@@ -97,6 +97,9 @@ from langchain_community.embeddings.gigachat import GigaChatEmbeddings
 from langchain_text_splitters import RecursiveCharacterTextSplitter
 ```
 
+import ChatModelTabs from "@theme/ChatModelTabs";
+
+<ChatModelTabs customVarName="llm" />
 
 ```python
 # Загрузка, разделение на части и индексация содержимого блога.
@@ -131,7 +134,6 @@ rag_chain = (
     | StrOutputParser()
 )
 ```
-
 
 ```python
 rag_chain.invoke("What is Task Decomposition?")
@@ -185,7 +187,6 @@ loader = WebBaseLoader(
 docs = loader.load()
 ```
 
-
 ```python
 len(docs[0].page_content)
 ```
@@ -198,11 +199,11 @@ len(docs[0].page_content)
 print(docs[0].page_content[:500])
 ```
 
-``` text
+```text
 
 
       LLM Powered Autonomous Agents
-    
+
 Date: June 23, 2023  |  Estimated Reading Time: 31 min  |  Author: Lilian Weng
 
 
@@ -242,12 +243,11 @@ text_splitter = RecursiveCharacterTextSplitter(
 all_splits = text_splitter.split_documents(docs)
 ```
 
-
 ```python
 len(all_splits)
 ```
 
-``` text
+```text
 66
 ```
 
@@ -255,7 +255,7 @@ len(all_splits)
 len(all_splits[0].page_content)
 ```
 
-``` text
+```text
 969
 ```
 
@@ -263,7 +263,7 @@ len(all_splits[0].page_content)
 all_splits[10].metadata
 ```
 
-``` text
+```text
 {'source': 'https://lilianweng.github.io/posts/2023-06-23-agent/',
  'start_index': 7056}
 ```
@@ -341,17 +341,15 @@ GigaChain предоставляет интерфейсу [Retriever](../../../d
 retriever = vectorstore.as_retriever(search_type="similarity", search_kwargs={"k": 6})
 ```
 
-
 ```python
 retrieved_docs = retriever.invoke("What are the approaches to Task Decomposition?")
 ```
-
 
 ```python
 len(retrieved_docs)
 ```
 
-``` text
+```text
 6
 ```
 
@@ -359,7 +357,7 @@ len(retrieved_docs)
 print(retrieved_docs[0].page_content)
 ```
 
-``` text
+```text
 Tree of Thoughts (Yao et al. 2023) extends CoT by exploring multiple reasoning possibilities at each step. It first decomposes the problem into multiple thought steps and generates multiple thoughts per step, creating a tree structure. The search process can be BFS (breadth-first search) or DFS (depth-first search) with each state evaluated by a classifier (via a prompt) or majority vote.
 Task decomposition can be done (1) by LLM with simple prompting like "Steps for XYZ.\n1.", "What are the subgoals for achieving XYZ?", (2) by using task-specific instructions; e.g. "Write a story outline." for writing a novel, or (3) with human inputs.
 ```
@@ -401,7 +399,6 @@ from langchain import hub
 prompt = hub.pull("rlm/rag-prompt")
 ```
 
-
 ```python
 example_messages = prompt.invoke(
     {"context": "filler context", "question": "filler question"}
@@ -409,7 +406,7 @@ example_messages = prompt.invoke(
 example_messages
 ```
 
-``` text
+```text
 [HumanMessage(content="You are an assistant for question-answering tasks. Use the following pieces of retrieved context to answer the question. If you don't know the answer, just say that you don't know. Use three sentences maximum and keep the answer concise.\nQuestion: filler question \nContext: filler context \nAnswer:")]
 ```
 
@@ -417,10 +414,10 @@ example_messages
 print(example_messages[0].content)
 ```
 
-``` text
+```text
 You are an assistant for question-answering tasks. Use the following pieces of retrieved context to answer the question. If you don't know the answer, just say that you don't know. Use three sentences maximum and keep the answer concise.
-Question: filler question 
-Context: filler context 
+Question: filler question
+Context: filler context
 Answer:
 ```
 
@@ -443,13 +440,12 @@ rag_chain = (
 )
 ```
 
-
 ```python
 for chunk in rag_chain.stream("What is Task Decomposition?"):
     print(chunk, end="", flush=True)
 ```
 
-``` text
+```text
 Task decomposition is a technique used to break down complex tasks into smaller and simpler steps. It involves transforming big tasks into multiple manageable tasks, allowing for easier interpretation and execution by autonomous agents or models. Task decomposition can be done through various methods, such as using prompting techniques, task-specific instructions, or human inputs.
 ```
 
@@ -507,7 +503,7 @@ rag_chain = (
 rag_chain.invoke("What is Task Decomposition?")
 ```
 
-``` text
+```text
 'Task decomposition is a technique used to break down complex tasks into smaller and simpler steps. It involves transforming big tasks into multiple manageable tasks, allowing for a more systematic and organized approach to problem-solving. Thanks for asking!'
 ```
 
