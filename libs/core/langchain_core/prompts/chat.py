@@ -896,8 +896,7 @@ class ChatPromptTemplate(BaseChatPromptTemplate):
 
     @classmethod
     def from_messages(
-        cls,
-        messages: Sequence[MessageLikeRepresentation],
+        cls, messages: Sequence[MessageLikeRepresentation], **kwargs: Any
     ) -> ChatPromptTemplate:
         """Create a chat prompt template from a variety of message formats.
 
@@ -937,7 +936,7 @@ class ChatPromptTemplate(BaseChatPromptTemplate):
 
         # Automatically infer input variables from messages
         input_vars: Set[str] = set()
-        partial_vars: Dict[str, Any] = {}
+        partial_vars: Dict[str, Any] = kwargs.get("partial_variables", {})
         for _message in _messages:
             if isinstance(_message, MessagesPlaceholder) and _message.optional:
                 partial_vars[_message.variable_name] = []
@@ -950,6 +949,7 @@ class ChatPromptTemplate(BaseChatPromptTemplate):
             input_variables=sorted(input_vars),
             messages=_messages,
             partial_variables=partial_vars,
+            **kwargs,
         )
 
     def format_messages(self, **kwargs: Any) -> List[BaseMessage]:
