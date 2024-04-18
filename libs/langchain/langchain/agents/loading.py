@@ -1,4 +1,5 @@
 """Functionality for loading agents."""
+
 import json
 import logging
 from pathlib import Path
@@ -8,7 +9,6 @@ import yaml
 from langchain_core._api import deprecated
 from langchain_core.language_models import BaseLanguageModel
 from langchain_core.tools import Tool
-from langchain_core.utils.loading import try_load_from_hub
 
 from langchain.agents.agent import BaseMultiActionAgent, BaseSingleActionAgent
 from langchain.agents.types import AGENT_TO_CLASS
@@ -16,7 +16,7 @@ from langchain.chains.loading import load_chain, load_chain_from_config
 
 logger = logging.getLogger(__file__)
 
-URL_BASE = "https://raw.githubusercontent.com/ai-forever/gigachain/hub/master/agents/"
+URL_BASE = "https://raw.githubusercontent.com/hwchase17/langchain-hub/master/agents/"
 
 
 def _load_agent_from_tools(
@@ -100,13 +100,13 @@ def load_agent(
     Returns:
         An agent executor.
     """
-    valid_suffixes = {"json", "yaml"}
-    if hub_result := try_load_from_hub(
-        path, _load_agent_from_file, "agents", valid_suffixes
-    ):
-        return hub_result
-    else:
-        return _load_agent_from_file(path, **kwargs)
+    if isinstance(path, str) and path.startswith("lc://"):
+        raise RuntimeError(
+            "Loading from the deprecated github-based Hub is no longer supported. "
+            "Please use the new LangChain Hub at https://smith.langchain.com/hub "
+            "instead."
+        )
+    return _load_agent_from_file(path, **kwargs)
 
 
 def _load_agent_from_file(
@@ -121,10 +121,10 @@ def _load_agent_from_file(
         file_path = file
     # Load from either json or yaml.
     if file_path.suffix[1:] == "json":
-        with open(file_path, encoding="utf-8") as f:
+        with open(file_path) as f:
             config = json.load(f)
     elif file_path.suffix[1:] == "yaml":
-        with open(file_path, "r", encoding="utf-8") as f:
+        with open(file_path, "r") as f:
             config = yaml.safe_load(f)
     else:
         raise ValueError(f"Unsupported file type, must be one of {valid_suffixes}.")

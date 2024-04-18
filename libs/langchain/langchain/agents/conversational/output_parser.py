@@ -22,7 +22,6 @@ class ConvoOutputParser(AgentOutputParser):
         return self.format_instructions
 
     def parse(self, text: str) -> Union[AgentAction, AgentFinish]:
-        text = re.sub(r"Observation:.*", "", text, 0, re.MULTILINE | re.DOTALL)
         if f"{self.ai_prefix}:" in text:
             return AgentFinish(
                 {"output": text.split(f"{self.ai_prefix}:")[-1].strip()}, text

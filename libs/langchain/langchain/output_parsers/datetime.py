@@ -38,8 +38,12 @@ class DatetimeOutputParser(BaseOutputParser[datetime]):
 
     def get_format_instructions(self) -> str:
         examples = comma_list(_generate_random_datetime_strings(self.format))
-        return f"""Напиши только дату в следующем формате: \
-"{self.format}". Например: {examples}. Не пиши ничего больше."""
+        return (
+            f"Write a datetime string that matches the "
+            f"following pattern: '{self.format}'.\n\n"
+            f"Examples: {examples}\n\n"
+            f"Return ONLY this string, no other words!"
+        )
 
     def parse(self, response: str) -> datetime:
         try:

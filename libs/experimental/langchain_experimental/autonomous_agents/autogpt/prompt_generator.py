@@ -1,5 +1,3 @@
-# ruff: noqa: E501
-
 import json
 from typing import List
 
@@ -25,14 +23,14 @@ class PromptGenerator:
         self.resources: List[str] = []
         self.performance_evaluation: List[str] = []
         self.response_format = {
-            "рассуждения": {
-                "text": "мысль",
-                "reasoning": "рассуждение",
-                "plan": "- тезисный план\n- список, который определяет\n- долгосрочный план",
-                "criticism": "конструктивная самокритика",
-                "speak": "итоговые мысли для передачи пользователю",
+            "thoughts": {
+                "text": "thought",
+                "reasoning": "reasoning",
+                "plan": "- short bulleted\n- list that conveys\n- long-term plan",
+                "criticism": "constructive self-criticism",
+                "speak": "thoughts summary to say to user",
             },
-            "команда": {"name": "имя команды", "args": {"arg name": "значение"}},
+            "command": {"name": "command name", "args": {"arg name": "value"}},
         }
 
     def add_constraint(self, constraint: str) -> None:
@@ -49,7 +47,7 @@ class PromptGenerator:
 
     def _generate_command_string(self, tool: BaseTool) -> str:
         output = f"{tool.name}: {tool.description}"
-        output += f", args json schema: {json.dumps(tool.args, ensure_ascii=False)}"
+        output += f", args json schema: {json.dumps(tool.args)}"
         return output
 
     def add_resource(self, resource: str) -> None:
@@ -88,11 +86,11 @@ class PromptGenerator:
                 for i, item in enumerate(items)
             ]
             finish_description = (
-                "используй это, чтобы сигнализировать, что вы выполнил все свои задачи"
+                "use this to signal that you have finished all your objectives"
             )
             finish_args = (
-                '"response": "окончательный ответ, чтобы '
-                'пользователь узнал, что ты выполнил свои задачи"'
+                '"response": "final response to let '
+                'people know you have finished your objectives"'
             )
             finish_string = (
                 f"{len(items) + 1}. {FINISH_NAME}: "
@@ -108,19 +106,17 @@ class PromptGenerator:
         Returns:
             str: The generated prompt string.
         """
-        formatted_response_format = json.dumps(
-            self.response_format, indent=4, ensure_ascii=False
-        )
+        formatted_response_format = json.dumps(self.response_format, indent=4)
         prompt_string = (
-            f"Ограничения:\n{self._generate_numbered_list(self.constraints)}\n\n"
-            f"Команды:\n"
+            f"Constraints:\n{self._generate_numbered_list(self.constraints)}\n\n"
+            f"Commands:\n"
             f"{self._generate_numbered_list(self.commands, item_type='command')}\n\n"
-            f"Ресурсы:\n{self._generate_numbered_list(self.resources)}\n\n"
-            f"Оценка производительности:\n"
+            f"Resources:\n{self._generate_numbered_list(self.resources)}\n\n"
+            f"Performance Evaluation:\n"
             f"{self._generate_numbered_list(self.performance_evaluation)}\n\n"
-            f"Ты должен отвечать только в формате JSON, как описано ниже "
-            f"\nФормат ответа: \n{formatted_response_format} "
-            f"\nУбедись, что ответ можно разобрать с помощью Python json.loads"
+            f"You should only respond in JSON format as described below "
+            f"\nResponse Format: \n{formatted_response_format} "
+            f"\nEnsure the response can be parsed by Python json.loads"
         )
 
         return prompt_string
@@ -140,18 +136,18 @@ def get_prompt(tools: List[BaseTool]) -> str:
 
     # Add constraints to the PromptGenerator object
     prompt_generator.add_constraint(
-        "Лимит в ~4000 слов для краткосрочной памяти. "
-        "Твоя краткосрочная память короткосрочная, "
-        "поэтому немедленно сохраняй важную информацию в файлах."
+        "~4000 word limit for short term memory. "
+        "Your short term memory is short, "
+        "so immediately save important information to files."
     )
     prompt_generator.add_constraint(
-        "Если ты не уверен, как ты что-то делал ранее "
-        "или хочешь вспомнить прошлые события, "
-        "мысли о похожих событиях помогут тебе вспомнить."
+        "If you are unsure how you previously did something "
+        "or want to recall past events, "
+        "thinking about similar events will help you remember."
     )
-    prompt_generator.add_constraint("Без помощи пользователя")
+    prompt_generator.add_constraint("No user assistance")
     prompt_generator.add_constraint(
-        'Используй исключительно команды, перечисленные в двойных кавычках, например, "имя команды"'
+        'Exclusively use the commands listed in double quotes e.g. "command name"'
     )
 
     # Add commands to the PromptGenerator object
@@ -159,27 +155,29 @@ def get_prompt(tools: List[BaseTool]) -> str:
         prompt_generator.add_tool(tool)
 
     # Add resources to the PromptGenerator object
-    prompt_generator.add_resource("Доступ в Интернет для поиска и сбора информации.")
-    prompt_generator.add_resource("Управление долгосрочной памятью.")
     prompt_generator.add_resource(
-        "Агенты на базе GPT-3.5 для делегирования простых задач."
+        "Internet access for searches and information gathering."
     )
-    prompt_generator.add_resource("Выходной файл.")
+    prompt_generator.add_resource("Long Term memory management.")
+    prompt_generator.add_resource(
+        "GPT-3.5 powered Agents for delegation of simple tasks."
+    )
+    prompt_generator.add_resource("File output.")
 
     # Add performance evaluations to the PromptGenerator object
     prompt_generator.add_performance_evaluation(
-        "Постоянно пересматривай и анализируй свои действия "
-        "чтобы убедиться, что вы работаешь на пределе своих возможностей."
+        "Continuously review and analyze your actions "
+        "to ensure you are performing to the best of your abilities."
     )
     prompt_generator.add_performance_evaluation(
-        "Постоянно конструктивно самокритикуй свое поведение в большом масштабе."
+        "Constructively self-criticize your big-picture behavior constantly."
     )
     prompt_generator.add_performance_evaluation(
-        "Размышляй о прошлых решениях и стратегиях, чтобы усовершенствовать свой подход."
+        "Reflect on past decisions and strategies to refine your approach."
     )
     prompt_generator.add_performance_evaluation(
-        "Каждая команда имеет свою цену, поэтому будь умен и эффективен. "
-        "Стремись выполнить задачи за минимальное количество шагов."
+        "Every command has a cost, so be smart and efficient. "
+        "Aim to complete tasks in the least number of steps."
     )
 
     # Generate the prompt string

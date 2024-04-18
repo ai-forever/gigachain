@@ -1,6 +1,5 @@
 from __future__ import annotations
 
-import json
 import logging
 from functools import cached_property
 from typing import TYPE_CHECKING, Any, AsyncIterator, Dict, Iterator, List, Optional
@@ -219,7 +218,7 @@ class GigaChat(_BaseGigaChat, BaseLLM):
             payload["update_interval"] = self.update_interval
 
         if self.verbose:
-            logger.warning("Giga request: %s", json.dumps(payload, ensure_ascii=False))
+            logger.info("Giga request: %s", payload)
 
         return payload
 
@@ -312,7 +311,7 @@ class GigaChat(_BaseGigaChat, BaseLLM):
                 content = chunk.choices[0].delta.content
                 yield GenerationChunk(text=content)
                 if run_manager:
-                    run_manager.on_llm_new_token(content if content is not None else "")
+                    run_manager.on_llm_new_token(content)
 
     async def _astream(
         self,
@@ -328,9 +327,7 @@ class GigaChat(_BaseGigaChat, BaseLLM):
                 content = chunk.choices[0].delta.content
                 yield GenerationChunk(text=content)
                 if run_manager:
-                    await run_manager.on_llm_new_token(
-                        content if content is not None else ""
-                    )
+                    await run_manager.on_llm_new_token(content)
 
     class Config:
         extra = "allow"

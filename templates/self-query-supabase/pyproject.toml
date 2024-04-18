@@ -9,7 +9,7 @@ readme = "README.md"
 
 [tool.poetry.dependencies]
 python = ">=3.8.1,<4.0"
-gigachain = ">=0.0.325"
+langchain = "^0.1"
 openai = "<2"
 tiktoken = "^0.5.1"
 supabase = "^1.2.0"
@@ -17,8 +17,13 @@ lark = "^1.1.8"
 
 [tool.poetry.group.dev.dependencies]
 langchain-cli = ">=0.0.21"
+[tool.poetry.group.dev.dependencies.python-dotenv]
+extras = [
+    "cli",
+]
+version = "^1.0.0"
 
-[tool.gigaserve]
+[tool.langserve]
 export_module = "self_query_supabase.chain"
 export_attr = "chain"
 

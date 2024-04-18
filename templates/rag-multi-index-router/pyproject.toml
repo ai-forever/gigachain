@@ -7,7 +7,7 @@ readme = "README.md"
 
 [tool.poetry.dependencies]
 python = ">=3.8.1,<4.0"
-gigachain = ">=0.0.313, <0.1"
+langchain = "^0.1"
 openai = "<2"
 xmltodict = "^0.13.0"
 kay = "^0.1.2"
@@ -20,7 +20,7 @@ langchain-cli = ">=0.0.21"
 fastapi = ">=0.104.0,<1"
 sse-starlette = "^1.6.5"
 
-[tool.gigaserve]
+[tool.langserve]
 export_module = "rag_multi_index_router"
 export_attr = "chain"
 

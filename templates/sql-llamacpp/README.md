@@ -22,19 +22,19 @@ CMAKE_ARGS="-DLLAMA_METAL=on" FORCE_CMAKE=1 pip install -U llama-cpp-python --no
 To use this package, you should first have the LangChain CLI installed:
 
 ```shell
-pip install -U "gigachain-cli"
+pip install -U langchain-cli
 ```
 
 To create a new LangChain project and install this as the only package, you can do:
 
 ```shell
-gigachain app new my-app --package sql-llamacpp
+langchain app new my-app --package sql-llamacpp
 ```
 
 If you want to add this to an existing project, you can just run:
 
 ```shell
-gigachain app add sql-llamacpp
+langchain app add sql-llamacpp
 ```
 
 And add the following code to your `server.py` file:
@@ -48,7 +48,7 @@ The package will download the Mistral-7b model from [here](https://huggingface.c
 
 This package includes an example DB of 2023 NBA rosters. You can see instructions to build this DB [here](https://github.com/facebookresearch/llama-recipes/blob/main/demo_apps/StructuredLlama.ipynb).
 
-(Optional) Configure LangSmith for tracing, monitoring and debugging LangChain applications. LangSmith is currently in private beta, you can sign up [here](https://smith.langchain.com/). If you don't have access, you can skip this section
+(Optional) Configure LangSmith for tracing, monitoring and debugging LangChain applications. You can sign up for LangSmith [here](https://smith.langchain.com/). If you don't have access, you can skip this section
 
 ```shell
 export LANGCHAIN_TRACING_V2=true
@@ -59,7 +59,7 @@ export LANGCHAIN_PROJECT=<your-project>  # if not specified, defaults to "defaul
 If you are inside this directory, then you can spin up a LangServe instance directly by:
 
 ```shell
-gigachain serve
+langchain serve
 ```
 
 This will start the FastAPI app with a server running locally at 

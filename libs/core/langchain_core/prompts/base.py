@@ -81,32 +81,13 @@ class BasePromptTemplate(
     def get_input_schema(
         self, config: Optional[RunnableConfig] = None
     ) -> Type[BaseModel]:
-        partial_kwargs = {}
-        for name in self.partial_variables:
-            if callable(self.partial_variables[name]):
-                doc = self.partial_variables[name].__doc__
-                description = "By default. It's calling function."
-                if doc:
-                    description += f" Function description: {doc.strip()}"
-                partial_kwargs[name] = (
-                    str,
-                    Field(
-                        default=self.partial_variables[name](), description=description
-                    ),
-                )
-            else:
-                partial_kwargs[name] = (
-                    self.input_types.get(name, str),
-                    self.partial_variables[name],
-                )
         # This is correct, but pydantic typings/mypy don't think so.
         return create_model(  # type: ignore[call-overload]
             "PromptInput",
             **{k: (self.input_types.get(k, str), None) for k in self.input_variables},
-            **partial_kwargs,
         )
 
-    def _format_prompt_with_error_handling(self, inner_input: Dict) -> PromptValue:
+    def _validate_input(self, inner_input: Dict) -> Dict:
         if not isinstance(inner_input, dict):
             if len(self.input_variables) == 1:
                 var_name = self.input_variables[0]
@@ -124,18 +105,43 @@ class BasePromptTemplate(
                 f" Expected: {self.input_variables}"
                 f" Received: {list(inner_input.keys())}"
             )
-        return self.format_prompt(**inner_input)
+        return inner_input
+
+    def _format_prompt_with_error_handling(self, inner_input: Dict) -> PromptValue:
+        _inner_input = self._validate_input(inner_input)
+        return self.format_prompt(**_inner_input)
+
+    async def _aformat_prompt_with_error_handling(
+        self, inner_input: Dict
+    ) -> PromptValue:
+        _inner_input = self._validate_input(inner_input)
+        return await self.aformat_prompt(**_inner_input)
 
     def invoke(
         self, input: Dict, config: Optional[RunnableConfig] = None
     ) -> PromptValue:
         config = ensure_config(config)
         if self.metadata:
+            config["metadata"] = {**config["metadata"], **self.metadata}
+        if self.tags:
+            config["tags"] = config["tags"] + self.tags
+        return self._call_with_config(
+            self._format_prompt_with_error_handling,
+            input,
+            config,
+            run_type="prompt",
+        )
+
+    async def ainvoke(
+        self, input: Dict, config: Optional[RunnableConfig] = None, **kwargs: Any
+    ) -> PromptValue:
+        config = ensure_config(config)
+        if self.metadata:
             config["metadata"].update(self.metadata)
         if self.tags:
             config["tags"].extend(self.tags)
-        return self._call_with_config(
-            self._format_prompt_with_error_handling,
+        return await self._acall_with_config(
+            self._aformat_prompt_with_error_handling,
             input,
             config,
             run_type="prompt",
@@ -144,6 +150,10 @@ class BasePromptTemplate(
     @abstractmethod
     def format_prompt(self, **kwargs: Any) -> PromptValue:
         """Create Prompt Value."""
+
+    async def aformat_prompt(self, **kwargs: Any) -> PromptValue:
+        """Create Prompt Value."""
+        return self.format_prompt(**kwargs)
 
     @root_validator()
     def validate_variable_names(cls, values: Dict) -> Dict:
@@ -201,6 +211,23 @@ class BasePromptTemplate(
             prompt.format(variable1="foo")
         """
 
+    async def aformat(self, **kwargs: Any) -> FormatOutputType:
+        """Format the prompt with the inputs.
+
+        Args:
+            kwargs: Any arguments to be passed to the prompt template.
+
+        Returns:
+            A formatted string.
+
+        Example:
+
+        .. code-block:: python
+
+            await prompt.aformat(variable1="foo")
+        """
+        return self.format(**kwargs)
+
     @property
     def _prompt_type(self) -> str:
         """Return the prompt type key."""
@@ -245,12 +272,27 @@ class BasePromptTemplate(
 
         if save_path.suffix == ".json":
             with open(file_path, "w") as f:
-                json.dump(prompt_dict, f, indent=4, ensure_ascii=False)
+                json.dump(prompt_dict, f, indent=4)
         elif save_path.suffix.endswith((".yaml", ".yml")):
-            with open(file_path, "w", encoding="utf-8") as f:
+            with open(file_path, "w") as f:
                 yaml.dump(prompt_dict, f, default_flow_style=False)
         else:
             raise ValueError(f"{save_path} must be json or yaml")
+
+
+def _get_document_info(doc: Document, prompt: BasePromptTemplate[str]) -> Dict:
+    base_info = {"page_content": doc.page_content, **doc.metadata}
+    missing_metadata = set(prompt.input_variables).difference(base_info)
+    if len(missing_metadata) > 0:
+        required_metadata = [
+            iv for iv in prompt.input_variables if iv != "page_content"
+        ]
+        raise ValueError(
+            f"Document prompt requires documents to have metadata variables: "
+            f"{required_metadata}. Received document with missing metadata: "
+            f"{list(missing_metadata)}."
+        )
+    return {k: base_info[k] for k in prompt.input_variables}
 
 
 def format_document(doc: Document, prompt: BasePromptTemplate[str]) -> str:
@@ -287,16 +329,30 @@ def format_document(doc: Document, prompt: BasePromptTemplate[str]) -> str:
             format_document(doc, prompt)
             >>> "Page 1: This is a joke"
     """
-    base_info = {"page_content": doc.page_content, **doc.metadata}
-    missing_metadata = set(prompt.input_variables).difference(base_info)
-    if len(missing_metadata) > 0:
-        required_metadata = [
-            iv for iv in prompt.input_variables if iv != "page_content"
-        ]
-        raise ValueError(
-            f"Document prompt requires documents to have metadata variables: "
-            f"{required_metadata}. Received document with missing metadata: "
-            f"{list(missing_metadata)}."
-        )
-    document_info = {k: base_info[k] for k in prompt.input_variables}
-    return prompt.format(**document_info)
+    return prompt.format(**_get_document_info(doc, prompt))
+
+
+async def aformat_document(doc: Document, prompt: BasePromptTemplate[str]) -> str:
+    """Format a document into a string based on a prompt template.
+
+    First, this pulls information from the document from two sources:
+
+    1. `page_content`:
+        This takes the information from the `document.page_content`
+        and assigns it to a variable named `page_content`.
+    2. metadata:
+        This takes information from `document.metadata` and assigns
+        it to variables of the same name.
+
+    Those variables are then passed into the `prompt` to produce a formatted string.
+
+    Args:
+        doc: Document, the page_content and metadata will be used to create
+            the final string.
+        prompt: BasePromptTemplate, will be used to format the page_content
+            and metadata into the final string.
+
+    Returns:
+        string of the document formatted.
+    """
+    return await prompt.aformat(**_get_document_info(doc, prompt))

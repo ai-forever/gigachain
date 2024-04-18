@@ -167,11 +167,7 @@ def _format_attribute_info(info: Sequence[Union[AttributeInfo, dict]]) -> str:
     for i in info:
         i_dict = dict(i)
         info_dicts[i_dict.pop("name")] = i_dict
-    return (
-        json.dumps(info_dicts, indent=4, ensure_ascii=False)
-        .replace("{", "{{")
-        .replace("}", "}}")
-    )
+    return json.dumps(info_dicts, indent=4).replace("{", "{{").replace("}", "}}")
 
 
 def construct_examples(input_output_pairs: Sequence[Tuple[str, dict]]) -> List[dict]:
@@ -186,9 +182,7 @@ def construct_examples(input_output_pairs: Sequence[Tuple[str, dict]]) -> List[d
     examples = []
     for i, (_input, output) in enumerate(input_output_pairs):
         structured_request = (
-            json.dumps(output, indent=4, ensure_ascii=False)
-            .replace("{", "{{")
-            .replace("}", "}}")
+            json.dumps(output, indent=4).replace("{", "{{").replace("}", "}}")
         )
         example = {
             "i": i + 1,

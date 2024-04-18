@@ -31,7 +31,7 @@ jobs:
         uses: Ana06/get-changed-files@v2.2.0
       - id: set-matrix
         run: |
-          python .github/scripts/check_diff.py ${{ steps.files.outputs.added_modified_renamed }} >> $GITHUB_OUTPUT
+          python .github/scripts/check_diff.py ${{ steps.files.outputs.all }} >> $GITHUB_OUTPUT
     outputs:
       dirs-to-lint: ${{ steps.set-matrix.outputs.dirs-to-lint }}
       dirs-to-test: ${{ steps.set-matrix.outputs.dirs-to-test }}
@@ -58,6 +58,12 @@ jobs:
     uses: ./.github/workflows/_test.yml
     with:
       working-directory: ${{ matrix.working-directory }}
+    secrets: inherit
+
+  test_doc_imports:
+    needs: [ build ]
+    if: ${{ needs.build.outputs.dirs-to-test != '[]' }}
+    uses: ./.github/workflows/_test_doc_imports.yml
     secrets: inherit
 
   compile-integration-tests:

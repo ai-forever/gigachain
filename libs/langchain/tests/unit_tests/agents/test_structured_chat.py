@@ -2,15 +2,16 @@
 from textwrap import dedent
 from typing import Any, Tuple
 
-from langchain.agents.structured_chat.base import StructuredChatAgent
-from langchain.agents.structured_chat.output_parser import StructuredChatOutputParser
-from langchain.prompts.chat import (
+from langchain_core.agents import AgentAction, AgentFinish
+from langchain_core.prompts.chat import (
     ChatPromptTemplate,
     HumanMessagePromptTemplate,
     SystemMessagePromptTemplate,
 )
-from langchain.schema import AgentAction, AgentFinish
-from langchain.tools import Tool
+from langchain_core.tools import Tool
+
+from langchain.agents.structured_chat.base import StructuredChatAgent
+from langchain.agents.structured_chat.output_parser import StructuredChatOutputParser
 
 output_parser = StructuredChatOutputParser()
 
@@ -136,15 +137,15 @@ class TestCreatePrompt:
 
         expected = dedent(
             """
-            Отвечай человеку как можно более полезно и точно. У тебя есть доступ к следующим инструментам:
+            Respond to the human as helpfully and accurately as possible. You have access to the following tools:
             
             foo: Test tool FOO, args: {'tool_input': {'type': 'string'}}
         
-            Используй json-объект для указания инструмента, предоставив ключ действия (имя инструмента) и ключ ввода действия (ввод инструмента).
+            Use a json blob to specify a tool by providing an action key (tool name) and an action_input key (tool input).
             
-            Допустимые значения "action": "Final Answer" или foo
+            Valid "action" values: "Final Answer" or foo
             
-            Предоставь только ОДНО действие на $JSON_BLOB, как показано:
+            Provide only ONE action per $JSON_BLOB, as shown:
             
             ```
             {
@@ -153,26 +154,26 @@ class TestCreatePrompt:
             }
             ```
             
-            Следуй этому формату:
+            Follow this format:
             
-            Question: вводимый вопрос для ответа
-            Thought: учитывай предыдущие и последующие шаги
+            Question: input question to answer
+            Thought: consider previous and subsequent steps
             Action:
             ```
             $JSON_BLOB
             ```
-            Observation: результат действия
-            ... (повторяй Thought/Action/Action Input/Observation может повторяться N раз)
-            Thought: Я знаю, что отвечать
+            Observation: action result
+            ... (repeat Thought/Action/Observation N times)
+            Thought: I know what to respond
             Action:
             ```
             {
               "action": "Final Answer",
-              "action_input": "Окончательный ответ человеку"
+              "action_input": "Final response to human"
             }
             ```
         
-            Начни! Напоминаю, что ВСЕГДА нужно отвечать действительным json-объектом одного действия. Используй инструменты, если это необходимо. Отвечай напрямую, если это уместно. Формат - Action:```$JSON_BLOB```затем Observation:.
+            Begin! Reminder to ALWAYS respond with a valid json blob of a single action. Use tools if necessary. Respond directly if appropriate. Format is Action:```$JSON_BLOB```then Observation:.
             Thought:
             """  # noqa: E501
         ).strip()
@@ -202,16 +203,16 @@ class TestCreatePrompt:
 
         expected = dedent(
             """
-            Отвечай человеку как можно более полезно и точно. У тебя есть доступ к следующим инструментам:
+            Respond to the human as helpfully and accurately as possible. You have access to the following tools:
             
             foo: Test tool FOO, args: {'tool_input': {'type': 'string'}}
             bar: Test tool BAR, args: {'tool_input': {'type': 'string'}}
         
-            Используй json-объект для указания инструмента, предоставив ключ действия (имя инструмента) и ключ ввода действия (ввод инструмента).
+            Use a json blob to specify a tool by providing an action key (tool name) and an action_input key (tool input).
             
-            Допустимые значения "action": "Final Answer" или foo, bar
+            Valid "action" values: "Final Answer" or foo, bar
             
-            Предоставь только ОДНО действие на $JSON_BLOB, как показано:
+            Provide only ONE action per $JSON_BLOB, as shown:
             
             ```
             {
@@ -220,26 +221,26 @@ class TestCreatePrompt:
             }
             ```
             
-            Следуй этому формату:
+            Follow this format:
             
-            Question: вводимый вопрос для ответа
-            Thought: учитывай предыдущие и последующие шаги
+            Question: input question to answer
+            Thought: consider previous and subsequent steps
             Action:
             ```
             $JSON_BLOB
             ```
-            Observation: результат действия
-            ... (повторяй Thought/Action/Action Input/Observation может повторяться N раз)
-            Thought: Я знаю, что отвечать
+            Observation: action result
+            ... (repeat Thought/Action/Observation N times)
+            Thought: I know what to respond
             Action:
             ```
             {
               "action": "Final Answer",
-              "action_input": "Окончательный ответ человеку"
+              "action_input": "Final response to human"
             }
             ```
         
-            Начни! Напоминаю, что ВСЕГДА нужно отвечать действительным json-объектом одного действия. Используй инструменты, если это необходимо. Отвечай напрямую, если это уместно. Формат - Action:```$JSON_BLOB```затем Observation:.
+            Begin! Reminder to ALWAYS respond with a valid json blob of a single action. Use tools if necessary. Respond directly if appropriate. Format is Action:```$JSON_BLOB```then Observation:.
             Thought:
             """  # noqa: E501
         ).strip()

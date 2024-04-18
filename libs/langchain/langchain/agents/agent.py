@@ -184,9 +184,9 @@ class BaseSingleActionAgent(BaseModel):
 
         if save_path.suffix == ".json":
             with open(file_path, "w") as f:
-                json.dump(agent_dict, f, indent=4, ensure_ascii=False)
+                json.dump(agent_dict, f, indent=4)
         elif save_path.suffix.endswith((".yaml", ".yml")):
-            with open(file_path, "w", encoding="utf-8") as f:
+            with open(file_path, "w") as f:
                 yaml.dump(agent_dict, f, default_flow_style=False)
         else:
             raise ValueError(f"{save_path} must be json or yaml")
@@ -308,10 +308,10 @@ class BaseMultiActionAgent(BaseModel):
         directory_path.mkdir(parents=True, exist_ok=True)
 
         if save_path.suffix == ".json":
-            with open(file_path, "w", encoding="utf-8") as f:
-                json.dump(agent_dict, f, indent=4, ensure_ascii=False)
+            with open(file_path, "w") as f:
+                json.dump(agent_dict, f, indent=4)
         elif save_path.suffix.endswith((".yaml", ".yml")):
-            with open(file_path, "w", encoding="utf-8") as f:
+            with open(file_path, "w") as f:
                 yaml.dump(agent_dict, f, default_flow_style=False)
         else:
             raise ValueError(f"{save_path} must be json or yaml")

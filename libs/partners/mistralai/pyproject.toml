@@ -1,6 +1,6 @@
 [tool.poetry]
-name = "gigachain-mistralai"
-version = "0.1.0"
+name = "langchain-mistralai"
+version = "0.1.2"
 description = "An integration package connecting Mistral and LangChain"
 authors = []
 readme = "README.md"
@@ -12,7 +12,7 @@ license = "MIT"
 
 [tool.poetry.dependencies]
 python = ">=3.8.1,<4.0"
-gigachain-core = "^0.1.31"
+langchain-core = "^0.1.42"
 tokenizers = "^0.15.1"
 httpx = ">=0.25.2,<1"
 httpx-sse = ">=0.3.1,<1"
@@ -23,7 +23,8 @@ optional = true
 [tool.poetry.group.test.dependencies]
 pytest = "^7.3.0"
 pytest-asyncio = "^0.21.1"
-gigachain-core = { path = "../../core", develop = true }
+langchain-core = { path = "../../core", develop = true }
+langchain-standard-tests = { path = "../../standard-tests", develop = true }
 
 [tool.poetry.group.test_integration]
 optional = true
@@ -44,13 +45,13 @@ ruff = "^0.1.5"
 
 [tool.poetry.group.typing.dependencies]
 mypy = "^0.991"
-gigachain-core = { path = "../../core", develop = true }
+langchain-core = { path = "../../core", develop = true }
 
 [tool.poetry.group.dev]
 optional = true
 
 [tool.poetry.group.dev.dependencies]
-gigachain-core = { path = "../../core", develop = true }
+langchain-core = { path = "../../core", develop = true }
 
 [tool.ruff.lint]
 select = [

@@ -4,17 +4,7 @@ import warnings
 from importlib import metadata
 from typing import Any, Optional
 
-from langchain_community.__gigachain_community import _check_gigachain_community_version
-
-# Check that we have gigachain_core package instead of langchain_core
-from langchain_core.__gigachain_core import _check_gigachain_core_version
 from langchain_core._api.deprecation import surface_langchain_deprecation_warnings
-
-# Убелимся, что мы используем именно gigachain_core и gigachain_community,
-# а не соответствующие langchain_... версии
-_check_gigachain_core_version()
-_check_gigachain_community_version()
-
 
 try:
     __version__ = metadata.version(__package__)
@@ -77,10 +67,10 @@ def __getattr__(name: str) -> Any:
         return ConversationChain
     elif name == "LLMBashChain":
         raise ImportError(
-            "This module has been moved to gigachain-experimental. "
+            "This module has been moved to langchain-experimental. "
             "For more details: "
             "https://github.com/langchain-ai/langchain/discussions/11352."
-            "To access this code, install it with `pip install gigachain-experimental`."
+            "To access this code, install it with `pip install langchain-experimental`."
             "`from langchain_experimental.llm_bash.base "
             "import LLMBashChain`"
         )

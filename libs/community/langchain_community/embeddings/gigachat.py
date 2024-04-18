@@ -25,11 +25,6 @@ class GigaChatEmbeddings(BaseModel, Embeddings):
             )
     """
 
-    """ DEPRECATED: Send texts one-by-one to server (to increase token limit) """
-    one_by_one_mode: bool = False
-    """ DEPRECATED: Debug timeout for limit rps to server """
-    _debug_delay: float = 0
-
     base_url: Optional[str] = None
     """ Base API URL """
     auth_url: Optional[str] = None
