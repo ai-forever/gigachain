@@ -56,8 +56,8 @@ class AutoGPTOutputParser(BaseAutoGPTOutputParser):
                 )
         try:
             return AutoGPTAction(
-                name=parsed["команда"]["name"],
-                args=parsed["команда"]["args"],
+                name=parsed["command"]["name"],
+                args=parsed["command"]["args"],
             )
         except (KeyError, TypeError):
             # If the command is null or incomplete, return an erroneous tool

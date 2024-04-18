@@ -48,7 +48,7 @@ def __getattr__(name: str) -> Any:
             "langchain will no longer be supported as of langchain==0.2.0. "
             "Please import from langchain-community instead:\n\n"
             f"`from langchain_community.retrievers import {name}`.\n\n"
-            "To install gigachain-community run `pip install -U gigachain-community`.",
+            "To install langchain-community run `pip install -U langchain-community`.",
             category=LangChainDeprecationWarning,
         )
 
@@ -60,6 +60,7 @@ __all__ = [
     "AmazonKnowledgeBasesRetriever",
     "ArceeRetriever",
     "ArxivRetriever",
+    "AzureAISearchRetriever",
     "AzureCognitiveSearchRetriever",
     "ChatGPTPluginRetriever",
     "ContextualCompressionRetriever",

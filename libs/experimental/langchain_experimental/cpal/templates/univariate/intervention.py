@@ -3,13 +3,13 @@
 # fmt: off
 template = (
     """
-Преобразуй гипотетическое условие whatif в JSON. Не догадывайся о каких-либо частях. Напиши NONE, если не уверен.
+Transform the hypothetical whatif statement into JSON. Don't guess at any of the parts. Write NONE if you are unsure.
 
 {format_instructions}
 
 
 
-statement: если бы у Синди было 4 питомца
+statement: if cindy's pet count was 4
 
 
 
@@ -28,7 +28,7 @@ statement: если бы у Синди было 4 питомца
 
 
 
-statement: Допустим, у Бориса десять долларов, а у Билла 20 долларов.
+statement: Let's say boris has ten dollars and Bill has 20 dollars.
 
 
 

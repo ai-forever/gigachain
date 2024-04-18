@@ -59,9 +59,9 @@ For more advanced use cases, also check out [LangGraph](https://github.com/langc
 
 ## 📕 Releases & Versioning
 
-`gigachain-core` is currently on version `0.1.x`.
+`langchain-core` is currently on version `0.1.x`.
 
-As `gigachain-core` contains the base abstractions and runtime for the whole LangChain ecosystem, we will communicate any breaking changes with advance notice and version bumps. The exception for this is anything in `gigachain_core.beta`. The reason for `gigachain_core.beta` is that given the rate of change of the field, being able to move quickly is still a priority, and this module is our attempt to do so.
+As `langchain-core` contains the base abstractions and runtime for the whole LangChain ecosystem, we will communicate any breaking changes with advance notice and version bumps. The exception for this is anything in `langchain_core.beta`. The reason for `langchain_core.beta` is that given the rate of change of the field, being able to move quickly is still a priority, and this module is our attempt to do so.
 
 Minor version increases will occur for:
 

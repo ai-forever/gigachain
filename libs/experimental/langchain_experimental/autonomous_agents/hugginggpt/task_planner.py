@@ -4,7 +4,6 @@ from abc import abstractmethod
 from typing import Any, Dict, List, Optional, Union
 
 from langchain.base_language import BaseLanguageModel
-from langchain.callbacks.manager import Callbacks
 from langchain.chains import LLMChain
 from langchain.prompts.chat import (
     AIMessagePromptTemplate,
@@ -13,13 +12,14 @@ from langchain.prompts.chat import (
     SystemMessagePromptTemplate,
 )
 from langchain.tools.base import BaseTool
+from langchain_core.callbacks.manager import Callbacks
 
 from langchain_experimental.pydantic_v1 import BaseModel
 
 DEMONSTRATIONS = [
     {
         "role": "user",
-        "content": "покажи мне видео и изображение на основе текста 'мальчик бежит' и озвучь это",  # noqa: E501
+        "content": "please show me a video and an image of (based on the text) 'a boy is running' and dub it",  # noqa: E501
     },
     {
         "role": "assistant",
@@ -27,7 +27,7 @@ DEMONSTRATIONS = [
     },
     {
         "role": "user",
-        "content": "У тебя есть несколько картинок e1.jpg, e2.png, e3.jpg, помоги мне посчитать количество овец?",  # noqa: E501
+        "content": "Give you some pictures e1.jpg, e2.png, e3.jpg, help me count the number of sheep?",  # noqa: E501
     },
     {
         "role": "assistant",
@@ -47,8 +47,8 @@ class TaskPlaningChain(LLMChain):
         verbose: bool = True,
     ) -> LLMChain:
         """Get the response parser."""
-        system_template = """#1 Этап планирования задач: AI-ассистент может разбить ввод пользователя на несколько задач: [{{"task": задача, "id": id_задачи, "dep": id_зависимой_задачи, "args": {{"input name": текст может содержать <resource-dep_id>}}}}]. Специальный тег "dep_id" относится к сгенерированному тексту/изображению/аудио в зависимой задаче (Пожалуйста, учтите, генерирует ли зависимая задача ресурсы этого типа.) и "dep_id" должен быть в списке "dep". Поле "dep" обозначает id предыдущих обязательных задач, которые генерируют новый ресурс, на котором зависит текущая задача. Задача ДОЛЖНА быть выбрана из следующих инструментов (вместе с описанием инструмента, именем ввода и типом вывода): {tools}. Может быть несколько задач одного типа. Подумай шаг за шагом обо всех задачах, необходимых для решения запроса пользователя. Выделите как можно меньше задач, обеспечивая при этом возможность решения запроса пользователя. Обратите внимание на зависимости и порядок задач. Если ввод пользователя не может быть разобран, вам нужно ответить пустым JSON []."""  # noqa: E501
-        human_template = """Теперь я ввожу: {input}."""
+        system_template = """#1 Task Planning Stage: The AI assistant can parse user input to several tasks: [{{"task": task, "id": task_id, "dep": dependency_task_id, "args": {{"input name": text may contain <resource-dep_id>}}}}]. The special tag "dep_id" refer to the one generated text/image/audio in the dependency task (Please consider whether the dependency task generates resources of this type.) and "dep_id" must be in "dep" list. The "dep" field denotes the ids of the previous prerequisite tasks which generate a new resource that the current task relies on. The task MUST be selected from the following tools (along with tool description, input name and output type): {tools}. There may be multiple tasks of the same type. Think step by step about all the tasks needed to resolve the user's request. Parse out as few tasks as possible while ensuring that the user request can be resolved. Pay attention to the dependencies and order among tasks. If the user input can't be parsed, you need to reply empty JSON []."""  # noqa: E501
+        human_template = """Now I input: {input}."""
         system_message_prompt = SystemMessagePromptTemplate.from_template(
             system_template
         )

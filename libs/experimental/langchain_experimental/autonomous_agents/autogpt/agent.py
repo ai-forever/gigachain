@@ -11,7 +11,7 @@ from langchain.schema import (
 from langchain.tools.base import BaseTool
 from langchain_community.tools.human.tool import HumanInputRun
 from langchain_core.language_models import BaseChatModel
-from langchain_core.messages import AIMessage, HumanMessage
+from langchain_core.messages import AIMessage, HumanMessage, SystemMessage
 from langchain_core.vectorstores import VectorStoreRetriever
 
 from langchain_experimental.autonomous_agents.autogpt.output_parser import (
@@ -80,7 +80,8 @@ class AutoGPT:
 
     def run(self, goals: List[str]) -> str:
         user_input = (
-            "Определи, какую команду использовать, " "и ответь в корректном формате."
+            "Determine which next command to use, "
+            "and respond using the format specified above:"
         )
         # Interaction Loop
         loop_count = 0
@@ -118,18 +119,18 @@ class AutoGPT:
                     observation = (
                         f"Error: {str(e)}, {type(e).__name__}, args: {action.args}"
                     )
-                result = f"Команда {tool.name} верунла: {observation}"
+                result = f"Command {tool.name} returned: {observation}"
             elif action.name == "ERROR":
                 result = f"Error: {action.args}. "
             else:
                 result = (
-                    f"Неизвестная команда '{action.name}'. "
-                    f"Пожалуйста используй только команды из списка 'Комманды:' "
-                    f"и отвечай только в требуемом JSON формате."
+                    f"Unknown command '{action.name}'. "
+                    f"Please refer to the 'COMMANDS' list for available "
+                    f"commands and only respond in the specified JSON format."
                 )
 
             memory_to_add = (
-                f"Ответ ассистента: {assistant_reply} " f"\nResult: {result} "
+                f"Assistant Reply: {assistant_reply} " f"\nResult: {result} "
             )
             if self.feedback_tool is not None:
                 feedback = f"\n{self.feedback_tool.run('Input: ')}"
@@ -139,4 +140,4 @@ class AutoGPT:
                 memory_to_add += feedback
 
             self.memory.add_documents([Document(page_content=memory_to_add)])
-            self.chat_history_memory.add_message(HumanMessage(content=result))
+            self.chat_history_memory.add_message(SystemMessage(content=result))

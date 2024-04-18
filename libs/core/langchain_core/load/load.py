@@ -12,7 +12,12 @@ from langchain_core.load.mapping import (
 )
 from langchain_core.load.serializable import Serializable
 
-DEFAULT_NAMESPACES = ["langchain", "langchain_core", "langchain_community"]
+DEFAULT_NAMESPACES = [
+    "langchain",
+    "langchain_core",
+    "langchain_community",
+    "langchain_anthropic",
+]
 
 ALL_SERIALIZABLE_MAPPINGS = {
     **SERIALIZABLE_MAPPING,
@@ -85,7 +90,7 @@ class Reviver:
                 if key not in ALL_SERIALIZABLE_MAPPINGS:
                     raise ValueError(
                         "Trying to deserialize something that cannot "
-                        "be deserialized in current version of gigachain-core: "
+                        "be deserialized in current version of langchain-core: "
                         f"{key}"
                     )
                 import_path = ALL_SERIALIZABLE_MAPPINGS[key]
