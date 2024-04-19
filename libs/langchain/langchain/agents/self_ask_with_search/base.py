@@ -46,15 +46,15 @@ class SelfAskWithSearchAgent(Agent):
         if len(tools) != 1:
             raise ValueError(f"Exactly one tool must be specified, but got {tools}")
         tool_names = {tool.name for tool in tools}
-        if tool_names != {"Промежуточный ответ"}:
+        if tool_names != {"Intermediate Answer"}:
             raise ValueError(
-                f"Tool name should be Промежуточный ответ, got {tool_names}"
+                f"Tool name should be Intermediate Answer, got {tool_names}"
             )
 
     @property
     def observation_prefix(self) -> str:
         """Prefix to append the observation with."""
-        return "Промежуточный ответ: "
+        return "Intermediate answer: "
 
     @property
     def llm_prefix(self) -> str:
@@ -76,10 +76,10 @@ class SelfAskWithSearchChain(AgentExecutor):
     ):
         """Initialize only with an LLM and a search chain."""
         search_tool = Tool(
-            name="Промежуточный ответ",
+            name="Intermediate Answer",
             func=search_chain.run,
             coroutine=search_chain.arun,
-            description="Поиск",
+            description="Search",
         )
         agent = SelfAskWithSearchAgent.from_llm_and_tools(llm, [search_tool])
         super().__init__(agent=agent, tools=[search_tool], **kwargs)
@@ -173,7 +173,9 @@ def create_self_ask_with_search_agent(
 
             prompt = PromptTemplate.from_template(template)
     """  # noqa: E501
-    missing_vars = {"agent_scratchpad"}.difference(prompt.input_variables)
+    missing_vars = {"agent_scratchpad"}.difference(
+        prompt.input_variables + list(prompt.partial_variables)
+    )
     if missing_vars:
         raise ValueError(f"Prompt missing required variables: {missing_vars}")
 

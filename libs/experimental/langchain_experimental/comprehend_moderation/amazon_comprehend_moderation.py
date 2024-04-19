@@ -1,13 +1,14 @@
 from typing import Any, Dict, List, Optional
 
-from langchain.callbacks.manager import CallbackManagerForChainRun
 from langchain.chains.base import Chain
+from langchain_core.callbacks.manager import CallbackManagerForChainRun
 
-from langchain_experimental.comprehend_moderation.base_moderation import (
-    BaseModeration,
-)
+from langchain_experimental.comprehend_moderation.base_moderation import BaseModeration
 from langchain_experimental.comprehend_moderation.base_moderation_callbacks import (
     BaseModerationCallbackHandler,
+)
+from langchain_experimental.comprehend_moderation.base_moderation_config import (
+    BaseModerationConfig,
 )
 from langchain_experimental.pydantic_v1 import root_validator
 
@@ -24,10 +25,13 @@ class AmazonComprehendModerationChain(Chain):
     input_key: str = "input"  #: :meta private:
     """Key used to fetch/store the input in data containers. Defaults to `input`"""
 
-    moderation_config: Optional[Dict[str, Any]] = None
-    """Configuration settings for moderation"""
+    moderation_config: BaseModerationConfig = BaseModerationConfig()
+    """
+    Configuration settings for moderation, 
+    defaults to BaseModerationConfig with default values
+    """
 
-    client: Optional[Any]
+    client: Optional[Any] = None
     """boto3 client object for connection to Amazon Comprehend"""
 
     region_name: Optional[str] = None
@@ -105,7 +109,7 @@ class AmazonComprehendModerationChain(Chain):
             raise ValueError(
                 "Could not load credentials to authenticate with AWS client. "
                 "Please check that credentials in the specified "
-                "profile name are valid."
+                f"profile name are valid. {e}"
             ) from e
 
     @property

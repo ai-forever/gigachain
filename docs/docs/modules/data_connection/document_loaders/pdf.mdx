@@ -173,9 +173,9 @@ data[0]
 
 ### Fetching remote PDFs using Unstructured
 
-This covers how to load online pdfs into a document format that we can use downstream. This can be used for various online pdf sites such as https://open.umn.edu/opentextbooks/textbooks/ and https://arxiv.org/archive/
+This covers how to load online PDFs into a document format that we can use downstream. This can be used for various online PDF sites such as https://open.umn.edu/opentextbooks/textbooks/ and https://arxiv.org/archive/
 
-Note: all other pdf loaders can also be used to fetch remote PDFs, but `OnlinePDFLoader` is a legacy function, and works specifically with `UnstructuredPDFLoader`.
+Note: all other PDF loaders can also be used to fetch remote PDFs, but `OnlinePDFLoader` is a legacy function, and works specifically with `UnstructuredPDFLoader`.
 
 
 
@@ -242,7 +242,7 @@ data = loader.load()
 
 ### Using PDFMiner to generate HTML text
 
-This can be helpful for chunking texts semantically into sections as the output html content can be parsed via `BeautifulSoup` to get more structured and rich information about font size, page numbers, pdf headers/footers, etc.
+This can be helpful for chunking texts semantically into sections as the output html content can be parsed via `BeautifulSoup` to get more structured and rich information about font size, page numbers, PDF headers/footers, etc.
 
 
 ```python
@@ -256,7 +256,7 @@ loader = PDFMinerPDFasHTMLLoader("example_data/layout-parser-paper.pdf")
 
 
 ```python
-data = loader.load()[0]   # entire pdf is loaded as a single Document
+data = loader.load()[0]   # entire PDF is loaded as a single Document
 ```
 
 
@@ -293,12 +293,12 @@ for c in content:
         cur_text = c.text
 snippets.append((cur_text,cur_fs))
 # Note: The above logic is very straightforward. One can also add more strategies such as removing duplicate snippets (as
-# headers/footers in a PDF appear on multiple pages so if we find duplicatess safe to assume that it is redundant info)
+# headers/footers in a PDF appear on multiple pages so if we find duplicates it's safe to assume that it is redundant info)
 ```
 
 
 ```python
-from langchain.docstore.document import Document
+from langchain_community.docstore.document import Document
 cur_idx = -1
 semantic_snippets = []
 # Assumption: headings have higher font size than their respective content
@@ -392,7 +392,7 @@ loader = PyPDFDirectoryLoader("example_data/")
 docs = loader.load()
 ```
 
-## Using pdfplumber
+## Using PDFPlumber
 
 Like PyMuPDF, the output Documents contain detailed metadata about the PDF and its pages, and returns one document per page.
 

@@ -1,11 +1,11 @@
 import time
 from typing import Any, Callable, List, cast
 
-from langchain.prompts.chat import (
-    BaseChatPromptTemplate,
-)
 from langchain.tools.base import BaseTool
 from langchain_core.messages import BaseMessage, HumanMessage, SystemMessage
+from langchain_core.prompts.chat import (
+    BaseChatPromptTemplate,
+)
 from langchain_core.vectorstores import VectorStoreRetriever
 
 from langchain_experimental.autonomous_agents.autogpt.prompt_generator import get_prompt
@@ -46,15 +46,17 @@ class AutoGPTPrompt(BaseChatPromptTemplate, BaseModel):  # type: ignore[misc]
 
     def construct_full_prompt(self, goals: List[str]) -> str:
         prompt_start = (
-            "Ваши решения всегда должны приниматься независимо, "
-            "без привлечения помощи пользователя.\n"
-            "Играйте на своих сильных сторонах как LLM и преследуйте простые "
-            "стратегии без юридических сложностей.\n"
-            "Если вы выполнили все свои задачи, обязательно "
-            'используйте команду "завершить".'
+            "Your decisions must always be made independently "
+            "without seeking user assistance.\n"
+            "Play to your strengths as an LLM and pursue simple "
+            "strategies with no legal complications.\n"
+            "If you have completed all your tasks, make sure to "
+            'use the "finish" command.'
         )
         # Construct full prompt
-        full_prompt = f"Вы {self.ai_name}, {self.ai_role}\n{prompt_start}\n\nЦЕЛИ:\n\n"
+        full_prompt = (
+            f"You are {self.ai_name}, {self.ai_role}\n{prompt_start}\n\nGOALS:\n\n"
+        )
         for i, goal in enumerate(goals):
             full_prompt += f"{i+1}. {goal}\n"
 
@@ -64,7 +66,7 @@ class AutoGPTPrompt(BaseChatPromptTemplate, BaseModel):  # type: ignore[misc]
     def format_messages(self, **kwargs: Any) -> List[BaseMessage]:
         base_prompt = SystemMessage(content=self.construct_full_prompt(kwargs["goals"]))
         time_prompt = SystemMessage(
-            content=f"Текущее время и дата {time.strftime('%c')}"
+            content=f"The current time and date is {time.strftime('%c')}"
         )
         used_tokens = self.token_counter(
             cast(str, base_prompt.content)
@@ -82,8 +84,8 @@ class AutoGPTPrompt(BaseChatPromptTemplate, BaseModel):  # type: ignore[misc]
                 [self.token_counter(doc) for doc in relevant_memory]
             )
         content_format = (
-            f"Это напоминает тебе о следующих событиях "
-            f"из вашего прошлого:\n{relevant_memory}\n\n"
+            f"This reminds you of these events "
+            f"from your past:\n{relevant_memory}\n\n"
         )
         memory_message = SystemMessage(content=content_format)
         used_tokens += self.token_counter(cast(str, memory_message.content))

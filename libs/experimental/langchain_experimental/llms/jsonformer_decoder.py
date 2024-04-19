@@ -4,8 +4,8 @@ from __future__ import annotations
 import json
 from typing import TYPE_CHECKING, Any, List, Optional, cast
 
-from langchain.callbacks.manager import CallbackManagerForLLMRun
 from langchain_community.llms.huggingface_pipeline import HuggingFacePipeline
+from langchain_core.callbacks.manager import CallbackManagerForLLMRun
 
 from langchain_experimental.pydantic_v1 import Field, root_validator
 
@@ -65,4 +65,4 @@ class JsonFormer(HuggingFacePipeline):
             debug=self.debug,
         )
         text = model()
-        return json.dumps(text, ensure_ascii=False)
+        return json.dumps(text)

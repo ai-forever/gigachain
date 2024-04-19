@@ -4,11 +4,11 @@ from textwrap import indent
 from typing import Any, Dict, List, Optional, Type
 
 from langchain.base_language import BaseLanguageModel
-from langchain.callbacks.manager import (
+from langchain.chains.base import Chain
+from langchain_core.callbacks.manager import (
     AsyncCallbackManagerForChainRun,
     CallbackManagerForChainRun,
 )
-from langchain.chains.base import Chain
 
 from langchain_experimental.pydantic_v1 import Extra
 from langchain_experimental.tot.checker import ToTChecker
@@ -91,7 +91,7 @@ class ToTChain(Chain):
                 ThoughtValidity.VALID_INTERMEDIATE: "yellow",
                 ThoughtValidity.INVALID: "red",
             }
-            text = indent(f"Мысль: {thought.text}\n", prefix="    " * level)
+            text = indent(f"Thought: {thought.text}\n", prefix="    " * level)
             run_manager.on_text(
                 text=text, color=colors[thought.validity], verbose=self.verbose
             )
