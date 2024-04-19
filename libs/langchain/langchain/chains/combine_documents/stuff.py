@@ -60,7 +60,7 @@ def create_stuff_documents_chain(
             prompt = ChatPromptTemplate.from_messages(
                 [("system", "What are everyone's favorite colors:\\n\\n{context}")]
             )
-            llm = ChatOpenAI(model_name="gpt-3.5-turbo")
+            llm = ChatOpenAI(model="gpt-3.5-turbo")
             chain = create_stuff_documents_chain(llm, prompt)
 
             docs = [
@@ -201,7 +201,6 @@ class StuffDocumentsChain(BaseCombineDocumentsChain):
             k: v
             for k, v in kwargs.items()
             if k in self.llm_chain.prompt.input_variables
-            or k in self.llm_chain.prompt.partial_variables.keys()
         }
         inputs[self.document_variable_name] = self.document_separator.join(doc_strings)
         return inputs

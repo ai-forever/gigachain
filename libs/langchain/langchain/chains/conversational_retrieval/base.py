@@ -87,8 +87,6 @@ class BaseConversationalRetrievalChain(Chain):
     get_chat_history: Optional[Callable[[List[CHAT_TURN_TYPE]], str]] = None
     """An optional function to get a string of the chat history.
     If None is provided, will use a default."""
-    disable_question_generator: bool = False
-    """Запрещает видоизменять запрос пользователя, оставляя его в исходном виде"""
     response_if_no_docs_found: Optional[str]
     """If specified, the chain will return a fixed response if no docs 
     are found for the question. """
@@ -143,7 +141,7 @@ class BaseConversationalRetrievalChain(Chain):
         get_chat_history = self.get_chat_history or _get_chat_history
         chat_history_str = get_chat_history(inputs["chat_history"])
 
-        if chat_history_str and not self.disable_question_generator:
+        if chat_history_str:
             callbacks = _run_manager.get_child()
             new_question = self.question_generator.run(
                 question=question, chat_history=chat_history_str, callbacks=callbacks

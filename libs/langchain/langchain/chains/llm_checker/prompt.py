@@ -6,25 +6,25 @@ CREATE_DRAFT_ANSWER_PROMPT = PromptTemplate(
     input_variables=["question"], template=_CREATE_DRAFT_ANSWER_TEMPLATE
 )
 
-_LIST_ASSERTIONS_TEMPLATE = """Вот утверждение:
+_LIST_ASSERTIONS_TEMPLATE = """Here is a statement:
 {statement}
-Составь список предположений, которые ты сделал, формулируя вышеуказанное утверждение.\n\n"""
+Make a bullet point list of the assumptions you made when producing the above statement.\n\n"""
 LIST_ASSERTIONS_PROMPT = PromptTemplate(
     input_variables=["statement"], template=_LIST_ASSERTIONS_TEMPLATE
 )
 
-_CHECK_ASSERTIONS_TEMPLATE = """Вот список утверждений:
+_CHECK_ASSERTIONS_TEMPLATE = """Here is a bullet point list of assertions:
 {assertions}
-Для каждого утверждения определи, верно оно или нет. Если оно неверно, объясни почему.\n\n"""
+For each assertion, determine whether it is true or false. If it is false, explain why.\n\n"""
 CHECK_ASSERTIONS_PROMPT = PromptTemplate(
     input_variables=["assertions"], template=_CHECK_ASSERTIONS_TEMPLATE
 )
 
 _REVISED_ANSWER_TEMPLATE = """{checked_assertions}
 
-Question: Учитывая вышеуказанные утверждения и проверки, как бы ты ответил на вопрос '{question}'?
+Question: In light of the above assertions and checks, how would you answer the question '{question}'?
 
-Ответ:"""
+Answer:"""
 REVISED_ANSWER_PROMPT = PromptTemplate(
     input_variables=["checked_assertions", "question"],
     template=_REVISED_ANSWER_TEMPLATE,

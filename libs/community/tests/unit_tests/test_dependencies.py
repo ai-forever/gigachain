@@ -41,8 +41,7 @@ def test_required_dependencies(poetry_conf: Mapping[str, Any]) -> None:
             "SQLAlchemy",
             "aiohttp",
             "dataclasses-json",
-            "gigachain-core",
-            "gigachat",
+            "langchain-core",
             "langsmith",
             "numpy",
             "python",
@@ -73,7 +72,7 @@ def test_test_group_dependencies(poetry_conf: Mapping[str, Any]) -> None:
         [
             "duckdb-engine",
             "freezegun",
-            "gigachain-core",
+            "langchain-core",
             "lark",
             "pandas",
             "pytest",

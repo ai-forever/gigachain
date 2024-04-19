@@ -1,9 +1,9 @@
 # flake8: noqa
-prompt_template = """Учитывая следующий вопрос и контекст, верните ДА, если контекст относится к вопросу, и НЕТ, если это не так.
+prompt_template = """Given the following question and context, return YES if the context is relevant to the question and NO if it isn't.
 
 > Question: {question}
-> Контекст:
+> Context:
 >>>
 {context}
 >>>
-> Релевантно (ДА / НЕТ):"""
+> Relevant (YES / NO):"""

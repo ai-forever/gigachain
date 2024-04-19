@@ -11,13 +11,13 @@ They are all in a standard format which make it easy to deploy them with [LangSe
 To use, first install the LangChain CLI.
 
 ```shell
-pip install -U gigachain-cli
+pip install -U langchain-cli
 ```
 
 Next, create a new LangChain project:
 
 ```shell
-gigachain app new my-app
+langchain app new my-app
 ```
 
 This will create a new directory called `my-app` with two folders:
@@ -36,7 +36,7 @@ In this getting started guide, we will add a simple `pirate-speak` project.
 All this project does is convert user input into pirate speak.
 
 ```shell
-gigachain app add pirate-speak
+langchain app add pirate-speak
 ```
 
 This will pull in the specified template into `packages/pirate-speak`
@@ -77,7 +77,7 @@ add_routes(app, pirate_speak_chain, path="/pirate-speak")
 
 (Optional) Let's now configure LangSmith. 
 LangSmith will help us trace, monitor and debug LangChain applications. 
-LangSmith is currently in private beta, you can sign up [here](https://smith.langchain.com/). 
+You can sign up for LangSmith [here](https://smith.langchain.com/). 
 If you don't have access, you can skip this section
 
 
@@ -96,7 +96,7 @@ export OPENAI_API_KEY=sk-...
 You can then spin up production-ready endpoints, along with a playground, by running:
 
 ```shell
-gigachain serve
+langchain serve
 ```
 
 This now gives a fully deployed LangServe application.

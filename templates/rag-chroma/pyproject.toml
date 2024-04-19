@@ -9,7 +9,7 @@ readme = "README.md"
 
 [tool.poetry.dependencies]
 python = ">=3.8.1,<4.0"
-gigachain = ">=0.0.325"
+langchain = "^0.1"
 openai = "<2"
 tiktoken = ">=0.5.1"
 chromadb = ">=0.4.14"
@@ -18,7 +18,7 @@ langchain-text-splitters = ">=0.0.1,<0.1"
 [tool.poetry.group.dev.dependencies]
 langchain-cli = ">=0.0.21"
 
-[tool.gigaserve]
+[tool.langserve]
 export_module = "rag_chroma"
 export_attr = "chain"
 

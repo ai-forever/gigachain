@@ -240,7 +240,7 @@ def create_ernie_fn_runnable(
 
                 from langchain.chains.ernie_functions import create_ernie_fn_chain
                 from langchain_community.chat_models import ErnieBotChat
-                from langchain.prompts import ChatPromptTemplate
+                from langchain_core.prompts import ChatPromptTemplate
                 from langchain.pydantic_v1 import BaseModel, Field
 
 
@@ -314,7 +314,7 @@ def create_structured_output_runnable(
 
             from langchain.chains.ernie_functions import create_structured_output_chain
             from langchain_community.chat_models import ErnieBotChat
-            from langchain.prompts import ChatPromptTemplate
+            from langchain_core.prompts import ChatPromptTemplate
             from langchain.pydantic_v1 import BaseModel, Field
 
             class Dog(BaseModel):
@@ -340,15 +340,15 @@ def create_structured_output_runnable(
         function: Any = {
             "name": "output_formatter",
             "description": (
-                "Output formatter. Всегда используй его чтобы отформатировать свой"
-                " ответ пользователю."
+                "Output formatter. Should always be used to format your response to the"
+                " user."
             ),
             "parameters": output_schema,
         }
     else:
 
         class _OutputFormatter(BaseModel):
-            """Output formatter. Всегда используй его чтобы отформатировать свой ответ пользователю."""  # noqa: E501
+            """Output formatter. Should always be used to format your response to the user."""  # noqa: E501
 
             output: output_schema  # type: ignore
 
@@ -411,7 +411,7 @@ def create_ernie_fn_chain(
 
                 from langchain.chains.ernie_functions import create_ernie_fn_chain
                 from langchain_community.chat_models import ErnieBotChat
-                from langchain.prompts import ChatPromptTemplate
+                from langchain_core.prompts import ChatPromptTemplate
 
                 from langchain.pydantic_v1 import BaseModel, Field
 
@@ -498,7 +498,7 @@ def create_structured_output_chain(
 
                 from langchain.chains.ernie_functions import create_structured_output_chain
                 from langchain_community.chat_models import ErnieBotChat
-                from langchain.prompts import ChatPromptTemplate
+                from langchain_core.prompts import ChatPromptTemplate
 
                 from langchain.pydantic_v1 import BaseModel, Field
 
@@ -525,15 +525,15 @@ def create_structured_output_chain(
         function: Any = {
             "name": "output_formatter",
             "description": (
-                "Output formatter. Всегда используй его чтобы отформатировать свой"
-                " ответ пользователю."
+                "Output formatter. Should always be used to format your response to the"
+                " user."
             ),
             "parameters": output_schema,
         }
     else:
 
         class _OutputFormatter(BaseModel):
-            """Output formatter. Всегда используй его чтобы отформатировать свой ответ пользователю."""  # noqa: E501
+            """Output formatter. Should always be used to format your response to the user."""  # noqa: E501
 
             output: output_schema  # type: ignore
 

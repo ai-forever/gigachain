@@ -9,11 +9,11 @@ from typing import (
     Tuple,
 )
 
-from langchain.callbacks.manager import CallbackManagerForLLMRun
 from langchain.schema import (
     ChatGeneration,
     ChatResult,
 )
+from langchain_core.callbacks.manager import CallbackManagerForLLMRun
 from langchain_core.language_models import BaseChatModel
 from langchain_core.messages import (
     AIMessage,
@@ -37,7 +37,7 @@ def _convert_dict_to_message(_dict: Mapping[str, Any]) -> BaseMessage:
         content = _dict.get("content") or ""
         if _dict.get("function_call"):
             _dict["function_call"]["arguments"] = json.dumps(
-                _dict["function_call"]["arguments"], ensure_ascii=False
+                _dict["function_call"]["arguments"]
             )
             additional_kwargs = {"function_call": dict(_dict["function_call"])}
         else:

@@ -9,16 +9,17 @@ readme = "README.md"
 
 [tool.poetry.dependencies]
 python = ">=3.8.1,<4.0"
-gigachain = "^0.1"
+langchain = "^0.1"
 tiktoken = "^0.5.1"
 openai = "<2"
 neo4j = "^5.14.0"
 langchain-text-splitters = ">=0.0.1,<0.1"
+langchain-openai = "^0.1.1"
 
 [tool.poetry.group.dev.dependencies]
 langchain-cli = ">=0.0.21"
 
-[tool.gigaserve]
+[tool.langserve]
 export_module = "neo4j_vector_memory"
 export_attr = "chain"
 

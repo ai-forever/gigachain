@@ -469,9 +469,9 @@ def _import_titan_takeoff() -> Any:
 
 
 def _import_titan_takeoff_pro() -> Any:
-    from langchain_community.llms.titan_takeoff_pro import TitanTakeoffPro
+    from langchain_community.llms.titan_takeoff import TitanTakeoff
 
-    return TitanTakeoffPro
+    return TitanTakeoff
 
 
 def _import_together() -> Any:
@@ -550,7 +550,7 @@ def __getattr__(name: str) -> Any:
             "langchain will no longer be supported as of langchain==0.2.0. "
             "Please import from langchain-community instead:\n\n"
             f"`from langchain_community.llms import {name}`.\n\n"
-            "To install gigachain-community run `pip install -U gigachain-community`.",
+            "To install langchain-community run `pip install -U langchain-community`.",
             category=LangChainDeprecationWarning,
         )
 
@@ -644,7 +644,6 @@ __all__ = [
     "Xinference",
     "JavelinAIGateway",
     "QianfanLLMEndpoint",
-    "GigaChat",
     "YandexGPT",
     "VolcEngineMaasLLM",
 ]

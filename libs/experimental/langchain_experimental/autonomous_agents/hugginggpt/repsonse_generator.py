@@ -1,8 +1,8 @@
 from typing import Any, List, Optional
 
 from langchain.base_language import BaseLanguageModel
-from langchain.callbacks.manager import Callbacks
 from langchain.chains import LLMChain
+from langchain_core.callbacks.manager import Callbacks
 from langchain_core.prompts import PromptTemplate
 
 
@@ -12,11 +12,10 @@ class ResponseGenerationChain(LLMChain):
     @classmethod
     def from_llm(cls, llm: BaseLanguageModel, verbose: bool = True) -> LLMChain:
         execution_template = (
-            "AI-ассистент проанализировал ввод пользователя,"
-            " разбил его на несколько задач"
-            "и выполнил их. Результаты следующие:\n"
+            "The AI assistant has parsed the user input into several tasks"
+            "and executed them. The results are as follows:\n"
             "{task_execution}"
-            "\nПожалуйста, суммируй результаты и сформулируй ответ."
+            "\nPlease summarize the results and generate a response."
         )
         prompt = PromptTemplate(
             template=execution_template,

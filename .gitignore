@@ -117,12 +117,9 @@ celerybeat.pid
 .envrc
 .venv*
 venv*
-venv/
 env/
 ENV/
 env.bak/
-venv.bak/
-venv_clear/
 
 # Spyder project settings
 .spyderproject
@@ -174,16 +171,10 @@ docs/api_reference/*/
 !docs/api_reference/_static/
 !docs/api_reference/templates/
 !docs/api_reference/themes/
-docs/docs_skeleton/build
-docs/docs_skeleton/node_modules
-docs/docs_skeleton/yarn.lock
-processed.txt
-libs/langchain/langchain/output_parsers/list.py
 docs/docs/build
 docs/docs/node_modules
 docs/docs/yarn.lock
 _dist
 docs/docs/templates
-developer_utils/
+
 prof
-*.epub

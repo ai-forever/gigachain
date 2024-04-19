@@ -9,17 +9,17 @@ readme = "README.md"
 
 [tool.poetry.dependencies]
 python = ">=3.8.1,<4.0"
-gigachain = ">=0.0.325"
+langchain = "^0.1"
 openai = "<2"
 neo4j = "^5.12.0"
-gigachain-openai = "^0.0.8"
+langchain-openai = "^0.0.8"
 langchain-community = "^0.0.28"
 langchain-experimental = "^0.0.54"
 
 [tool.poetry.group.dev.dependencies]
 langchain-cli = ">=0.0.21"
 
-[tool.gigaserve]
+[tool.langserve]
 export_module = "neo4j_generation.chain"
 export_attr = "chain"
 
