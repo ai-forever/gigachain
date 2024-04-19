@@ -98,28 +98,6 @@ def convert_pydantic_to_openai_function(
     }
 
 
-def convert_pydantic_to_gigachat_function(
-    model: Type[BaseModel],
-    *,
-    name: Optional[str] = None,
-    description: Optional[str] = None,
-) -> FunctionDescription:
-    """Converts a Pydantic model to a function description for the GigaChat API."""
-    schema = dereference_refs(model.schema())
-    schema.pop("definitions", None)
-    if "properties" in schema:
-        for key in schema["properties"]:
-            if "type" not in schema["properties"][key]:
-                schema["properties"][key]["type"] = "object"
-            if "description" not in schema["properties"][key]:
-                schema["properties"][key]["description"] = ""
-    return {
-        "name": name or schema["title"],
-        "description": description or schema["description"],
-        "parameters": schema,
-    }
-
-
 @deprecated(
     "0.1.16",
     alternative="langchain_core.utils.function_calling.convert_to_openai_tool()",
@@ -330,7 +308,7 @@ def convert_to_openai_function(
     elif isinstance(function, type) and issubclass(function, BaseModel):
         return cast(Dict, convert_pydantic_to_openai_function(function))
     elif isinstance(function, BaseTool):
-        return format_tool_to_openai_function(function)
+        return cast(Dict, format_tool_to_openai_function(function))
     elif callable(function):
         return convert_python_function_to_openai_function(function)
     else:
@@ -339,37 +317,6 @@ def convert_to_openai_function(
             " as Dict, pydantic.BaseModel, or Callable. If they're a dict they must"
             " either be in OpenAI function format or valid JSON schema with top-level"
             " 'title' and 'description' keys."
-        )
-
-
-def convert_to_gigachat_function(
-    function: Union[Dict[str, Any], Type[BaseModel], Callable, BaseTool],
-) -> Dict[str, Any]:
-    """Convert a raw function/class to an OpenAI function.
-
-    Args:
-        function: Either a dictionary, a pydantic.BaseModel class, or a Python function.
-            If a dictionary is passed in, it is assumed to already be a valid OpenAI
-            function.
-
-    Returns:
-        A dict version of the passed in function which is compatible with the
-            OpenAI function-calling API.
-    """
-    from langchain_core.tools import BaseTool
-
-    if isinstance(function, dict):
-        return function
-    elif isinstance(function, type) and issubclass(function, BaseModel):
-        return cast(Dict, convert_pydantic_to_openai_function(function))
-    elif isinstance(function, BaseTool):
-        return format_tool_to_openai_function(function)
-    elif callable(function):
-        return convert_python_function_to_openai_function(function)
-    else:
-        raise ValueError(
-            f"Unsupported function type {type(function)}. Functions must be passed in"
-            f" as Dict, pydantic.BaseModel, or Callable."
         )
 
 
@@ -391,28 +338,6 @@ def convert_to_openai_tool(
     if isinstance(tool, dict) and tool.get("type") == "function" and "function" in tool:
         return tool
     function = convert_to_openai_function(tool)
-    return {"type": "function", "function": function}
-
-
-def convert_to_gigachat_tool(
-    tool: Union[Dict[str, Any], Type[BaseModel], Callable, BaseTool],
-) -> Dict[str, Any]:
-    """Convert a raw function/class to an GigaChat tool.
-
-    Args:
-        tool: Either a dictionary, a pydantic.BaseModel class, Python function, or
-            BaseTool. If a dictionary is passed in, it is assumed to already be a valid
-            GigaChat tool, GigaChat function,
-            or a JSON schema with top-level 'title' and
-            'description' keys specified.
-
-    Returns:
-        A dict version of the passed in tool which is compatible with the
-            GigaChat tool-calling API.
-    """
-    if isinstance(tool, dict) and tool.get("type") == "function" and "function" in tool:
-        return tool
-    function = convert_to_gigachat_function(tool)
     return {"type": "function", "function": function}
 
 

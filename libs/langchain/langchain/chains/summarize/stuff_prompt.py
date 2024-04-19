@@ -1,11 +1,11 @@
 # flake8: noqa
 from langchain_core.prompts import PromptTemplate
 
-prompt_template = """Напиши краткое резюме следующего:
+prompt_template = """Write a concise summary of the following:
 
 
 "{text}"
 
 
-КРАТКОЕ РЕЗЮМЕ:"""
+CONCISE SUMMARY:"""
 PROMPT = PromptTemplate(template=prompt_template, input_variables=["text"])

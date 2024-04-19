@@ -1,4 +1,4 @@
-Thank you for contributing to GigaChain!
+Thank you for contributing to LangChain!
 
 - [ ] **PR title**: "package: description"
   - Where "package" is whichever of langchain, community, core, experimental, etc. is being modified. Use "docs: ..." for purely docs changes, "templates: ..." for template changes, "infra: ..." for CI changes.

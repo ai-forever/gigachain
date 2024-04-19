@@ -1,15 +1,11 @@
 [tool.poetry]
-name = "gigachain-cli"
+name = "langchain-cli"
 version = "0.0.22rc1"
-description = "CLI for interacting with GigaChain"
+description = "CLI for interacting with LangChain"
 authors = ["Erick Friis <erick@langchain.dev>"]
 readme = "README.md"
 repository = "https://github.com/langchain-ai/langchain"
 license = "MIT"
-packages = [
-    {include = "langchain_cli"}
-]
-
 
 [tool.poetry.urls]
 "Source Code" = "https://github.com/langchain-ai/langchain/tree/master/libs/cli"
@@ -18,15 +14,13 @@ packages = [
 python = ">=3.8.1,<4.0"
 typer = { extras = ["all"], version = "^0.9.0" }
 gitpython = "^3.1.40"
-gigaserve = { extras = ["all"], version = ">=0.0.51" }
+langserve = { extras = ["all"], version = ">=0.0.51" }
 uvicorn = "^0.23.2"
 tomlkit = "^0.12.2"
-certifi = "^2023.7.22"
-httpx = "^0.25.0"
 
 [tool.poetry.scripts]
-gigachain = "langchain_cli.cli:app"
-gigachain-cli = "langchain_cli.cli:app"
+langchain = "langchain_cli.cli:app"
+langchain-cli = "langchain_cli.cli:app"
 
 [tool.poetry.group.dev.dependencies]
 poethepoet = "^0.24.1"

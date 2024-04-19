@@ -7,12 +7,12 @@ readme = "README.md"
 
 [tool.poetry.dependencies]
 python = ">=3.8.1,<4.0"
-gigachain = "^0.1"
-gigachain-openai = ">=0.0.2,<0.2"
+langchain = "^0.1"
+langchain-openai = ">=0.0.2,<0.2"
 langchain-robocorp = ">=0.0.3,<0.2"
 
 [tool.poetry.group.dev.dependencies]
-gigachain-cli = ">=0.0.21"
+langchain-cli = ">=0.0.21"
 fastapi = ">=0.104.0,<1"
 sse-starlette = "^1.6.5"
 

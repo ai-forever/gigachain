@@ -21,7 +21,6 @@ _EXPECTED = [
     "Tool",
     "XMLAgent",
     "ZeroShotAgent",
-    "create_gigachat_functions_agent",
     "create_json_agent",
     "create_openapi_agent",
     "create_pbi_agent",
@@ -43,6 +42,7 @@ _EXPECTED = [
     "create_self_ask_with_search_agent",
     "create_json_chat_agent",
     "create_structured_chat_agent",
+    "create_tool_calling_agent",
 ]
 
 

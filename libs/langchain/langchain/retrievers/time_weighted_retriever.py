@@ -68,7 +68,7 @@ class TimeWeightedVectorStoreRetriever(BaseRetriever):
         """Return the combined score for a document."""
         hours_passed = _get_hours_passed(
             current_time,
-            document.metadata["last_accessed_at"],
+            self._document_get_date("last_accessed_at", document),
         )
         score = (1.0 - self.decay_rate) ** hours_passed
         for key in self.other_score_keys:

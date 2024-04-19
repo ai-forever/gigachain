@@ -1,24 +1,20 @@
 [tool.poetry]
-name = "gigachain"
-version = "0.1.13.1"
+name = "langchain"
+version = "0.1.16"
 description = "Building applications with LLMs through composability"
 authors = []
 license = "MIT"
 readme = "README.md"
-repository = "https://github.com/ai-forever/gigachain"
-packages = [
-    {include = "langchain"}
-]
+repository = "https://github.com/langchain-ai/langchain"
 
 [tool.poetry.scripts]
 langchain-server = "langchain.server:main"
 
 [tool.poetry.dependencies]
 python = ">=3.8.1,<4.0"
-gigachain-core = "^0.1.33"
-gigachain-text-splitters = ">=0.0.1,<0.1"
-gigachain-community = ">=0.0.29,<0.1"
-gigachat = "^0.1.20"
+langchain-core = "^0.1.42"
+langchain-text-splitters = ">=0.0.1,<0.1"
+langchain-community = ">=0.0.32,<0.1"
 langsmith = "^0.1.17"
 pydantic = ">=1,<3"
 SQLAlchemy = ">=1.4,<3"
@@ -40,7 +36,7 @@ jinja2 = {version = "^3", optional = true}
 tiktoken = {version = ">=0.3.2,<0.6.0", optional = true, python=">=3.9"}
 qdrant-client = {version = "^1.3.1", optional = true, python = ">=3.8.1,<3.12"}
 dataclasses-json = ">= 0.5.7, < 0.7"
-cohere = {version = "^4", optional = true}
+cohere = {version = ">=4,<6", optional = true}
 openai = {version = "<2", optional = true}
 nlpcloud = {version = "^1", optional = true}
 huggingface_hub = {version = "^0", optional = true}
@@ -58,7 +54,7 @@ azure-cosmos = {version="^4.4.0b1", optional=true}
 jq = {version = "^1.4.1", optional = true}
 pdfminer-six = {version = "^20221105", optional = true}
 docarray = {version="^0.32.0", extras=["hnswlib"], optional=true}
-lxml = {version = "^4.9.2", optional = true}
+lxml = {version = ">=4.9.3,<6.0", optional = true}
 pymupdf = {version = "^1.22.3", optional = true}
 rapidocr-onnxruntime = {version = "^1.3.2", optional = true, python = ">=3.8.1,<3.12"}
 pypdfium2 = {version = "^4.10.0", optional = true}
@@ -114,7 +110,7 @@ databricks-vectorsearch = {version = "^0.21", optional = true}
 couchbase = {version = "^4.1.9", optional = true}
 dgml-utils = {version = "^0.3.0", optional = true}
 datasets = {version = "^2.15.0", optional = true}
-gigachain-openai = {version = ">=0.0.2,<0.1", optional = true}
+langchain-openai = {version = ">=0.0.2,<0.1", optional = true}
 rdflib = {version = "7.0.0", optional = true}
 
 [tool.poetry.group.test]
@@ -138,8 +134,8 @@ pytest-mock  = "^3.10.0"
 pytest-socket = "^0.6.0"
 syrupy = "^4.0.2"
 requests-mock = "^1.11.0"
-gigachain-core = { path = "../core", develop = true }
-gigachain-text-splitters = { path = "../text-splitters", develop = true }
+langchain-core = {path = "../core", develop = true}
+langchain-text-splitters = {path = "../text-splitters", develop = true}
 
 [tool.poetry.group.codespell]
 optional = true
@@ -173,9 +169,9 @@ python-dotenv = "^1.0.0"
 cassio = "^0.1.0"
 tiktoken = ">=0.3.2,<0.6.0"
 anthropic = "^0.3.11"
-gigachain-core = { path = "../core", develop = true }
-gigachain-community = { path = "../community", develop = true }
-gigachain-text-splitters = { path = "../text-splitters", develop = true }
+langchain-core = {path = "../core", develop = true}
+langchain-community = {path = "../community", develop = true}
+langchain-text-splitters = {path = "../text-splitters", develop = true}
 langchainhub = "^0.1.15"
 
 [tool.poetry.group.lint]
@@ -196,10 +192,9 @@ types-redis = "^4.3.21.6"
 types-pytz = "^2023.3.0.0"
 types-chardet = "^5.0.4.6"
 mypy-protobuf = "^3.0.0"
-pydantic = "^1"
-gigachain-core = { path = "../core", develop = true }
-gigachain-community = { path = "../community", develop = true }
-gigachain-text-splitters = { path = "../text-splitters", develop = true }
+langchain-core = {path = "../core", develop = true}
+langchain-community = {path = "../community", develop = true}
+langchain-text-splitters = {path = "../text-splitters", develop = true}
 
 [tool.poetry.group.dev]
 optional = true
@@ -208,9 +203,9 @@ optional = true
 jupyter = "^1.0.0"
 playwright = "^1.28.0"
 setuptools = "^67.6.1"
-gigachain-core = { path = "../core", develop = true }
-gigachain-community = { path = "../community", develop = true }
-gigachain-text-splitters = { path = "../text-splitters", develop = true }
+langchain-core = {path = "../core", develop = true}
+langchain-community = {path = "../community", develop = true}
+langchain-text-splitters = {path = "../text-splitters", develop = true}
 
 [tool.poetry.extras]
 llms = ["clarifai", "cohere", "openai", "openlm", "nlpcloud", "huggingface_hub", "manifest-ml", "torch", "transformers"]
@@ -305,7 +300,7 @@ extended_testing = [
  "couchbase",
  "dgml-utils",
  "cohere",
- "gigachain-openai",
+ "langchain-openai",
  "rdflib",
 ]
 

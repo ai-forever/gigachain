@@ -7,7 +7,7 @@ readme = "README.md"
 
 [tool.poetry.dependencies]
 python = ">=3.8.1,<4.0"
-gigachain = ">=0.0.313, <0.1"
+langchain = "^0.1"
 momento = "^1.12.0"
 openai = "<2"
 tiktoken = "^0.5.1"
@@ -22,9 +22,9 @@ sse-starlette = "^1.6.5"
 bs4 = "^0.0.1"
 
 [tool.poetry.group.test.dependencies]
-gigaserve = "^0.0.21"
+langserve = "^0.0.21"
 
-[tool.gigaserve]
+[tool.langserve]
 export_module = "rag_momento_vector_index"
 export_attr = "chain"
 
