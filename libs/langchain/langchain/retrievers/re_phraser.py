@@ -15,11 +15,10 @@ from langchain.chains.llm import LLMChain
 logger = logging.getLogger(__name__)
 
 # Default template
-DEFAULT_TEMPLATE = """Ты помощник, задача которого состоит в том, \
-чтобы принять запрос на естественном языке от пользователя и \
-преобразовать его в запрос для векторного хранилища. \
-В этом процессе ты отсеиваешь информацию, которая не имеет отношения \
-к задаче извлечения. Вот пользовательский запрос: {question}"""
+DEFAULT_TEMPLATE = """You are an assistant tasked with taking a natural language \
+query from a user and converting it into a query for a vectorstore. \
+In this process, you strip out information that is not relevant for \
+the retrieval task. Here is the user query: {question}"""
 
 # Default prompt
 DEFAULT_QUERY_PROMPT = PromptTemplate.from_template(DEFAULT_TEMPLATE)

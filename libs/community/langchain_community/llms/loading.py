@@ -34,6 +34,7 @@ def load_llm_from_config(config: dict, **kwargs: Any) -> BaseLLM:
 
 
 def load_llm(file: Union[str, Path], **kwargs: Any) -> BaseLLM:
+    """Load LLM from a file."""
     # Convert file to Path object.
     if isinstance(file, str):
         file_path = Path(file)
@@ -41,10 +42,10 @@ def load_llm(file: Union[str, Path], **kwargs: Any) -> BaseLLM:
         file_path = file
     # Load from either json or yaml.
     if file_path.suffix == ".json":
-        with open(file_path, encoding="utf-8") as f:
+        with open(file_path) as f:
             config = json.load(f)
     elif file_path.suffix.endswith((".yaml", ".yml")):
-        with open(file_path, "r", encoding="utf-8") as f:
+        with open(file_path, "r") as f:
             config = yaml.safe_load(f)
     else:
         raise ValueError("File type must be json or yaml")

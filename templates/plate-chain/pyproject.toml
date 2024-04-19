@@ -7,16 +7,16 @@ readme = "README.md"
 
 [tool.poetry.dependencies]
 python = ">=3.8.1,<4.0"
-gigachain = "^0.1"
+langchain = "^0.1"
 openai = "<2"
-gigaserve = ">=0.0.19"
+langserve = ">=0.0.19"
 
 [tool.poetry.group.dev.dependencies]
 langchain-cli = ">=0.0.21"
 fastapi = ">=0.104.0,<1"
 sse-starlette = "^1.6.5"
 
-[tool.gigaserve]
+[tool.langserve]
 export_module = "plate_chain"
 export_attr = "chain"
 

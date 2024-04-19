@@ -14,19 +14,19 @@ Set the `ANTHROPIC_API_KEY` environment variable to access the Anthropic models.
 To use this package, you should first have the LangChain CLI installed:
 
 ```shell
-pip install -U gigachain-cli
+pip install -U langchain-cli
 ```
 
 To create a new LangChain project and install this as the only package, you can do:
 
 ```shell
-gigachain app new my-app --package anthropic-iterative-search
+langchain app new my-app --package anthropic-iterative-search
 ```
 
 If you want to add this to an existing project, you can just run:
 
 ```shell
-gigachain app add anthropic-iterative-search
+langchain app add anthropic-iterative-search
 ```
 
 And add the following code to your `server.py` file:
@@ -38,7 +38,7 @@ add_routes(app, anthropic_iterative_search_chain, path="/anthropic-iterative-sea
 
 (Optional) Let's now configure LangSmith. 
 LangSmith will help us trace, monitor and debug LangChain applications. 
-LangSmith is currently in private beta, you can sign up [here](https://smith.langchain.com/). 
+You can sign up for LangSmith [here](https://smith.langchain.com/). 
 If you don't have access, you can skip this section
 
 
@@ -51,7 +51,7 @@ export LANGCHAIN_PROJECT=<your-project>  # if not specified, defaults to "defaul
 If you are inside this directory, then you can spin up a LangServe instance directly by:
 
 ```shell
-gigachain serve
+langchain serve
 ```
 
 This will start the FastAPI app with a server is running locally at 

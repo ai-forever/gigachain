@@ -53,7 +53,7 @@ class ConversationalChatAgent(Agent):
     @property
     def llm_prefix(self) -> str:
         """Prefix to append the llm call with."""
-        return ""
+        return "Thought:"
 
     @classmethod
     def _validate_tools(cls, tools: Sequence[BaseTool]) -> None:
@@ -70,10 +70,7 @@ class ConversationalChatAgent(Agent):
         output_parser: Optional[BaseOutputParser] = None,
     ) -> BasePromptTemplate:
         tool_strings = "\n".join(
-            [
-                f"{index + 1}: {tool.name}\n {tool.description}"
-                for index, tool in enumerate(tools)
-            ]
+            [f"> {tool.name}: {tool.description}" for tool in tools]
         )
         tool_names = ", ".join([tool.name for tool in tools])
         _output_parser = output_parser or cls._get_default_output_parser()
@@ -128,7 +125,7 @@ class ConversationalChatAgent(Agent):
             input_variables=input_variables,
             output_parser=_output_parser,
         )
-        llm_chain = LLMChain(
+        llm_chain = LLMChain(  # type: ignore[misc]
             llm=llm,
             prompt=prompt,
             callback_manager=callback_manager,

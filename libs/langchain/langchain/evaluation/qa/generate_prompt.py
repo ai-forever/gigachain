@@ -2,21 +2,21 @@
 from langchain.output_parsers.regex import RegexParser
 from langchain_core.prompts import PromptTemplate
 
-template = """Ты учитель, который составляет вопросы для викторины. 
-Исходя из следующего документа, пожалуйста, сформулируй вопрос и ответ, основанные на этом документе.
+template = """You are a teacher coming up with questions to ask on a quiz. 
+Given the following document, please generate a question and answer based on that document.
 
-Пример формата:
-<Начало документа>
+Example Format:
+<Begin Document>
 ...
-<Конец документа>
-ВОПРОС: вопрос здесь
-ОТВЕТ: ответ здесь
+<End Document>
+QUESTION: question here
+ANSWER: answer here
 
-Эти вопросы должны быть подробными и строго основываться на информации в документе. Начни!
+These questions should be detailed and be based explicitly on information in the document. Begin!
 
-<Начало документа>
+<Begin Document>
 {doc}
-<Конец документа>"""
+<End Document>"""
 PROMPT = PromptTemplate(
     input_variables=["doc"],
     template=template,

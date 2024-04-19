@@ -41,7 +41,7 @@ def _create_key_encoder(namespace: str) -> Callable[[str], str]:
 
 def _value_serializer(value: Sequence[float]) -> bytes:
     """Serialize a value."""
-    return json.dumps(value, ensure_ascii=False).encode()
+    return json.dumps(value).encode()
 
 
 def _value_deserializer(serialized_value: bytes) -> List[float]:

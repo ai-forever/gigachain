@@ -11,6 +11,7 @@ from typing import Any
 
 from langchain_core._api import LangChainDeprecationWarning
 from langchain_core.callbacks import (
+    FileCallbackHandler,
     StdOutCallbackHandler,
     StreamingStdOutCallbackHandler,
 )
@@ -21,7 +22,6 @@ from langchain_core.tracers.context import (
 )
 from langchain_core.tracers.langchain import LangChainTracer
 
-from langchain.callbacks.file import FileCallbackHandler
 from langchain.callbacks.streaming_aiter import AsyncIteratorCallbackHandler
 from langchain.callbacks.streaming_stdout_final_only import (
     FinalStreamingStdOutCallbackHandler,
@@ -39,7 +39,7 @@ def __getattr__(name: str) -> Any:
             "langchain will no longer be supported as of langchain==0.2.0. "
             "Please import from langchain-community instead:\n\n"
             f"`from langchain_community.callbacks import {name}`.\n\n"
-            "To install gigachain-community run `pip install -U gigachain-community`.",
+            "To install langchain-community run `pip install -U langchain-community`.",
             category=LangChainDeprecationWarning,
         )
 

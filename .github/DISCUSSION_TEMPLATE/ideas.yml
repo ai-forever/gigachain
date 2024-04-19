@@ -1,6 +1,4 @@
-name: "\U0001F680 Запрос на функциональность"
-description: Отправьте запрос или сделайте предложение по доработке функциональности GigaChain
-labels: ["02 "]
+labels: [idea]
 body:
   - type: checkboxes
     id: checks
@@ -19,24 +17,22 @@ body:
     validations:
       required: true
     attributes:
-      label: Описание функциональности
+      label: Feature request
       description: |
-        Краткое описание предлагаемых доработок по существу. Приведите ссылки на подходящие GitHub-репозитории, статьи или другие ресурсы.
-
+        A clear and concise description of the feature proposal. Please provide links to any relevant GitHub repos, papers, or other resources if relevant.
   - type: textarea
     id: motivation
     validations:
       required: true
     attributes:
-      label: Обоснование
+      label: Motivation
       description: |
-        Опишите, что побудило вас предложить доработку. Если предложенная функциональность связанна с существующей issue, дайте ссылку на неё.
-
+        Please outline the motivation for the proposal. Is your feature request related to a problem? e.g., I'm always frustrated when [...]. If this is related to another GitHub issue, please link here too.
   - type: textarea
     id: proposal
     validations:
       required: false
     attributes:
-      label: Ваш вклад
+      label: Proposal (If applicable)
       description: |
-        Возможно, вы хотите предложить свое решение и отправить PR? Пожалуйста, ознакомьтесь с правилами создания PR, описанными в [CONTRIBUTING.MD](https://github.com/langchain-ai/langchain/blob/master/.github/CONTRIBUTING.md).
+        If you would like to propose a solution, please describe it here. 

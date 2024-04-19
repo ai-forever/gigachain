@@ -25,8 +25,8 @@ _FUNCTIONS: Any = [
     {
         "name": "format_person_info",
         "description": (
-            "Output formatter. Всегда используй его чтобы отформатировать свой"
-            " ответ пользователю."
+            "Output formatter. Should always be used to format your response to the"
+            " user."
         ),
         "parameters": {
             "title": "Person",
@@ -84,6 +84,17 @@ _FUNCTIONS: Any = [
         },
     },
 ]
+
+
+def test_initialization() -> None:
+    """Test chat model initialization."""
+
+    for model in [
+        QianfanChatEndpoint(model="BLOOMZ-7B", timeout=40),
+        QianfanChatEndpoint(model="BLOOMZ-7B", request_timeout=40),
+    ]:
+        assert model.model == "BLOOMZ-7B"
+        assert model.request_timeout == 40
 
 
 def test_default_call() -> None:

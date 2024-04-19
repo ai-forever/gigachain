@@ -27,7 +27,7 @@ docker run -p 9200:9200 -e "discovery.type=single-node" -e "xpack.security.enabl
 To use this package, you should first have the LangChain CLI installed:
 
 ```shell
-pip install -U "gigachain-cli[serve]"
+pip install -U "langchain-cli[serve]"
 ```
 
 To create a new LangChain project and install this as the only package, you can do:
@@ -56,7 +56,7 @@ python ingest.py
 
 (Optional) Let's now configure LangSmith. 
 LangSmith will help us trace, monitor and debug LangChain applications. 
-LangSmith is currently in private beta, you can sign up [here](https://smith.langchain.com/). 
+You can sign up for LangSmith [here](https://smith.langchain.com/). 
 If you don't have access, you can skip this section
 
 ```shell
