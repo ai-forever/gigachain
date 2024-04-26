@@ -13,7 +13,7 @@ python = ">=3.8.1,<4.0"
 black = "^24.2.0"
 
 [tool.poetry.group.docs.dependencies]
-gigachain = { path = "libs/langchain/", develop = true }
+gigachain = { path = "libs/gigachain/", develop = true }
 autodoc_pydantic = "^1.8.0"
 myst_parser = "^0.18.1"
 nbsphinx = "^0.8.9"
@@ -35,7 +35,7 @@ ruff = "^0.1.5"
 gigachain-core = { path = "libs/core/", develop = true }
 gigachain-text-splitters = { path = "libs/text-splitters", develop = true }
 gigachain-community = { path = "libs/community/", develop = true }
-gigachain = { path = "libs/langchain/", develop = true }
+gigachain = { path = "libs/gigachain/", develop = true }
 gigachain-experimental = { path = "libs/experimental/", develop = true }
 gigachain-openai = { path = "libs/partners/openai", develop = true }
 
@@ -47,7 +47,7 @@ codespell = "^2.2.0"
 gigachain-core = { path = "libs/core/", develop = true }
 gigachain-text-splitters = { path = "libs/text-splitters", develop = true }
 gigachain-community = { path = "libs/community/", develop = true }
-gigachain = { path = "libs/langchain/", develop = true }
+gigachain = { path = "libs/gigachain/", develop = true }
 gigachain-experimental = { path = "libs/experimental/", develop = true }
 gigachain-openai = { path = "libs/partners/openai", develop = true }
 ipykernel = "^6.29.2"
