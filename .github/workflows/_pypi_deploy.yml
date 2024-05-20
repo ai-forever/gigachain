@@ -1,6 +1,18 @@
 name: Publish Python distribution to PyPI
 
-on: workflow_dispatch
+on:
+  workflow_dispatch:
+    inputs:
+      distribVersion:
+        discription: 'Version of gigachain distrib'
+        required: true
+        type: string
+        default: '0.1.0'
+      distrib:
+        discription: 'Publish distrib to pypi'
+        required: true
+        type: boolean
+        default: false
 
 jobs:
   build:
@@ -24,16 +36,17 @@ jobs:
       - name: Store the distribution packages
         uses: actions/upload-artifact@v3
         with:
-          name: python-package-distributions
+          name: D-${{ inputs.tags }}
           path: dist/
 
   publish-to-pypi:
+    if: ${{ inputs.distrib }}
     needs:
       - build
     runs-on: ubuntu-latest
     environment:
       name: pypi
-      url: https://pypi.org/p/<package-name>  # Replace <package-name> with your PyPI project name
+      url: https://pypi.org/p/gigachat
     permissions:
       id-token: write
 
@@ -41,10 +54,12 @@ jobs:
       - name: Download all the dists
         uses: actions/download-artifact@v3
         with:
-          name: python-package-distributions
+          name: D-${{ inputs.tags }}
           path: dist/
       - name: Publish distribution to PyPI
-        uses: pypa/gh-action-pypi-publish@release/v1
+        uses: pypa/gh-action-pypi-publish@v3
+        with:
+          password: ${{ secrets.PYPI_API_TOKEN }}
 
 #  github-release:
 #    name: >-
