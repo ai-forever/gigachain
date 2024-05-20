@@ -51,11 +51,6 @@ jobs:
       id-token: write
 
     steps:
-      - name: Download all the dists
-        uses: actions/download-artifact@v3
-        with:
-          name: D-${{ inputs.tags }}
-          path: dist/
       - name: Publish distribution to PyPI
         uses: pypa/gh-action-pypi-publish@v3
         with:
