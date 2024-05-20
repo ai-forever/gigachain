@@ -36,7 +36,7 @@ jobs:
       - name: Store the distribution packages
         uses: actions/upload-artifact@v3
         with:
-          name: D-${{ inputs.tags }}
+          name: ${{ inputs.tags }}
           path: dist/
 
   publish-to-pypi:
