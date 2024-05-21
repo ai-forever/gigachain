@@ -57,6 +57,8 @@ ipykernel = "^6.29.2"
 
 [tool.poetry.group.typing.dependencies]
 
+[tool.poetry.group.setuptools.dependencies]
+
 [tool.setuptools]
 py-modules = []
 packages = ['hub', 'libs', 'docker', 'cookbook', 'templates']
