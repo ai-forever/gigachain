@@ -33,6 +33,7 @@ jobs:
       - name: Install Poetry
         run: |
           python3 -m pip install poetry
+          poetry update numpy
       - name: Install dependencies
         run: poetry install
       - name: Build a binary wheel
