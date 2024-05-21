@@ -33,7 +33,7 @@ jobs:
       - name: Install Poetry
         run: >-
           python3 -m
-          pip3 install
+          pip install
           poetry
           --user
       - name: Install dependencies
