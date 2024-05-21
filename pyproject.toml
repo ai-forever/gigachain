@@ -57,12 +57,6 @@ ipykernel = "^6.29.2"
 
 [tool.poetry.group.typing.dependencies]
 
-[tool.poetry.group.setuptools.dependencies]
-
-[tool.setuptools]
-py-modules = []
-packages = ['hub', 'libs', 'docker', 'cookbook', 'templates']
-
 [tool.codespell]
 skip = '.git,*.pdf,*.svg,*.pdf,*.yaml,*.ipynb,poetry.lock,*.min.js,*.css,package-lock.json,example_data,_dist,examples,templates,*.trig'
 # Ignore latin etc
