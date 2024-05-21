@@ -7,9 +7,6 @@ license = "MIT"
 readme = "README.md"
 repository = "https://www.github.com/ai-forever/gigachain"
 
-[tool.setuptools]
-py-modules = []
-
 [tool.poetry.dependencies]
 python = ">=3.8.1,<4.0"
 black = "^24.2.0"
@@ -59,6 +56,9 @@ ipykernel = "^6.29.2"
 [tool.poetry.group.test_integration.dependencies]
 
 [tool.poetry.group.typing.dependencies]
+
+[tool.setuptools]
+py-modules = []
 
 [tool.codespell]
 skip = '.git,*.pdf,*.svg,*.pdf,*.yaml,*.ipynb,poetry.lock,*.min.js,*.css,package-lock.json,example_data,_dist,examples,templates,*.trig'
