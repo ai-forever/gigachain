@@ -30,22 +30,24 @@ jobs:
         uses: actions/setup-python@v5
         with:
           python-version: "3.x"
-      - name: Install pypa/build
+      - name: Install Poetry
         run: >-
           python3 -m
-          pip install
-          build
+          pip3 install
+          poetry
           --user
+      - name: Install dependencies
+        run: poetry install
       - name: Build a binary wheel
-        run: python3 -m build
+        run: poetry build
       - name: Store the distribution packages
         uses: actions/upload-artifact@v3
         with:
-          name: ${{ inputs.tags }}
+          name: ${{ inputs.distribVersion }}
           path: dist/
 
   publish-to-pypi:
-    if: ${{ inputs.distrib }}
+    if: ${{ inputs.publish }}
     needs:
       - build
     runs-on: ubuntu-latest
