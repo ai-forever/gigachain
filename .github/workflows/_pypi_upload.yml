@@ -31,11 +31,9 @@ jobs:
         with:
           python-version: "3.x"
       - name: Install Poetry
-        run: >-
-          python3 -m
-          pip install
-          poetry
-          --user
+        run: |
+          python3 -m pip install poetry --user
+          poetry config experimental.new-installer true
       - name: Install dependencies
         run: poetry install
       - name: Build a binary wheel
