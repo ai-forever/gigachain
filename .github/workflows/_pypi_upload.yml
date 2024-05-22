@@ -59,11 +59,15 @@ jobs:
       id-token: write
 
     steps:
+      - name: Download all the dists
+        uses: actions/download-artifact@v3
+        with:
+          name: ${{ inputs.distribVersion }}
+          path: dist/
       - name: Publish distribution to PyPI
         uses: pypa/gh-action-pypi-publish@release/v1
         with:
           password: ${{ secrets.PYPI_API_TOKEN }}
-          packages-dir: /home/runner/work/gigachain/gigachain/libs/core/dist/
 
   github-release:
     name: >-
