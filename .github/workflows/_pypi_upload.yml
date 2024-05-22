@@ -37,7 +37,9 @@ jobs:
 #      - name: Install dependencies
 #        run: poetry install
       - name: Build a binary wheel
-        run: poetry build
+        run: |
+          cd libs/core
+          poetry build
       - name: Store the distribution packages
         uses: actions/upload-artifact@v3
         with:
