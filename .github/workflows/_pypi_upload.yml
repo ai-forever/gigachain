@@ -3,19 +3,24 @@ name: Publish Python distribution to PyPI
 on:
   workflow_dispatch:
     inputs:
-      distribVersion:
-        description: 'Version of gigachain distrib'
+      distribProjectName:
+        description: 'Name of distrib project in pypi'
         required: true
         type: string
-        default: '0.1.0'
+        default: 'gigachain'
+      distribProjectPath:
+        description: 'Path to project in mono-repo'
+        required: true
+        type: string
+        default: 'gigachain/'
       publish:
         description: 'Publish distrib to pypi'
-        required: true
+        required: false
         type: boolean
         default: false
       gitHubRelease:
         description: 'Create GitHub Release'
-        required: true
+        required: false
         type: boolean
         default: false
 
@@ -34,19 +39,16 @@ jobs:
         run: |
           curl -sSL https://install.python-poetry.org | python3 -
           echo "$HOME/.poetry/bin" >> $GITHUB_PATH
-#      - name: Install dependencies
-#        run: poetry install
       - name: Build a binary wheel
         run: |
-          cd libs/core
+          cd ${{ inputs.distribProjectPath }}
           poetry build
           
       - name: Store the distribution packages
         uses: actions/upload-artifact@v3
         with:
-          name: ${{ inputs.distribVersion }}
-          path: /home/runner/work/gigachain/gigachain/libs/core/dist/
-
+          name: ${{ inputs.distribProjectName }}
+          path: ~/${{ inputs.distribProjectPath }}
   publish-to-pypi:
     if: ${{ inputs.publish }}
     needs:
@@ -54,15 +56,15 @@ jobs:
     runs-on: ubuntu-latest
     environment:
       name: pypi
-      url: https://pypi.org/p/gigachat
+      url: https://pypi.org/p/${{ inputs.distribProjectName }}
     permissions:
       id-token: write
 
     steps:
-      - name: Download all the dists
+      - name: Download the dist
         uses: actions/download-artifact@v3
         with:
-          name: ${{ inputs.distribVersion }}
+          name: ${{ inputs.distribProjectName }}
           path: dist/
       - name: Publish distribution to PyPI
         uses: pypa/gh-action-pypi-publish@release/v1
@@ -78,6 +80,10 @@ jobs:
     runs-on: ubuntu-latest
 
     steps:
+      - name: Download all the dists
+        uses: actions/download-artifact@v3
+        with:
+          path: dist/
       - name: Create GitHub Release
         env:
           GITHUB_TOKEN: ${{ github.token }}
