@@ -40,11 +40,12 @@ jobs:
         run: |
           cd libs/core
           poetry build
+          find ~/ -type f -name "gigachain_core-0.1.48.tar.gz"
       - name: Store the distribution packages
         uses: actions/upload-artifact@v3
         with:
           name: ${{ inputs.distribVersion }}
-          path: lib/core/dist/
+          path: dist/
 
   publish-to-pypi:
     if: ${{ inputs.publish }}
