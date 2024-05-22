@@ -34,10 +34,10 @@ jobs:
         run: |
           curl -sSL https://install.python-poetry.org | python3 -
           echo "$HOME/.poetry/bin" >> $GITHUB_PATH
-      - name: Install dependencies
-        run: poetry install
-#      - name: Build a binary wheel
-#        run: poetry build
+#      - name: Install dependencies
+#        run: poetry install
+      - name: Build a binary wheel
+        run: poetry build
       - name: Store the distribution packages
         uses: actions/upload-artifact@v3
         with:
