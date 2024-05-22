@@ -4,17 +4,17 @@ on:
   workflow_dispatch:
     inputs:
       distribVersion:
-        discription: 'Version of gigachain distrib'
+        description: 'Version of gigachain distrib'
         required: true
         type: string
         default: '0.1.0'
       publish:
-        discription: 'Publish distrib to pypi'
+        description: 'Publish distrib to pypi'
         required: true
         type: boolean
         default: false
       gitHubRelease:
-        discription: 'Create GitHub Release'
+        description: 'Create GitHub Release'
         required: true
         type: boolean
         default: false
@@ -31,9 +31,9 @@ jobs:
         with:
           python-version: "3.x"
       - name: Install Poetry
-          run: |
-            curl -sSL https://install.python-poetry.org | python3 -
-            echo "$HOME/.poetry/bin" >> $GITHUB_PATH
+        run: |
+          curl -sSL https://install.python-poetry.org | python3 -
+          echo "$HOME/.poetry/bin" >> $GITHUB_PATH
       - name: Install dependencies
         run: poetry install
       - name: Build a binary wheel
