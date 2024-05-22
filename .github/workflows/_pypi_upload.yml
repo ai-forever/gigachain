@@ -48,7 +48,7 @@ jobs:
         uses: actions/upload-artifact@v3
         with:
           name: ${{ inputs.distribProjectName }}
-          path: ~/${{ inputs.distribProjectPath }}
+          path: ~/${{ inputs.distribProjectPath }}/dist
   publish-to-pypi:
     if: ${{ inputs.publish }}
     needs:
