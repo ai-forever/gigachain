@@ -6,13 +6,10 @@ on:
       distribProjectName:
         description: 'Name of distrib project in pypi'
         required: true
-        type: string
-        default: 'gigachain'
-      distribProjectPath:
-        description: 'Path to project in mono-repo'
-        required: true
-        type: string
-        default: 'gigachain/'
+        type: choice
+        options:
+          - gigachain-core
+          - gigachain-community
       publish:
         description: 'Publish distrib to pypi'
         required: false
@@ -23,6 +20,10 @@ on:
         required: false
         type: boolean
         default: false
+
+env:
+  gigachain-core: "libs/core"
+  gigachain-community: "libs/community"
 
 jobs:
   check-ci-job-status:
@@ -76,7 +77,7 @@ jobs:
         uses: actions/upload-artifact@v3
         with:
           name: ${{ inputs.distribProjectName }}
-          path: /home/runner/work/gigachain/gigachain/${{ inputs.distribProjectPath }}/dist/
+          path: /home/runner/work/gigachain/gigachain/${{ env[inputs.distribProjectName] }}/dist/
   publish-to-pypi:
     if: ${{ inputs.publish }}
     needs:
