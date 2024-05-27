@@ -47,7 +47,7 @@ jobs:
         run: echo "${{ steps.JobStatus.outputs.State }}"
     
   build:
-    if: ${{ jobs.check-ci-job-status.steps.JobStatus.outputs.State }}
+    #if: ${{ jobs.check-ci-job-status.steps.JobStatus.outputs.State }}
     name: Build distribution
     needs: check-ci-job-status
     runs-on: ubuntu-latest
