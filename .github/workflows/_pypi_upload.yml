@@ -46,7 +46,7 @@ jobs:
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
       - name: Check status
-        if: "${{ steps.JobStatus.outputs.State }}"
+        if: "${{ ! steps.JobStatus.outputs.State }}"
         uses: actions/github-script@v3
         with:
           script: |
