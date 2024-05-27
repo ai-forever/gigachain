@@ -25,8 +25,31 @@ on:
         default: false
 
 jobs:
+  check-ci-job-status:
+    name: Check CI workflow status
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Check last job status
+        id: JobStatus
+        run: |
+          JOB_STATUS=$(gh run list --workflow check_diffs.yml | grep -oh "completed.*" | head -1 | awk '{print $2}')
+          if [ "$JOB_STATUS" == "success" ]; then
+            echo "status is $JOB_STATUS"
+            echo "::set-output name=State::true"
+          else
+            echo "status is $JOB_STATUS"
+            echo "::set-output name=State::false"
+          fi
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+      - name: test
+        run: echo "${{ steps.JobStatus.outputs.State }}"
+    
   build:
+    if: ${{ jobs.check-ci-job-status.steps.JobStatus.outputs.State }}
     name: Build distribution
+    needs: check-ci-job-status
     runs-on: ubuntu-latest
 
     steps:
