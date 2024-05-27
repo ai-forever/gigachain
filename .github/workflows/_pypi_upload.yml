@@ -32,7 +32,7 @@ jobs:
     steps:
       - name: Checkout
         uses: actions/checkout@v3
-      - name: Check last job status
+      - name: Get last CI workflow status
         id: JobStatus
         run: |
           JOB_STATUS=$(gh run list --workflow check_diffs.yml | grep -oh "completed.*" | head -1 | awk '{print $2}')
@@ -45,11 +45,14 @@ jobs:
           fi
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-      - name: test
-        run: echo "${{ steps.JobStatus.outputs.State }}"
+      - name: Check status
+        if: "${{ steps.JobStatus.outputs.State }}"
+        uses: actions/github-script@v3
+        with:
+          script: |
+            core.setFailed('Failed CI check')
     
   build:
-    #if: ${{ jobs.check-ci-job-status.steps.JobStatus.outputs.State }}
     name: Build distribution
     needs: check-ci-job-status
     runs-on: ubuntu-latest
