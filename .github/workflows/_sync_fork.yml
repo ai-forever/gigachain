@@ -27,9 +27,11 @@ jobs:
         run: |
           # Create a temporary branch for the merge
           git checkout -b temp-merge-branch
+
+          git fetch langchain master
           
           # Merge only the .toml files
-          git checkout langchain/master -- '**/*.toml'
+          git checkout FETCH_HEAD -- '**/*.toml'
           
           # Handle .toml conflicts
           for file in $(git diff --name-only --diff-filter=U | grep '\.toml$'); do
