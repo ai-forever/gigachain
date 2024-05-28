@@ -33,31 +33,18 @@ jobs:
           
           # Handle .toml conflicts
           for file in $(git diff --name-only --diff-filter=U | grep '\.toml$'); do
-            # Extract gigachain content and langchain versions
-            awk '
-            BEGIN {FS=" = "; OFS=" = "}
-            /<<<<<<< HEAD/ {in_gigachain = 1; next}
-            /=======/ {in_gigachain = 0; in_langchain = 1; next}
-            />>>>>>>/ {in_langchain = 0; next}
-            {
-              if (in_gigachain) gigachain[$1] = $2;
-              else if (in_langchain) langchain[$1] = $2;
-              else gigachain[$1] = $2; # no conflict lines
-            }
-            END {
-              for (k in gigachain) {
-                if (k == "version") {
-                  print k, langchain[k]; # Use langchain version
-                } else {
-                  print k, gigachain[k]; # Use gigachain content
-                }
-              }
-            }
-            ' $file > temp_file
-    
-            # Overwrite the original file with the resolved content
-            mv temp_file $file
+            # Extract sections with conflicts
+            awk '/<<<<<<< HEAD/{flag=1;next}/=======/{flag=0}flag' $file > gigachain_changes.txt
+            awk '/=======/{flag=1;next}/>>>>>>>/{flag=0}flag' $file > langchain_changes.txt
 
+            cat gigachain_changes.txt
+            echo '<<<<<====>>>>>"
+            cat langchain_changes.txt
+            
+            # Apply the gigachain naming and langchain version changes
+            cp gigachain_changes.txt $file
+            sed -i 's/.*version =.*/'$(awk -F ' = ' '/version =/ {print $2}' langchain_changes.txt)'/g' $file
+      
             sed -i -E '/packages = \[/,/^\s*\]/! s/langchain/gigachain/' $file
             
             # Add the resolved file to the staging area
