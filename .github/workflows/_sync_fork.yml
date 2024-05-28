@@ -20,18 +20,16 @@ jobs:
 
       - name: Fetch upstream changes
         run: |
-          git remote add langchan https://github.com/langchain-ai/langchain.git
-          git fetch langchan
+          git remote add langchain https://github.com/langchain-ai/langchain.git
+          git fetch langchain
 
       - name: Merge .toml files from langchain/master into gigachain/dev
         run: |
           # Create a temporary branch for the merge
           git checkout -b temp-merge-branch
-
-          git fetch langchain master
           
           # Merge only the .toml files
-          git checkout FETCH_HEAD -- '**/*.toml'
+          git checkout langchain/master -- '**/*.toml'
           
           # Handle .toml conflicts
           for file in $(git diff --name-only --diff-filter=U | grep '\.toml$'); do
@@ -51,7 +49,7 @@ jobs:
           git branch -d temp-merge-branch
 
       # - name: Merge changes from upstream
-      #   run: git merge  --allow-unrelated-histories langchan/master || true
+      #   run: git merge  --allow-unrelated-histories langchain/master || true
 
       # - name: Resolve .lock conflicts
       #   run: |
