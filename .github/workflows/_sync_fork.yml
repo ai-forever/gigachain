@@ -33,7 +33,7 @@ jobs:
           
           # Handle .toml conflicts
           for file in $(git diff --name-only --diff-filter=U | grep '\.toml$'); do
-            # Extract gigachain naming and langchain versions
+            # Extract gigachain content and langchain versions
             awk '
             BEGIN {FS=" = "; OFS=" = "}
             /<<<<<<< HEAD/ {in_gigachain = 1; next}
@@ -46,17 +46,14 @@ jobs:
             }
             END {
               for (k in gigachain) {
-                if (k in langchain) {
+                if (k == "version") {
                   print k, langchain[k]; # Use langchain version
                 } else {
-                  print k, gigachain[k]; # Use gigachain name
+                  print k, gigachain[k]; # Use gigachain content
                 }
               }
             }
             ' $file > temp_file
-    
-            # Replace "langchain" with "gigachain" in the resolved content
-            sed -i 's/langchain/gigachain/g' temp_file
     
             # Overwrite the original file with the resolved content
             mv temp_file $file
