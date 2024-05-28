@@ -24,7 +24,7 @@ jobs:
           git fetch langchan
 
       - name: Merge changes from upstream
-        run: git merge  --allow-unrelated-histories langchan/master
+        run: git merge  --allow-unrelated-histories langchan/master || true
 
       - name: Resolve .lock conflicts
         run: |
