@@ -81,6 +81,7 @@ class BasePromptTemplate(
     def get_input_schema(
         self, config: Optional[RunnableConfig] = None
     ) -> Type[BaseModel]:
+<<<<<<< HEAD
         partial_kwargs = {}
         for name in self.partial_variables:
             if callable(self.partial_variables[name]):
@@ -99,11 +100,16 @@ class BasePromptTemplate(
                     self.input_types.get(name, str),
                     self.partial_variables[name],
                 )
+=======
+>>>>>>> langchan/master
         # This is correct, but pydantic typings/mypy don't think so.
         return create_model(  # type: ignore[call-overload]
             "PromptInput",
             **{k: (self.input_types.get(k, str), None) for k in self.input_variables},
+<<<<<<< HEAD
             **partial_kwargs,
+=======
+>>>>>>> langchan/master
         )
 
     def _validate_input(self, inner_input: Dict) -> Dict:
@@ -291,9 +297,15 @@ class BasePromptTemplate(
 
         if save_path.suffix == ".json":
             with open(file_path, "w") as f:
+<<<<<<< HEAD
                 json.dump(prompt_dict, f, indent=4, ensure_ascii=False)
         elif save_path.suffix.endswith((".yaml", ".yml")):
             with open(file_path, "w", encoding="utf-8") as f:
+=======
+                json.dump(prompt_dict, f, indent=4)
+        elif save_path.suffix.endswith((".yaml", ".yml")):
+            with open(file_path, "w") as f:
+>>>>>>> langchan/master
                 yaml.dump(prompt_dict, f, default_flow_style=False)
         else:
             raise ValueError(f"{save_path} must be json or yaml")

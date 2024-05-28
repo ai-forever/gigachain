@@ -1,5 +1,8 @@
 """Chains and utils related to evaluating question answering functionality."""
+<<<<<<< HEAD
 
+=======
+>>>>>>> langchan/master
 from langchain.evaluation.qa.eval_chain import (
     ContextQAEvalChain,
     CotQAEvalChain,

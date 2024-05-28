@@ -68,8 +68,12 @@ def _get_json_format(request: FileProcessingRequest):
                 "col_end": 1 + request.num_cols - 1,
                 "contents": "Entity ID",
             }
+<<<<<<< HEAD
         ],
         ensure_ascii=False,
+=======
+        ]
+>>>>>>> langchan/master
     )
 
 

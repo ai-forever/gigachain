@@ -13,7 +13,10 @@ allow it to work with a variety of SQL as a backend.
 * Keys can be listed based on the updated at field.
 * Keys can be deleted.
 """
+<<<<<<< HEAD
 
+=======
+>>>>>>> langchan/master
 import contextlib
 import decimal
 import uuid

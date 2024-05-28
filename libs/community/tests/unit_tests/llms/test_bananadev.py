@@ -1,5 +1,8 @@
 """Test Banana llm"""
+<<<<<<< HEAD
 
+=======
+>>>>>>> langchan/master
 from typing import cast
 
 from langchain_core.pydantic_v1 import SecretStr

@@ -9,7 +9,11 @@ readme = "README.md"
 
 [tool.poetry.dependencies]
 python = ">=3.8.1,<4.0"
+<<<<<<< HEAD
 gigachain = "^0.1"
+=======
+langchain = "^0.1"
+>>>>>>> langchan/master
 openai = "<2"
 tiktoken = ">=0.5.1"
 pinecone-client = ">=2.2.4"
@@ -17,9 +21,15 @@ beautifulsoup4 = "^4.12.2"
 langchain-text-splitters = ">=0.0.1,<0.1"
 
 [tool.poetry.group.dev.dependencies]
+<<<<<<< HEAD
 gigachain-cli = ">=0.0.21"
 
 [tool.gigaserve]
+=======
+langchain-cli = ">=0.0.21"
+
+[tool.langserve]
+>>>>>>> langchan/master
 export_module = "rag_conversation"
 export_attr = "chain"
 

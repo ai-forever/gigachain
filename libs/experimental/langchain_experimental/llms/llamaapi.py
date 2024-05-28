@@ -37,7 +37,11 @@ def _convert_dict_to_message(_dict: Mapping[str, Any]) -> BaseMessage:
         content = _dict.get("content") or ""
         if _dict.get("function_call"):
             _dict["function_call"]["arguments"] = json.dumps(
+<<<<<<< HEAD
                 _dict["function_call"]["arguments"], ensure_ascii=False
+=======
+                _dict["function_call"]["arguments"]
+>>>>>>> langchan/master
             )
             additional_kwargs = {"function_call": dict(_dict["function_call"])}
         else:

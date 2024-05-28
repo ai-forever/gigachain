@@ -1,5 +1,8 @@
 """Test ChatOpenAI wrapper."""
+<<<<<<< HEAD
 
+=======
+>>>>>>> langchan/master
 from typing import Any, Optional
 
 import pytest

@@ -6,7 +6,11 @@ This package contains the LangChain integrations for [AI21](https://docs.ai21.co
 
 - Install the AI21 partner package
 ```bash
+<<<<<<< HEAD
 pip install gigachain-ai21
+=======
+pip install langchain-ai21
+>>>>>>> langchan/master
 ```
 - Get an AI21 api key and set it as an environment variable (`AI21_API_KEY`)
 
@@ -27,11 +31,20 @@ Then initialize
 from langchain_core.messages import HumanMessage
 from langchain_ai21.chat_models import ChatAI21
 
+<<<<<<< HEAD
 chat = ChatAI21(model="j2-ultra")
+=======
+chat = ChatAI21(model="jamab-instruct")
+>>>>>>> langchan/master
 messages = [HumanMessage(content="Hello from AI21")]
 chat.invoke(messages)
 ```
 
+<<<<<<< HEAD
+=======
+For a list of the supported models, see [this page](https://docs.ai21.com/reference/python-sdk#chat)
+
+>>>>>>> langchan/master
 ## LLMs
 You can use AI21's generative AI models as Langchain LLMs:
 

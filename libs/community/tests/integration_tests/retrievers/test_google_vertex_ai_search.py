@@ -1,6 +1,10 @@
 """Test Google Vertex AI Search retriever.
 
+<<<<<<< HEAD
 You need to create a Vertex AI Search app and populate it
+=======
+You need to create a Vertex AI Search app and populate it 
+>>>>>>> langchan/master
 with data to run the integration tests.
 Follow the instructions in the example notebook:
 google_vertex_ai_search.ipynb

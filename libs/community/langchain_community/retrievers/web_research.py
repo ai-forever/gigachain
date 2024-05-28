@@ -35,21 +35,35 @@ class SearchQueries(BaseModel):
 
 DEFAULT_LLAMA_SEARCH_PROMPT = PromptTemplate(
     input_variables=["question"],
+<<<<<<< HEAD
     template="""<<SYS>> \n Ты помощник, задача которого - \
 улучшить результаты поиска в Google. \n <</SYS>> \n\n [INST] \
 Сгенерируй ТРИ поисковых запроса в Google, которые \
 похожи на этот вопрос. Результат должен быть \
 представлен в виде нумерованного списка вопросов, \
 и каждый вопрос должен заканчиваться вопросительным знаком: \n\n {question} [/INST]""",
+=======
+    template="""<<SYS>> \n You are an assistant tasked with improving Google search \
+results. \n <</SYS>> \n\n [INST] Generate THREE Google search queries that \
+are similar to this question. The output should be a numbered list of questions \
+and each should have a question mark at the end: \n\n {question} [/INST]""",
+>>>>>>> langchan/master
 )
 
 DEFAULT_SEARCH_PROMPT = PromptTemplate(
     input_variables=["question"],
+<<<<<<< HEAD
     template="""Ты помощник, задача которого - улучшить результаты поиска в Google. \
 Сгенерируй ТРИ поисковых запроса, которые похожи на \
 этот вопрос. Результат должен быть представлен \
 в виде нумерованного списка вопросов, и каждый \
 вопрос должен заканчиваться вопросительным знаком: {question}""",
+=======
+    template="""You are an assistant tasked with improving Google search \
+results. Generate THREE Google search queries that are similar to \
+this question. The output should be a numbered list of questions and each \
+should have a question mark at the end: {question}""",
+>>>>>>> langchan/master
 )
 
 
@@ -78,8 +92,16 @@ class WebResearchRetriever(BaseRetriever):
     url_database: List[str] = Field(
         default_factory=list, description="List of processed URLs"
     )
+<<<<<<< HEAD
     verify_ssl: bool = Field(True, description="Verify SSL certificate")
     proxies: dict = Field({}, description="Proxies config for requests")
+=======
+    trust_env: bool = Field(
+        False,
+        description="Whether to use the http_proxy/https_proxy env variables or "
+        "check .netrc for proxy configuration",
+    )
+>>>>>>> langchan/master
 
     @classmethod
     def from_llm(
@@ -92,8 +114,12 @@ class WebResearchRetriever(BaseRetriever):
         text_splitter: RecursiveCharacterTextSplitter = RecursiveCharacterTextSplitter(
             chunk_size=1500, chunk_overlap=150
         ),
+<<<<<<< HEAD
         verify_ssl: bool = True,
         proxies: dict = {},
+=======
+        trust_env: bool = False,
+>>>>>>> langchan/master
     ) -> "WebResearchRetriever":
         """Initialize from llm using default template.
 
@@ -104,9 +130,14 @@ class WebResearchRetriever(BaseRetriever):
             prompt: prompt to generating search questions
             num_search_results: Number of pages per Google search
             text_splitter: Text splitter for splitting web pages into chunks
+<<<<<<< HEAD
             verify_ssl: Verify SSL certificate, while loading web pages
             proxies: Proxies config for requests library, for example -
                 proxies={"http": "http://localhost:8080", "https": "https://localhost:8443"}
+=======
+            trust_env: Whether to use the http_proxy/https_proxy env variables
+                or check .netrc for proxy configuration
+>>>>>>> langchan/master
 
         Returns:
             WebResearchRetriever
@@ -134,8 +165,12 @@ class WebResearchRetriever(BaseRetriever):
             search=search,
             num_search_results=num_search_results,
             text_splitter=text_splitter,
+<<<<<<< HEAD
             verify_ssl=verify_ssl,
             proxies=proxies,
+=======
+            trust_env=trust_env,
+>>>>>>> langchan/master
         )
 
     def clean_search_query(self, query: str) -> str:
@@ -204,10 +239,14 @@ class WebResearchRetriever(BaseRetriever):
         # Load, split, and add new urls to vectorstore
         if new_urls:
             loader = AsyncHtmlLoader(
+<<<<<<< HEAD
                 new_urls,
                 ignore_load_errors=True,
                 verify_ssl=self.verify_ssl,
                 proxies=self.proxies,
+=======
+                new_urls, ignore_load_errors=True, trust_env=self.trust_env
+>>>>>>> langchan/master
             )
             html2text = Html2TextTransformer()
             logger.info("Indexing new urls...")

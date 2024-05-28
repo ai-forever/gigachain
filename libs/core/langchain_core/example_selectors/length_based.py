@@ -1,5 +1,8 @@
 """Select examples based on length."""
+<<<<<<< HEAD
 
+=======
+>>>>>>> langchan/master
 import re
 from typing import Callable, Dict, List
 

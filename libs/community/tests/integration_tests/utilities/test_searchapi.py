@@ -1,5 +1,8 @@
 """Integration tests for SearchApi"""
+<<<<<<< HEAD
 
+=======
+>>>>>>> langchan/master
 from langchain_community.utilities.searchapi import SearchApiAPIWrapper
 
 

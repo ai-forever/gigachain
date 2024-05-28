@@ -14,7 +14,11 @@ if __name__ == "__main__":
             "chat_history": [],
         }
     )
+<<<<<<< HEAD
     print(response)  # noqa: T201
+=======
+    print(response)
+>>>>>>> langchan/master
 
     follow_up_question = "What are their objectives?"
 
@@ -30,4 +34,8 @@ if __name__ == "__main__":
         }
     )
 
+<<<<<<< HEAD
     print(response)  # noqa: T201
+=======
+    print(response)
+>>>>>>> langchan/master

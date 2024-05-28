@@ -1,5 +1,8 @@
 """Wrapper around Epsilla vector database."""
+<<<<<<< HEAD
 
+=======
+>>>>>>> langchan/master
 from __future__ import annotations
 
 import logging

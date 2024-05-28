@@ -1,5 +1,8 @@
 """Test ChatYuan2 wrapper."""
+<<<<<<< HEAD
 
+=======
+>>>>>>> langchan/master
 from typing import List
 
 import pytest

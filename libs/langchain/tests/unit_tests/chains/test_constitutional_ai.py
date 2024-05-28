@@ -1,5 +1,8 @@
 """Unit tests for the Constitutional AI chain."""
+<<<<<<< HEAD
 
+=======
+>>>>>>> langchan/master
 from langchain.chains.constitutional_ai.base import ConstitutionalChain
 
 TEXT_ONE = """ This text is bad.

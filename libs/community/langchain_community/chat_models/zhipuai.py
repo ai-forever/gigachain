@@ -331,9 +331,14 @@ class ChatZhipuAI(BaseChatModel):
         import httpx
 
         with httpx.Client(headers=headers, timeout=60) as client:
+<<<<<<< HEAD
             if self.zhipuai_api_base:
                 response = client.post(self.zhipuai_api_base, json=payload)
                 response.raise_for_status()
+=======
+            response = client.post(self.zhipuai_api_base, json=payload)
+            response.raise_for_status()
+>>>>>>> langchan/master
         return self._create_chat_result(response.json())
 
     def _stream(
@@ -419,9 +424,14 @@ class ChatZhipuAI(BaseChatModel):
         import httpx
 
         async with httpx.AsyncClient(headers=headers, timeout=60) as client:
+<<<<<<< HEAD
             if self.zhipuai_api_base:
                 response = await client.post(self.zhipuai_api_base, json=payload)
                 response.raise_for_status()
+=======
+            response = await client.post(self.zhipuai_api_base, json=payload)
+            response.raise_for_status()
+>>>>>>> langchan/master
         return self._create_chat_result(response.json())
 
     async def _astream(

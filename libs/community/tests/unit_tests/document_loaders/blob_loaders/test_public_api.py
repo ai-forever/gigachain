@@ -6,6 +6,10 @@ def test_public_api() -> None:
     assert sorted(__all__) == [
         "Blob",
         "BlobLoader",
+<<<<<<< HEAD
+=======
+        "CloudBlobLoader",
+>>>>>>> langchan/master
         "FileSystemBlobLoader",
         "YoutubeAudioLoader",
     ]

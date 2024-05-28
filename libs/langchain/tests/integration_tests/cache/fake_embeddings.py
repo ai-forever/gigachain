@@ -1,5 +1,8 @@
 """Fake Embedding class for testing purposes."""
+<<<<<<< HEAD
 
+=======
+>>>>>>> langchan/master
 import math
 from typing import List
 

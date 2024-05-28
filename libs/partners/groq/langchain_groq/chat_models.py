@@ -2,6 +2,10 @@
 
 from __future__ import annotations
 
+<<<<<<< HEAD
+=======
+import json
+>>>>>>> langchan/master
 import os
 import warnings
 from operator import itemgetter
@@ -23,7 +27,10 @@ from typing import (
     cast,
 )
 
+<<<<<<< HEAD
 from langchain_core._api import beta
+=======
+>>>>>>> langchan/master
 from langchain_core.callbacks import (
     AsyncCallbackManagerForLLMRun,
     CallbackManagerForLLMRun,
@@ -45,8 +52,15 @@ from langchain_core.messages import (
     FunctionMessageChunk,
     HumanMessage,
     HumanMessageChunk,
+<<<<<<< HEAD
     SystemMessage,
     SystemMessageChunk,
+=======
+    InvalidToolCall,
+    SystemMessage,
+    SystemMessageChunk,
+    ToolCall,
+>>>>>>> langchan/master
     ToolMessage,
     ToolMessageChunk,
 )
@@ -408,6 +422,10 @@ class ChatGroq(BaseChatModel):
             chunk = ChatGenerationChunk(
                 message=chunk, generation_info=generation_info or None
             )
+<<<<<<< HEAD
+=======
+
+>>>>>>> langchan/master
             if run_manager:
                 await run_manager.on_llm_new_token(
                     token=chunk.text, chunk=chunk, logprobs=logprobs
@@ -837,7 +855,18 @@ def _convert_message_to_dict(message: BaseMessage) -> dict:
             # If function call only, content is None not empty string
             if message_dict["content"] == "":
                 message_dict["content"] = None
+<<<<<<< HEAD
         if "tool_calls" in message.additional_kwargs:
+=======
+        if message.tool_calls or message.invalid_tool_calls:
+            message_dict["tool_calls"] = [
+                _lc_tool_call_to_groq_tool_call(tc) for tc in message.tool_calls
+            ] + [
+                _lc_invalid_tool_call_to_groq_tool_call(tc)
+                for tc in message.invalid_tool_calls
+            ]
+        elif "tool_calls" in message.additional_kwargs:
+>>>>>>> langchan/master
             message_dict["tool_calls"] = message.additional_kwargs["tool_calls"]
             # If tool calls only, content is None not empty string
             if message_dict["content"] == "":
@@ -944,3 +973,30 @@ def _convert_dict_to_message(_dict: Mapping[str, Any]) -> BaseMessage:
         )
     else:
         return ChatMessage(content=_dict.get("content", ""), role=role)
+<<<<<<< HEAD
+=======
+
+
+def _lc_tool_call_to_groq_tool_call(tool_call: ToolCall) -> dict:
+    return {
+        "type": "function",
+        "id": tool_call["id"],
+        "function": {
+            "name": tool_call["name"],
+            "arguments": json.dumps(tool_call["args"]),
+        },
+    }
+
+
+def _lc_invalid_tool_call_to_groq_tool_call(
+    invalid_tool_call: InvalidToolCall,
+) -> dict:
+    return {
+        "type": "function",
+        "id": invalid_tool_call["id"],
+        "function": {
+            "name": invalid_tool_call["name"],
+            "arguments": invalid_tool_call["args"],
+        },
+    }
+>>>>>>> langchan/master

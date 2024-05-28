@@ -16,19 +16,31 @@ Set the `ANTHROPIC_API_KEY` environment variable to access the Anthropic models.
 To use this package, you should first have the LangChain CLI installed:
 
 ```shell
+<<<<<<< HEAD
 pip install -U "gigachain-cli"
+=======
+pip install -U langchain-cli
+>>>>>>> langchan/master
 ```
 
 To create a new LangChain project and install this as the only package, you can do:
 
 ```shell
+<<<<<<< HEAD
 gigachain app new my-app --package summarize-anthropic
+=======
+langchain app new my-app --package summarize-anthropic
+>>>>>>> langchan/master
 ```
 
 If you want to add this to an existing project, you can just run:
 
 ```shell
+<<<<<<< HEAD
 gigachain app add summarize-anthropic
+=======
+langchain app add summarize-anthropic
+>>>>>>> langchan/master
 ```
 
 And add the following code to your `server.py` file:
@@ -52,7 +64,11 @@ export LANGCHAIN_PROJECT=<your-project>  # if not specified, defaults to "defaul
 If you are inside this directory, then you can spin up a LangServe instance directly by:
 
 ```shell
+<<<<<<< HEAD
 gigachain serve
+=======
+langchain serve
+>>>>>>> langchan/master
 ```
 
 This will start the FastAPI app with a server is running locally at 

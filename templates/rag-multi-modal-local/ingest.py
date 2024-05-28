@@ -20,7 +20,11 @@ vectorstore = Path(__file__).parent / "chroma_db_multi_modal"
 re_vectorstore_path = vectorstore.relative_to(Path.cwd())
 
 # Load embedding function
+<<<<<<< HEAD
 print("Loading embedding function")  # noqa: T201
+=======
+print("Loading embedding function")
+>>>>>>> langchan/master
 embedding = OpenCLIPEmbeddings(model_name="ViT-H-14", checkpoint="laion2b_s32b_b79k")
 
 # Create chroma
@@ -31,5 +35,9 @@ vectorstore_mmembd = Chroma(
 )
 
 # Add images
+<<<<<<< HEAD
 print("Embedding images")  # noqa: T201
+=======
+print("Embedding images")
+>>>>>>> langchan/master
 vectorstore_mmembd.add_images(uris=image_uris)

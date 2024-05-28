@@ -1,5 +1,8 @@
 """Test ChatDeepInfra wrapper."""
+<<<<<<< HEAD
 
+=======
+>>>>>>> langchan/master
 from langchain_core.messages import BaseMessage, HumanMessage
 from langchain_core.outputs import ChatGeneration, LLMResult
 

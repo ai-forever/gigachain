@@ -6,6 +6,7 @@ test:
 
 format:
 	poetry run poe format
+<<<<<<< HEAD
 
 lock:
 	@echo "Locking dependencies..."
@@ -18,3 +19,5 @@ check:
 	@for d in $$(find . -name pyproject.toml -exec dirname {} \;); do \
 		(cd $$d && echo "Checking $$d" && poetry check); \
 	done
+=======
+>>>>>>> langchan/master

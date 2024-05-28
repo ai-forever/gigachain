@@ -1,5 +1,8 @@
 """Module implements an agent that uses OpenAI's APIs function enabled API."""
+<<<<<<< HEAD
 
+=======
+>>>>>>> langchan/master
 from typing import Any, List, Optional, Sequence, Tuple, Type, Union
 
 from langchain_core._api import deprecated

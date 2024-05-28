@@ -89,7 +89,20 @@ def test__format_output() -> None:
     )
     expected = ChatResult(
         generations=[
+<<<<<<< HEAD
             ChatGeneration(message=AIMessage("bar")),
+=======
+            ChatGeneration(
+                message=AIMessage(
+                    "bar",
+                    usage_metadata={
+                        "input_tokens": 2,
+                        "output_tokens": 1,
+                        "total_tokens": 3,
+                    },
+                )
+            ),
+>>>>>>> langchan/master
         ],
         llm_output={
             "id": "foo",
@@ -343,10 +356,14 @@ def test__format_messages_with_str_content_and_tool_calls() -> None:
         "thought",
         tool_calls=[{"name": "bar", "id": "1", "args": {"baz": "buzz"}}],
     )
+<<<<<<< HEAD
     tool = ToolMessage(
         "blurb",
         tool_call_id="1",
     )
+=======
+    tool = ToolMessage("blurb", tool_call_id="1")
+>>>>>>> langchan/master
     messages = [system, human, ai, tool]
     expected = (
         "fuzz",
@@ -355,10 +372,14 @@ def test__format_messages_with_str_content_and_tool_calls() -> None:
             {
                 "role": "assistant",
                 "content": [
+<<<<<<< HEAD
                     {
                         "type": "text",
                         "text": "thought",
                     },
+=======
+                    {"type": "text", "text": "thought"},
+>>>>>>> langchan/master
                     {
                         "type": "tool_use",
                         "name": "bar",
@@ -385,12 +406,16 @@ def test__format_messages_with_list_content_and_tool_calls() -> None:
     # If content and tool_calls are specified and content is a list, then content is
     # preferred.
     ai = AIMessage(
+<<<<<<< HEAD
         [
             {
                 "type": "text",
                 "text": "thought",
             }
         ],
+=======
+        [{"type": "text", "text": "thought"}],
+>>>>>>> langchan/master
         tool_calls=[{"name": "bar", "id": "1", "args": {"baz": "buzz"}}],
     )
     tool = ToolMessage(
@@ -404,11 +429,61 @@ def test__format_messages_with_list_content_and_tool_calls() -> None:
             {"role": "user", "content": "foo"},
             {
                 "role": "assistant",
+<<<<<<< HEAD
                 "content": [
                     {
                         "type": "text",
                         "text": "thought",
                     }
+=======
+                "content": [{"type": "text", "text": "thought"}],
+            },
+            {
+                "role": "user",
+                "content": [
+                    {"type": "tool_result", "content": "blurb", "tool_use_id": "1"}
+                ],
+            },
+        ],
+    )
+    actual = _format_messages(messages)
+    assert expected == actual
+
+
+def test__format_messages_with_tool_use_blocks_and_tool_calls() -> None:
+    """Show that tool_calls are preferred to tool_use blocks when both have same id."""
+    system = SystemMessage("fuzz")
+    human = HumanMessage("foo")
+    # NOTE: tool_use block in contents and tool_calls have different arguments.
+    ai = AIMessage(
+        [
+            {"type": "text", "text": "thought"},
+            {
+                "type": "tool_use",
+                "name": "bar",
+                "id": "1",
+                "input": {"baz": "NOT_BUZZ"},
+            },
+        ],
+        tool_calls=[{"name": "bar", "id": "1", "args": {"baz": "BUZZ"}}],
+    )
+    tool = ToolMessage("blurb", tool_call_id="1")
+    messages = [system, human, ai, tool]
+    expected = (
+        "fuzz",
+        [
+            {"role": "user", "content": "foo"},
+            {
+                "role": "assistant",
+                "content": [
+                    {"type": "text", "text": "thought"},
+                    {
+                        "type": "tool_use",
+                        "name": "bar",
+                        "id": "1",
+                        "input": {"baz": "BUZZ"},  # tool_calls value preferred.
+                    },
+>>>>>>> langchan/master
                 ],
             },
             {

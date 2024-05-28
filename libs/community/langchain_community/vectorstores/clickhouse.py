@@ -39,6 +39,10 @@ class ClickhouseSettings(BaseSettings):
         port (int) : URL port to connect with HTTP. Defaults to 8443.
         username (str) : Username to login. Defaults to None.
         password (str) : Password to login. Defaults to None.
+<<<<<<< HEAD
+=======
+        secure (bool) : Connect to server over secure connection. Defaults to False.
+>>>>>>> langchan/master
         index_type (str): index type string.
         index_param (list): index build parameter.
         index_query_params(dict): index query parameters.
@@ -72,6 +76,11 @@ class ClickhouseSettings(BaseSettings):
     username: Optional[str] = None
     password: Optional[str] = None
 
+<<<<<<< HEAD
+=======
+    secure: bool = False
+
+>>>>>>> langchan/master
     index_type: Optional[str] = "annoy"
     # Annoy supports L2Distance and cosineDistance.
     index_param: Optional[Union[List, Dict]] = ["'L2Distance'", 100]
@@ -193,6 +202,10 @@ class Clickhouse(VectorStore):
             port=self.config.port,
             username=self.config.username,
             password=self.config.password,
+<<<<<<< HEAD
+=======
+            secure=self.config.secure,
+>>>>>>> langchan/master
             **kwargs,
         )
         # Enable JSON type

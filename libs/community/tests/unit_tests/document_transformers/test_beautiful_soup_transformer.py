@@ -1,5 +1,8 @@
 """Unit tests for beautiful soup document transformer."""
+<<<<<<< HEAD
 
+=======
+>>>>>>> langchan/master
 import pytest
 from langchain_core.documents import Document
 

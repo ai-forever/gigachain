@@ -1,5 +1,8 @@
 """Integration test for Serper.dev's Google Search API Wrapper."""
+<<<<<<< HEAD
 
+=======
+>>>>>>> langchan/master
 from langchain_community.utilities.google_serper import GoogleSerperAPIWrapper
 
 

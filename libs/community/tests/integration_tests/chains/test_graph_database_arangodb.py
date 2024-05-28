@@ -1,5 +1,8 @@
 """Test Graph Database Chain."""
+<<<<<<< HEAD
 
+=======
+>>>>>>> langchan/master
 from typing import Any
 
 from langchain_community.chains.graph_qa.arangodb import ArangoGraphQAChain

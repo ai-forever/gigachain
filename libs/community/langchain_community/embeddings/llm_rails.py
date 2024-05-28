@@ -1,5 +1,9 @@
+<<<<<<< HEAD
 """This file is for LLMRails Embedding"""
 
+=======
+""" This file is for LLMRails Embedding """
+>>>>>>> langchan/master
 from typing import Dict, List, Optional
 
 import requests

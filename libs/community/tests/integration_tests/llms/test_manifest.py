@@ -1,5 +1,8 @@
 """Test manifest integration."""
+<<<<<<< HEAD
 
+=======
+>>>>>>> langchan/master
 from langchain_community.llms.manifest import ManifestWrapper
 
 

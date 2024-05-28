@@ -1,5 +1,8 @@
 """Integration test for PubMed API Wrapper."""
+<<<<<<< HEAD
 
+=======
+>>>>>>> langchan/master
 from typing import Any, List
 
 import pytest

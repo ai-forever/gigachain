@@ -2,10 +2,16 @@
 In order to run this test, you need to install VertexAI SDK:
 pip install google-cloud-aiplatform>=1.36.0
 
+<<<<<<< HEAD
 Your end-user credentials would be used to make the calls (make sure you've run
 `gcloud auth login` first).
 """
 
+=======
+Your end-user credentials would be used to make the calls (make sure you've run 
+`gcloud auth login` first).
+"""
+>>>>>>> langchan/master
 import os
 from typing import Optional
 

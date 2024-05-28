@@ -1,5 +1,8 @@
 """Integration test for Github Wrapper."""
+<<<<<<< HEAD
 
+=======
+>>>>>>> langchan/master
 import pytest
 
 from langchain_community.utilities.github import GitHubAPIWrapper

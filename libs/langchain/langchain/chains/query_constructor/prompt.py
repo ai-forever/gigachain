@@ -4,6 +4,7 @@ from langchain_core.prompts import PromptTemplate
 SONG_DATA_SOURCE = """\
 ```json
 {{
+<<<<<<< HEAD
     "content": "Текст песни",
     "attributes": {{
         "artist": {{
@@ -17,6 +18,21 @@ SONG_DATA_SOURCE = """\
         "genre": {{
             "type": "string",
             "description": "Жанр песни, один из \"pop\", \"rock\" или \"rap\""
+=======
+    "content": "Lyrics of a song",
+    "attributes": {{
+        "artist": {{
+            "type": "string",
+            "description": "Name of the song artist"
+        }},
+        "length": {{
+            "type": "integer",
+            "description": "Length of the song in seconds"
+        }},
+        "genre": {{
+            "type": "string",
+            "description": "The song genre, one of \"pop\", \"rock\" or \"rap\""
+>>>>>>> langchan/master
         }}
     }}
 }}
@@ -55,13 +71,21 @@ DEFAULT_EXAMPLES = [
     {
         "i": 1,
         "data_source": SONG_DATA_SOURCE,
+<<<<<<< HEAD
         "user_query": "Какие песни Тейлор Свифт или Кэти Перри о подростковой любви длительностью менее 3 минут в жанре поп?",
+=======
+        "user_query": "What are songs by Taylor Swift or Katy Perry about teenage romance under 3 minutes long in the dance pop genre",
+>>>>>>> langchan/master
         "structured_request": FULL_ANSWER,
     },
     {
         "i": 2,
         "data_source": SONG_DATA_SOURCE,
+<<<<<<< HEAD
         "user_query": "Какие песни не были опубликованы на Spotify",
+=======
+        "user_query": "What are songs that were not published on Spotify",
+>>>>>>> langchan/master
         "structured_request": NO_FILTER_ANSWER,
     },
 ]
@@ -70,24 +94,37 @@ EXAMPLES_WITH_LIMIT = [
     {
         "i": 1,
         "data_source": SONG_DATA_SOURCE,
+<<<<<<< HEAD
         "user_query": "Какие песни Тейлор Свифт или Кэти Перри о подростковой любви длительностью менее 3 минут в жанре поп?",
+=======
+        "user_query": "What are songs by Taylor Swift or Katy Perry about teenage romance under 3 minutes long in the dance pop genre",
+>>>>>>> langchan/master
         "structured_request": FULL_ANSWER,
     },
     {
         "i": 2,
         "data_source": SONG_DATA_SOURCE,
+<<<<<<< HEAD
         "user_query": "Какие песни не были опубликованы на Spotify",
+=======
+        "user_query": "What are songs that were not published on Spotify",
+>>>>>>> langchan/master
         "structured_request": NO_FILTER_ANSWER,
     },
     {
         "i": 3,
         "data_source": SONG_DATA_SOURCE,
+<<<<<<< HEAD
         "user_query": "Какие три песни о любви",
+=======
+        "user_query": "What are three songs about love",
+>>>>>>> langchan/master
         "structured_request": WITH_LIMIT_ANSWER,
     },
 ]
 
 EXAMPLE_PROMPT_TEMPLATE = """\
+<<<<<<< HEAD
 << Пример {i}. >>
 Источник данных:
 {data_source}
@@ -96,6 +133,16 @@ EXAMPLE_PROMPT_TEMPLATE = """\
 {user_query}
 
 Структурированный запрос:
+=======
+<< Example {i}. >>
+Data Source:
+{data_source}
+
+User Query:
+{user_query}
+
+Structured Request:
+>>>>>>> langchan/master
 {structured_request}
 """
 
@@ -115,6 +162,7 @@ Structured Request:
 )
 
 DEFAULT_SCHEMA = """\
+<<<<<<< HEAD
 << Схема структурированного запроса >>
 При ответе используйте фрагмент кода markdown с объектом JSON, отформатированным по следующей схеме:
 
@@ -144,10 +192,42 @@ DEFAULT_SCHEMA = """\
 Убедитесь, что фильтры используют только формат `YYYY-MM-DD` при обработке значений типа данных временной метки.
 Убедитесь, что фильтры учитывают описания атрибутов и делают только те сравнения, которые возможны с учетом типа хранимых данных.
 Убедитесь, что фильтры используются только по мере необходимости. Если нет фильтров, которые следует применить, верните "NO_FILTER" для значения фильтра.\
+=======
+<< Structured Request Schema >>
+When responding use a markdown code snippet with a JSON object formatted in the following schema:
+
+```json
+{{{{
+    "query": string \\ text string to compare to document contents
+    "filter": string \\ logical condition statement for filtering documents
+}}}}
+```
+
+The query string should contain only text that is expected to match the contents of documents. Any conditions in the filter should not be mentioned in the query as well.
+
+A logical condition statement is composed of one or more comparison and logical operation statements.
+
+A comparison statement takes the form: `comp(attr, val)`:
+- `comp` ({allowed_comparators}): comparator
+- `attr` (string):  name of attribute to apply the comparison to
+- `val` (string): is the comparison value
+
+A logical operation statement takes the form `op(statement1, statement2, ...)`:
+- `op` ({allowed_operators}): logical operator
+- `statement1`, `statement2`, ... (comparison statements or logical operation statements): one or more statements to apply the operation to
+
+Make sure that you only use the comparators and logical operators listed above and no others.
+Make sure that filters only refer to attributes that exist in the data source.
+Make sure that filters only use the attributed names with its function names if there are functions applied on them.
+Make sure that filters only use format `YYYY-MM-DD` when handling date data typed values.
+Make sure that filters take into account the descriptions of attributes and only make comparisons that are feasible given the type of data being stored.
+Make sure that filters are only used as needed. If there are no filters that should be applied return "NO_FILTER" for the filter value.\
+>>>>>>> langchan/master
 """
 DEFAULT_SCHEMA_PROMPT = PromptTemplate.from_template(DEFAULT_SCHEMA)
 
 SCHEMA_WITH_LIMIT = """\
+<<<<<<< HEAD
 << Схема структурированного запроса >>
 При ответе используйте фрагмент кода markdown с объектом JSON, отформатированным по следующей схеме:
 
@@ -179,11 +259,48 @@ SCHEMA_WITH_LIMIT = """\
 Убедитесь, что фильтры учитывают описания атрибутов и делают только те сравнения, которые возможны с учетом типа хранимых данных.
 Убедитесь, что фильтры используются только по мере необходимости. Если нет фильтров, которые следует применить, верните "NO_FILTER" для значения фильтра.
 Убедитесь, что `limit` всегда является целым числом. Это необязательный параметр, поэтому оставьте его пустым, если он не имеет смысла.
+=======
+<< Structured Request Schema >>
+When responding use a markdown code snippet with a JSON object formatted in the following schema:
+
+```json
+{{{{
+    "query": string \\ text string to compare to document contents
+    "filter": string \\ logical condition statement for filtering documents
+    "limit": int \\ the number of documents to retrieve
+}}}}
+```
+
+The query string should contain only text that is expected to match the contents of documents. Any conditions in the filter should not be mentioned in the query as well.
+
+A logical condition statement is composed of one or more comparison and logical operation statements.
+
+A comparison statement takes the form: `comp(attr, val)`:
+- `comp` ({allowed_comparators}): comparator
+- `attr` (string):  name of attribute to apply the comparison to
+- `val` (string): is the comparison value
+
+A logical operation statement takes the form `op(statement1, statement2, ...)`:
+- `op` ({allowed_operators}): logical operator
+- `statement1`, `statement2`, ... (comparison statements or logical operation statements): one or more statements to apply the operation to
+
+Make sure that you only use the comparators and logical operators listed above and no others.
+Make sure that filters only refer to attributes that exist in the data source.
+Make sure that filters only use the attributed names with its function names if there are functions applied on them.
+Make sure that filters only use format `YYYY-MM-DD` when handling date data typed values.
+Make sure that filters take into account the descriptions of attributes and only make comparisons that are feasible given the type of data being stored.
+Make sure that filters are only used as needed. If there are no filters that should be applied return "NO_FILTER" for the filter value.
+Make sure the `limit` is always an int value. It is an optional parameter so leave it blank if it does not make sense.
+>>>>>>> langchan/master
 """
 SCHEMA_WITH_LIMIT_PROMPT = PromptTemplate.from_template(SCHEMA_WITH_LIMIT)
 
 DEFAULT_PREFIX = """\
+<<<<<<< HEAD
 Твоя задача - структурировать запрос пользователя, чтобы он соответствовал схеме запроса, представленной ниже.
+=======
+Your goal is to structure the user's query to match the request schema provided below.
+>>>>>>> langchan/master
 
 {schema}\
 """
@@ -203,8 +320,13 @@ PREFIX_WITH_DATA_SOURCE = (
 )
 
 DEFAULT_SUFFIX = """\
+<<<<<<< HEAD
 << Пример {i}. >>
 Источник данных:
+=======
+<< Example {i}. >>
+Data Source:
+>>>>>>> langchan/master
 ```json
 {{{{
     "content": "{content}",
@@ -212,6 +334,7 @@ DEFAULT_SUFFIX = """\
 }}}}
 ```
 
+<<<<<<< HEAD
 Запрос пользователя:
 {{query}}
 
@@ -224,4 +347,18 @@ SUFFIX_WITHOUT_DATA_SOURCE = """\
 {{query}}
 
 Структурированный запрос:
+=======
+User Query:
+{{query}}
+
+Structured Request:
+"""
+
+SUFFIX_WITHOUT_DATA_SOURCE = """\
+<< Example {i}. >>
+User Query:
+{{query}}
+
+Structured Request:
+>>>>>>> langchan/master
 """

@@ -12,7 +12,11 @@ tavily-python = "^0.1.9"
 langchain-google-genai = ">=0.0.8,<0.1"
 
 [tool.poetry.group.dev.dependencies]
+<<<<<<< HEAD
 gigachain-cli = ">=0.0.21"
+=======
+langchain-cli = ">=0.0.21"
+>>>>>>> langchan/master
 
 [tool.langserve]
 export_module = "gemini_functions_agent"

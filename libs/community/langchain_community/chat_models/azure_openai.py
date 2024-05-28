@@ -1,5 +1,8 @@
 """Azure OpenAI chat wrapper."""
+<<<<<<< HEAD
 
+=======
+>>>>>>> langchan/master
 from __future__ import annotations
 
 import logging
@@ -86,7 +89,11 @@ class AzureChatOpenAI(ChatOpenAI):
         
         For more: 
         https://www.microsoft.com/en-us/security/business/identity-access/microsoft-entra-id.
+<<<<<<< HEAD
     """  # noqa: E501
+=======
+    """
+>>>>>>> langchan/master
     azure_ad_token_provider: Union[Callable[[], str], None] = None
     """A function that returns an Azure Active Directory token.
         

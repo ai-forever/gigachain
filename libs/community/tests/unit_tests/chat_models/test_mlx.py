@@ -1,5 +1,8 @@
 """Test MLX Chat wrapper."""
+<<<<<<< HEAD
 
+=======
+>>>>>>> langchan/master
 from importlib import import_module
 
 

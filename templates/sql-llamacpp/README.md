@@ -22,19 +22,31 @@ CMAKE_ARGS="-DLLAMA_METAL=on" FORCE_CMAKE=1 pip install -U llama-cpp-python --no
 To use this package, you should first have the LangChain CLI installed:
 
 ```shell
+<<<<<<< HEAD
 pip install -U "gigachain-cli"
+=======
+pip install -U langchain-cli
+>>>>>>> langchan/master
 ```
 
 To create a new LangChain project and install this as the only package, you can do:
 
 ```shell
+<<<<<<< HEAD
 gigachain app new my-app --package sql-llamacpp
+=======
+langchain app new my-app --package sql-llamacpp
+>>>>>>> langchan/master
 ```
 
 If you want to add this to an existing project, you can just run:
 
 ```shell
+<<<<<<< HEAD
 gigachain app add sql-llamacpp
+=======
+langchain app add sql-llamacpp
+>>>>>>> langchan/master
 ```
 
 And add the following code to your `server.py` file:
@@ -59,7 +71,11 @@ export LANGCHAIN_PROJECT=<your-project>  # if not specified, defaults to "defaul
 If you are inside this directory, then you can spin up a LangServe instance directly by:
 
 ```shell
+<<<<<<< HEAD
 gigachain serve
+=======
+langchain serve
+>>>>>>> langchan/master
 ```
 
 This will start the FastAPI app with a server running locally at 

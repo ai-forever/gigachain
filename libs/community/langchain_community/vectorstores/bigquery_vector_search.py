@@ -738,7 +738,13 @@ class BigQueryVectorSearch(VectorStore):
         Returns:
             List of Documents selected by maximal marginal relevance.
         """
+<<<<<<< HEAD
         query_embedding = self.embedding_model.embed_query(query)  # type: ignore
+=======
+        query_embedding = self.embedding_model.embed_query(  # type: ignore
+            query
+        )
+>>>>>>> langchan/master
         doc_tuples = self._search_with_score_and_embeddings_by_vector(
             query_embedding, fetch_k, filter, brute_force, fraction_lists_to_search
         )

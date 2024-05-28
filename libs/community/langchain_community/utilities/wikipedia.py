@@ -1,5 +1,8 @@
 """Util that calls Wikipedia."""
+<<<<<<< HEAD
 
+=======
+>>>>>>> langchan/master
 import logging
 from typing import Any, Dict, Iterator, List, Optional
 

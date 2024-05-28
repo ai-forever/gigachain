@@ -1,5 +1,8 @@
 """Test Lantern functionality."""
+<<<<<<< HEAD
 
+=======
+>>>>>>> langchan/master
 import os
 from typing import List, Tuple
 

@@ -1,5 +1,8 @@
 """Tests for the HTML parsers."""
+<<<<<<< HEAD
 
+=======
+>>>>>>> langchan/master
 from pathlib import Path
 
 import pytest

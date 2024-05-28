@@ -1,5 +1,8 @@
 """Methods for creating chains that use OpenAI function-calling APIs."""
+<<<<<<< HEAD
 
+=======
+>>>>>>> langchan/master
 from typing import (
     Any,
     Callable,
@@ -208,15 +211,24 @@ def create_structured_output_chain(
         function: Any = {
             "name": "output_formatter",
             "description": (
+<<<<<<< HEAD
                 "Output formatter. Всегда используй его чтобы отформатировать свой"
                 " ответ пользователю."
+=======
+                "Output formatter. Should always be used to format your response to the"
+                " user."
+>>>>>>> langchan/master
             ),
             "parameters": output_schema,
         }
     else:
 
         class _OutputFormatter(BaseModel):
+<<<<<<< HEAD
             """Output formatter. Всегда используй его чтобы отформатировать свой ответ пользователю."""  # noqa: E501
+=======
+            """Output formatter. Should always be used to format your response to the user."""  # noqa: E501
+>>>>>>> langchan/master
 
             output: output_schema  # type: ignore
 

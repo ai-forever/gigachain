@@ -16,7 +16,10 @@ clickup = ClickupAPIWrapper()
 toolkit = ClickupToolkit.from_clickup_api_wrapper(clickup)
 ```
 """
+<<<<<<< HEAD
 
+=======
+>>>>>>> langchan/master
 from typing import Optional
 
 from langchain_core.callbacks import CallbackManagerForToolRun

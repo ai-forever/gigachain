@@ -1,4 +1,8 @@
 """Load prompts."""
+<<<<<<< HEAD
+=======
+
+>>>>>>> langchan/master
 import json
 import logging
 from pathlib import Path
@@ -11,8 +15,13 @@ from langchain_core.prompts.base import BasePromptTemplate
 from langchain_core.prompts.chat import ChatPromptTemplate
 from langchain_core.prompts.few_shot import FewShotPromptTemplate
 from langchain_core.prompts.prompt import PromptTemplate
+<<<<<<< HEAD
 from langchain_core.utils import try_load_from_hub
 
+=======
+
+URL_BASE = "https://raw.githubusercontent.com/hwchase17/langchain-hub/master/prompts/"
+>>>>>>> langchan/master
 logger = logging.getLogger(__name__)
 
 
@@ -126,12 +135,22 @@ def _load_prompt(config: dict) -> PromptTemplate:
 
 def load_prompt(path: Union[str, Path]) -> BasePromptTemplate:
     """Unified method for loading a prompt from LangChainHub or local fs."""
+<<<<<<< HEAD
     if hub_result := try_load_from_hub(
         path, _load_prompt_from_file, "prompts", {"py", "json", "yaml"}
     ):
         return hub_result
     else:
         return _load_prompt_from_file(path)
+=======
+    if isinstance(path, str) and path.startswith("lc://"):
+        raise RuntimeError(
+            "Loading from the deprecated github-based Hub is no longer supported. "
+            "Please use the new LangChain Hub at https://smith.langchain.com/hub "
+            "instead."
+        )
+    return _load_prompt_from_file(path)
+>>>>>>> langchan/master
 
 
 def _load_prompt_from_file(file: Union[str, Path]) -> BasePromptTemplate:
@@ -143,10 +162,17 @@ def _load_prompt_from_file(file: Union[str, Path]) -> BasePromptTemplate:
         file_path = file
     # Load from either json or yaml.
     if file_path.suffix == ".json":
+<<<<<<< HEAD
         with open(file_path, encoding="utf-8") as f:
             config = json.load(f)
     elif file_path.suffix.endswith((".yaml", ".yml")):
         with open(file_path, "r", encoding="utf-8") as f:
+=======
+        with open(file_path) as f:
+            config = json.load(f)
+    elif file_path.suffix.endswith((".yaml", ".yml")):
+        with open(file_path, "r") as f:
+>>>>>>> langchan/master
             config = yaml.safe_load(f)
     else:
         raise ValueError(f"Got unsupported file type {file_path.suffix}")
@@ -156,6 +182,7 @@ def _load_prompt_from_file(file: Union[str, Path]) -> BasePromptTemplate:
 
 def _load_chat_prompt(config: Dict) -> ChatPromptTemplate:
     """Load chat prompt from config"""
+<<<<<<< HEAD
     messages = config.pop("messages")
     config.pop("input_variables")
     config.pop("output_parser")
@@ -165,6 +192,17 @@ def _load_chat_prompt(config: Dict) -> ChatPromptTemplate:
             (message.get("role", "user"), message["prompt"].pop("template"))
         )
     return ChatPromptTemplate.from_messages(text_messages, **config)
+=======
+
+    messages = config.pop("messages")
+    template = messages[0]["prompt"].pop("template") if messages else None
+    config.pop("input_variables")
+
+    if not template:
+        raise ValueError("Can't load chat prompt without template")
+
+    return ChatPromptTemplate.from_template(template=template, **config)
+>>>>>>> langchan/master
 
 
 type_to_loader_dict: Dict[str, Callable[[dict], BasePromptTemplate]] = {

@@ -34,7 +34,11 @@ def store_movie_rating(movie: str, rating: int):
     try:
         return response[0]["response"]
     except Exception as e:
+<<<<<<< HEAD
         print(e)  # noqa: T201
+=======
+        print(e)
+>>>>>>> langchan/master
         return "Something went wrong"
 
 

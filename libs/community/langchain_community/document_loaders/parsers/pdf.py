@@ -1,5 +1,8 @@
 """Module contains common parsers for PDFs."""
+<<<<<<< HEAD
 
+=======
+>>>>>>> langchan/master
 from __future__ import annotations
 
 import warnings

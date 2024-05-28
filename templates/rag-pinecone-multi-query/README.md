@@ -18,19 +18,31 @@ Set the `OPENAI_API_KEY` environment variable to access the OpenAI models.
 To use this package, you should first install the LangChain CLI:
 
 ```shell
+<<<<<<< HEAD
 pip install -U gigachain-cli
+=======
+pip install -U langchain-cli
+>>>>>>> langchan/master
 ```
 
 To create a new LangChain project and install this package, do:
 
 ```shell
+<<<<<<< HEAD
 gigachain app new my-app --package rag-pinecone-multi-query
+=======
+langchain app new my-app --package rag-pinecone-multi-query
+>>>>>>> langchan/master
 ```
 
 To add this package to an existing project, run:
 
 ```shell
+<<<<<<< HEAD
 gigachain app add rag-pinecone-multi-query
+=======
+langchain app add rag-pinecone-multi-query
+>>>>>>> langchan/master
 ```
 
 And add the following code to your `server.py` file:
@@ -52,7 +64,11 @@ export LANGCHAIN_PROJECT=<your-project>  # if not specified, defaults to "defaul
 If you are inside this directory, then you can spin up a LangServe instance directly by:
 
 ```shell
+<<<<<<< HEAD
 gigachain serve
+=======
+langchain serve
+>>>>>>> langchan/master
 ```
 
 This will start the FastAPI app with a server running locally at [http://localhost:8000](http://localhost:8000)

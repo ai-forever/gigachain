@@ -2,7 +2,10 @@
 and the output of a chat.
 
 """
+<<<<<<< HEAD
 
+=======
+>>>>>>> langchan/master
 from langchain_core.outputs.chat_generation import ChatGeneration, ChatGenerationChunk
 from langchain_core.outputs.chat_result import ChatResult
 from langchain_core.outputs.generation import Generation, GenerationChunk

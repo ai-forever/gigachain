@@ -214,7 +214,11 @@ if TYPE_CHECKING:
         GitHubIssuesLoader,
     )
     from langchain_community.document_loaders.glue_catalog import (
+<<<<<<< HEAD
         GlueCatalogLoader,  # noqa: F401
+=======
+        GlueCatalogLoader,
+>>>>>>> langchan/master
     )
     from langchain_community.document_loaders.google_speech_to_text import (
         GoogleSpeechToTextLoader,
@@ -332,8 +336,13 @@ if TYPE_CHECKING:
         OracleAutonomousDatabaseLoader,
     )
     from langchain_community.document_loaders.oracleai import (
+<<<<<<< HEAD
         OracleDocLoader,  # noqa: F401
         OracleTextSplitter,  # noqa: F401
+=======
+        OracleDocLoader,
+        OracleTextSplitter,
+>>>>>>> langchan/master
     )
     from langchain_community.document_loaders.org_mode import (
         UnstructuredOrgModeLoader,
@@ -403,6 +412,12 @@ if TYPE_CHECKING:
     from langchain_community.document_loaders.s3_file import (
         S3FileLoader,
     )
+<<<<<<< HEAD
+=======
+    from langchain_community.document_loaders.scrapfly import (
+        ScrapflyLoader,
+    )
+>>>>>>> langchan/master
     from langchain_community.document_loaders.sharepoint import (
         SharePointLoader,
     )
@@ -654,6 +669,10 @@ _module_lookup = {
     "RocksetLoader": "langchain_community.document_loaders.rocksetdb",
     "S3DirectoryLoader": "langchain_community.document_loaders.s3_directory",
     "S3FileLoader": "langchain_community.document_loaders.s3_file",
+<<<<<<< HEAD
+=======
+    "ScrapflyLoader": "langchain_community.document_loaders.scrapfly",
+>>>>>>> langchan/master
     "SQLDatabaseLoader": "langchain_community.document_loaders.sql_database",
     "SRTLoader": "langchain_community.document_loaders.srt",
     "SeleniumURLLoader": "langchain_community.document_loaders.url_selenium",
@@ -854,6 +873,10 @@ __all__ = [
     "RocksetLoader",
     "S3DirectoryLoader",
     "S3FileLoader",
+<<<<<<< HEAD
+=======
+    "ScrapflyLoader",
+>>>>>>> langchan/master
     "SQLDatabaseLoader",
     "SRTLoader",
     "SeleniumURLLoader",

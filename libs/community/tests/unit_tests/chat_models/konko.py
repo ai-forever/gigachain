@@ -1,5 +1,8 @@
 """Evaluate ChatKonko Interface."""
+<<<<<<< HEAD
 
+=======
+>>>>>>> langchan/master
 from typing import Any
 
 import pytest

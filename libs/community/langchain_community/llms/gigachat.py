@@ -1,5 +1,6 @@
 from __future__ import annotations
 
+<<<<<<< HEAD
 import json
 import logging
 from functools import cached_property
@@ -13,6 +14,11 @@ from typing import (
     Literal,
     Optional,
 )
+=======
+import logging
+from functools import cached_property
+from typing import TYPE_CHECKING, Any, AsyncIterator, Dict, Iterator, List, Optional
+>>>>>>> langchan/master
 
 from langchain_core.callbacks import (
     AsyncCallbackManagerForLLMRun,
@@ -26,7 +32,10 @@ from langchain_core.pydantic_v1 import root_validator
 if TYPE_CHECKING:
     import gigachat
     import gigachat.models as gm
+<<<<<<< HEAD
     from gigachat._types import FileTypes
+=======
+>>>>>>> langchan/master
 
 logger = logging.getLogger(__name__)
 
@@ -194,6 +203,7 @@ class _BaseGigaChat(Serializable):
         else:
             return round(len(text) / 4.6)
 
+<<<<<<< HEAD
     def upload_file(
         self, file: FileTypes, purpose: Literal["general", "assistant"] = "general"
     ) -> gm.UploadedFile:
@@ -204,6 +214,8 @@ class _BaseGigaChat(Serializable):
     ) -> gm.UploadedFile:
         return await self._client.aupload_file(file, purpose)
 
+=======
+>>>>>>> langchan/master
 
 class GigaChat(_BaseGigaChat, BaseLLM):
     """`GigaChat` large language models API.
@@ -239,7 +251,11 @@ class GigaChat(_BaseGigaChat, BaseLLM):
             payload["update_interval"] = self.update_interval
 
         if self.verbose:
+<<<<<<< HEAD
             logger.warning("Giga request: %s", json.dumps(payload, ensure_ascii=False))
+=======
+            logger.info("Giga request: %s", payload)
+>>>>>>> langchan/master
 
         return payload
 
@@ -330,9 +346,15 @@ class GigaChat(_BaseGigaChat, BaseLLM):
         for chunk in self._client.stream(payload):
             if chunk.choices:
                 content = chunk.choices[0].delta.content
+<<<<<<< HEAD
                 yield GenerationChunk(text=content)  # type: ignore
                 if run_manager:
                     run_manager.on_llm_new_token(content if content is not None else "")
+=======
+                yield GenerationChunk(text=content)
+                if run_manager:
+                    run_manager.on_llm_new_token(content)
+>>>>>>> langchan/master
 
     async def _astream(
         self,
@@ -346,11 +368,17 @@ class GigaChat(_BaseGigaChat, BaseLLM):
         async for chunk in self._client.astream(payload):
             if chunk.choices:
                 content = chunk.choices[0].delta.content
+<<<<<<< HEAD
                 yield GenerationChunk(text=content)  # type: ignore
                 if run_manager:
                     await run_manager.on_llm_new_token(
                         content if content is not None else ""
                     )
+=======
+                yield GenerationChunk(text=content)
+                if run_manager:
+                    await run_manager.on_llm_new_token(content)
+>>>>>>> langchan/master
 
     class Config:
         extra = "allow"

@@ -1,6 +1,9 @@
 # flake8: noqa
 """Tools for making requests to an API endpoint."""
+<<<<<<< HEAD
 
+=======
+>>>>>>> langchan/master
 import json
 from typing import Any, Dict, Optional, Union
 

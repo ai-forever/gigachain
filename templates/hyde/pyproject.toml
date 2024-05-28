@@ -7,7 +7,11 @@ readme = "README.md"
 
 [tool.poetry.dependencies]
 python = ">=3.8.1,<4.0"
+<<<<<<< HEAD
 gigachain = ">=0.0.325"
+=======
+langchain = "^0.1"
+>>>>>>> langchan/master
 openai = "<2"
 chromadb = "^0.4.15"
 tiktoken = "^0.5.1"
@@ -15,11 +19,19 @@ langchain-text-splitters = ">=0.0.1,<0.1"
 
 [tool.poetry.group.dev.dependencies]
 poethepoet = "^0.24.1"
+<<<<<<< HEAD
 gigachain-cli = ">=0.0.21"
 fastapi = ">=0.104.0,<1"
 sse-starlette = "^1.6.5"
 
 [tool.gigaserve]
+=======
+langchain-cli = ">=0.0.21"
+fastapi = ">=0.104.0,<1"
+sse-starlette = "^1.6.5"
+
+[tool.langserve]
+>>>>>>> langchan/master
 export_module = "hyde.chain"
 export_attr = "chain"
 
@@ -30,7 +42,11 @@ integrations = ["OpenAI", "ChromaDB"]
 tags = ["paper"]
 
 [tool.poe.tasks.start]
+<<<<<<< HEAD
 cmd = "uvicorn gigachain_cli.dev_scripts:create_demo_server --reload --port $port --host $host"
+=======
+cmd = "uvicorn langchain_cli.dev_scripts:create_demo_server --reload --port $port --host $host"
+>>>>>>> langchan/master
 args = [
     { name = "port", help = "port to run on", default = "8000" },
     { name = "host", help = "host to run on", default = "127.0.0.1" },

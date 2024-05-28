@@ -16,19 +16,31 @@ Set the `OPENAI_API_KEY` environment variable to access the OpenAI models.
 To utilize plate-chain, you must have the LangChain CLI installed:
 
 ```shell
+<<<<<<< HEAD
 pip install -U gigachain-cli
+=======
+pip install -U langchain-cli
+>>>>>>> langchan/master
 ```
 
 Creating a new LangChain project and installing plate-chain as the only package can be done with:
 
 ```shell
+<<<<<<< HEAD
 gigachain app new my-app --package plate-chain
+=======
+langchain app new my-app --package plate-chain
+>>>>>>> langchan/master
 ```
 
 If you wish to add this to an existing project, simply run:
 
 ```shell
+<<<<<<< HEAD
 gigachain app add plate-chain
+=======
+langchain app add plate-chain
+>>>>>>> langchan/master
 ```
 
 Then add the following code to your `server.py` file:
@@ -50,7 +62,11 @@ export LANGCHAIN_PROJECT=<your-project>  # if not specified, defaults to "defaul
 If you're in this directory, you can start a LangServe instance directly by:
 
 ```shell
+<<<<<<< HEAD
 gigachain serve
+=======
+langchain serve
+>>>>>>> langchan/master
 ```
 
 This starts the FastAPI app with a server running locally at 

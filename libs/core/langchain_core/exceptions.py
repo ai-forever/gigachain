@@ -1,5 +1,9 @@
+<<<<<<< HEAD
 """Custom **exceptions** for LangChain."""
 
+=======
+"""Custom **exceptions** for LangChain. """
+>>>>>>> langchan/master
 from typing import Any, Optional
 
 

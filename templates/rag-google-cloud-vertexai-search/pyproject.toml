@@ -7,16 +7,28 @@ readme = "README.md"
 
 [tool.poetry.dependencies]
 python = ">=3.8.1,<4.0"
+<<<<<<< HEAD
 gigachain = ">=0.0.333"
+=======
+langchain = "^0.1"
+>>>>>>> langchan/master
 google-cloud-aiplatform = ">=1.35.0"
 
 
 [tool.poetry.group.dev.dependencies]
+<<<<<<< HEAD
 gigachain-cli = ">=0.0.21"
 fastapi = ">=0.104.0,<1"
 sse-starlette = "^1.6.5"
 
 [tool.gigaserve]
+=======
+langchain-cli = ">=0.0.21"
+fastapi = ">=0.104.0,<1"
+sse-starlette = "^1.6.5"
+
+[tool.langserve]
+>>>>>>> langchan/master
 export_module = "rag_google_cloud_vertexai_search"
 export_attr = "chain"
 

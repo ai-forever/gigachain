@@ -22,7 +22,10 @@ Example:
     #    "However, it does not provide an explanation of what the formula means."
     # }
 """
+<<<<<<< HEAD
 
+=======
+>>>>>>> langchan/master
 from langchain.evaluation.scoring.eval_chain import (
     LabeledScoreStringEvalChain,
     ScoreStringEvalChain,

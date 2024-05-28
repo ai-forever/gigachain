@@ -50,15 +50,25 @@ class SelfAskWithSearchAgent(Agent):
         if len(tools) != 1:
             raise ValueError(f"Exactly one tool must be specified, but got {tools}")
         tool_names = {tool.name for tool in tools}
+<<<<<<< HEAD
         if tool_names != {"Промежуточный ответ"}:
             raise ValueError(
                 f"Tool name should be Промежуточный ответ, got {tool_names}"
+=======
+        if tool_names != {"Intermediate Answer"}:
+            raise ValueError(
+                f"Tool name should be Intermediate Answer, got {tool_names}"
+>>>>>>> langchan/master
             )
 
     @property
     def observation_prefix(self) -> str:
         """Prefix to append the observation with."""
+<<<<<<< HEAD
         return "Промежуточный ответ: "
+=======
+        return "Intermediate answer: "
+>>>>>>> langchan/master
 
     @property
     def llm_prefix(self) -> str:
@@ -80,10 +90,17 @@ class SelfAskWithSearchChain(AgentExecutor):
     ):
         """Initialize only with an LLM and a search chain."""
         search_tool = Tool(
+<<<<<<< HEAD
             name="Промежуточный ответ",
             func=search_chain.run,
             coroutine=search_chain.arun,
             description="Поиск",
+=======
+            name="Intermediate Answer",
+            func=search_chain.run,
+            coroutine=search_chain.arun,
+            description="Search",
+>>>>>>> langchan/master
         )
         agent = SelfAskWithSearchAgent.from_llm_and_tools(llm, [search_tool])
         super().__init__(agent=agent, tools=[search_tool], **kwargs)
@@ -117,7 +134,11 @@ def create_self_ask_with_search_agent(
             )
 
             prompt = hub.pull("hwchase17/self-ask-with-search")
+<<<<<<< HEAD
             model = ChatAnthropic()
+=======
+            model = ChatAnthropic(model="claude-3-haiku-20240307")
+>>>>>>> langchan/master
             tools = [...]  # Should just be one tool with name `Intermediate Answer`
 
             agent = create_self_ask_with_search_agent(model, tools, prompt)

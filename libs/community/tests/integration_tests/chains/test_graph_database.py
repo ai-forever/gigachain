@@ -1,5 +1,8 @@
 """Test Graph Database Chain."""
+<<<<<<< HEAD
 
+=======
+>>>>>>> langchan/master
 import os
 
 from langchain.chains.loading import load_chain

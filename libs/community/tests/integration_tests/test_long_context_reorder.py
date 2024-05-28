@@ -1,5 +1,8 @@
 """Integration test for doc reordering."""
+<<<<<<< HEAD
 
+=======
+>>>>>>> langchan/master
 from langchain_community.document_transformers.long_context_reorder import (
     LongContextReorder,
 )

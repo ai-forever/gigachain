@@ -1,5 +1,8 @@
 """Test Weaviate functionality."""
+<<<<<<< HEAD
 
+=======
+>>>>>>> langchan/master
 import logging
 import os
 import uuid

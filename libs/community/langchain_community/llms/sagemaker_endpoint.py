@@ -1,5 +1,8 @@
 """Sagemaker InvokeEndpoint API."""
+<<<<<<< HEAD
 
+=======
+>>>>>>> langchan/master
 import io
 import json
 from abc import abstractmethod

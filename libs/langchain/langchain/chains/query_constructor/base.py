@@ -1,5 +1,8 @@
 """LLM Chain for turning a user text query into a structured query."""
+<<<<<<< HEAD
 
+=======
+>>>>>>> langchan/master
 from __future__ import annotations
 
 import json
@@ -168,11 +171,15 @@ def _format_attribute_info(info: Sequence[Union[AttributeInfo, dict]]) -> str:
     for i in info:
         i_dict = dict(i)
         info_dicts[i_dict.pop("name")] = i_dict
+<<<<<<< HEAD
     return (
         json.dumps(info_dicts, indent=4, ensure_ascii=False)
         .replace("{", "{{")
         .replace("}", "}}")
     )
+=======
+    return json.dumps(info_dicts, indent=4).replace("{", "{{").replace("}", "}}")
+>>>>>>> langchan/master
 
 
 def construct_examples(input_output_pairs: Sequence[Tuple[str, dict]]) -> List[dict]:
@@ -187,9 +194,13 @@ def construct_examples(input_output_pairs: Sequence[Tuple[str, dict]]) -> List[d
     examples = []
     for i, (_input, output) in enumerate(input_output_pairs):
         structured_request = (
+<<<<<<< HEAD
             json.dumps(output, indent=4, ensure_ascii=False)
             .replace("{", "{{")
             .replace("}", "}}")
+=======
+            json.dumps(output, indent=4).replace("{", "{{").replace("}", "}}")
+>>>>>>> langchan/master
         )
         example = {
             "i": i + 1,

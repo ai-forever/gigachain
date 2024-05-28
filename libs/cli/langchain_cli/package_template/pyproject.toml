@@ -7,6 +7,7 @@ readme = "README.md"
 
 [tool.poetry.dependencies]
 python = ">=3.8.1,<4.0"
+<<<<<<< HEAD
 gigachain-core = ">=0.1.5,<0.3"
 gigachain-openai = ">=0.0.1"
 
@@ -17,6 +18,18 @@ fastapi = "^0.104.0"
 sse-starlette = "^1.6.5"
 
 [tool.gigaserve]
+=======
+langchain-core = ">=0.1.5,<0.3"
+langchain-openai = ">=0.0.1"
+
+
+[tool.poetry.group.dev.dependencies]
+langchain-cli = ">=0.0.4"
+fastapi = "^0.104.0"
+sse-starlette = "^1.6.5"
+
+[tool.langserve]
+>>>>>>> langchan/master
 export_module = "__module_name__"
 export_attr = "chain"
 

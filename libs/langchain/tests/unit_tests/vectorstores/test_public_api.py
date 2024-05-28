@@ -1,5 +1,8 @@
 """Test the public API of the tools package."""
+<<<<<<< HEAD
 
+=======
+>>>>>>> langchan/master
 from langchain.vectorstores import __all__ as public_api
 
 _EXPECTED = [

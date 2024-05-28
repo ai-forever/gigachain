@@ -1,5 +1,9 @@
 """Wrapper around wikipedia API."""
 
+<<<<<<< HEAD
+=======
+
+>>>>>>> langchan/master
 from typing import Union
 
 from langchain_core.documents import Document

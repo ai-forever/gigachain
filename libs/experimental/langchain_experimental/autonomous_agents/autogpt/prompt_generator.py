@@ -1,5 +1,8 @@
+<<<<<<< HEAD
 # ruff: noqa: E501
 
+=======
+>>>>>>> langchan/master
 import json
 from typing import List
 
@@ -25,6 +28,7 @@ class PromptGenerator:
         self.resources: List[str] = []
         self.performance_evaluation: List[str] = []
         self.response_format = {
+<<<<<<< HEAD
             "рассуждения": {
                 "text": "мысль",
                 "reasoning": "рассуждение",
@@ -33,6 +37,16 @@ class PromptGenerator:
                 "speak": "итоговые мысли для передачи пользователю",
             },
             "команда": {"name": "имя команды", "args": {"arg name": "значение"}},
+=======
+            "thoughts": {
+                "text": "thought",
+                "reasoning": "reasoning",
+                "plan": "- short bulleted\n- list that conveys\n- long-term plan",
+                "criticism": "constructive self-criticism",
+                "speak": "thoughts summary to say to user",
+            },
+            "command": {"name": "command name", "args": {"arg name": "value"}},
+>>>>>>> langchan/master
         }
 
     def add_constraint(self, constraint: str) -> None:
@@ -49,7 +63,11 @@ class PromptGenerator:
 
     def _generate_command_string(self, tool: BaseTool) -> str:
         output = f"{tool.name}: {tool.description}"
+<<<<<<< HEAD
         output += f", args json schema: {json.dumps(tool.args, ensure_ascii=False)}"
+=======
+        output += f", args json schema: {json.dumps(tool.args)}"
+>>>>>>> langchan/master
         return output
 
     def add_resource(self, resource: str) -> None:
@@ -88,11 +106,19 @@ class PromptGenerator:
                 for i, item in enumerate(items)
             ]
             finish_description = (
+<<<<<<< HEAD
                 "используй это, чтобы сигнализировать, что вы выполнил все свои задачи"
             )
             finish_args = (
                 '"response": "окончательный ответ, чтобы '
                 'пользователь узнал, что ты выполнил свои задачи"'
+=======
+                "use this to signal that you have finished all your objectives"
+            )
+            finish_args = (
+                '"response": "final response to let '
+                'people know you have finished your objectives"'
+>>>>>>> langchan/master
             )
             finish_string = (
                 f"{len(items) + 1}. {FINISH_NAME}: "
@@ -108,6 +134,7 @@ class PromptGenerator:
         Returns:
             str: The generated prompt string.
         """
+<<<<<<< HEAD
         formatted_response_format = json.dumps(
             self.response_format, indent=4, ensure_ascii=False
         )
@@ -121,6 +148,19 @@ class PromptGenerator:
             f"Ты должен отвечать только в формате JSON, как описано ниже "
             f"\nФормат ответа: \n{formatted_response_format} "
             f"\nУбедись, что ответ можно разобрать с помощью Python json.loads"
+=======
+        formatted_response_format = json.dumps(self.response_format, indent=4)
+        prompt_string = (
+            f"Constraints:\n{self._generate_numbered_list(self.constraints)}\n\n"
+            f"Commands:\n"
+            f"{self._generate_numbered_list(self.commands, item_type='command')}\n\n"
+            f"Resources:\n{self._generate_numbered_list(self.resources)}\n\n"
+            f"Performance Evaluation:\n"
+            f"{self._generate_numbered_list(self.performance_evaluation)}\n\n"
+            f"You should only respond in JSON format as described below "
+            f"\nResponse Format: \n{formatted_response_format} "
+            f"\nEnsure the response can be parsed by Python json.loads"
+>>>>>>> langchan/master
         )
 
         return prompt_string
@@ -140,6 +180,7 @@ def get_prompt(tools: List[BaseTool]) -> str:
 
     # Add constraints to the PromptGenerator object
     prompt_generator.add_constraint(
+<<<<<<< HEAD
         "Лимит в ~4000 слов для краткосрочной памяти. "
         "Твоя краткосрочная память короткосрочная, "
         "поэтому немедленно сохраняй важную информацию в файлах."
@@ -152,6 +193,20 @@ def get_prompt(tools: List[BaseTool]) -> str:
     prompt_generator.add_constraint("Без помощи пользователя")
     prompt_generator.add_constraint(
         'Используй исключительно команды, перечисленные в двойных кавычках, например, "имя команды"'
+=======
+        "~4000 word limit for short term memory. "
+        "Your short term memory is short, "
+        "so immediately save important information to files."
+    )
+    prompt_generator.add_constraint(
+        "If you are unsure how you previously did something "
+        "or want to recall past events, "
+        "thinking about similar events will help you remember."
+    )
+    prompt_generator.add_constraint("No user assistance")
+    prompt_generator.add_constraint(
+        'Exclusively use the commands listed in double quotes e.g. "command name"'
+>>>>>>> langchan/master
     )
 
     # Add commands to the PromptGenerator object
@@ -159,6 +214,7 @@ def get_prompt(tools: List[BaseTool]) -> str:
         prompt_generator.add_tool(tool)
 
     # Add resources to the PromptGenerator object
+<<<<<<< HEAD
     prompt_generator.add_resource("Доступ в Интернет для поиска и сбора информации.")
     prompt_generator.add_resource("Управление долгосрочной памятью.")
     prompt_generator.add_resource(
@@ -180,6 +236,31 @@ def get_prompt(tools: List[BaseTool]) -> str:
     prompt_generator.add_performance_evaluation(
         "Каждая команда имеет свою цену, поэтому будь умен и эффективен. "
         "Стремись выполнить задачи за минимальное количество шагов."
+=======
+    prompt_generator.add_resource(
+        "Internet access for searches and information gathering."
+    )
+    prompt_generator.add_resource("Long Term memory management.")
+    prompt_generator.add_resource(
+        "GPT-3.5 powered Agents for delegation of simple tasks."
+    )
+    prompt_generator.add_resource("File output.")
+
+    # Add performance evaluations to the PromptGenerator object
+    prompt_generator.add_performance_evaluation(
+        "Continuously review and analyze your actions "
+        "to ensure you are performing to the best of your abilities."
+    )
+    prompt_generator.add_performance_evaluation(
+        "Constructively self-criticize your big-picture behavior constantly."
+    )
+    prompt_generator.add_performance_evaluation(
+        "Reflect on past decisions and strategies to refine your approach."
+    )
+    prompt_generator.add_performance_evaluation(
+        "Every command has a cost, so be smart and efficient. "
+        "Aim to complete tasks in the least number of steps."
+>>>>>>> langchan/master
     )
 
     # Generate the prompt string

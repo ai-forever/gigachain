@@ -75,19 +75,31 @@ Use these steps to setup your Supabase database if you haven't already.
 To use this package, install the LangChain CLI first:
 
 ```shell
+<<<<<<< HEAD
 pip install -U gigachain-cli
+=======
+pip install -U langchain-cli
+>>>>>>> langchan/master
 ```
 
 Create a new LangChain project and install this package as the only one:
 
 ```shell
+<<<<<<< HEAD
 gigachain app new my-app --package self-query-supabase
+=======
+langchain app new my-app --package self-query-supabase
+>>>>>>> langchan/master
 ```
 
 To add this to an existing project, run:
 
 ```shell
+<<<<<<< HEAD
 gigachain app add self-query-supabase
+=======
+langchain app add self-query-supabase
+>>>>>>> langchan/master
 ```
 
 Add the following code to your `server.py` file:
@@ -108,7 +120,11 @@ export LANGCHAIN_PROJECT=<your-project>  # if not specified, defaults to "defaul
 If you are inside this directory, then you can spin up a LangServe instance directly by:
 
 ```shell
+<<<<<<< HEAD
 gigachain serve
+=======
+langchain serve
+>>>>>>> langchan/master
 ```
 
 This will start the FastAPI app with a server running locally at 

@@ -1,5 +1,8 @@
 """Test ChatFireworks wrapper."""
+<<<<<<< HEAD
 
+=======
+>>>>>>> langchan/master
 import sys
 from typing import cast
 

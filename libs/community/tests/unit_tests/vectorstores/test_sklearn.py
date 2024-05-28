@@ -1,5 +1,8 @@
 """Test SKLearnVectorStore functionality."""
+<<<<<<< HEAD
 
+=======
+>>>>>>> langchan/master
 from pathlib import Path
 
 import pytest

@@ -1,5 +1,8 @@
 """Base classes for scoring the output of a model on a scale of 1-10."""
+<<<<<<< HEAD
 
+=======
+>>>>>>> langchan/master
 from __future__ import annotations
 
 import logging
@@ -440,7 +443,11 @@ class LabeledScoreStringEvalChain(ScoreStringEvalChain):
         Raises:
             ValueError: If the input variables are not as expected.
 
+<<<<<<< HEAD
         """  # noqa: E501
+=======
+        """
+>>>>>>> langchan/master
         expected_input_vars = {
             "prediction",
             "input",

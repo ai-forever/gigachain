@@ -1,5 +1,8 @@
 """Global values and configuration that apply to all of LangChain."""
+<<<<<<< HEAD
 
+=======
+>>>>>>> langchan/master
 import warnings
 from typing import TYPE_CHECKING, Optional
 

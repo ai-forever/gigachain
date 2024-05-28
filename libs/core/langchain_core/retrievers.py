@@ -18,7 +18,10 @@ the backbone of a retriever, but there are other types of retrievers as well.
     Document, Serializable, Callbacks,
     CallbackManagerForRetrieverRun, AsyncCallbackManagerForRetrieverRun
 """
+<<<<<<< HEAD
 
+=======
+>>>>>>> langchan/master
 from __future__ import annotations
 
 import warnings

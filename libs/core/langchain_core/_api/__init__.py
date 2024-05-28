@@ -8,7 +8,10 @@ This module is only relevant for LangChain developers, not for users.
     in your own code.  We may change the API at any time with no warning.
 
 """
+<<<<<<< HEAD
 
+=======
+>>>>>>> langchan/master
 from .beta_decorator import (
     LangChainBetaWarning,
     beta,

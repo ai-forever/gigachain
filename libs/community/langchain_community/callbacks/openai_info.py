@@ -88,6 +88,7 @@ MODEL_COST_PER_1K_TOKENS = {
     # Fine Tuned input
     "babbage-002-finetuned": 0.0016,
     "davinci-002-finetuned": 0.012,
+<<<<<<< HEAD
     "gpt-3.5-turbo-0613-finetuned": 0.012,
     "gpt-3.5-turbo-1106-finetuned": 0.012,
     # Fine Tuned output
@@ -95,6 +96,17 @@ MODEL_COST_PER_1K_TOKENS = {
     "davinci-002-finetuned-completion": 0.012,
     "gpt-3.5-turbo-0613-finetuned-completion": 0.016,
     "gpt-3.5-turbo-1106-finetuned-completion": 0.016,
+=======
+    "gpt-3.5-turbo-0613-finetuned": 0.003,
+    "gpt-3.5-turbo-1106-finetuned": 0.003,
+    "gpt-3.5-turbo-0125-finetuned": 0.003,
+    # Fine Tuned output
+    "babbage-002-finetuned-completion": 0.0016,
+    "davinci-002-finetuned-completion": 0.012,
+    "gpt-3.5-turbo-0613-finetuned-completion": 0.006,
+    "gpt-3.5-turbo-1106-finetuned-completion": 0.006,
+    "gpt-3.5-turbo-0125-finetuned-completion": 0.006,
+>>>>>>> langchan/master
     # Azure Fine Tuned input
     "babbage-002-azure-finetuned": 0.0004,
     "davinci-002-azure-finetuned": 0.002,

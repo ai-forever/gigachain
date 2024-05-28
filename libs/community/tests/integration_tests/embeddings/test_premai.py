@@ -1,6 +1,10 @@
 """Test PremAIEmbeddings from PremAI API wrapper.
 
+<<<<<<< HEAD
 Note: This test must be run with the PREMAI_API_KEY environment variable set to a valid
+=======
+Note: This test must be run with the PREMAI_API_KEY environment variable set to a valid 
+>>>>>>> langchan/master
 API key and a valid project_id. This needs to setup a project in PremAI's platform.
 You can check it out here: https://app.premai.io
 """

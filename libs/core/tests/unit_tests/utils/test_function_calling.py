@@ -146,6 +146,19 @@ def test_function_optional_param() -> None:
     assert set(req) == {"b"}
 
 
+<<<<<<< HEAD
+=======
+def test_function_no_params() -> None:
+    def nullary_function() -> None:
+        """nullary function"""
+        pass
+
+    func = convert_to_openai_function(nullary_function)
+    req = func["parameters"]["required"]
+    assert not req
+
+
+>>>>>>> langchan/master
 class FakeCall(BaseModel):
     data: str
 

@@ -1,6 +1,9 @@
 # flake8: noqa
 """Tools for working with JSON specs."""
+<<<<<<< HEAD
 
+=======
+>>>>>>> langchan/master
 from __future__ import annotations
 
 import json

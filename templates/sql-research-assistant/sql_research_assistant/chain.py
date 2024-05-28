@@ -17,6 +17,10 @@ chain = chain_notypes.with_types(input_type=InputType)
 
 
 if __name__ == "__main__":
+<<<<<<< HEAD
     print(  # noqa: T201
+=======
+    print(
+>>>>>>> langchan/master
         chain.invoke({"question": "who is typically older: point guards or centers?"})
     )

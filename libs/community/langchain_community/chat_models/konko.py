@@ -1,5 +1,8 @@
 """KonkoAI chat wrapper."""
+<<<<<<< HEAD
 
+=======
+>>>>>>> langchan/master
 from __future__ import annotations
 
 import logging

@@ -1,4 +1,10 @@
+<<<<<<< HEAD
 from typing import Any, Dict, List, Literal, Union
+=======
+from typing import Any, Dict, List, Literal, Optional, Union
+
+from typing_extensions import TypedDict
+>>>>>>> langchan/master
 
 from langchain_core.messages.base import (
     BaseMessage,
@@ -19,6 +25,23 @@ from langchain_core.utils.json import (
 )
 
 
+<<<<<<< HEAD
+=======
+class UsageMetadata(TypedDict):
+    """Usage metadata for a message, such as token counts.
+
+    Attributes:
+        input_tokens: (int) count of input (or prompt) tokens
+        output_tokens: (int) count of output (or completion) tokens
+        total_tokens: (int) total token count
+    """
+
+    input_tokens: int
+    output_tokens: int
+    total_tokens: int
+
+
+>>>>>>> langchan/master
 class AIMessage(BaseMessage):
     """Message from an AI."""
 
@@ -31,6 +54,14 @@ class AIMessage(BaseMessage):
     """If provided, tool calls associated with the message."""
     invalid_tool_calls: List[InvalidToolCall] = []
     """If provided, tool calls with parsing errors associated with the message."""
+<<<<<<< HEAD
+=======
+    usage_metadata: Optional[UsageMetadata] = None
+    """If provided, usage metadata for a message, such as token counts.
+
+    This is a standard representation of token usage that is consistent across models.
+    """
+>>>>>>> langchan/master
 
     type: Literal["ai"] = "ai"
 
@@ -110,7 +141,11 @@ class AIMessageChunk(AIMessage, BaseMessageChunk):
     # Ignoring mypy re-assignment here since we're overriding the value
     # to make sure that the chunk variant can be discriminated from the
     # non-chunk variant.
+<<<<<<< HEAD
     type: Literal["AIMessageChunk"] = "AIMessageChunk"  # type: ignore[assignment] # noqa: E501
+=======
+    type: Literal["AIMessageChunk"] = "AIMessageChunk"  # type: ignore[assignment]
+>>>>>>> langchan/master
 
     tool_call_chunks: List[ToolCallChunk] = []
     """If provided, tool call chunks associated with the message."""
@@ -198,12 +233,35 @@ class AIMessageChunk(AIMessage, BaseMessageChunk):
             else:
                 tool_call_chunks = []
 
+<<<<<<< HEAD
+=======
+            # Token usage
+            if self.usage_metadata or other.usage_metadata:
+                left: UsageMetadata = self.usage_metadata or UsageMetadata(
+                    input_tokens=0, output_tokens=0, total_tokens=0
+                )
+                right: UsageMetadata = other.usage_metadata or UsageMetadata(
+                    input_tokens=0, output_tokens=0, total_tokens=0
+                )
+                usage_metadata: Optional[UsageMetadata] = {
+                    "input_tokens": left["input_tokens"] + right["input_tokens"],
+                    "output_tokens": left["output_tokens"] + right["output_tokens"],
+                    "total_tokens": left["total_tokens"] + right["total_tokens"],
+                }
+            else:
+                usage_metadata = None
+
+>>>>>>> langchan/master
             return self.__class__(
                 example=self.example,
                 content=content,
                 additional_kwargs=additional_kwargs,
                 tool_call_chunks=tool_call_chunks,
                 response_metadata=response_metadata,
+<<<<<<< HEAD
+=======
+                usage_metadata=usage_metadata,
+>>>>>>> langchan/master
                 id=self.id,
             )
 

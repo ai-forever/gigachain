@@ -194,7 +194,10 @@ class Graph:
 
     nodes: Dict[str, Node] = field(default_factory=dict)
     edges: List[Edge] = field(default_factory=list)
+<<<<<<< HEAD
     branches: Optional[Dict[str, List[Branch]]] = field(default_factory=dict)
+=======
+>>>>>>> langchan/master
 
     def to_json(self, *, with_schemas: bool = False) -> Dict[str, List[Dict[str, Any]]]:
         """Convert the graph to a JSON-serializable format."""

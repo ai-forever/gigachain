@@ -8,7 +8,10 @@ threads.
 This is useful in situations when there's a mix of synchronous and asynchronous
 used in the code.
 """
+<<<<<<< HEAD
 
+=======
+>>>>>>> langchan/master
 import asyncio
 from asyncio import AbstractEventLoop, Queue
 from typing import AsyncIterator, Generic, TypeVar

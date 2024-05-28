@@ -1,15 +1,33 @@
+<<<<<<< HEAD
 
 [tool.poetry]
 name = "gigachain-ai21"
+=======
+[tool.poetry]
+name = "langchain-ai21"
+>>>>>>> langchan/master
 version = "0.1.5"
 description = "An integration package connecting AI21 and LangChain"
 authors = []
 readme = "README.md"
+<<<<<<< HEAD
 
 [tool.poetry.dependencies]
 python = ">=3.8.1,<4.0"
 gigachain-core = ">=0.1.48,<0.3"
 gigachain-text-splitters = ">=0.0.1,<0.2"
+=======
+repository = "https://github.com/langchain-ai/langchain"
+license = "MIT"
+
+[tool.poetry.urls]
+"Source Code" = "https://github.com/langchain-ai/langchain/tree/master/libs/partners/ai21"
+
+[tool.poetry.dependencies]
+python = ">=3.8.1,<4.0"
+langchain-core = ">=0.1.48,<0.3"
+langchain-text-splitters = ">=0.0.1,<0.2"
+>>>>>>> langchan/master
 ai21 = "^2.2.5"
 
 [tool.poetry.group.test]
@@ -22,9 +40,15 @@ pytest-mock = "^3.10.0"
 syrupy = "^4.0.2"
 pytest-watcher = "^0.3.4"
 pytest-asyncio = "^0.21.1"
+<<<<<<< HEAD
 gigachain-core = { path = "../../core", develop = true }
 gigachain-standard-tests = { path = "../../standard-tests", develop = true }
 gigachain-text-splitters = { path = "../../text-splitters", develop = true }
+=======
+langchain-core = { path = "../../core", develop = true }
+langchain-standard-tests = { path = "../../standard-tests", develop = true }
+langchain-text-splitters = { path = "../../text-splitters", develop = true }
+>>>>>>> langchan/master
 
 [tool.poetry.group.codespell]
 optional = true
@@ -45,13 +69,21 @@ ruff = "^0.1.5"
 
 [tool.poetry.group.typing.dependencies]
 mypy = "^0.991"
+<<<<<<< HEAD
 gigachain-core = { path = "../../core", develop = true }
+=======
+langchain-core = { path = "../../core", develop = true }
+>>>>>>> langchan/master
 
 [tool.poetry.group.dev]
 optional = true
 
 [tool.poetry.group.dev.dependencies]
+<<<<<<< HEAD
 gigachain-core = { path = "../../core", develop = true }
+=======
+langchain-core = { path = "../../core", develop = true }
+>>>>>>> langchan/master
 
 [tool.ruff.lint]
 select = [
@@ -90,4 +122,7 @@ markers = [
   "scheduled: mark tests to run in scheduled testing",
 ]
 asyncio_mode = "auto"
+<<<<<<< HEAD
 
+=======
+>>>>>>> langchan/master

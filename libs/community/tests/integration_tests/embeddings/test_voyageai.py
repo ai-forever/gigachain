@@ -1,5 +1,8 @@
 """Test voyage embeddings."""
+<<<<<<< HEAD
 
+=======
+>>>>>>> langchan/master
 from langchain_community.embeddings.voyageai import VoyageEmbeddings
 
 # Please set VOYAGE_API_KEY in the environment variables

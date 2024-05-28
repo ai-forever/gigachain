@@ -1,5 +1,8 @@
 """Test OpenLLM wrapper."""
+<<<<<<< HEAD
 
+=======
+>>>>>>> langchan/master
 from langchain_community.llms.openllm import OpenLLM
 
 

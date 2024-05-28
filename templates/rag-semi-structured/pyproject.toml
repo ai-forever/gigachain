@@ -9,7 +9,11 @@ readme = "README.md"
 
 [tool.poetry.dependencies]
 python = ">=3.9,<4"
+<<<<<<< HEAD
 gigachain = "^0.1"
+=======
+langchain = "^0.1"
+>>>>>>> langchan/master
 tiktoken = ">=0.5.1"
 chromadb = ">=0.4.14"
 openai = "<2"
@@ -24,9 +28,15 @@ unstructured-pytesseract = "^0.3.12"
 unstructured-inference = "^0.7.18"
 
 [tool.poetry.group.dev.dependencies]
+<<<<<<< HEAD
 gigachain-cli = ">=0.0.15"
 
 [tool.gigaserve]
+=======
+langchain-cli = ">=0.0.15"
+
+[tool.langserve]
+>>>>>>> langchan/master
 export_module = "rag_semi_structured"
 export_attr = "chain"
 

@@ -1,5 +1,8 @@
 """Send Gmail messages."""
+<<<<<<< HEAD
 
+=======
+>>>>>>> langchan/master
 import base64
 from email.mime.multipart import MIMEMultipart
 from email.mime.text import MIMEText

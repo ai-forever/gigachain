@@ -1,5 +1,8 @@
 """Test ChatGLM API wrapper."""
+<<<<<<< HEAD
 
+=======
+>>>>>>> langchan/master
 from langchain_core.outputs import LLMResult
 
 from langchain_community.llms.chatglm import ChatGLM

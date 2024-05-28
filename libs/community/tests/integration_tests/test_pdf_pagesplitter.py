@@ -1,5 +1,8 @@
 """Test splitting with page numbers included."""
+<<<<<<< HEAD
 
+=======
+>>>>>>> langchan/master
 import os
 
 from langchain_community.document_loaders import PyPDFLoader

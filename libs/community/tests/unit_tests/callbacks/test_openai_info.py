@@ -1,6 +1,10 @@
 from unittest.mock import MagicMock
 from uuid import uuid4
 
+<<<<<<< HEAD
+=======
+import numpy as np
+>>>>>>> langchan/master
 import pytest
 from langchain_core.outputs import LLMResult
 
@@ -58,7 +62,11 @@ def test_on_llm_end_custom_model(handler: OpenAICallbackHandler) -> None:
         ("davinci:ft-your-org:custom-model-name-2022-02-15-04-21-04", 0.24),
         ("ft:babbage-002:your-org:custom-model-name:1abcdefg", 0.0032),
         ("ft:davinci-002:your-org:custom-model-name:1abcdefg", 0.024),
+<<<<<<< HEAD
         ("ft:gpt-3.5-turbo-0613:your-org:custom-model-name:1abcdefg", 0.028),
+=======
+        ("ft:gpt-3.5-turbo-0613:your-org:custom-model-name:1abcdefg", 0.009),
+>>>>>>> langchan/master
         ("babbage-002.ft-0123456789abcdefghijklmnopqrstuv", 0.0008),
         ("davinci-002.ft-0123456789abcdefghijklmnopqrstuv", 0.004),
         ("gpt-35-turbo-0613.ft-0123456789abcdefghijklmnopqrstuv", 0.0035),
@@ -79,7 +87,11 @@ def test_on_llm_end_finetuned_model(
         },
     )
     handler.on_llm_end(response)
+<<<<<<< HEAD
     assert handler.total_cost == expected_cost
+=======
+    assert np.isclose(handler.total_cost, expected_cost)
+>>>>>>> langchan/master
 
 
 @pytest.mark.parametrize(

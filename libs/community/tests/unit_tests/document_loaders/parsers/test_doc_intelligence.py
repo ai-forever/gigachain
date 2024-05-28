@@ -1,5 +1,8 @@
 """Tests for the Google Cloud DocAI parser."""
+<<<<<<< HEAD
 
+=======
+>>>>>>> langchan/master
 from unittest.mock import MagicMock, patch
 
 import pytest

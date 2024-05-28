@@ -1,5 +1,9 @@
 """Test the criteria eval chain."""
 
+<<<<<<< HEAD
+=======
+
+>>>>>>> langchan/master
 import pytest
 
 from langchain.evaluation.criteria.eval_chain import (

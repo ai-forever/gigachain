@@ -1,5 +1,8 @@
 """LLM Chain for generating examples for question answering."""
+<<<<<<< HEAD
 
+=======
+>>>>>>> langchan/master
 from __future__ import annotations
 
 from typing import Any

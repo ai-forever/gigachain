@@ -1,5 +1,8 @@
 """Toolkit for interacting with Spark SQL."""
+<<<<<<< HEAD
 
+=======
+>>>>>>> langchan/master
 from typing import List
 
 from langchain_core.language_models import BaseLanguageModel

@@ -1,5 +1,8 @@
 """Integration test for JIRA API Wrapper."""
+<<<<<<< HEAD
 
+=======
+>>>>>>> langchan/master
 import json
 from datetime import datetime
 

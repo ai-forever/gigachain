@@ -1,5 +1,8 @@
 """Test Yuan2.0 API wrapper."""
+<<<<<<< HEAD
 
+=======
+>>>>>>> langchan/master
 from langchain_core.outputs import LLMResult
 
 from langchain_community.llms import Yuan2

@@ -1,5 +1,8 @@
 """Document transformers that use OpenAI Functions models"""
+<<<<<<< HEAD
 
+=======
+>>>>>>> langchan/master
 from typing import Any, Dict, Optional, Sequence, Type, Union
 
 from langchain_core.documents import BaseDocumentTransformer, Document
@@ -58,7 +61,11 @@ class OpenAIMetadataTagger(BaseDocumentTransformer, BaseModel):
         new_documents = []
 
         for document in documents:
+<<<<<<< HEAD
             extracted_metadata: Dict = self.tagging_chain.run(document.page_content)  # type: ignore[assignment]  # noqa: E501
+=======
+            extracted_metadata: Dict = self.tagging_chain.run(document.page_content)  # type: ignore[assignment]
+>>>>>>> langchan/master
             new_document = Document(
                 page_content=document.page_content,
                 metadata={**extracted_metadata, **document.metadata},

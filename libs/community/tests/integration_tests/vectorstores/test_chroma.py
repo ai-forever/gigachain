@@ -1,5 +1,8 @@
 """Test Chroma functionality."""
+<<<<<<< HEAD
 
+=======
+>>>>>>> langchan/master
 import uuid
 
 import pytest

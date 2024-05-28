@@ -17,10 +17,17 @@ class ChatDatabricks(ChatMlflow):
 
             from langchain_community.chat_models import ChatDatabricks
 
+<<<<<<< HEAD
             chat = ChatDatabricks(
                 target_uri="databricks",
                 endpoint="databricks-llama-2-70b-chat",
                 temperature-0.1,
+=======
+            chat_model = ChatDatabricks(
+                target_uri="databricks",
+                endpoint="databricks-llama-2-70b-chat",
+                temperature=0.1,
+>>>>>>> langchan/master
             )
 
             # single input invocation

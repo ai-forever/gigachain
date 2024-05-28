@@ -1,5 +1,8 @@
 """Test MosaicML API wrapper."""
+<<<<<<< HEAD
 
+=======
+>>>>>>> langchan/master
 import re
 
 import pytest

@@ -1,5 +1,8 @@
 """Interface for selecting examples to include in prompts."""
+<<<<<<< HEAD
 
+=======
+>>>>>>> langchan/master
 from abc import ABC, abstractmethod
 from typing import Any, Dict, List
 

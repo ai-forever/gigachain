@@ -1,5 +1,8 @@
 """Test TiDB Vector functionality."""
+<<<<<<< HEAD
 
+=======
+>>>>>>> langchan/master
 import os
 from typing import List
 

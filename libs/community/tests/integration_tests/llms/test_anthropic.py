@@ -1,5 +1,8 @@
 """Test Anthropic API wrapper."""
+<<<<<<< HEAD
 
+=======
+>>>>>>> langchan/master
 from typing import Generator
 
 import pytest

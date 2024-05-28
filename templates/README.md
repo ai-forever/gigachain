@@ -11,13 +11,21 @@ They are all in a standard format which make it easy to deploy them with [LangSe
 To use, first install the LangChain CLI.
 
 ```shell
+<<<<<<< HEAD
 pip install -U gigachain-cli
+=======
+pip install -U langchain-cli
+>>>>>>> langchan/master
 ```
 
 Next, create a new LangChain project:
 
 ```shell
+<<<<<<< HEAD
 gigachain app new my-app
+=======
+langchain app new my-app
+>>>>>>> langchan/master
 ```
 
 This will create a new directory called `my-app` with two folders:
@@ -36,7 +44,11 @@ In this getting started guide, we will add a simple `pirate-speak` project.
 All this project does is convert user input into pirate speak.
 
 ```shell
+<<<<<<< HEAD
 gigachain app add pirate-speak
+=======
+langchain app add pirate-speak
+>>>>>>> langchan/master
 ```
 
 This will pull in the specified template into `packages/pirate-speak`
@@ -96,7 +108,11 @@ export OPENAI_API_KEY=sk-...
 You can then spin up production-ready endpoints, along with a playground, by running:
 
 ```shell
+<<<<<<< HEAD
 gigachain serve
+=======
+langchain serve
+>>>>>>> langchan/master
 ```
 
 This now gives a fully deployed LangServe application.

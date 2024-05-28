@@ -1,5 +1,8 @@
 """Module definitions of agent types together with corresponding agents."""
+<<<<<<< HEAD
 
+=======
+>>>>>>> langchan/master
 from enum import Enum
 
 from langchain_core._api import deprecated

@@ -7,6 +7,7 @@ readme = "README.md"
 
 [tool.poetry.dependencies]
 python = ">=3.8.1,<4.0"
+<<<<<<< HEAD
 gigachain = ">=0.0.313, <0.1"
 openai = "<2"
 singlestoredb = ">=0.8.1"
@@ -15,6 +16,16 @@ gigachain-text-splitters = ">=0.0.1,<0.1"
 
 [tool.poetry.group.dev.dependencies]
 gigachain-cli = ">=0.0.21"
+=======
+langchain = "^0.1"
+openai = "<2"
+singlestoredb = ">=0.8.1"
+tiktoken = "^0.5.1"
+langchain-text-splitters = ">=0.0.1,<0.1"
+
+[tool.poetry.group.dev.dependencies]
+langchain-cli = ">=0.0.21"
+>>>>>>> langchan/master
 fastapi = ">=0.104.0,<1"
 sse-starlette = "^1.6.5"
 

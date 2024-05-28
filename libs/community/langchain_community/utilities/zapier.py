@@ -11,7 +11,10 @@ LangChain needs access to the end-user's connected accounts on Zapier.com, you'l
 to use oauth. Review the full docs above and reach out to nla@zapier.com for
 developer support.
 """
+<<<<<<< HEAD
 
+=======
+>>>>>>> langchan/master
 import json
 from typing import Any, Dict, List, Optional
 

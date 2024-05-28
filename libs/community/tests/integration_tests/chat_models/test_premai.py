@@ -1,7 +1,12 @@
 """Test ChatPremAI from PremAI API wrapper.
 
+<<<<<<< HEAD
 Note: This test must be run with the PREMAI_API_KEY environment variable set to a valid
 API key and a valid project_id.
+=======
+Note: This test must be run with the PREMAI_API_KEY environment variable set to a valid 
+API key and a valid project_id. 
+>>>>>>> langchan/master
 For this we need to have a project setup in PremAI's platform: https://app.premai.io
 """
 

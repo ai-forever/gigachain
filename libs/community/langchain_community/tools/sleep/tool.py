@@ -1,5 +1,8 @@
 """Tool for agent to sleep."""
+<<<<<<< HEAD
 
+=======
+>>>>>>> langchan/master
 from asyncio import sleep as asleep
 from time import sleep
 from typing import Optional, Type

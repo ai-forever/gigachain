@@ -1,5 +1,8 @@
 """Test Cassandra functionality."""
+<<<<<<< HEAD
 
+=======
+>>>>>>> langchan/master
 import asyncio
 import time
 from typing import List, Optional, Type

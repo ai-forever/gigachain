@@ -88,7 +88,11 @@ class BashProcess:
 
         Args:
             Prompt(str): the bash command to execute
+<<<<<<< HEAD
         """  # noqa: E501
+=======
+        """
+>>>>>>> langchan/master
         pexpect = self._lazy_import_pexpect()
         process = pexpect.spawn(
             "env", ["-i", "bash", "--norc", "--noprofile"], encoding="utf-8"
@@ -107,7 +111,11 @@ class BashProcess:
         Args:
             commands(List[str]): a list of commands to
                 execute in the session
+<<<<<<< HEAD
         """  # noqa: E501
+=======
+        """
+>>>>>>> langchan/master
         if isinstance(commands, str):
             commands = [commands]
         commands = ";".join(commands)
@@ -125,7 +133,11 @@ class BashProcess:
 
         Args:
             command: The command to run
+<<<<<<< HEAD
         """  # noqa: E501
+=======
+        """
+>>>>>>> langchan/master
         try:
             output = subprocess.run(
                 command,
@@ -149,7 +161,11 @@ class BashProcess:
         Args:
             output: a process' output string
             command: the executed command
+<<<<<<< HEAD
         """  # noqa: E501
+=======
+        """
+>>>>>>> langchan/master
         pattern = re.escape(command) + r"\s*\n"
         output = re.sub(pattern, "", output, count=1)
         return output.strip()
@@ -161,7 +177,11 @@ class BashProcess:
 
         Args:
             command: the command to execute
+<<<<<<< HEAD
         """  # noqa: E501
+=======
+        """
+>>>>>>> langchan/master
         pexpect = self._lazy_import_pexpect()
         if self.process is None:
             raise ValueError("Process not initialized")

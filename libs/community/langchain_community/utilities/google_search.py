@@ -2,7 +2,10 @@
 
 from typing import Any, Dict, List, Optional
 
+<<<<<<< HEAD
 import httplib2
+=======
+>>>>>>> langchan/master
 from langchain_core._api.deprecation import deprecated
 from langchain_core.pydantic_v1 import BaseModel, Extra, root_validator
 from langchain_core.utils import get_from_dict_or_env
@@ -50,6 +53,7 @@ class GoogleSearchAPIWrapper(BaseModel):
     After search engine is created, you can click on it and find `Search engine ID`
       on the Overview page.
 
+<<<<<<< HEAD
     5. How to use proxy (you need socks5 proxy):
     ```python
     from httplib2 import socks, ProxyInfo
@@ -59,6 +63,8 @@ class GoogleSearchAPIWrapper(BaseModel):
     search = GoogleSearchAPIWrapper(http=http)
     ```
 
+=======
+>>>>>>> langchan/master
     """
 
     search_engine: Any  #: :meta private:
@@ -66,12 +72,18 @@ class GoogleSearchAPIWrapper(BaseModel):
     google_cse_id: Optional[str] = None
     k: int = 10
     siterestrict: bool = False
+<<<<<<< HEAD
     http: Optional[httplib2.Http] = None
+=======
+>>>>>>> langchan/master
 
     class Config:
         """Configuration for this pydantic object."""
 
+<<<<<<< HEAD
         arbitrary_types_allowed = True
+=======
+>>>>>>> langchan/master
         extra = Extra.forbid
 
     def _google_search_results(self, search_term: str, **kwargs: Any) -> List[dict]:
@@ -102,12 +114,16 @@ class GoogleSearchAPIWrapper(BaseModel):
                 ">=2.100.0`"
             )
 
+<<<<<<< HEAD
         service = build(
             "customsearch",
             "v1",
             developerKey=google_api_key,
             http=values.get("http", None),
         )
+=======
+        service = build("customsearch", "v1", developerKey=google_api_key)
+>>>>>>> langchan/master
         values["search_engine"] = service
 
         return values

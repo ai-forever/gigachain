@@ -141,7 +141,11 @@ class TrajectoryEvalChain(AgentTrajectoryEvaluator, LLMEvalChain):
         )
         print(result["score"])  # noqa: T201
         # 0
+<<<<<<< HEAD
     """  # noqa: E501
+=======
+    """
+>>>>>>> langchan/master
 
     agent_tools: Optional[List[BaseTool]] = None
     """A list of tools available to the agent."""

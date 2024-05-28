@@ -172,18 +172,23 @@ def _format_messages(messages: List[BaseMessage]) -> Tuple[Optional[str], List[D
             content = []
             for item in message.content:
                 if isinstance(item, str):
+<<<<<<< HEAD
                     content.append(
                         {
                             "type": "text",
                             "text": item,
                         }
                     )
+=======
+                    content.append({"type": "text", "text": item})
+>>>>>>> langchan/master
                 elif isinstance(item, dict):
                     if "type" not in item:
                         raise ValueError("Dict content item must have a type key")
                     elif item["type"] == "image_url":
                         # convert format
                         source = _format_image(item["image_url"]["url"])
+<<<<<<< HEAD
                         content.append(
                             {
                                 "type": "image",
@@ -193,29 +198,57 @@ def _format_messages(messages: List[BaseMessage]) -> Tuple[Optional[str], List[D
                     elif item["type"] == "tool_use":
                         item.pop("text", None)
                         content.append(item)
+=======
+                        content.append({"type": "image", "source": source})
+                    elif item["type"] == "tool_use":
+                        # If a tool_call with the same id as a tool_use content block
+                        # exists, the tool_call is preferred.
+                        if isinstance(message, AIMessage) and item["id"] in [
+                            tc["id"] for tc in message.tool_calls
+                        ]:
+                            overlapping = [
+                                tc
+                                for tc in message.tool_calls
+                                if tc["id"] == item["id"]
+                            ]
+                            content.extend(
+                                _lc_tool_calls_to_anthropic_tool_use_blocks(overlapping)
+                            )
+                        else:
+                            item.pop("text", None)
+                            content.append(item)
+>>>>>>> langchan/master
                     elif item["type"] == "text":
                         text = item.get("text", "")
                         # Only add non-empty strings for now as empty ones are not
                         # accepted.
                         # https://github.com/anthropics/anthropic-sdk-python/issues/461
                         if text.strip():
+<<<<<<< HEAD
                             content.append(
                                 {
                                     "type": "text",
                                     "text": text,
                                 }
                             )
+=======
+                            content.append({"type": "text", "text": text})
+>>>>>>> langchan/master
                     else:
                         content.append(item)
                 else:
                     raise ValueError(
                         f"Content items must be str or dict, instead was: {type(item)}"
                     )
+<<<<<<< HEAD
         elif (
             isinstance(message, AIMessage)
             and not isinstance(message.content, list)
             and message.tool_calls
         ):
+=======
+        elif isinstance(message, AIMessage) and message.tool_calls:
+>>>>>>> langchan/master
             content = (
                 []
                 if not message.content
@@ -228,12 +261,16 @@ def _format_messages(messages: List[BaseMessage]) -> Tuple[Optional[str], List[D
         else:
             content = message.content
 
+<<<<<<< HEAD
         formatted_messages.append(
             {
                 "role": role,
                 "content": content,
             }
         )
+=======
+        formatted_messages.append({"role": role, "content": content})
+>>>>>>> langchan/master
     return system, formatted_messages
 
 
@@ -503,6 +540,15 @@ class ChatAnthropic(BaseChatModel):
             )
         else:
             msg = AIMessage(content=content)
+<<<<<<< HEAD
+=======
+        # Collect token usage
+        msg.usage_metadata = {
+            "input_tokens": data.usage.input_tokens,
+            "output_tokens": data.usage.output_tokens,
+            "total_tokens": data.usage.input_tokens + data.usage.output_tokens,
+        }
+>>>>>>> langchan/master
         return ChatResult(
             generations=[ChatGeneration(message=msg)],
             llm_output=llm_output,

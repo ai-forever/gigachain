@@ -11,6 +11,10 @@ from langchain_core.language_models import BaseLanguageModel
 from langchain_core.output_parsers import BaseOutputParser
 from langchain_core.prompts.prompt import PromptTemplate
 from langchain_core.retrievers import BaseRetriever
+<<<<<<< HEAD
+=======
+from langchain_core.runnables import Runnable
+>>>>>>> langchan/master
 
 from langchain.chains.llm import LLMChain
 
@@ -28,6 +32,7 @@ class LineListOutputParser(BaseOutputParser[List[str]]):
 # Default prompt
 DEFAULT_QUERY_PROMPT = PromptTemplate(
     input_variables=["question"],
+<<<<<<< HEAD
     template="""Ты - помощник на основе AI. Твоя задача - 
     сгенерировать 3 разные версии заданного пользователем 
     вопроса для извлечения соответствующих документов из векторной базы данных. 
@@ -35,6 +40,15 @@ DEFAULT_QUERY_PROMPT = PromptTemplate(
     твоя цель - помочь пользователю преодолеть некоторые ограничения 
     поиска по сходству на основе расстояния. Предоставь эти альтернативные 
     вопросы, разделенные новыми строками. Исходный вопрос: {question}""",
+=======
+    template="""You are an AI language model assistant. Your task is 
+    to generate 3 different versions of the given user 
+    question to retrieve relevant documents from a vector  database. 
+    By generating multiple perspectives on the user question, 
+    your goal is to help the user overcome some of the limitations 
+    of distance-based similarity search. Provide these alternative 
+    questions separated by newlines. Original question: {question}""",
+>>>>>>> langchan/master
 )
 
 
@@ -49,7 +63,11 @@ class MultiQueryRetriever(BaseRetriever):
     """
 
     retriever: BaseRetriever
+<<<<<<< HEAD
     llm_chain: LLMChain
+=======
+    llm_chain: Runnable
+>>>>>>> langchan/master
     verbose: bool = True
     parser_key: str = "lines"
     """DEPRECATED. parser_key is no longer used and should not be specified."""
@@ -77,7 +95,11 @@ class MultiQueryRetriever(BaseRetriever):
             MultiQueryRetriever
         """
         output_parser = LineListOutputParser()
+<<<<<<< HEAD
         llm_chain = LLMChain(llm=llm, prompt=prompt, output_parser=output_parser)
+=======
+        llm_chain = prompt | llm | output_parser
+>>>>>>> langchan/master
         return cls(
             retriever=retriever,
             llm_chain=llm_chain,
@@ -115,10 +137,20 @@ class MultiQueryRetriever(BaseRetriever):
         Returns:
             List of LLM generated queries that are similar to the user input
         """
+<<<<<<< HEAD
         response = await self.llm_chain.acall(
             inputs={"question": question}, callbacks=run_manager.get_child()
         )
         lines = response["text"]
+=======
+        response = await self.llm_chain.ainvoke(
+            {"question": question}, config={"callbacks": run_manager.get_child()}
+        )
+        if isinstance(self.llm_chain, LLMChain):
+            lines = response["text"]
+        else:
+            lines = response
+>>>>>>> langchan/master
         if self.verbose:
             logger.info(f"Generated queries: {lines}")
         return lines
@@ -175,10 +207,20 @@ class MultiQueryRetriever(BaseRetriever):
         Returns:
             List of LLM generated queries that are similar to the user input
         """
+<<<<<<< HEAD
         response = self.llm_chain(
             {"question": question}, callbacks=run_manager.get_child()
         )
         lines = response["text"]
+=======
+        response = self.llm_chain.invoke(
+            {"question": question}, config={"callbacks": run_manager.get_child()}
+        )
+        if isinstance(self.llm_chain, LLMChain):
+            lines = response["text"]
+        else:
+            lines = response
+>>>>>>> langchan/master
         if self.verbose:
             logger.info(f"Generated queries: {lines}")
         return lines

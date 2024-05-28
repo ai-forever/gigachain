@@ -6,7 +6,11 @@
 ## Quick Install
 
 ```bash
+<<<<<<< HEAD
 pip install gigachain-text-splitters
+=======
+pip install langchain-text-splitters
+>>>>>>> langchan/master
 ```
 
 ## What is it?

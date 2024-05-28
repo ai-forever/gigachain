@@ -1,5 +1,8 @@
 """Test math utility functions."""
+<<<<<<< HEAD
 
+=======
+>>>>>>> langchan/master
 from typing import List
 
 import numpy as np

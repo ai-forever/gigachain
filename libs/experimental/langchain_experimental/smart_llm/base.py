@@ -146,11 +146,15 @@ class SmartLLMChain(Chain):
         stop = None
         if "stop" in inputs:
             stop = inputs["stop"]
+<<<<<<< HEAD
         all_inputs = self.prompt.input_variables + list(
             self.prompt.partial_variables.keys()
         )
         selected_inputs = {k: inputs[k] for k in all_inputs if k in inputs}
 
+=======
+        selected_inputs = {k: inputs[k] for k in self.prompt.input_variables}
+>>>>>>> langchan/master
         prompt = self.prompt.format_prompt(**selected_inputs)
         _colored_text = get_colored_text(prompt.to_string(), "green")
         _text = "Prompt after formatting:\n" + _colored_text
@@ -201,7 +205,12 @@ class SmartLLMChain(Chain):
         role_strings.append(
             (
                 HumanMessagePromptTemplate,
+<<<<<<< HEAD
                 "Question: {question}\nОтвет: Давай разберем это шаг за шагом, чтобы убедиться, что у нас правильный ответ:",  # noqa: E501
+=======
+                "Question: {question}\nAnswer: Let's work this out in a step by "
+                "step way to be sure we have the right answer:",
+>>>>>>> langchan/master
             )
         )
         if stage == "ideation":
@@ -211,18 +220,29 @@ class SmartLLMChain(Chain):
                 *[
                     (
                         AIMessagePromptTemplate,
+<<<<<<< HEAD
                         "Идея " + str(i + 1) + ": {idea_" + str(i + 1) + "}",
+=======
+                        "Idea " + str(i + 1) + ": {idea_" + str(i + 1) + "}",
+>>>>>>> langchan/master
                     )
                     for i in range(self.n_ideas)
                 ],
                 (
                     HumanMessagePromptTemplate,
+<<<<<<< HEAD
                     "Ты исследователь, задача которого - исследовать "
                     f"{self.n_ideas} предложенных вариантов ответа."
                     " Перечисли недостатки и логические ошибки "
                     "каждого варианта ответа. "
                     "Давай разберем это шаг за шагом, чтобы убедиться,"
                     " что мы учли все ошибки:",
+=======
+                    "You are a researcher tasked with investigating the "
+                    f"{self.n_ideas} response options provided. List the flaws and "
+                    "faulty logic of each answer option. Let's work this out in a step"
+                    " by step way to be sure we have all the errors:",
+>>>>>>> langchan/master
                 ),
             ]
         )
@@ -230,6 +250,7 @@ class SmartLLMChain(Chain):
             return role_strings
         role_strings.extend(
             [
+<<<<<<< HEAD
                 (AIMessagePromptTemplate, "Критика: {critique}"),
                 (
                     HumanMessagePromptTemplate,
@@ -240,6 +261,17 @@ class SmartLLMChain(Chain):
                     "Не выводи ничего для шага 1 или 2, только полный ответ на шаге 3. "
                     "Давай разберем это шаг за шагом, чтобы убедиться, "
                     "что у нас правильный ответ:",
+=======
+                (AIMessagePromptTemplate, "Critique: {critique}"),
+                (
+                    HumanMessagePromptTemplate,
+                    "You are a resolver tasked with 1) finding which of "
+                    f"the {self.n_ideas} answer options the researcher thought was  "
+                    "best, 2) improving that answer and 3) printing the answer in "
+                    "full. Don't output anything for step 1 or 2, only the full "
+                    "answer in 3. Let's work this out in a step by step way to "
+                    "be sure we have the right answer:",
+>>>>>>> langchan/master
                 ),
             ]
         )
@@ -303,7 +335,11 @@ class SmartLLMChain(Chain):
                 llm.generate_prompt([prompt], stop, callbacks), step="critique"
             )
             _colored_text = get_colored_text(critique, "yellow")
+<<<<<<< HEAD
             _text = "Критика:\n" + _colored_text
+=======
+            _text = "Critique:\n" + _colored_text
+>>>>>>> langchan/master
             if run_manager:
                 run_manager.on_text(_text, end="\n", verbose=self.verbose)
             return critique
@@ -326,7 +362,11 @@ class SmartLLMChain(Chain):
                 llm.generate_prompt([prompt], stop, callbacks), step="resolve"
             )
             _colored_text = get_colored_text(resolution, "green")
+<<<<<<< HEAD
             _text = "Решение:\n" + _colored_text
+=======
+            _text = "Resolution:\n" + _colored_text
+>>>>>>> langchan/master
             if run_manager:
                 run_manager.on_text(_text, end="\n", verbose=self.verbose)
             return resolution

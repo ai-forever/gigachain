@@ -1,5 +1,8 @@
 """Test Base Schema of documents."""
+<<<<<<< HEAD
 
+=======
+>>>>>>> langchan/master
 from typing import Iterator, List
 
 import pytest

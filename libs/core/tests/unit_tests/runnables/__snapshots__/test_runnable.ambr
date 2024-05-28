@@ -5286,6 +5286,12 @@
             'title': 'Type',
             'type': 'string',
           }),
+<<<<<<< HEAD
+=======
+          'usage_metadata': dict({
+            '$ref': '#/definitions/UsageMetadata',
+          }),
+>>>>>>> langchan/master
         }),
         'required': list([
           'content',
@@ -5707,6 +5713,32 @@
         'title': 'ToolMessage',
         'type': 'object',
       }),
+<<<<<<< HEAD
+=======
+      'UsageMetadata': dict({
+        'properties': dict({
+          'input_tokens': dict({
+            'title': 'Input Tokens',
+            'type': 'integer',
+          }),
+          'output_tokens': dict({
+            'title': 'Output Tokens',
+            'type': 'integer',
+          }),
+          'total_tokens': dict({
+            'title': 'Total Tokens',
+            'type': 'integer',
+          }),
+        }),
+        'required': list([
+          'input_tokens',
+          'output_tokens',
+          'total_tokens',
+        ]),
+        'title': 'UsageMetadata',
+        'type': 'object',
+      }),
+>>>>>>> langchan/master
     }),
     'title': 'FakeListLLMInput',
   })
@@ -5821,6 +5853,12 @@
             'title': 'Type',
             'type': 'string',
           }),
+<<<<<<< HEAD
+=======
+          'usage_metadata': dict({
+            '$ref': '#/definitions/UsageMetadata',
+          }),
+>>>>>>> langchan/master
         }),
         'required': list([
           'content',
@@ -6242,6 +6280,32 @@
         'title': 'ToolMessage',
         'type': 'object',
       }),
+<<<<<<< HEAD
+=======
+      'UsageMetadata': dict({
+        'properties': dict({
+          'input_tokens': dict({
+            'title': 'Input Tokens',
+            'type': 'integer',
+          }),
+          'output_tokens': dict({
+            'title': 'Output Tokens',
+            'type': 'integer',
+          }),
+          'total_tokens': dict({
+            'title': 'Total Tokens',
+            'type': 'integer',
+          }),
+        }),
+        'required': list([
+          'input_tokens',
+          'output_tokens',
+          'total_tokens',
+        ]),
+        'title': 'UsageMetadata',
+        'type': 'object',
+      }),
+>>>>>>> langchan/master
     }),
     'title': 'FakeListChatModelInput',
   })
@@ -6340,6 +6404,12 @@
             'title': 'Type',
             'type': 'string',
           }),
+<<<<<<< HEAD
+=======
+          'usage_metadata': dict({
+            '$ref': '#/definitions/UsageMetadata',
+          }),
+>>>>>>> langchan/master
         }),
         'required': list([
           'content',
@@ -6692,6 +6762,32 @@
         'title': 'ToolMessage',
         'type': 'object',
       }),
+<<<<<<< HEAD
+=======
+      'UsageMetadata': dict({
+        'properties': dict({
+          'input_tokens': dict({
+            'title': 'Input Tokens',
+            'type': 'integer',
+          }),
+          'output_tokens': dict({
+            'title': 'Output Tokens',
+            'type': 'integer',
+          }),
+          'total_tokens': dict({
+            'title': 'Total Tokens',
+            'type': 'integer',
+          }),
+        }),
+        'required': list([
+          'input_tokens',
+          'output_tokens',
+          'total_tokens',
+        ]),
+        'title': 'UsageMetadata',
+        'type': 'object',
+      }),
+>>>>>>> langchan/master
     }),
     'title': 'FakeListChatModelOutput',
   })
@@ -6778,6 +6874,12 @@
             'title': 'Type',
             'type': 'string',
           }),
+<<<<<<< HEAD
+=======
+          'usage_metadata': dict({
+            '$ref': '#/definitions/UsageMetadata',
+          }),
+>>>>>>> langchan/master
         }),
         'required': list([
           'content',
@@ -7199,6 +7301,32 @@
         'title': 'ToolMessage',
         'type': 'object',
       }),
+<<<<<<< HEAD
+=======
+      'UsageMetadata': dict({
+        'properties': dict({
+          'input_tokens': dict({
+            'title': 'Input Tokens',
+            'type': 'integer',
+          }),
+          'output_tokens': dict({
+            'title': 'Output Tokens',
+            'type': 'integer',
+          }),
+          'total_tokens': dict({
+            'title': 'Total Tokens',
+            'type': 'integer',
+          }),
+        }),
+        'required': list([
+          'input_tokens',
+          'output_tokens',
+          'total_tokens',
+        ]),
+        'title': 'UsageMetadata',
+        'type': 'object',
+      }),
+>>>>>>> langchan/master
     }),
     'title': 'ChatPromptTemplateOutput',
   })
@@ -7285,6 +7413,12 @@
             'title': 'Type',
             'type': 'string',
           }),
+<<<<<<< HEAD
+=======
+          'usage_metadata': dict({
+            '$ref': '#/definitions/UsageMetadata',
+          }),
+>>>>>>> langchan/master
         }),
         'required': list([
           'content',
@@ -7706,6 +7840,32 @@
         'title': 'ToolMessage',
         'type': 'object',
       }),
+<<<<<<< HEAD
+=======
+      'UsageMetadata': dict({
+        'properties': dict({
+          'input_tokens': dict({
+            'title': 'Input Tokens',
+            'type': 'integer',
+          }),
+          'output_tokens': dict({
+            'title': 'Output Tokens',
+            'type': 'integer',
+          }),
+          'total_tokens': dict({
+            'title': 'Total Tokens',
+            'type': 'integer',
+          }),
+        }),
+        'required': list([
+          'input_tokens',
+          'output_tokens',
+          'total_tokens',
+        ]),
+        'title': 'UsageMetadata',
+        'type': 'object',
+      }),
+>>>>>>> langchan/master
     }),
     'title': 'PromptTemplateOutput',
   })
@@ -7784,6 +7944,12 @@
             'title': 'Type',
             'type': 'string',
           }),
+<<<<<<< HEAD
+=======
+          'usage_metadata': dict({
+            '$ref': '#/definitions/UsageMetadata',
+          }),
+>>>>>>> langchan/master
         }),
         'required': list([
           'content',
@@ -8216,6 +8382,32 @@
         'title': 'ToolMessage',
         'type': 'object',
       }),
+<<<<<<< HEAD
+=======
+      'UsageMetadata': dict({
+        'properties': dict({
+          'input_tokens': dict({
+            'title': 'Input Tokens',
+            'type': 'integer',
+          }),
+          'output_tokens': dict({
+            'title': 'Output Tokens',
+            'type': 'integer',
+          }),
+          'total_tokens': dict({
+            'title': 'Total Tokens',
+            'type': 'integer',
+          }),
+        }),
+        'required': list([
+          'input_tokens',
+          'output_tokens',
+          'total_tokens',
+        ]),
+        'title': 'UsageMetadata',
+        'type': 'object',
+      }),
+>>>>>>> langchan/master
     }),
     'items': dict({
       '$ref': '#/definitions/PromptTemplateOutput',
@@ -8321,6 +8513,12 @@
             'title': 'Type',
             'type': 'string',
           }),
+<<<<<<< HEAD
+=======
+          'usage_metadata': dict({
+            '$ref': '#/definitions/UsageMetadata',
+          }),
+>>>>>>> langchan/master
         }),
         'required': list([
           'content',
@@ -8673,6 +8871,32 @@
         'title': 'ToolMessage',
         'type': 'object',
       }),
+<<<<<<< HEAD
+=======
+      'UsageMetadata': dict({
+        'properties': dict({
+          'input_tokens': dict({
+            'title': 'Input Tokens',
+            'type': 'integer',
+          }),
+          'output_tokens': dict({
+            'title': 'Output Tokens',
+            'type': 'integer',
+          }),
+          'total_tokens': dict({
+            'title': 'Total Tokens',
+            'type': 'integer',
+          }),
+        }),
+        'required': list([
+          'input_tokens',
+          'output_tokens',
+          'total_tokens',
+        ]),
+        'title': 'UsageMetadata',
+        'type': 'object',
+      }),
+>>>>>>> langchan/master
     }),
     'title': 'CommaSeparatedListOutputParserInput',
   })

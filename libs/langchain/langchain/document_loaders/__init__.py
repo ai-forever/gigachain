@@ -185,6 +185,10 @@ if TYPE_CHECKING:
         XorbitsLoader,
         YoutubeAudioLoader,
         YoutubeLoader,
+<<<<<<< HEAD
+=======
+        YuqueLoader,
+>>>>>>> langchan/master
     )
 
 from langchain_core.document_loaders import Blob, BlobLoader
@@ -547,4 +551,8 @@ __all__ = [
     "XorbitsLoader",
     "YoutubeAudioLoader",
     "YoutubeLoader",
+<<<<<<< HEAD
+=======
+    "YuqueLoader",
+>>>>>>> langchan/master
 ]

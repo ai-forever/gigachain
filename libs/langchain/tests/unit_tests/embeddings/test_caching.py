@@ -1,5 +1,8 @@
 """Embeddings tests."""
+<<<<<<< HEAD
 
+=======
+>>>>>>> langchan/master
 from typing import List
 
 import pytest

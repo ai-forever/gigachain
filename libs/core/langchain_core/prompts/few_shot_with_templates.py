@@ -1,5 +1,8 @@
 """Prompt template that contains few shot examples."""
+<<<<<<< HEAD
 
+=======
+>>>>>>> langchan/master
 from pathlib import Path
 from typing import Any, Dict, List, Optional, Union
 

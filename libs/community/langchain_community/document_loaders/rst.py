@@ -1,5 +1,8 @@
 """Loads RST files."""
+<<<<<<< HEAD
 
+=======
+>>>>>>> langchan/master
 from pathlib import Path
 from typing import Any, List, Union
 

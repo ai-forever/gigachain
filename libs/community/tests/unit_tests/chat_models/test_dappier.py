@@ -1,5 +1,8 @@
 """Test EdenAI Chat API wrapper."""
+<<<<<<< HEAD
 
+=======
+>>>>>>> langchan/master
 from typing import List
 
 import pytest

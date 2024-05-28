@@ -60,9 +60,15 @@ class GenerativeAgentMemory(BaseMemory):
         """Return the 3 most salient high-level questions about recent observations."""
         prompt = PromptTemplate.from_template(
             "{observations}\n\n"
+<<<<<<< HEAD
             "Учитывая только приведенную выше информацию, какие 3 наиболее важных "
             "вопроса высокого уровня мы можем ответить о субъектах в утверждениях?\n"
             "Укажи каждый вопрос на новой строке."
+=======
+            "Given only the information above, what are the 3 most salient "
+            "high-level questions we can answer about the subjects in the statements?\n"
+            "Provide each question on a new line."
+>>>>>>> langchan/master
         )
         observations = self.memory_retriever.memory_stream[-last_k:]
         observation_str = "\n".join(
@@ -76,6 +82,7 @@ class GenerativeAgentMemory(BaseMemory):
     ) -> List[str]:
         """Generate 'insights' on a topic of reflection, based on pertinent memories."""
         prompt = PromptTemplate.from_template(
+<<<<<<< HEAD
             "Утверждения, относящиеся к: '{topic}'\n"
             "---\n"
             "{related_statements}\n"
@@ -87,6 +94,18 @@ class GenerativeAgentMemory(BaseMemory):
             "Не повторяй выводы, которые уже были сделаны.\n\n"
             "Question: {topic}\n\n"
             "(пример формата: вывод (из-за 1, 5, 3))\n"
+=======
+            "Statements relevant to: '{topic}'\n"
+            "---\n"
+            "{related_statements}\n"
+            "---\n"
+            "What 5 high-level novel insights can you infer from the above statements "
+            "that are relevant for answering the following question?\n"
+            "Do not include any insights that are not relevant to the question.\n"
+            "Do not repeat any insights that have already been made.\n\n"
+            "Question: {topic}\n\n"
+            "(example format: insight (because of 1, 5, 3))\n"
+>>>>>>> langchan/master
         )
 
         related_memories = self.fetch_memories(topic, now=now)
@@ -118,6 +137,7 @@ class GenerativeAgentMemory(BaseMemory):
     def _score_memory_importance(self, memory_content: str) -> float:
         """Score the absolute importance of the given memory."""
         prompt = PromptTemplate.from_template(
+<<<<<<< HEAD
             "На шкале от 1 до 10, где 1 - это совершенно обыденное"
             + " (например, чистка зубов, застилание кровати) и 10 -"
             + " это чрезвычайно важное (например, расставание, поступление в колледж),"
@@ -125,6 +145,15 @@ class GenerativeAgentMemory(BaseMemory):
             + " фрагмента памяти. Ответь одним числом."
             + "\nПамять: {memory_content}"
             + "\nОценка: "
+=======
+            "On the scale of 1 to 10, where 1 is purely mundane"
+            + " (e.g., brushing teeth, making bed) and 10 is"
+            + " extremely poignant (e.g., a break up, college"
+            + " acceptance), rate the likely poignancy of the"
+            + " following piece of memory. Respond with a single integer."
+            + "\nMemory: {memory_content}"
+            + "\nRating: "
+>>>>>>> langchan/master
         )
         score = self.chain(prompt).run(memory_content=memory_content).strip()
         if self.verbose:
@@ -138,6 +167,7 @@ class GenerativeAgentMemory(BaseMemory):
     def _score_memories_importance(self, memory_content: str) -> List[float]:
         """Score the absolute importance of the given memory."""
         prompt = PromptTemplate.from_template(
+<<<<<<< HEAD
             "На шкале от 1 до 10, где 1 - это совершенно обыденное"
             + " (например, чистка зубов, застилание кровати) и 10 -"
             + " это чрезвычайно важное (например, расставание, поступление в колледж),"
@@ -147,6 +177,17 @@ class GenerativeAgentMemory(BaseMemory):
             + " Память разделена точками с запятой (;)"
             + "\Память: {memory_content}"
             + "\nОценка: "
+=======
+            "On the scale of 1 to 10, where 1 is purely mundane"
+            + " (e.g., brushing teeth, making bed) and 10 is"
+            + " extremely poignant (e.g., a break up, college"
+            + " acceptance), rate the likely poignancy of the"
+            + " following piece of memory. Always answer with only a list of numbers."
+            + " If just given one memory still respond in a list."
+            + " Memories are separated by semi colans (;)"
+            + "\Memories: {memory_content}"
+            + "\nRating: "
+>>>>>>> langchan/master
         )
         scores = self.chain(prompt).run(memory_content=memory_content).strip()
 

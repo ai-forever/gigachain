@@ -1,5 +1,8 @@
 """Test PaiEasEndpoint API wrapper."""
+<<<<<<< HEAD
 
+=======
+>>>>>>> langchan/master
 import os
 from typing import Generator
 

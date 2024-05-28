@@ -1,5 +1,9 @@
 [tool.poetry]
+<<<<<<< HEAD
 name = "gigachain-mistralai"
+=======
+name = "langchain-mistralai"
+>>>>>>> langchan/master
 version = "0.1.7"
 description = "An integration package connecting Mistral and LangChain"
 authors = []
@@ -12,7 +16,11 @@ license = "MIT"
 
 [tool.poetry.dependencies]
 python = ">=3.8.1,<4.0"
+<<<<<<< HEAD
 gigachain-core = ">=0.1.46,<0.3"
+=======
+langchain-core = ">=0.2.0,<0.3"
+>>>>>>> langchan/master
 tokenizers = ">=0.15.1,<1"
 httpx = ">=0.25.2,<1"
 httpx-sse = ">=0.3.1,<1"
@@ -23,8 +31,13 @@ optional = true
 [tool.poetry.group.test.dependencies]
 pytest = "^7.3.0"
 pytest-asyncio = "^0.21.1"
+<<<<<<< HEAD
 gigachain-core = { path = "../../core", develop = true }
 gigachain-standard-tests = { path = "../../standard-tests", develop = true }
+=======
+langchain-core = { path = "../../core", develop = true }
+langchain-standard-tests = { path = "../../standard-tests", develop = true }
+>>>>>>> langchan/master
 
 [tool.poetry.group.test_integration]
 optional = true
@@ -45,13 +58,21 @@ ruff = "^0.1.5"
 
 [tool.poetry.group.typing.dependencies]
 mypy = "^0.991"
+<<<<<<< HEAD
 gigachain-core = { path = "../../core", develop = true }
+=======
+langchain-core = { path = "../../core", develop = true }
+>>>>>>> langchan/master
 
 [tool.poetry.group.dev]
 optional = true
 
 [tool.poetry.group.dev.dependencies]
+<<<<<<< HEAD
 gigachain-core = { path = "../../core", develop = true }
+=======
+langchain-core = { path = "../../core", develop = true }
+>>>>>>> langchan/master
 
 [tool.ruff.lint]
 select = [

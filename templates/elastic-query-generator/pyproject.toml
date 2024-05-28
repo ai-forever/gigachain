@@ -7,12 +7,24 @@ readme = "README.md"
 
 [tool.poetry.dependencies]
 python = ">=3.8.1,<4.0"
+<<<<<<< HEAD
 gigachain = ">=0.0.325"
+=======
+langchain = "^0.1"
+>>>>>>> langchan/master
 elasticsearch = "^8.10.1"
 openai = "<2"
 
 [tool.poetry.group.dev.dependencies]
+<<<<<<< HEAD
 gigachain-cli = ">=0.0.21"
+=======
+langchain-cli = ">=0.0.21"
+
+[tool.langserve]
+export_module = "elastic_query_generator"
+export_attr = "chain"
+>>>>>>> langchan/master
 
 [tool.templates-hub]
 use-case = "query"

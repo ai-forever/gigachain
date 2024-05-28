@@ -1,5 +1,8 @@
 """Test few shot prompt template."""
+<<<<<<< HEAD
 
+=======
+>>>>>>> langchan/master
 from typing import Any, Dict, List, Sequence, Tuple
 
 import pytest

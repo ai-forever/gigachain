@@ -8,7 +8,11 @@ from langchain_core.exceptions import OutputParserException
 from langchain.agents.agent import AgentOutputParser
 from langchain.agents.chat.prompt import FORMAT_INSTRUCTIONS
 
+<<<<<<< HEAD
 FINAL_ANSWER_ACTION = "Final answer:"
+=======
+FINAL_ANSWER_ACTION = "Final Answer:"
+>>>>>>> langchan/master
 
 
 class ChatOutputParser(AgentOutputParser):

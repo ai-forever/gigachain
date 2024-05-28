@@ -1,5 +1,8 @@
 """Util that calls Lambda."""
+<<<<<<< HEAD
 
+=======
+>>>>>>> langchan/master
 import json
 from typing import Any, Dict, Optional
 
@@ -61,7 +64,11 @@ class LambdaWrapper(BaseModel):
             query: an input to passed to the lambda
                 function as the ``body`` of a JSON
                 object.
+<<<<<<< HEAD
         """  # noqa: E501
+=======
+        """
+>>>>>>> langchan/master
         res = self.lambda_client.invoke(
             FunctionName=self.function_name,
             InvocationType="RequestResponse",

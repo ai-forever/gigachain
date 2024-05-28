@@ -1,5 +1,8 @@
 """Test BESVectorStore functionality."""
+<<<<<<< HEAD
 
+=======
+>>>>>>> langchan/master
 from typing import List, Optional
 
 from langchain_core.documents import Document

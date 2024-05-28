@@ -1,5 +1,8 @@
 """Base callback handler that can be used to handle callbacks in langchain."""
+<<<<<<< HEAD
 
+=======
+>>>>>>> langchan/master
 from __future__ import annotations
 
 from typing import TYPE_CHECKING, Any, Dict, List, Optional, Sequence, TypeVar, Union

@@ -1,5 +1,8 @@
 """Common utility functions for LLM APIs."""
+<<<<<<< HEAD
 
+=======
+>>>>>>> langchan/master
 import re
 from typing import List
 

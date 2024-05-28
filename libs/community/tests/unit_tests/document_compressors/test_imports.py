@@ -4,6 +4,10 @@ EXPECTED_ALL = [
     "LLMLinguaCompressor",
     "OpenVINOReranker",
     "JinaRerank",
+<<<<<<< HEAD
+=======
+    "RankLLMRerank",
+>>>>>>> langchan/master
     "FlashrankRerank",
 ]
 

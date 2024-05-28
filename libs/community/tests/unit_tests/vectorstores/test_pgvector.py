@@ -1,5 +1,8 @@
 """Test PGVector functionality."""
+<<<<<<< HEAD
 
+=======
+>>>>>>> langchan/master
 from unittest import mock
 from unittest.mock import Mock
 

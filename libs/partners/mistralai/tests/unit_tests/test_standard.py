@@ -13,6 +13,7 @@ class TestMistralStandard(ChatModelUnitTests):
     @pytest.fixture
     def chat_model_class(self) -> Type[BaseChatModel]:
         return ChatMistralAI
+<<<<<<< HEAD
 
     @pytest.mark.xfail(reason="Not implemented.")
     def test_standard_params(
@@ -24,3 +25,5 @@ class TestMistralStandard(ChatModelUnitTests):
             chat_model_class,
             chat_model_params,
         )
+=======
+>>>>>>> langchan/master

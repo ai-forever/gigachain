@@ -1,5 +1,8 @@
 """Chain that combines documents by stuffing into context."""
+<<<<<<< HEAD
 
+=======
+>>>>>>> langchan/master
 from typing import Any, Dict, List, Optional, Tuple
 
 from langchain_core.callbacks import Callbacks
@@ -202,7 +205,10 @@ class StuffDocumentsChain(BaseCombineDocumentsChain):
             k: v
             for k, v in kwargs.items()
             if k in self.llm_chain.prompt.input_variables
+<<<<<<< HEAD
             or k in self.llm_chain.prompt.partial_variables.keys()
+=======
+>>>>>>> langchan/master
         }
         inputs[self.document_variable_name] = self.document_separator.join(doc_strings)
         return inputs

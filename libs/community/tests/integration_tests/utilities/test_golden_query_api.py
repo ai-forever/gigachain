@@ -1,5 +1,8 @@
 """Integration test for Golden API Wrapper."""
+<<<<<<< HEAD
 
+=======
+>>>>>>> langchan/master
 import json
 
 from langchain_community.utilities.golden_query import GoldenQueryAPIWrapper

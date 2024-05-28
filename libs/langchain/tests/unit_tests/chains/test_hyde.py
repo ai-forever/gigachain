@@ -1,5 +1,8 @@
 """Test HyDE."""
+<<<<<<< HEAD
 
+=======
+>>>>>>> langchan/master
 from typing import Any, List, Optional
 
 import numpy as np

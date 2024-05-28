@@ -578,7 +578,11 @@ class OpenAIAssistantRunnable(RunnableSerializable[Dict, OutputType]):
                 )
             return actions
         else:
+<<<<<<< HEAD
             run_info = json.dumps(run.dict(), indent=2, ensure_ascii=False)
+=======
+            run_info = json.dumps(run.dict(), indent=2)
+>>>>>>> langchan/master
             raise ValueError(
                 f"Unexpected run status: {run.status}. Full run info:\n\n{run_info})"
             )

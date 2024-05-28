@@ -1,5 +1,8 @@
 """Evaluators for parsing strings."""
+<<<<<<< HEAD
 
+=======
+>>>>>>> langchan/master
 import json
 from operator import eq
 from typing import Any, Callable, Optional, Union, cast

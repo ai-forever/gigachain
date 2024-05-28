@@ -10,7 +10,11 @@ readme = "README.md"
 
 [tool.poetry.dependencies]
 python = ">=3.9,<3.13"
+<<<<<<< HEAD
 gigachain = "^0.1"
+=======
+langchain = "^0.1"
+>>>>>>> langchan/master
 fastapi = ">=0.104.0,<1"
 sse-starlette = "^1.6.5"
 openai = "<2"
@@ -18,7 +22,11 @@ sentence-transformers = "2.2.2"
 redis = "5.0.1"
 tiktoken = "0.5.1"
 pdf2image = "1.16.3"
+<<<<<<< HEAD
 gigachain-text-splitters = ">=0.0.1,<0.1"
+=======
+langchain-text-splitters = ">=0.0.1,<0.1"
+>>>>>>> langchan/master
 
 [tool.poetry.dependencies.unstructured]
 version = "^0.10.27"
@@ -26,7 +34,15 @@ extras = ["pdf"]
 
 [tool.poetry.group.dev.dependencies]
 poethepoet = "^0.24.1"
+<<<<<<< HEAD
 gigachain-cli = ">=0.0.21"
+=======
+langchain-cli = ">=0.0.21"
+
+[tool.langserve]
+export_module = "rag_redis.chain"
+export_attr = "chain"
+>>>>>>> langchan/master
 
 [tool.templates-hub]
 use-case = "rag"
@@ -35,7 +51,11 @@ integrations = ["OpenAI", "Redis", "HuggingFace"]
 tags = ["vectordbs"]
 
 [tool.poe.tasks.start]
+<<<<<<< HEAD
 cmd = "uvicorn gigachain_cli.dev_scripts:create_demo_server --reload --port $port --host $host"
+=======
+cmd = "uvicorn langchain_cli.dev_scripts:create_demo_server --reload --port $port --host $host"
+>>>>>>> langchan/master
 args = [
     { name = "port", help = "port to run on", default = "8000" },
     { name = "host", help = "host to run on", default = "127.0.0.1" },

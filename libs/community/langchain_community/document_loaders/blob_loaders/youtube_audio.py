@@ -5,6 +5,10 @@ from langchain_community.document_loaders.blob_loaders.schema import Blob, BlobL
 
 
 class YoutubeAudioLoader(BlobLoader):
+<<<<<<< HEAD
+=======
+
+>>>>>>> langchan/master
     """Load YouTube urls as audio file(s)."""
 
     def __init__(self, urls: List[str], save_dir: str):

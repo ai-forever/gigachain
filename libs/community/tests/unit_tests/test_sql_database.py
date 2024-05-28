@@ -1,6 +1,9 @@
 # flake8: noqa: E501
 """Test SQL database wrapper."""
+<<<<<<< HEAD
 
+=======
+>>>>>>> langchan/master
 import pytest
 import sqlalchemy as sa
 from sqlalchemy import (

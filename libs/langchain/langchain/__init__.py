@@ -1,10 +1,14 @@
 # ruff: noqa: E402
 """Main entrypoint into package."""
+<<<<<<< HEAD
 
+=======
+>>>>>>> langchan/master
 import warnings
 from importlib import metadata
 from typing import Any, Optional
 
+<<<<<<< HEAD
 from langchain_core.__gigachain_core import _check_gigachain_core_version
 from langchain_core._api.deprecation import surface_langchain_deprecation_warnings
 
@@ -15,6 +19,12 @@ _check_gigachain_core_version()
 
 try:
     __version__ = metadata.version("gigachain")
+=======
+from langchain_core._api.deprecation import surface_langchain_deprecation_warnings
+
+try:
+    __version__ = metadata.version(__package__)
+>>>>>>> langchan/master
 except metadata.PackageNotFoundError:
     # Case where package metadata is not available.
     __version__ = ""
@@ -74,10 +84,17 @@ def __getattr__(name: str) -> Any:
         return ConversationChain
     elif name == "LLMBashChain":
         raise ImportError(
+<<<<<<< HEAD
             "This module has been moved to gigachain-experimental. "
             "For more details: "
             "https://github.com/langchain-ai/langchain/discussions/11352."
             "To access this code, install it with `pip install gigachain-experimental`."
+=======
+            "This module has been moved to langchain-experimental. "
+            "For more details: "
+            "https://github.com/langchain-ai/langchain/discussions/11352."
+            "To access this code, install it with `pip install langchain-experimental`."
+>>>>>>> langchan/master
             "`from langchain_experimental.llm_bash.base "
             "import LLMBashChain`"
         )

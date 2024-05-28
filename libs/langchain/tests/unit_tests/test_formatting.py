@@ -1,5 +1,8 @@
 """Test formatting functionality."""
+<<<<<<< HEAD
 
+=======
+>>>>>>> langchan/master
 import pytest
 from langchain_core.utils import formatter
 

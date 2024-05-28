@@ -7,6 +7,7 @@ readme = "README.md"
 
 [tool.poetry.dependencies]
 python = ">=3.8.1,<4.0"
+<<<<<<< HEAD
 gigachain = ">=0.0.325"
 google-cloud-aiplatform = "^1.35.0"
 
@@ -16,6 +17,17 @@ fastapi = ">=0.104.0,<1"
 sse-starlette = "^1.6.5"
 
 [tool.gigaserve]
+=======
+langchain = "^0.1"
+google-cloud-aiplatform = "^1.35.0"
+
+[tool.poetry.group.dev.dependencies]
+langchain-cli = ">=0.0.21"
+fastapi = ">=0.104.0,<1"
+sse-starlette = "^1.6.5"
+
+[tool.langserve]
+>>>>>>> langchan/master
 export_module = "rag_matching_engine"
 export_attr = "chain"
 

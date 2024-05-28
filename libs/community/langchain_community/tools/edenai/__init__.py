@@ -1,5 +1,8 @@
 """Edenai Tools."""
+<<<<<<< HEAD
 
+=======
+>>>>>>> langchan/master
 from langchain_community.tools.edenai.audio_speech_to_text import (
     EdenAiSpeechToTextTool,
 )

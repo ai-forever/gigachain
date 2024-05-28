@@ -1,5 +1,8 @@
 """A unit test meant to catch accidental introduction of non-optional dependencies."""
+<<<<<<< HEAD
 
+=======
+>>>>>>> langchan/master
 from pathlib import Path
 from typing import Any, Dict, Mapping
 
@@ -42,10 +45,15 @@ def test_required_dependencies(poetry_conf: Mapping[str, Any]) -> None:
             "SQLAlchemy",
             "aiohttp",
             "async-timeout",
+<<<<<<< HEAD
             "dataclasses-json",
             "gigachain-core",
             "gigachain-text-splitters",
             "gigachat",
+=======
+            "langchain-core",
+            "langchain-text-splitters",
+>>>>>>> langchan/master
             "langsmith",
             "numpy",
             "pydantic",
@@ -77,9 +85,15 @@ def test_test_group_dependencies(poetry_conf: Mapping[str, Any]) -> None:
         [
             "duckdb-engine",
             "freezegun",
+<<<<<<< HEAD
             "gigachain-core",
             "gigachain-text-splitters",
             "gigachain-openai",
+=======
+            "langchain-core",
+            "langchain-text-splitters",
+            "langchain-openai",
+>>>>>>> langchan/master
             "lark",
             "pandas",
             "pytest",

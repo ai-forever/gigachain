@@ -17,7 +17,11 @@ def ingest_documents():
     data_path = "data/"
     doc = [os.path.join(data_path, file) for file in os.listdir(data_path)][0]
 
+<<<<<<< HEAD
     print("Parsing 10k filing doc for NIKE", doc)  # noqa: T201
+=======
+    print("Parsing 10k filing doc for NIKE", doc)
+>>>>>>> langchan/master
 
     text_splitter = RecursiveCharacterTextSplitter(
         chunk_size=1500, chunk_overlap=100, add_start_index=True
@@ -25,7 +29,11 @@ def ingest_documents():
     loader = UnstructuredFileLoader(doc, mode="single", strategy="fast")
     chunks = loader.load_and_split(text_splitter)
 
+<<<<<<< HEAD
     print("Done preprocessing. Created", len(chunks), "chunks of the original pdf")  # noqa: T201
+=======
+    print("Done preprocessing. Created", len(chunks), "chunks of the original pdf")
+>>>>>>> langchan/master
     # Create vectorstore
     embedder = HuggingFaceEmbeddings(model_name=EMBED_MODEL)
 

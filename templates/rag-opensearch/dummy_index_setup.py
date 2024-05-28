@@ -41,7 +41,11 @@ index_settings = {
 
 response = client.indices.create(index=OPENSEARCH_INDEX_NAME, body=index_settings)
 
+<<<<<<< HEAD
 print(response)  # noqa: T201
+=======
+print(response)
+>>>>>>> langchan/master
 
 
 # Insert docs
@@ -57,4 +61,8 @@ for each in docs:
 
     response = client.index(index=OPENSEARCH_INDEX_NAME, body=document, refresh=True)
 
+<<<<<<< HEAD
     print(response)  # noqa: T201
+=======
+    print(response)
+>>>>>>> langchan/master

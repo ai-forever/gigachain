@@ -1,5 +1,8 @@
 """Test Elasticsearch functionality."""
+<<<<<<< HEAD
 
+=======
+>>>>>>> langchan/master
 import pytest
 
 from langchain_community.vectorstores.elasticsearch import (

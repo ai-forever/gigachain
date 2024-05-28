@@ -1,15 +1,24 @@
 [tool.poetry]
+<<<<<<< HEAD
 name = "gigachain-cli"
 version = "0.0.22"
 description = "CLI for interacting with gigachain"
+=======
+name = "langchain-cli"
+version = "0.0.23"
+description = "CLI for interacting with LangChain"
+>>>>>>> langchan/master
 authors = ["Erick Friis <erick@langchain.dev>"]
 readme = "README.md"
 repository = "https://github.com/langchain-ai/langchain"
 license = "MIT"
+<<<<<<< HEAD
 packages = [
     {include = "langchain_cli"}
 ]
 
+=======
+>>>>>>> langchan/master
 
 [tool.poetry.urls]
 "Source Code" = "https://github.com/langchain-ai/langchain/tree/master/libs/cli"
@@ -18,14 +27,23 @@ packages = [
 python = ">=3.8.1,<4.0"
 typer = { extras = ["all"], version = "^0.9.0" }
 gitpython = "^3.1.40"
+<<<<<<< HEAD
 gigaserve = { extras = ["all"], version = ">=0.0.51" }
+=======
+langserve = { extras = ["all"], version = ">=0.0.51" }
+>>>>>>> langchan/master
 uvicorn = "^0.23.2"
 tomlkit = "^0.12.2"
 libcst = { version = "^1.3.1", python = "^3.9" }
 
 [tool.poetry.scripts]
+<<<<<<< HEAD
 gigachain = "langchain_cli.cli:app"
 gigachain-cli = "langchain_cli.cli:app"
+=======
+langchain = "langchain_cli.cli:app"
+langchain-cli = "langchain_cli.cli:app"
+>>>>>>> langchan/master
 
 [tool.poetry.group.dev.dependencies]
 poethepoet = "^0.24.1"
@@ -72,4 +90,8 @@ _lint_fix = "poetry run ruff . --fix"
 
 [build-system]
 requires = ["poetry-core"]
+<<<<<<< HEAD
 build-backend = "poetry.core.masonry.api"
+=======
+build-backend = "poetry.core.masonry.api"
+>>>>>>> langchan/master

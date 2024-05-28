@@ -4,12 +4,34 @@
   "trailingSlash": true,
   "rewrites": [
     {
+<<<<<<< HEAD
+=======
+      "source": "/v0.1",
+      "destination": "https://langchain-v01.vercel.app/v0.1"
+    },
+    {
+>>>>>>> langchan/master
       "source": "/v0.1/:path(.*/?)*",
       "destination": "https://langchain-v01.vercel.app/v0.1/:path*"
     }
   ],
   "redirects": [
     {
+<<<<<<< HEAD
+=======
+      "source": "/docs/how_to/tool_calls_multi_modal(/?)",
+      "destination": "/docs/how_to/multimodal_inputs/"
+    },
+    {
+      "source": "/v0.2/docs/langsmith(/?)",
+      "destination": "https://docs.smith.langchain.com/"
+    },
+    {
+      "source": "/v0.2/docs/langgraph(/?)",
+      "destination": "https://langchain-ai.github.io/langgraph"
+    },
+    {
+>>>>>>> langchan/master
       "source": "/",
       "destination": "/v0.2/docs/introduction/"
     },
@@ -18,6 +40,13 @@
       "destination": "/v0.2/docs/introduction/"
     },
     {
+<<<<<<< HEAD
+=======
+      "source": "/docs/get_started/introduction(/?)",
+      "destination": "/v0.2/docs/introduction/"
+    },
+    {
+>>>>>>> langchan/master
       "source": "/docs/:path(.*/?)*",
       "destination": "/v0.1/docs/:path*"
     },

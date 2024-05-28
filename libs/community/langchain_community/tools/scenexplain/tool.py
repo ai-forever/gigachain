@@ -1,5 +1,8 @@
 """Tool for the SceneXplain API."""
+<<<<<<< HEAD
 
+=======
+>>>>>>> langchan/master
 from typing import Optional
 
 from langchain_core.callbacks import CallbackManagerForToolRun

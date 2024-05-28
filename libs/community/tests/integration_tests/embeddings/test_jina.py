@@ -1,5 +1,8 @@
 """Test jina embeddings."""
+<<<<<<< HEAD
 
+=======
+>>>>>>> langchan/master
 from langchain_community.embeddings.jina import JinaEmbeddings
 
 

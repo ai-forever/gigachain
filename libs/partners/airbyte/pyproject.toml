@@ -12,7 +12,11 @@ license = "MIT"
 
 [tool.poetry.dependencies]
 python = "^3.9"
+<<<<<<< HEAD
 gigachain-core = ">=0.1.5,<0.3"
+=======
+langchain-core = ">=0.1.5,<0.3"
+>>>>>>> langchan/master
 airbyte = "^0.7.3"
 pydantic = ">=1.10.8,<2"
 
@@ -22,7 +26,11 @@ optional = true
 [tool.poetry.group.test.dependencies]
 pytest = "^7.4.3"
 pytest-asyncio = "^0.23.2"
+<<<<<<< HEAD
 gigachain-core = { path = "../../core", develop = true }
+=======
+langchain-core = { path = "../../core", develop = true }
+>>>>>>> langchan/master
 
 [tool.poetry.group.codespell]
 optional = true
@@ -43,7 +51,11 @@ ruff = "^0.1.8"
 
 [tool.poetry.group.typing.dependencies]
 mypy = "^1.7.1"
+<<<<<<< HEAD
 gigachain-core = { path = "../../core", develop = true }
+=======
+langchain-core = { path = "../../core", develop = true }
+>>>>>>> langchan/master
 langchain-text-splitters = { path = "../../text-splitters", develop = true }
 langchain = { path = "../../langchain", develop = true }
 
@@ -51,7 +63,11 @@ langchain = { path = "../../langchain", develop = true }
 optional = true
 
 [tool.poetry.group.dev.dependencies]
+<<<<<<< HEAD
 gigachain-core = { path = "../../core", develop = true }
+=======
+langchain-core = { path = "../../core", develop = true }
+>>>>>>> langchan/master
 
 [tool.ruff.lint]
 select = [

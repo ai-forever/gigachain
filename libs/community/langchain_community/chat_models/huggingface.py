@@ -44,7 +44,12 @@ DEFAULT_SYSTEM_PROMPT = """You are a helpful, respectful, and honest assistant."
     ),
 )
 class ChatHuggingFace(BaseChatModel):
+<<<<<<< HEAD
     """Hugging Face LLMs as ChatModels.
+=======
+    """
+    Wrapper for using Hugging Face LLM's as ChatModels.
+>>>>>>> langchan/master
 
     Works with `HuggingFaceTextGenInference`, `HuggingFaceEndpoint`,
     and `HuggingFaceHub` LLMs.

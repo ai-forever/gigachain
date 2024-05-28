@@ -7,7 +7,11 @@ readme = "README.md"
 
 [tool.poetry.dependencies]
 python = ">=3.8.1,<4.0"
+<<<<<<< HEAD
 gigachain = ">=0.0.313, <0.1"
+=======
+langchain = "^0.1"
+>>>>>>> langchan/master
 openai = "<2"
 pymongo = "^4.6.0"
 pypdf = "^3.17.0"
@@ -15,11 +19,19 @@ tiktoken = "^0.5.1"
 langchain-text-splitters = ">=0.0.1,<0.1"
 
 [tool.poetry.group.dev.dependencies]
+<<<<<<< HEAD
 gigachain-cli = ">=0.0.21"
 fastapi = ">=0.104.0,<1"
 sse-starlette = "^1.6.5"
 
 [tool.gigaserve]
+=======
+langchain-cli = ">=0.0.21"
+fastapi = ">=0.104.0,<1"
+sse-starlette = "^1.6.5"
+
+[tool.langserve]
+>>>>>>> langchan/master
 export_module = "mongo_parent_document_retrieval"
 export_attr = "chain"
 

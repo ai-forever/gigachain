@@ -5,6 +5,10 @@ EXPECTED_ALL = [
     "AmazonKnowledgeBasesRetriever",
     "ArceeRetriever",
     "ArxivRetriever",
+<<<<<<< HEAD
+=======
+    "AskNewsRetriever",
+>>>>>>> langchan/master
     "AzureAISearchRetriever",
     "AzureCognitiveSearchRetriever",
     "BreebsRetriever",
@@ -42,6 +46,10 @@ EXPECTED_ALL = [
     "WebResearchRetriever",
     "YouRetriever",
     "ZepRetriever",
+<<<<<<< HEAD
+=======
+    "ZepCloudRetriever",
+>>>>>>> langchan/master
     "ZillizRetriever",
     "DocArrayRetriever",
     "NeuralDBRetriever",

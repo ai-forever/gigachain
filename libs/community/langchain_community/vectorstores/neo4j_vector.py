@@ -1043,6 +1043,22 @@ class Neo4jVector(VectorStore):
 
         results = self.query(read_query, params=parameters)
 
+<<<<<<< HEAD
+=======
+        if any(result["text"] is None for result in results):
+            if not self.retrieval_query:
+                raise ValueError(
+                    f"Make sure that none of the `{self.text_node_property}` "
+                    f"properties on nodes with label `{self.node_label}` "
+                    "are missing or empty"
+                )
+            else:
+                raise ValueError(
+                    "Inspect the `retrieval_query` and ensure it doesn't "
+                    "return None for the `text` column"
+                )
+
+>>>>>>> langchan/master
         docs = [
             (
                 Document(

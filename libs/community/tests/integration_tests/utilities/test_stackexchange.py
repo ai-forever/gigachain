@@ -1,5 +1,8 @@
 """Integration test for Stack Exchange."""
+<<<<<<< HEAD
 
+=======
+>>>>>>> langchan/master
 from langchain_community.utilities import StackExchangeAPIWrapper
 
 

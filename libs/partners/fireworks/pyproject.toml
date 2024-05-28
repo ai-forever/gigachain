@@ -12,7 +12,11 @@ license = "MIT"
 
 [tool.poetry.dependencies]
 python = ">=3.8.1,<4.0"
+<<<<<<< HEAD
 gigachain-core = ">=0.1.52,<0.3"
+=======
+langchain-core = ">=0.1.52,<0.3"
+>>>>>>> langchan/master
 fireworks-ai = ">=0.13.0"
 openai = "^1.10.0"
 requests = "^2"
@@ -28,8 +32,13 @@ pytest-mock = "^3.10.0"
 syrupy = "^4.0.2"
 pytest-watcher = "^0.3.4"
 pytest-asyncio = "^0.21.1"
+<<<<<<< HEAD
 gigachain-core = { path = "../../core", develop = true }
 gigachain-standard-tests = { path = "../../standard-tests", develop = true }
+=======
+langchain-core = { path = "../../core", develop = true }
+langchain-standard-tests = { path = "../../standard-tests", develop = true }
+>>>>>>> langchan/master
 
 [tool.poetry.group.codespell]
 optional = true
@@ -50,14 +59,22 @@ ruff = "^0.2.2"
 
 [tool.poetry.group.typing.dependencies]
 mypy = "^0.991"
+<<<<<<< HEAD
 gigachain-core = { path = "../../core", develop = true }
+=======
+langchain-core = { path = "../../core", develop = true }
+>>>>>>> langchan/master
 types-requests = "^2"
 
 [tool.poetry.group.dev]
 optional = true
 
 [tool.poetry.group.dev.dependencies]
+<<<<<<< HEAD
 gigachain-core = { path = "../../core", develop = true }
+=======
+langchain-core = { path = "../../core", develop = true }
+>>>>>>> langchan/master
 
 [tool.ruff.lint]
 select = [

@@ -9,16 +9,26 @@ readme = "README.md"
 
 [tool.poetry.dependencies]
 python = ">=3.8.1,<4.0"
+<<<<<<< HEAD
 gigachain = ">=0.0.325"
+=======
+langchain = "^0.1"
+>>>>>>> langchan/master
 neo4j = ">5.12"
 openai = "<2"
 langchain-community = "^0.0.33"
 langchain-openai = "^0.1.3"
 
 [tool.poetry.group.dev.dependencies]
+<<<<<<< HEAD
 gigachain-cli = ">=0.0.21"
 
 [tool.gigaserve]
+=======
+langchain-cli = ">=0.0.21"
+
+[tool.langserve]
+>>>>>>> langchan/master
 export_module = "neo4j_cypher_memory"
 export_attr = "chain"
 

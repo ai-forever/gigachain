@@ -7,7 +7,11 @@ from langchain_nvidia_aiplay import NVIDIAEmbeddings
 from langchain_text_splitters.character import CharacterTextSplitter
 
 if os.environ.get("NVIDIA_API_KEY", "").startswith("nvapi-"):
+<<<<<<< HEAD
     print("Valid NVIDIA_API_KEY already in environment. Delete to reset")  # noqa: T201
+=======
+    print("Valid NVIDIA_API_KEY already in environment. Delete to reset")
+>>>>>>> langchan/master
 else:
     nvapi_key = getpass.getpass("NVAPI Key (starts with nvapi-): ")
     assert nvapi_key.startswith("nvapi-"), f"{nvapi_key[:5]}... is not a valid key"

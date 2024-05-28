@@ -38,6 +38,10 @@ def print_text(
 ) -> None:
     """Print text with highlighting and no end characters."""
     text_to_print = get_colored_text(text, color) if color else text
+<<<<<<< HEAD
     print(text_to_print, end=end, file=file)  # noqa: T201
+=======
+    print(text_to_print, end=end, file=file)
+>>>>>>> langchan/master
     if file:
         file.flush()  # ensure all printed content are written to file

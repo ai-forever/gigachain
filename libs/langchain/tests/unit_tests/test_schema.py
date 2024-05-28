@@ -1,5 +1,8 @@
 """Test formatting functionality."""
+<<<<<<< HEAD
 
+=======
+>>>>>>> langchan/master
 from typing import Union
 
 import pytest

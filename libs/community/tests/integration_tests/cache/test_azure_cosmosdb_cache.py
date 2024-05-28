@@ -6,7 +6,10 @@ Required to run this test:
     - one environment variable set:
         export MONGODB_VCORE_URI="connection string for azure cosmos db mongo vCore"
 """
+<<<<<<< HEAD
 
+=======
+>>>>>>> langchan/master
 import os
 import uuid
 

@@ -16,6 +16,7 @@ function Imports({ imports }) {
         borderBottomRightRadius: "var(--ifm-code-border-radius)",
       }}
     >
+<<<<<<< HEAD
       <h4 style={{ paddingLeft: "0.65rem", marginBottom: "0.45rem" }}>
         API Reference:
       </h4>
@@ -28,6 +29,16 @@ function Imports({ imports }) {
           </li>
         ))}
       </ul>
+=======
+      <b style={{ paddingLeft: "0.65rem", marginBottom: "0.45rem", marginRight: "0.5rem" }}>
+        API Reference:
+      </b>
+        {imports.map(({ imported, source, docs }, index) => (
+          <span key={imported}>
+            <a href={docs}>{imported}</a>{index < imports.length - 1 ? ' | ' : ''}
+          </span>
+        ))}
+>>>>>>> langchan/master
     </div>
   );
 }

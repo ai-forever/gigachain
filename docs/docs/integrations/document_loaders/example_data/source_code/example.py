@@ -3,7 +3,11 @@ class MyClass:
         self.name = name
 
     def greet(self):
+<<<<<<< HEAD
         print(f"Hello, {self.name}!")  # noqa: T201
+=======
+        print(f"Hello, {self.name}!")
+>>>>>>> langchan/master
 
 
 def main():

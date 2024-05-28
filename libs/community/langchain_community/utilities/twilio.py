@@ -1,5 +1,8 @@
 """Util that calls Twilio."""
+<<<<<<< HEAD
 
+=======
+>>>>>>> langchan/master
 from typing import Any, Dict, Optional
 
 from langchain_core.pydantic_v1 import BaseModel, Extra, root_validator
@@ -41,7 +44,11 @@ class TwilioAPIWrapper(BaseModel):
         Twilio also work here. You cannot, for example, spoof messages from a private 
         cell phone number. If you are using `messaging_service_sid`, this parameter 
         must be empty.
+<<<<<<< HEAD
     """  # noqa: E501
+=======
+    """
+>>>>>>> langchan/master
 
     class Config:
         """Configuration for this pydantic object."""
@@ -78,6 +85,10 @@ class TwilioAPIWrapper(BaseModel):
                 SMS/MMS or
                 [Channel user address](https://www.twilio.com/docs/sms/channels#channel-addresses)
                 for other 3rd-party channels.
+<<<<<<< HEAD
         """  # noqa: E501
+=======
+        """
+>>>>>>> langchan/master
         message = self.client.messages.create(to, from_=self.from_number, body=body)
         return message.sid

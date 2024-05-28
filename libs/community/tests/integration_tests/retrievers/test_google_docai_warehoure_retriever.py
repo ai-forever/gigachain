@@ -1,5 +1,8 @@
 """Test Google Cloud Document AI Warehouse retriever."""
+<<<<<<< HEAD
 
+=======
+>>>>>>> langchan/master
 import os
 
 from langchain_core.documents import Document

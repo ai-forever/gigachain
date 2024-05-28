@@ -14,6 +14,7 @@ from langchain_core.outputs import ChatGeneration, Generation
 from langchain_core.pydantic_v1 import BaseModel, root_validator
 
 
+<<<<<<< HEAD
 def _get_arguments_from_function_call(function_call: Any) -> Any:
     """Supports both type of function_call - dict and objects (for giga)"""
     if hasattr(function_call, "arguments"):
@@ -25,6 +26,8 @@ def _get_arguments_from_function_call(function_call: Any) -> Any:
         return json.dumps(args, ensure_ascii=False)
 
 
+=======
+>>>>>>> langchan/master
 class OutputFunctionsParser(BaseGenerationOutputParser[Any]):
     """Parse an output that is one of sets of values."""
 
@@ -92,15 +95,23 @@ class JsonOutputFunctionsParser(BaseCumulativeTransformOutputParser[Any]):
                 try:
                     if self.args_only:
                         return parse_partial_json(
+<<<<<<< HEAD
                             _get_arguments_from_function_call(function_call),
                             strict=self.strict,
+=======
+                            function_call["arguments"], strict=self.strict
+>>>>>>> langchan/master
                         )
                     else:
                         return {
                             **function_call,
                             "arguments": parse_partial_json(
+<<<<<<< HEAD
                                 _get_arguments_from_function_call(function_call),
                                 strict=self.strict,
+=======
+                                function_call["arguments"], strict=self.strict
+>>>>>>> langchan/master
                             ),
                         }
                 except json.JSONDecodeError:
@@ -108,6 +119,7 @@ class JsonOutputFunctionsParser(BaseCumulativeTransformOutputParser[Any]):
             else:
                 if self.args_only:
                     try:
+<<<<<<< HEAD
                         res = json.loads(
                             _get_arguments_from_function_call(function_call),
                             strict=self.strict,
@@ -115,6 +127,11 @@ class JsonOutputFunctionsParser(BaseCumulativeTransformOutputParser[Any]):
                         if not isinstance(res, dict) or res == {}:
                             raise OutputParserException("Expected arguments.")
                         return res
+=======
+                        return json.loads(
+                            function_call["arguments"], strict=self.strict
+                        )
+>>>>>>> langchan/master
                     except (json.JSONDecodeError, TypeError) as exc:
                         raise OutputParserException(
                             f"Could not parse function call data: {exc}"
@@ -124,8 +141,12 @@ class JsonOutputFunctionsParser(BaseCumulativeTransformOutputParser[Any]):
                         return {
                             **function_call,
                             "arguments": json.loads(
+<<<<<<< HEAD
                                 _get_arguments_from_function_call(function_call),
                                 strict=self.strict,
+=======
+                                function_call["arguments"], strict=self.strict
+>>>>>>> langchan/master
                             ),
                         }
                     except (json.JSONDecodeError, TypeError) as exc:
@@ -219,13 +240,20 @@ class PydanticOutputFunctionsParser(OutputFunctionsParser):
     def parse_result(self, result: List[Generation], *, partial: bool = False) -> Any:
         _result = super().parse_result(result)
         if self.args_only:
+<<<<<<< HEAD
             if isinstance(_result, dict):  # Also support gigachat model
                 _result = json.dumps(_result, ensure_ascii=False)
+=======
+>>>>>>> langchan/master
             pydantic_args = self.pydantic_schema.parse_raw(_result)  # type: ignore
         else:
             fn_name = _result["name"]
             _args = _result["arguments"]
+<<<<<<< HEAD
             pydantic_args = self.pydantic_schema[fn_name].parse_raw(_args)  # type: ignore  # noqa: E501
+=======
+            pydantic_args = self.pydantic_schema[fn_name].parse_raw(_args)  # type: ignore
+>>>>>>> langchan/master
         return pydantic_args
 
 

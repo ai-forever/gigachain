@@ -35,7 +35,11 @@ class TextSplitter(BaseDocumentTransformer, ABC):
         chunk_size: int = 4000,
         chunk_overlap: int = 200,
         length_function: Callable[[str], int] = len,
+<<<<<<< HEAD
         keep_separator: bool = False,
+=======
+        keep_separator: Union[bool, Literal["start", "end"]] = False,
+>>>>>>> langchan/master
         add_start_index: bool = False,
         strip_whitespace: bool = True,
     ) -> None:
@@ -45,7 +49,12 @@ class TextSplitter(BaseDocumentTransformer, ABC):
             chunk_size: Maximum size of chunks to return
             chunk_overlap: Overlap in characters between chunks
             length_function: Function that measures the length of given chunks
+<<<<<<< HEAD
             keep_separator: Whether to keep the separator in the chunks
+=======
+            keep_separator: Whether to keep the separator and where to place it
+                            in each corresponding chunk (True='start')
+>>>>>>> langchan/master
             add_start_index: If `True`, includes chunk's start index in metadata
             strip_whitespace: If `True`, strips whitespace from the start and end of
                               every document

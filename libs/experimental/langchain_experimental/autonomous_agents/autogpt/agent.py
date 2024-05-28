@@ -11,7 +11,11 @@ from langchain.schema import (
 from langchain.tools.base import BaseTool
 from langchain_community.tools.human.tool import HumanInputRun
 from langchain_core.language_models import BaseChatModel
+<<<<<<< HEAD
 from langchain_core.messages import AIMessage, HumanMessage
+=======
+from langchain_core.messages import AIMessage, HumanMessage, SystemMessage
+>>>>>>> langchan/master
 from langchain_core.vectorstores import VectorStoreRetriever
 
 from langchain_experimental.autonomous_agents.autogpt.output_parser import (
@@ -80,7 +84,12 @@ class AutoGPT:
 
     def run(self, goals: List[str]) -> str:
         user_input = (
+<<<<<<< HEAD
             "Определи, какую команду использовать, " "и ответь в корректном формате."
+=======
+            "Determine which next command to use, "
+            "and respond using the format specified above:"
+>>>>>>> langchan/master
         )
         # Interaction Loop
         loop_count = 0
@@ -118,11 +127,16 @@ class AutoGPT:
                     observation = (
                         f"Error: {str(e)}, {type(e).__name__}, args: {action.args}"
                     )
+<<<<<<< HEAD
                 result = f"Команда {tool.name} верунла: {observation}"
+=======
+                result = f"Command {tool.name} returned: {observation}"
+>>>>>>> langchan/master
             elif action.name == "ERROR":
                 result = f"Error: {action.args}. "
             else:
                 result = (
+<<<<<<< HEAD
                     f"Неизвестная команда '{action.name}'. "
                     f"Пожалуйста используй только команды из списка 'Комманды:' "
                     f"и отвечай только в требуемом JSON формате."
@@ -130,6 +144,15 @@ class AutoGPT:
 
             memory_to_add = (
                 f"Ответ ассистента: {assistant_reply} " f"\nResult: {result} "
+=======
+                    f"Unknown command '{action.name}'. "
+                    f"Please refer to the 'COMMANDS' list for available "
+                    f"commands and only respond in the specified JSON format."
+                )
+
+            memory_to_add = (
+                f"Assistant Reply: {assistant_reply} " f"\nResult: {result} "
+>>>>>>> langchan/master
             )
             if self.feedback_tool is not None:
                 feedback = f"{self.feedback_tool.run('Input: ')}"
@@ -139,4 +162,8 @@ class AutoGPT:
                 memory_to_add += f"\n{feedback}"
 
             self.memory.add_documents([Document(page_content=memory_to_add)])
+<<<<<<< HEAD
             self.chat_history_memory.add_message(HumanMessage(content=result))
+=======
+            self.chat_history_memory.add_message(SystemMessage(content=result))
+>>>>>>> langchan/master

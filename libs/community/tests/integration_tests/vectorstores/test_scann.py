@@ -1,5 +1,8 @@
 """Test ScaNN functionality."""
+<<<<<<< HEAD
 
+=======
+>>>>>>> langchan/master
 import datetime
 import tempfile
 

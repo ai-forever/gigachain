@@ -3,7 +3,10 @@
 Splits up a document, sends the smaller parts to the LLM with one prompt,
 then combines the results with another one.
 """
+<<<<<<< HEAD
 
+=======
+>>>>>>> langchan/master
 from __future__ import annotations
 
 from typing import Any, Dict, List, Mapping, Optional

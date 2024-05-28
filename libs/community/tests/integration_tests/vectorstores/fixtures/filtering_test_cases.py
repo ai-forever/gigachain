@@ -1,5 +1,10 @@
+<<<<<<< HEAD
 """Module contains test cases for testing filtering of documents in vector stores."""
 
+=======
+"""Module contains test cases for testing filtering of documents in vector stores.
+"""
+>>>>>>> langchan/master
 from langchain_core.documents import Document
 
 metadatas = [

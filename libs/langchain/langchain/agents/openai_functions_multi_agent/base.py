@@ -1,5 +1,8 @@
 """Module implements an agent that uses OpenAI's APIs function enabled API."""
+<<<<<<< HEAD
 
+=======
+>>>>>>> langchan/master
 import json
 from json import JSONDecodeError
 from typing import Any, List, Optional, Sequence, Tuple, Union

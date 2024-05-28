@@ -1,5 +1,8 @@
 """Wrapper around Konko AI's Completion API."""
+<<<<<<< HEAD
 
+=======
+>>>>>>> langchan/master
 import logging
 import warnings
 from typing import Any, Dict, List, Optional

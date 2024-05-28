@@ -17,7 +17,11 @@ ReplaceImportsCodemod = generate_import_replacer(
         "langchain_to_core",
         "community_to_core",
     ]
+<<<<<<< HEAD
 )  # type: ignore[attr-defined] # noqa: E501
+=======
+)  # type: ignore[attr-defined]
+>>>>>>> langchan/master
 
 
 class TestReplaceImportsCommand(CodemodTest):

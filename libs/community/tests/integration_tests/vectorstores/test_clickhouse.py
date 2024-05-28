@@ -1,5 +1,8 @@
 """Test ClickHouse functionality."""
+<<<<<<< HEAD
 
+=======
+>>>>>>> langchan/master
 from langchain_core.documents import Document
 
 from langchain_community.vectorstores import Clickhouse, ClickhouseSettings

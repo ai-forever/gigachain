@@ -1,5 +1,8 @@
 """Run evaluator wrapper for string evaluators."""
+<<<<<<< HEAD
 
+=======
+>>>>>>> langchan/master
 from __future__ import annotations
 
 from abc import abstractmethod

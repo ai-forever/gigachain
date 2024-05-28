@@ -24,9 +24,15 @@ Fill out [this form](https://www.langchain.com/contact-sales) to speak with our 
 
 ## Quick Install
 
+<<<<<<< HEAD
 `pip install gigachain`
 or
 `pip install langsmith && conda install gigachain -c conda-forge`
+=======
+`pip install langchain`
+or
+`pip install langsmith && conda install langchain -c conda-forge`
+>>>>>>> langchan/master
 
 ## 🤔 What is this?
 

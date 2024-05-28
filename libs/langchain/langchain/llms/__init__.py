@@ -17,7 +17,10 @@ access to the large language model (**LLM**) APIs and services.
     CallbackManager, AsyncCallbackManager,
     AIMessage, BaseMessage
 """  # noqa: E501
+<<<<<<< HEAD
 
+=======
+>>>>>>> langchan/master
 import warnings
 from typing import Any, Callable, Dict, Type
 
@@ -551,7 +554,11 @@ def __getattr__(name: str) -> Any:
             "langchain will no longer be supported as of langchain==0.2.0. "
             "Please import from langchain-community instead:\n\n"
             f"`from langchain_community.llms import {name}`.\n\n"
+<<<<<<< HEAD
             "To install gigachain-community run `pip install -U gigachain-community`.",
+=======
+            "To install langchain-community run `pip install -U langchain-community`.",
+>>>>>>> langchan/master
             category=LangChainDeprecationWarning,
         )
 
@@ -645,7 +652,10 @@ __all__ = [
     "Xinference",
     "JavelinAIGateway",
     "QianfanLLMEndpoint",
+<<<<<<< HEAD
     "GigaChat",
+=======
+>>>>>>> langchan/master
     "YandexGPT",
     "VolcEngineMaasLLM",
 ]

@@ -17,7 +17,11 @@ Also, ensure the following environment variables are set:
 To use this package, you should first have the LangChain CLI installed:
 
 ```shell
+<<<<<<< HEAD
 pip install -U gigachain-cli
+=======
+pip install -U langchain-cli
+>>>>>>> langchan/master
 ```
 
 To create a new LangChain project and install this as the only package, you can do:

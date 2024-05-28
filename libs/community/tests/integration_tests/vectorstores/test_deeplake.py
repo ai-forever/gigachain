@@ -1,5 +1,8 @@
 """Test Deep Lake functionality."""
+<<<<<<< HEAD
 
+=======
+>>>>>>> langchan/master
 import pytest
 from langchain_core.documents import Document
 from pytest import FixtureRequest

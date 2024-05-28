@@ -1,4 +1,8 @@
+<<<<<<< HEAD
 """Wrapper around scikit-learn NearestNeighbors implementation.
+=======
+""" Wrapper around scikit-learn NearestNeighbors implementation.
+>>>>>>> langchan/master
 
 The vector store can be persisted in json, bson or parquet format.
 """

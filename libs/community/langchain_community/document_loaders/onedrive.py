@@ -1,5 +1,8 @@
 """Loads data from OneDrive"""
+<<<<<<< HEAD
 
+=======
+>>>>>>> langchan/master
 from __future__ import annotations
 
 import logging

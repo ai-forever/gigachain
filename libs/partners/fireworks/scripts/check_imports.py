@@ -10,6 +10,12 @@ if __name__ == "__main__":
             SourceFileLoader("x", file).load_module()
         except Exception:
             has_faillure = True
+<<<<<<< HEAD
             traceback.print_exc()
+=======
+            print(file)  # noqa: T201
+            traceback.print_exc()
+            print()  # noqa: T201
+>>>>>>> langchan/master
 
     sys.exit(1 if has_failure else 0)

@@ -1,5 +1,8 @@
 """Integration test for Wikipedia Document Loader."""
+<<<<<<< HEAD
 
+=======
+>>>>>>> langchan/master
 from typing import List
 
 from langchain_core.documents import Document

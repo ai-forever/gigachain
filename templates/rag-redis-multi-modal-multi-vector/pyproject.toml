@@ -7,8 +7,13 @@ readme = "README.md"
 
 [tool.poetry.dependencies]
 python = ">=3.8.1,<4.0"
+<<<<<<< HEAD
 gigachain-core = ">=0.1.5"
 gigachain-openai = ">=0.0.1"
+=======
+langchain-core = ">=0.1.5"
+langchain-openai = ">=0.0.1"
+>>>>>>> langchan/master
 redis = "^5.0.1"
 openai = "<=2.0.0"
 pypdfium2 = "^4.27.0"
@@ -16,7 +21,11 @@ pillow = "^10.2.0"
 
 
 [tool.poetry.group.dev.dependencies]
+<<<<<<< HEAD
 gigachain-cli = ">=0.0.21"
+=======
+langchain-cli = ">=0.0.21"
+>>>>>>> langchan/master
 fastapi = ">=0.104.0,<1"
 sse-starlette = "^1.6.5"
 

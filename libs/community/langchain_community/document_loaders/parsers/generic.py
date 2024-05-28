@@ -2,7 +2,10 @@
 
 This module contains some logic to help assemble more sophisticated parsers.
 """
+<<<<<<< HEAD
 
+=======
+>>>>>>> langchan/master
 from typing import Iterator, Mapping, Optional
 
 from langchain_core.documents import Document

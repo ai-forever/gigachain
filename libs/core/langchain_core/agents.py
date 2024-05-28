@@ -28,7 +28,10 @@ Agents select and use **Tools** and **Toolkits** for actions.
     AgentAction, AgentFinish, AgentStep
 
 """  # noqa: E501
+<<<<<<< HEAD
 
+=======
+>>>>>>> langchan/master
 from __future__ import annotations
 
 import json

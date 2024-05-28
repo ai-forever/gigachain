@@ -1,5 +1,8 @@
 """Chain that runs an arbitrary python function."""
+<<<<<<< HEAD
 
+=======
+>>>>>>> langchan/master
 import functools
 import logging
 from typing import Any, Awaitable, Callable, Dict, List, Optional

@@ -7,14 +7,22 @@ readme = "README.md"
 
 [tool.poetry.dependencies]
 python = ">=3.8.1,<4.0"
+<<<<<<< HEAD
 gigachain = ">=0.0.313, <0.1"
+=======
+langchain = "^0.1"
+>>>>>>> langchan/master
 momento = "^1.12.0"
 openai = "<2"
 tiktoken = "^0.5.1"
 langchain-text-splitters = ">=0.0.1,<0.1"
 
 [tool.poetry.group.dev.dependencies]
+<<<<<<< HEAD
 gigachain-cli = ">=0.0.21"
+=======
+langchain-cli = ">=0.0.21"
+>>>>>>> langchan/master
 fastapi = ">=0.104.0,<1"
 sse-starlette = "^1.6.5"
 
@@ -22,9 +30,15 @@ sse-starlette = "^1.6.5"
 bs4 = "^0.0.1"
 
 [tool.poetry.group.test.dependencies]
+<<<<<<< HEAD
 gigaserve = "^0.0.21"
 
 [tool.gigaserve]
+=======
+langserve = "^0.0.21"
+
+[tool.langserve]
+>>>>>>> langchan/master
 export_module = "rag_momento_vector_index"
 export_attr = "chain"
 

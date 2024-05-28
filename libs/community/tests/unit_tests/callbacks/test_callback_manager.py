@@ -1,5 +1,8 @@
 """Test CallbackManager."""
+<<<<<<< HEAD
 
+=======
+>>>>>>> langchan/master
 from unittest.mock import patch
 
 import pytest

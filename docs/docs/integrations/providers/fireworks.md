@@ -8,7 +8,11 @@ Langchain.
 - Install the Fireworks integration package.
 
   ```
+<<<<<<< HEAD
   pip install gigachain-fireworks
+=======
+  pip install langchain-fireworks
+>>>>>>> langchan/master
   ```
 
 - Get a Fireworks API key by signing up at [fireworks.ai](https://fireworks.ai).

@@ -1,5 +1,8 @@
 """Integration test for Wikipedia API Wrapper."""
+<<<<<<< HEAD
 
+=======
+>>>>>>> langchan/master
 from typing import List
 
 import pytest

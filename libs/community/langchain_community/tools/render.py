@@ -1,3 +1,4 @@
+<<<<<<< HEAD
 """Different methods for rendering Tools to be passed to LLMs.
 
 Depending on the LLM you are using and the prompting strategy you are using,
@@ -71,3 +72,11 @@ def format_tool_to_openai_tool(tool: BaseTool) -> ToolDescription:
     """Format tool into the OpenAI function API."""
     function = format_tool_to_openai_function(tool)
     return {"type": "function", "function": function}
+=======
+from langchain_core.utils.function_calling import (
+    format_tool_to_openai_function,
+    format_tool_to_openai_tool,
+)
+
+__all__ = ["format_tool_to_openai_function", "format_tool_to_openai_tool"]
+>>>>>>> langchan/master

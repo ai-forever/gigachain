@@ -7,7 +7,11 @@ readme = "README.md"
 
 [tool.poetry.dependencies]
 python = ">=3.9,<3.13"
+<<<<<<< HEAD
 gigachain = ">=0.0.325"
+=======
+langchain = "^0.1"
+>>>>>>> langchan/master
 openai = "<2"
 tiktoken = "^0.5.1"
 faiss-cpu = "^1.7.4"
@@ -15,10 +19,21 @@ pandas = "^2.1.1"
 setuptools = "^68.2.2"
 tabulate = "^0.9.0"
 pydantic = "<2"
+<<<<<<< HEAD
 gigachain-experimental = ">=0.0.54"
 
 [tool.poetry.group.dev.dependencies]
 gigachain-cli = ">=0.0.21"
+=======
+langchain-experimental = ">=0.0.54"
+
+[tool.poetry.group.dev.dependencies]
+langchain-cli = ">=0.0.21"
+
+[tool.langserve]
+export_module = "csv_agent"
+export_attr = "agent_executor"
+>>>>>>> langchan/master
 
 [tool.templates-hub]
 use-case = "question-answering"

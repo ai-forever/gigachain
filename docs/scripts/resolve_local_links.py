@@ -13,8 +13,18 @@ def update_links(doc_path, docs_link):
     # replace relative links
     content = re.sub(r"\]\(\.\/", f"]({docs_link}", content)
 
+<<<<<<< HEAD
     with open(DOCS_DIR / doc_path, "w") as f:
         f.write(content)
+=======
+    frontmatter = """---
+custom_edit_url:
+---
+"""
+
+    with open(DOCS_DIR / doc_path, "w") as f:
+        f.write(frontmatter + content)
+>>>>>>> langchan/master
 
 
 if __name__ == "__main__":

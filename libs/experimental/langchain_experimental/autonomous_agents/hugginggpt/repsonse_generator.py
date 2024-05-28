@@ -12,11 +12,18 @@ class ResponseGenerationChain(LLMChain):
     @classmethod
     def from_llm(cls, llm: BaseLanguageModel, verbose: bool = True) -> LLMChain:
         execution_template = (
+<<<<<<< HEAD
             "AI-ассистент проанализировал ввод пользователя,"
             " разбил его на несколько задач"
             "и выполнил их. Результаты следующие:\n"
             "{task_execution}"
             "\nПожалуйста, суммируй результаты и сформулируй ответ."
+=======
+            "The AI assistant has parsed the user input into several tasks"
+            "and executed them. The results are as follows:\n"
+            "{task_execution}"
+            "\nPlease summarize the results and generate a response."
+>>>>>>> langchan/master
         )
         prompt = PromptTemplate(
             template=execution_template,

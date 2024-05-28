@@ -1,5 +1,8 @@
 """A chain for comparing the output of two models using embeddings."""
+<<<<<<< HEAD
 
+=======
+>>>>>>> langchan/master
 from enum import Enum
 from typing import Any, Dict, List, Optional
 

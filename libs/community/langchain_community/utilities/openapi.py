@@ -1,5 +1,8 @@
 """Utility functions for parsing an OpenAPI spec."""
+<<<<<<< HEAD
 
+=======
+>>>>>>> langchan/master
 from __future__ import annotations
 
 import copy

@@ -2,7 +2,10 @@
 
 https://gist.github.com/foxmask/7b29c43a161e001ff04afdb2f181e31c
 """
+<<<<<<< HEAD
 
+=======
+>>>>>>> langchan/master
 import hashlib
 import logging
 from base64 import b64decode
@@ -35,7 +38,11 @@ class EverNoteLoader(BaseLoader):
             notes into a single long Document.
         If this is set to True (default) then the only metadata on the document will be
             the 'source' which contains the file name of the export.
+<<<<<<< HEAD
     """  # noqa: E501
+=======
+    """
+>>>>>>> langchan/master
 
     def __init__(self, file_path: Union[str, Path], load_single_document: bool = True):
         """Initialize with file path."""

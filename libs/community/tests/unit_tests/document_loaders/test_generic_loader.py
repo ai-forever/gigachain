@@ -1,5 +1,8 @@
 """Test generic loader."""
+<<<<<<< HEAD
 
+=======
+>>>>>>> langchan/master
 import os
 import tempfile
 from pathlib import Path

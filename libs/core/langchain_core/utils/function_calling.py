@@ -99,6 +99,7 @@ def convert_pydantic_to_openai_function(
     }
 
 
+<<<<<<< HEAD
 def convert_pydantic_to_gigachat_function(
     model: Type[BaseModel],
     *,
@@ -121,6 +122,8 @@ def convert_pydantic_to_gigachat_function(
     }
 
 
+=======
+>>>>>>> langchan/master
 @deprecated(
     "0.1.16",
     alternative="langchain_core.utils.function_calling.convert_to_openai_tool()",
@@ -225,9 +228,15 @@ def _get_python_function_required_args(function: Callable) -> List[str]:
 
     is_function_type = isinstance(function, FunctionType)
     is_method_type = isinstance(function, MethodType)
+<<<<<<< HEAD
     if is_function_type and required[0] == "self":
         required = required[1:]
     elif is_method_type and required[0] == "cls":
+=======
+    if required and is_function_type and required[0] == "self":
+        required = required[1:]
+    elif required and is_method_type and required[0] == "cls":
+>>>>>>> langchan/master
         required = required[1:]
     return required
 
@@ -260,6 +269,7 @@ def convert_python_function_to_openai_function(
 
 @deprecated(
     "0.1.16",
+<<<<<<< HEAD
     removal="0.3.0",
 )
 def format_tool_to_gigachat_function(tool: BaseTool) -> FunctionDescription:
@@ -289,6 +299,8 @@ def format_tool_to_gigachat_function(tool: BaseTool) -> FunctionDescription:
 
 @deprecated(
     "0.1.16",
+=======
+>>>>>>> langchan/master
     alternative="langchain_core.utils.function_calling.convert_to_openai_function()",
     removal="0.3.0",
 )
@@ -375,6 +387,7 @@ def convert_to_openai_function(
         )
 
 
+<<<<<<< HEAD
 def flatten_all_of(schema: Any) -> Any:
     """GigaChat не поддерживает allOf/anyOf, поэтому правим вложенную структуру"""
     if isinstance(schema, dict):
@@ -426,6 +439,8 @@ def convert_to_gigachat_function(
     return flatten_all_of(function)
 
 
+=======
+>>>>>>> langchan/master
 def convert_to_openai_tool(
     tool: Union[Dict[str, Any], Type[BaseModel], Callable, BaseTool],
 ) -> Dict[str, Any]:
@@ -447,6 +462,7 @@ def convert_to_openai_tool(
     return {"type": "function", "function": function}
 
 
+<<<<<<< HEAD
 def convert_to_gigachat_tool(
     tool: Union[Dict[str, Any], Type[BaseModel], Callable, BaseTool],
 ) -> Dict[str, Any]:
@@ -469,6 +485,8 @@ def convert_to_gigachat_tool(
     return {"type": "function", "function": function}
 
 
+=======
+>>>>>>> langchan/master
 def tool_example_to_messages(
     input: str, tool_calls: List[BaseModel], tool_outputs: Optional[List[str]] = None
 ) -> List[BaseMessage]:

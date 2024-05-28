@@ -1,5 +1,8 @@
 """Loading datasets and evaluators."""
+<<<<<<< HEAD
 
+=======
+>>>>>>> langchan/master
 from typing import Any, Dict, List, Optional, Sequence, Type, Union
 
 from langchain_core.language_models import BaseLanguageModel
@@ -57,7 +60,11 @@ def load_dataset(uri: str) -> List[Dict]:
 
         from langchain.evaluation import load_dataset
         ds = load_dataset("llm-math")
+<<<<<<< HEAD
     """  # noqa: E501
+=======
+    """
+>>>>>>> langchan/master
     try:
         from datasets import load_dataset
     except ImportError:

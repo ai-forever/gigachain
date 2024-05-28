@@ -1,5 +1,8 @@
 """Test FastEmbed embeddings."""
+<<<<<<< HEAD
 
+=======
+>>>>>>> langchan/master
 import pytest
 
 from langchain_community.embeddings.fastembed import FastEmbedEmbeddings

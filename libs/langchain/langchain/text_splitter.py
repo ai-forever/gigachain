@@ -1,5 +1,8 @@
 """Kept for backwards compatibility."""
+<<<<<<< HEAD
 
+=======
+>>>>>>> langchan/master
 from langchain_text_splitters import (
     Language,
     RecursiveCharacterTextSplitter,

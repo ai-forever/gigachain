@@ -1,5 +1,8 @@
 """Test Baseten API wrapper."""
+<<<<<<< HEAD
 
+=======
+>>>>>>> langchan/master
 import os
 
 from langchain_community.llms.baseten import Baseten

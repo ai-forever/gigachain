@@ -7,6 +7,7 @@ readme = "README.md"
 
 [tool.poetry.dependencies]
 python = ">=3.8.1,<4.0"
+<<<<<<< HEAD
 gigachain = ">=0.0.313, <0.1"
 openai = "<2"
 arxiv = "^2.0.0"
@@ -14,6 +15,15 @@ gigachain-openai = "^0.0.2.post1"
 
 [tool.poetry.group.dev.dependencies]
 gigachain-cli = ">=0.0.21"
+=======
+langchain = "^0.1"
+openai = "<2"
+arxiv = "^2.0.0"
+langchain-openai = "^0.0.2.post1"
+
+[tool.poetry.group.dev.dependencies]
+langchain-cli = ">=0.0.21"
+>>>>>>> langchan/master
 fastapi = ">=0.104.0,<1"
 sse-starlette = "^1.6.5"
 

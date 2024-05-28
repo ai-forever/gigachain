@@ -1,5 +1,8 @@
 """Configuration for unit tests."""
+<<<<<<< HEAD
 
+=======
+>>>>>>> langchan/master
 from importlib import util
 from typing import Dict, Sequence
 from uuid import UUID

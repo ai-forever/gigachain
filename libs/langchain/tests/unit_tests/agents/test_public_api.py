@@ -21,7 +21,10 @@ _EXPECTED = [
     "Tool",
     "XMLAgent",
     "ZeroShotAgent",
+<<<<<<< HEAD
     "create_gigachat_functions_agent",
+=======
+>>>>>>> langchan/master
     "create_json_agent",
     "create_openapi_agent",
     "create_pbi_agent",

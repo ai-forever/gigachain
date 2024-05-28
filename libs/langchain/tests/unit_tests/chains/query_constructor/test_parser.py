@@ -1,5 +1,8 @@
 """Test LLM-generated structured query parsing."""
+<<<<<<< HEAD
 
+=======
+>>>>>>> langchan/master
 from typing import Any, cast
 
 import lark

@@ -22,6 +22,12 @@ if TYPE_CHECKING:
         AstraDBByteStore,
         AstraDBStore,
     )
+<<<<<<< HEAD
+=======
+    from langchain_community.storage.cassandra import (
+        CassandraByteStore,
+    )
+>>>>>>> langchan/master
     from langchain_community.storage.mongodb import (
         MongoDBStore,
     )
@@ -36,6 +42,10 @@ if TYPE_CHECKING:
 __all__ = [
     "AstraDBByteStore",
     "AstraDBStore",
+<<<<<<< HEAD
+=======
+    "CassandraByteStore",
+>>>>>>> langchan/master
     "MongoDBStore",
     "RedisStore",
     "UpstashRedisByteStore",
@@ -45,6 +55,10 @@ __all__ = [
 _module_lookup = {
     "AstraDBByteStore": "langchain_community.storage.astradb",
     "AstraDBStore": "langchain_community.storage.astradb",
+<<<<<<< HEAD
+=======
+    "CassandraByteStore": "langchain_community.storage.cassandra",
+>>>>>>> langchan/master
     "MongoDBStore": "langchain_community.storage.mongodb",
     "RedisStore": "langchain_community.storage.redis",
     "UpstashRedisByteStore": "langchain_community.storage.upstash_redis",
@@ -57,6 +71,9 @@ def __getattr__(name: str) -> Any:
         module = importlib.import_module(_module_lookup[name])
         return getattr(module, name)
     raise AttributeError(f"module {__name__} has no attribute {name}")
+<<<<<<< HEAD
 
 
 __all__ = list(_module_lookup.keys())
+=======
+>>>>>>> langchan/master

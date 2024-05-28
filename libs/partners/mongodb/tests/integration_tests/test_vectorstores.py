@@ -51,7 +51,11 @@ class TestMongoDBAtlasVectorSearch:
         # insure the test collection is empty
         collection = get_collection()
         if collection.count_documents({}):
+<<<<<<< HEAD
             collection.delete_many({})  # type: ignore[index]  # noqa: E501
+=======
+            collection.delete_many({})  # type: ignore[index]
+>>>>>>> langchan/master
 
     @classmethod
     def teardown_class(cls) -> None:

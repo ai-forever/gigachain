@@ -1,5 +1,9 @@
 """
+<<<<<<< HEAD
 Manage GigaChain apps
+=======
+Manage LangChain apps
+>>>>>>> langchan/master
 """
 
 import shutil
@@ -123,7 +127,13 @@ def new(
     typer.echo(f"    cd ./{app_name}\n")
     typer.echo("Then add templates with commands like:\n")
     typer.echo("    langchain app add extraction-openai-functions")
+<<<<<<< HEAD
     typer.echo("    langchain app add git+ssh://git@github.com/efriis/simple-pirate.git\n\n")
+=======
+    typer.echo(
+        "    langchain app add git+ssh://git@github.com/efriis/simple-pirate.git\n\n"
+    )
+>>>>>>> langchan/master
 
 
 @app_cli.command()
@@ -157,8 +167,13 @@ def add(
     Adds the specified template to the current LangServe app.
 
     e.g.:
+<<<<<<< HEAD
     gigachain app add extraction-openai-functions
     gigachain app add git+ssh://git@github.com/efriis/simple-pirate.git
+=======
+    langchain app add extraction-openai-functions
+    langchain app add git+ssh://git@github.com/efriis/simple-pirate.git
+>>>>>>> langchan/master
     """
 
     parsed_deps = parse_dependencies(dependencies, repo, branch, api_path)
