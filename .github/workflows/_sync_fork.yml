@@ -57,6 +57,8 @@ jobs:
     
             # Overwrite the original file with the resolved content
             mv temp_file $file
+
+            sed -i -E '/packages = \[/,/^\s*\]/! s/langchain/gigachain/' $file
             
             # Add the resolved file to the staging area
             git add $file
