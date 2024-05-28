@@ -29,7 +29,7 @@ jobs:
       - name: Resolve .lock conflicts
         run: |
           for file in $(git diff --name-only --diff-filter=U | grep '\.lock$'); do
-            git checkout --ours $file
+            git checkout --theirs $file
           done
           git add .
 
@@ -43,7 +43,7 @@ jobs:
 
       - name: Accept incoming changes if not modified in gigachain
         run: |
-          git checkout --ours .
+          git checkout --theirs .
           git add .
           git commit -m "Merge langchain/master into gigachain/dev with automated conflict resolution for .toml and .lock files" || echo "No changes to commit"
 
