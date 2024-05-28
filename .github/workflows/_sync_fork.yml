@@ -20,20 +20,32 @@ jobs:
 
       - name: Fetch upstream changes
         run: |
-          git remote add upstream https://github.com/langchain-ai/langchain.git
-          git fetch upstream
+          git remote add langchan https://github.com/langchain-ai/langchain.git
+          git fetch langchan
 
       - name: Merge changes from upstream
-        run: git merge -Xours --allow-unrelated-histories upstream/master
+        run: git merge  --allow-unrelated-histories langchan/master
 
-      - name: Fix gigachain naming
+      - name: Resolve .lock conflicts
         run: |
-          echo "Fix gigachain naming"
-          chmod +x .github/scripts/fix_gigachain_naming.sh
-          .github/scripts/fix_gigachain_naming.sh
-          git add -A
-          git commit -m "fix naming"
+          for file in $(git diff --name-only --diff-filter=U | grep '\.lock$'); do
+            git checkout --ours $file
+          done
+          git add .
 
+      - name: Resolve .toml conflicts
+        run: |
+          for file in $(git diff --name-only --diff-filter=U | grep '\.toml$'); do
+            sed -i '/<<<<<<< HEAD/,/>>>>>>>/d' $file
+            sed -i 's/=======//' $file
+            git add $file
+          done
+
+      - name: Accept incoming changes if not modified in gigachain
+        run: |
+          git checkout --ours .
+          git add .
+          git commit -m "Merge langchain/master into gigachain/dev with automated conflict resolution for .toml and .lock files" || echo "No changes to commit"
 
       - name: Create pull request
         uses: peter-evans/create-pull-request@v3
