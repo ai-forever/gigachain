@@ -44,7 +44,7 @@ jobs:
             # Apply the gigachain naming and langchain version changes
             cp gigachain_changes.txt $file
             sed -i 's/.*version =.*/'$(awk -F ' = ' '/version =/ {print $2}' langchain_changes.txt)'/g' $file
-      
+            
             sed -i -E '/packages = \[/,/^\s*\]/! s/langchain/gigachain/' $file
             
             # Add the resolved file to the staging area
