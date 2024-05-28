@@ -33,22 +33,11 @@ jobs:
           
           # Handle .toml conflicts
           for file in $(git diff --name-only --diff-filter=U | grep '\.toml$'); do
-            # Extract sections with conflicts
-            awk '/<<<<<<< HEAD/{flag=1;next}/=======/{flag=0}flag' $file > gigachain_changes.txt
-            awk '/=======/{flag=1;next}/>>>>>>>/{flag=0}flag' $file > langchain_changes.txt
-            
-            # Apply the gigachain naming and langchain version changes
-            cp gigachain_changes.txt $file
-            sed -i 's/.*version =.*/'$(awk -F ' = ' '/version =/ {print $2}' langchain_changes.txt)'/g' $file
-            
-            # Clean up temporary files
-            cat gigachain_changes.txt
-            echo '======'
-            cat angchain_changes.txt
-            rm gigachain_changes.txt langchain_changes.txt
+            sed -i '/<<<<<<< HEAD/,/>>>>>>>/d' $file
+            sed -i 's/=======//' $file
             
             # Add the resolved file to the staging area
-            sed -i -E '/packages = \[/,/^\s*\]/! s/langchain/gigachain/' $file
+            sed -i -E '/packages = \[/,/^\s*\]/! s/lang/giga/' $file
             git add $file
           done
 
