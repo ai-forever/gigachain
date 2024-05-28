@@ -82,8 +82,6 @@ jobs:
 
       - name: Accept incoming changes if not modified in gigachain
         run: |
-          git checkout --theirs .
-          git add .
           git commit -m "Merge langchain/master into gigachain/dev with automated conflict resolution for .toml and .lock files" || echo "No changes to commit"
 
       - name: Create pull request
