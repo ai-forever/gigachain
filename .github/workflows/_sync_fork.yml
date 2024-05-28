@@ -48,6 +48,7 @@ jobs:
             rm gigachain_changes.txt langchain_changes.txt
             
             # Add the resolved file to the staging area
+            sed -i -E '/packages = \[/,/^\s*\]/! s/langchain/gigachain/' $file
             git add $file
           done
 
