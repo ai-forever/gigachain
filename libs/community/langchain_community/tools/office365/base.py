@@ -1,5 +1,8 @@
 """Base class for Office 365 tools."""
+<<<<<<< HEAD
 
+=======
+>>>>>>> langchan/master
 from __future__ import annotations
 
 from typing import TYPE_CHECKING

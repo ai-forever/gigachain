@@ -1,5 +1,8 @@
 """Test HuggingFaceHub embeddings."""
+<<<<<<< HEAD
 
+=======
+>>>>>>> langchan/master
 import pytest
 
 from langchain_community.embeddings import HuggingFaceHubEmbeddings

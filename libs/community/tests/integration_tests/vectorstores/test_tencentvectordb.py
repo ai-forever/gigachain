@@ -1,5 +1,8 @@
 """Test TencentVectorDB functionality."""
+<<<<<<< HEAD
 
+=======
+>>>>>>> langchan/master
 import time
 from typing import List, Optional
 

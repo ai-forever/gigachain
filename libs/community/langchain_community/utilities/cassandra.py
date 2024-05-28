@@ -5,7 +5,11 @@ from enum import Enum
 from typing import TYPE_CHECKING, Any, Callable
 
 if TYPE_CHECKING:
+<<<<<<< HEAD
     from cassandra.cluster import ResponseFuture
+=======
+    from cassandra.cluster import ResponseFuture, Session
+>>>>>>> langchan/master
 
 
 async def wrapped_response_future(
@@ -35,6 +39,13 @@ async def wrapped_response_future(
     return await asyncio_future
 
 
+<<<<<<< HEAD
+=======
+async def aexecute_cql(session: Session, query: str, **kwargs: Any) -> Any:
+    return await wrapped_response_future(session.execute_async, query, **kwargs)
+
+
+>>>>>>> langchan/master
 class SetupMode(Enum):
     SYNC = 1
     ASYNC = 2

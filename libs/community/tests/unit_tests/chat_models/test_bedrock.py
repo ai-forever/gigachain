@@ -1,5 +1,8 @@
 """Test Anthropic Chat API wrapper."""
+<<<<<<< HEAD
 
+=======
+>>>>>>> langchan/master
 from typing import List
 from unittest.mock import MagicMock
 

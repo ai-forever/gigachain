@@ -1,5 +1,8 @@
 """An agent designed to hold a conversation in addition to using tools."""
+<<<<<<< HEAD
 
+=======
+>>>>>>> langchan/master
 from __future__ import annotations
 
 from typing import Any, List, Optional, Sequence, Tuple
@@ -54,7 +57,11 @@ class ConversationalChatAgent(Agent):
     @property
     def llm_prefix(self) -> str:
         """Prefix to append the llm call with."""
+<<<<<<< HEAD
         return ""
+=======
+        return "Thought:"
+>>>>>>> langchan/master
 
     @classmethod
     def _validate_tools(cls, tools: Sequence[BaseTool]) -> None:
@@ -71,10 +78,14 @@ class ConversationalChatAgent(Agent):
         output_parser: Optional[BaseOutputParser] = None,
     ) -> BasePromptTemplate:
         tool_strings = "\n".join(
+<<<<<<< HEAD
             [
                 f"{index + 1}: {tool.name}\n {tool.description}"
                 for index, tool in enumerate(tools)
             ]
+=======
+            [f"> {tool.name}: {tool.description}" for tool in tools]
+>>>>>>> langchan/master
         )
         tool_names = ", ".join([tool.name for tool in tools])
         _output_parser = output_parser or cls._get_default_output_parser()

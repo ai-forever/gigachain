@@ -1,5 +1,8 @@
 """Interfaces to be implemented by general evaluators."""
+<<<<<<< HEAD
 
+=======
+>>>>>>> langchan/master
 from __future__ import annotations
 
 import logging

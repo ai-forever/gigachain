@@ -1,4 +1,8 @@
 """__ModuleName__ chat models."""
+<<<<<<< HEAD
+=======
+
+>>>>>>> langchan/master
 from typing import Any, AsyncIterator, Iterator, List, Optional
 
 from langchain_core.callbacks import (
@@ -29,6 +33,10 @@ class Chat__ModuleName__(BaseChatModel):
         """Return type of chat model."""
         return "chat-__package_name_short__"
 
+<<<<<<< HEAD
+=======
+    # TODO: This method must be implemented to generate chat responses.
+>>>>>>> langchan/master
     def _generate(
         self,
         messages: List[BaseMessage],
@@ -38,7 +46,11 @@ class Chat__ModuleName__(BaseChatModel):
     ) -> ChatResult:
         raise NotImplementedError
 
+<<<<<<< HEAD
     # TODO: Implement if __model_name__ supports streaming. Otherwise delete method.
+=======
+    # TODO: Implement if Chat__ModuleName__ supports streaming. Otherwise delete method.
+>>>>>>> langchan/master
     def _stream(
         self,
         messages: List[BaseMessage],
@@ -48,7 +60,11 @@ class Chat__ModuleName__(BaseChatModel):
     ) -> Iterator[ChatGenerationChunk]:
         raise NotImplementedError
 
+<<<<<<< HEAD
     # TODO: Implement if __model_name__ supports async streaming. Otherwise delete
+=======
+    # TODO: Implement if Chat__ModuleName__ supports async streaming. Otherwise delete
+>>>>>>> langchan/master
     # method.
     async def _astream(
         self,
@@ -59,7 +75,11 @@ class Chat__ModuleName__(BaseChatModel):
     ) -> AsyncIterator[ChatGenerationChunk]:
         raise NotImplementedError
 
+<<<<<<< HEAD
     # TODO: Implement if __model_name__ supports async generation. Otherwise delete
+=======
+    # TODO: Implement if Chat__ModuleName__ supports async generation. Otherwise delete
+>>>>>>> langchan/master
     # method.
     async def _agenerate(
         self,

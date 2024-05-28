@@ -150,16 +150,34 @@ def optional_enum_field(
     enum_values: Optional[List[str]] = None,
     description: str = "",
     input_type: str = "node",
+<<<<<<< HEAD
     **field_kwargs: Any,
 ) -> Any:
     """Utility function to conditionally create a field with an enum constraint."""
     if enum_values:
+=======
+    llm_type: Optional[str] = None,
+    **field_kwargs: Any,
+) -> Any:
+    """Utility function to conditionally create a field with an enum constraint."""
+    # Only openai supports enum param
+    if enum_values and llm_type == "openai-chat":
+>>>>>>> langchan/master
         return Field(
             ...,
             enum=enum_values,
             description=f"{description}. Available options are {enum_values}",
             **field_kwargs,
         )
+<<<<<<< HEAD
+=======
+    elif enum_values:
+        return Field(
+            ...,
+            description=f"{description}. Available options are {enum_values}",
+            **field_kwargs,
+        )
+>>>>>>> langchan/master
     else:
         additional_info = _get_additional_info(input_type)
         return Field(..., description=description + additional_info, **field_kwargs)
@@ -271,6 +289,10 @@ def create_simple_model(
     node_labels: Optional[List[str]] = None,
     rel_types: Optional[List[str]] = None,
     node_properties: Union[bool, List[str]] = False,
+<<<<<<< HEAD
+=======
+    llm_type: Optional[str] = None,
+>>>>>>> langchan/master
 ) -> Type[_Graph]:
     """
     Simple model allows to limit node and/or relationship types.
@@ -288,6 +310,10 @@ def create_simple_model(
                 node_labels,
                 description="The type or label of the node.",
                 input_type="node",
+<<<<<<< HEAD
+=======
+                llm_type=llm_type,
+>>>>>>> langchan/master
             ),
         ),
     }
@@ -325,6 +351,10 @@ def create_simple_model(
             node_labels,
             description="The type or label of the source node.",
             input_type="node",
+<<<<<<< HEAD
+=======
+            llm_type=llm_type,
+>>>>>>> langchan/master
         )
         target_node_id: str = Field(
             description="Name or human-readable unique identifier of target node"
@@ -333,11 +363,19 @@ def create_simple_model(
             node_labels,
             description="The type or label of the target node.",
             input_type="node",
+<<<<<<< HEAD
+=======
+            llm_type=llm_type,
+>>>>>>> langchan/master
         )
         type: str = optional_enum_field(
             rel_types,
             description="The type of the relationship.",
             input_type="relationship",
+<<<<<<< HEAD
+=======
+            llm_type=llm_type,
+>>>>>>> langchan/master
         )
 
     class DynamicGraph(_Graph):
@@ -572,8 +610,17 @@ class LLMGraphTransformer:
             self.chain = prompt | llm
         else:
             # Define chain
+<<<<<<< HEAD
             schema = create_simple_model(
                 allowed_nodes, allowed_relationships, node_properties
+=======
+            try:
+                llm_type = llm._llm_type  # type: ignore
+            except AttributeError:
+                llm_type = None
+            schema = create_simple_model(
+                allowed_nodes, allowed_relationships, node_properties, llm_type
+>>>>>>> langchan/master
             )
             structured_llm = llm.with_structured_output(schema, include_raw=True)
             prompt = prompt or default_prompt

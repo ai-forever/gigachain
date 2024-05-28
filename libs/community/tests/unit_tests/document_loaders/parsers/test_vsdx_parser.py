@@ -1,5 +1,8 @@
 """Tests for the VSDX parsers."""
+<<<<<<< HEAD
 
+=======
+>>>>>>> langchan/master
 from pathlib import Path
 from typing import Iterator
 

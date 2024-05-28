@@ -1,5 +1,8 @@
 """Unittests for langchain.agents.chat package."""
+<<<<<<< HEAD
 
+=======
+>>>>>>> langchan/master
 from typing import Tuple
 
 from langchain_core.agents import AgentAction

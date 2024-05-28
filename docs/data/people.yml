@@ -1,7 +1,13 @@
 maintainers:
+<<<<<<< HEAD
 - login: baskaryan
   count: 805
   avatarUrl: https://avatars.githubusercontent.com/u/22008038?u=8e3d6bbd0adbe02f0bd259c44f2ddb8612f90d88&v=4
+=======
+- login: agola11
+  count: 77
+  avatarUrl: https://avatars.githubusercontent.com/u/9536492?u=820809d60f4a720a4e1f507a1bf866dfb5f86614&v=4
+>>>>>>> langchan/master
   twitterUsername: null
   url: https://github.com/agola11
 - login: hinthornw
@@ -836,11 +842,14 @@ top_contributors:
   avatarUrl: https://avatars.githubusercontent.com/u/22579106?v=4
   twitterUsername: null
   url: https://github.com/seamusp
+<<<<<<< HEAD
 - login: tyumentsev4
   count: 6.315943499889286
   avatarUrl: https://avatars.githubusercontent.com/u/56769451?u=088102b6160822bc68c25a2a5df170080d0b16a2&v=4
   twitterUsername: null
   url: https://github.com/tyumentsev4
+=======
+>>>>>>> langchan/master
 - login: michaelfeil
   count: 6.30450671251487
   avatarUrl: https://avatars.githubusercontent.com/u/63565275?u=08a65e589a3045dad9c13218858c8a91d16528fc&v=4
@@ -1651,11 +1660,14 @@ top_contributors:
   avatarUrl: https://avatars.githubusercontent.com/u/5798036?u=4eba31d63c3818d17fb8f9aa923599ac63ebfea8&v=4
   twitterUsername: null
   url: https://github.com/lesters
+<<<<<<< HEAD
 - login: shane-huang
   count: 1.9508700575761329
   avatarUrl: https://avatars.githubusercontent.com/u/1995599?v=4
   twitterUsername: null
   url: https://github.com/shane-huang
+=======
+>>>>>>> langchan/master
 - login: max-arthurai
   count: 1.94914354230901
   avatarUrl: https://avatars.githubusercontent.com/u/115359769?v=4
@@ -2001,11 +2013,14 @@ top_contributors:
   avatarUrl: https://avatars.githubusercontent.com/u/4491983?u=9265a9310ce2fa08b9429dc5d68da5b8677058ba&v=4
   twitterUsername: null
   url: https://github.com/leedotpang
+<<<<<<< HEAD
 - login: harry-cohere
   count: 1.613858363858364
   avatarUrl: https://avatars.githubusercontent.com/u/127103098?v=4
   twitterUsername: null
   url: https://github.com/harry-cohere
+=======
+>>>>>>> langchan/master
 - login: yarikoptic
   count: 1.606060606060606
   avatarUrl: https://avatars.githubusercontent.com/u/39889?u=bd28816c18beaddc4da762d61d842547fdb271d9&v=4
@@ -2206,11 +2221,14 @@ top_contributors:
   avatarUrl: https://avatars.githubusercontent.com/u/17561003?u=76de0b85da74806eaad024ebc3315201ba49e867&v=4
   twitterUsername: null
   url: https://github.com/krrishdholakia
+<<<<<<< HEAD
 - login: '19374242'
   count: 1.422406855558624
   avatarUrl: https://avatars.githubusercontent.com/u/90301759?v=4
   twitterUsername: null
   url: https://github.com/19374242
+=======
+>>>>>>> langchan/master
 - login: samhita-alla
   count: 1.408794195719882
   avatarUrl: https://avatars.githubusercontent.com/u/27777173?u=4490be52549d8b6d2a662f35068b9a0d625b4b66&v=4
@@ -3346,11 +3364,14 @@ top_contributors:
   avatarUrl: https://avatars.githubusercontent.com/u/800430?v=4
   twitterUsername: null
   url: https://github.com/mikeknoop
+<<<<<<< HEAD
 - login: maximeperrindev
   count: 1.0442848661624091
   avatarUrl: https://avatars.githubusercontent.com/u/63123596?u=ae18d496d5a6ced90d57c147f102f7c5ecf8e63f&v=4
   twitterUsername: maximeperrin_
   url: https://github.com/maximeperrindev
+=======
+>>>>>>> langchan/master
 - login: datelier
   count: 1.0441176470588236
   avatarUrl: https://avatars.githubusercontent.com/u/57349093?v=4
@@ -3677,11 +3698,14 @@ top_reviewers:
   avatarUrl: https://avatars.githubusercontent.com/u/20304844?u=f00461bcedad6ba384a4e234a44c906802448b4e&v=4
   twitterUsername: tchutch94
   url: https://github.com/tylerhutcherson
+<<<<<<< HEAD
 - login: mspronesti
   count: 10
   avatarUrl: https://avatars.githubusercontent.com/u/44113430?u=34bdaacaeb2880e40fb4b07897c481771c6de544&v=4
   twitterUsername: null
   url: https://github.com/mspronesti
+=======
+>>>>>>> langchan/master
 - login: Spartee
   count: 9
   avatarUrl: https://avatars.githubusercontent.com/u/13009163?u=c2b3a11cceaadbc9415f545b971250c9e2b2078b&v=4
@@ -3757,11 +3781,14 @@ top_reviewers:
   avatarUrl: https://avatars.githubusercontent.com/u/23314389?u=2014e20e246530fa89bd902fe703b6f9e6ecf833&v=4
   twitterUsername: nicoloboschi
   url: https://github.com/nicoloboschi
+<<<<<<< HEAD
 - login: liugddx
   count: 6
   avatarUrl: https://avatars.githubusercontent.com/u/48236177?u=757490c6af76be0a8837dd5886991005a23c89c7&v=4
   twitterUsername: null
   url: https://github.com/liugddx
+=======
+>>>>>>> langchan/master
 - login: andersenchen
   count: 5
   avatarUrl: https://avatars.githubusercontent.com/u/101075607?v=4

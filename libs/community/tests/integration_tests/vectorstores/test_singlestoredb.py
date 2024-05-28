@@ -1,5 +1,8 @@
 """Test SingleStoreDB functionality."""
+<<<<<<< HEAD
 
+=======
+>>>>>>> langchan/master
 import math
 import os
 import tempfile

@@ -21,7 +21,11 @@ from langchain.chains.openai_functions.utils import (
 def _get_extraction_function(entity_schema: dict) -> dict:
     return {
         "name": "information_extraction",
+<<<<<<< HEAD
         "description": "Извлекает релевантную информацию из текста",
+=======
+        "description": "Extracts the relevant information from the passage.",
+>>>>>>> langchan/master
         "parameters": {
             "type": "object",
             "properties": {
@@ -32,6 +36,7 @@ def _get_extraction_function(entity_schema: dict) -> dict:
     }
 
 
+<<<<<<< HEAD
 _EXTRACTION_TEMPLATE = """Извлеки из текста и сохрани соответствующие упомянутые сущности \
 вместе с их свойствами из текста.
 
@@ -40,6 +45,16 @@ _EXTRACTION_TEMPLATE = """Извлеки из текста и сохрани с�
 Если свойство отсутствует и не требуется в параметрах функции, не включайте его в вывод.
 
 Текст из которого нужно извлечь сущности:
+=======
+_EXTRACTION_TEMPLATE = """Extract and save the relevant entities mentioned \
+in the following passage together with their properties.
+
+Only extract the properties mentioned in the 'information_extraction' function.
+
+If a property is not present and is not required in the function parameters, do not include it in the output.
+
+Passage:
+>>>>>>> langchan/master
 {input}
 """  # noqa: E501
 

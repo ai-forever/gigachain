@@ -6,4 +6,8 @@ if __name__ == "__main__":
         "First do background research on the sender and topics to make sure you"
         " understand the context, then write the draft."
     )
+<<<<<<< HEAD
     print(agent_executor.invoke({"input": question, "chat_history": []}))  # noqa: T201
+=======
+    print(agent_executor.invoke({"input": question, "chat_history": []}))
+>>>>>>> langchan/master

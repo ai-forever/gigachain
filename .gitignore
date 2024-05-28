@@ -117,12 +117,18 @@ celerybeat.pid
 .envrc
 .venv*
 venv*
+<<<<<<< HEAD
 venv/
 env/
 ENV/
 env.bak/
 venv.bak/
 venv_clear/
+=======
+env/
+ENV/
+env.bak/
+>>>>>>> langchan/master
 
 # Spyder project settings
 .spyderproject
@@ -174,17 +180,26 @@ docs/api_reference/*/
 !docs/api_reference/_static/
 !docs/api_reference/templates/
 !docs/api_reference/themes/
+<<<<<<< HEAD
 docs/docs_skeleton/build
 docs/docs_skeleton/node_modules
 docs/docs_skeleton/yarn.lock
 processed.txt
 libs/langchain/langchain/output_parsers/list.py
+=======
+>>>>>>> langchan/master
 docs/docs/build
 docs/docs/node_modules
 docs/docs/yarn.lock
 _dist
 docs/docs/templates
+<<<<<<< HEAD
 developer_utils/
 prof
 *.epub
 smart_merge.py
+=======
+
+prof
+virtualenv/
+>>>>>>> langchan/master

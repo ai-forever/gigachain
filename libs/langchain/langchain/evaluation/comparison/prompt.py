@@ -4,7 +4,10 @@ This prompt is used to compare two responses and evaluate which one best follows
 and answers the question. The prompt is based on the paper from
 Zheng, et. al. https://arxiv.org/abs/2306.05685
 """
+<<<<<<< HEAD
 
+=======
+>>>>>>> langchan/master
 # flake8: noqa
 from langchain_core.prompts.chat import ChatPromptTemplate
 

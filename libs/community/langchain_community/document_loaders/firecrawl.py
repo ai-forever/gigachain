@@ -25,7 +25,11 @@ class FireCrawlLoader(BaseLoader):
         Args:
             url: The url to be crawled.
             api_key: The Firecrawl API key. If not specified will be read from env var
+<<<<<<< HEAD
                 FIREWALL_API_KEY. Get an API key
+=======
+                FIRECRAWL_API_KEY. Get an API key
+>>>>>>> langchan/master
             mode: The mode to run the loader in. Default is "crawl".
                  Options include "scrape" (single url) and
                  "crawl" (all accessible sub pages).
@@ -44,7 +48,11 @@ class FireCrawlLoader(BaseLoader):
             raise ValueError(
                 f"Unrecognized mode '{mode}'. Expected one of 'crawl', 'scrape'."
             )
+<<<<<<< HEAD
         api_key = api_key or get_from_env("api_key", "FIREWALL_API_KEY")
+=======
+        api_key = api_key or get_from_env("api_key", "FIRECRAWL_API_KEY")
+>>>>>>> langchan/master
         self.firecrawl = FirecrawlApp(api_key=api_key)
         self.url = url
         self.mode = mode

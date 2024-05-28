@@ -25,7 +25,11 @@ def create_events(events: List[EventDict]) -> Optional[Any]:
 
         conn = http.client.HTTPSConnection("app.firstpartyhq.com")
 
+<<<<<<< HEAD
         payload = json.dumps(data, ensure_ascii=False)
+=======
+        payload = json.dumps(data)
+>>>>>>> langchan/master
 
         headers = {
             "Content-Type": "application/json",

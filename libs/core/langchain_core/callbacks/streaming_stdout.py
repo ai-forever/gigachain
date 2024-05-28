@@ -1,5 +1,8 @@
 """Callback Handler streams to stdout on new llm token."""
+<<<<<<< HEAD
 
+=======
+>>>>>>> langchan/master
 from __future__ import annotations
 
 import sys

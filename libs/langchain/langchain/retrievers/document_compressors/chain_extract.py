@@ -1,5 +1,8 @@
 """DocumentFilter that uses an LLM chain to extract the relevant parts of documents."""
+<<<<<<< HEAD
 
+=======
+>>>>>>> langchan/master
 from __future__ import annotations
 
 import asyncio

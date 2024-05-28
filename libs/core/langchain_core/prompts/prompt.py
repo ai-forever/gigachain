@@ -1,5 +1,8 @@
 """Prompt schema definition."""
+<<<<<<< HEAD
 
+=======
+>>>>>>> langchan/master
 from __future__ import annotations
 
 import warnings
@@ -197,7 +200,11 @@ class PromptTemplate(StringPromptTemplate):
         Returns:
             The prompt loaded from the file.
         """
+<<<<<<< HEAD
         with open(str(template_file), "r", encoding="utf-8") as f:
+=======
+        with open(str(template_file), "r") as f:
+>>>>>>> langchan/master
             template = f.read()
         if input_variables:
             warnings.warn(

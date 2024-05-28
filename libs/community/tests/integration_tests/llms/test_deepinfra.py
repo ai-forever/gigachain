@@ -1,5 +1,8 @@
 """Test DeepInfra API wrapper."""
+<<<<<<< HEAD
 
+=======
+>>>>>>> langchan/master
 from langchain_community.llms.deepinfra import DeepInfra
 
 

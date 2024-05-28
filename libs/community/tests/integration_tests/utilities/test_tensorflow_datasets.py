@@ -1,5 +1,8 @@
 """Integration tests for the TensorFlow Dataset client."""
+<<<<<<< HEAD
 
+=======
+>>>>>>> langchan/master
 from __future__ import annotations
 
 from typing import TYPE_CHECKING
@@ -11,7 +14,11 @@ from langchain_core.pydantic_v1 import ValidationError
 from langchain_community.utilities.tensorflow_datasets import TensorflowDatasets
 
 if TYPE_CHECKING:
+<<<<<<< HEAD
     import tensorflow as tf  # noqa: E402
+=======
+    import tensorflow as tf
+>>>>>>> langchan/master
 
 
 def decode_to_str(item: tf.Tensor) -> str:

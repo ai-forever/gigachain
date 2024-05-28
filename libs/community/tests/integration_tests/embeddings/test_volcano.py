@@ -1,5 +1,8 @@
 """Test Bytedance Volcano Embedding."""
+<<<<<<< HEAD
 
+=======
+>>>>>>> langchan/master
 from langchain_community.embeddings import VolcanoEmbeddings
 
 

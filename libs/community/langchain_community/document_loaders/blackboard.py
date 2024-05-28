@@ -31,7 +31,11 @@ class BlackboardLoader(WebBaseLoader):
             )
             documents = loader.load()
 
+<<<<<<< HEAD
     """  # noqa: E501
+=======
+    """
+>>>>>>> langchan/master
 
     def __init__(
         self,

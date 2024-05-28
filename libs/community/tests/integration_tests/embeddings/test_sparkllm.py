@@ -1,5 +1,8 @@
 """Test SparkLLM Text Embedding."""
+<<<<<<< HEAD
 
+=======
+>>>>>>> langchan/master
 from langchain_community.embeddings.sparkllm import SparkLLMTextEmbeddings
 
 

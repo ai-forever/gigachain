@@ -1,5 +1,8 @@
 """Integration test for Wikipedia Retriever."""
+<<<<<<< HEAD
 
+=======
+>>>>>>> langchan/master
 from typing import List
 
 import pytest

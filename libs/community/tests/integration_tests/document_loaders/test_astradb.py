@@ -10,7 +10,10 @@ Required to run this test:
     - optionally this as well (otherwise defaults are used):
         export ASTRA_DB_KEYSPACE="my_keyspace"
 """
+<<<<<<< HEAD
 
+=======
+>>>>>>> langchan/master
 from __future__ import annotations
 
 import json

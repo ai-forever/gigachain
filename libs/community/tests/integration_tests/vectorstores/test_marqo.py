@@ -1,5 +1,8 @@
 """Test Marqo functionality."""
+<<<<<<< HEAD
 
+=======
+>>>>>>> langchan/master
 from typing import Dict
 
 import pytest

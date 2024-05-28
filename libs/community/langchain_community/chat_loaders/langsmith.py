@@ -143,7 +143,11 @@ class LangSmithDatasetChatLoader(BaseChatLoader):
 
         :return: Iterator of chat sessions containing messages.
         """
+<<<<<<< HEAD
         from langchain_community.adapters import openai as oai_adapter  # noqa: E402
+=======
+        from langchain_community.adapters import openai as oai_adapter
+>>>>>>> langchan/master
 
         data = self.client.read_dataset_openai_finetuning(
             dataset_name=self.dataset_name

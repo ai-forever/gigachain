@@ -4,6 +4,12 @@ from typing import TYPE_CHECKING, Any
 from langchain_core.document_loaders import Blob, BlobLoader
 
 if TYPE_CHECKING:
+<<<<<<< HEAD
+=======
+    from langchain_community.document_loaders.blob_loaders.cloud_blob_loader import (
+        CloudBlobLoader,
+    )
+>>>>>>> langchan/master
     from langchain_community.document_loaders.blob_loaders.file_system import (
         FileSystemBlobLoader,
     )
@@ -13,6 +19,12 @@ if TYPE_CHECKING:
 
 
 _module_lookup = {
+<<<<<<< HEAD
+=======
+    "CloudBlobLoader": (
+        "langchain_community.document_loaders.blob_loaders.cloud_blob_loader"
+    ),
+>>>>>>> langchan/master
     "FileSystemBlobLoader": (
         "langchain_community.document_loaders.blob_loaders.file_system"
     ),
@@ -32,6 +44,10 @@ def __getattr__(name: str) -> Any:
 __all__ = [
     "BlobLoader",
     "Blob",
+<<<<<<< HEAD
+=======
+    "CloudBlobLoader",
+>>>>>>> langchan/master
     "FileSystemBlobLoader",
     "YoutubeAudioLoader",
 ]

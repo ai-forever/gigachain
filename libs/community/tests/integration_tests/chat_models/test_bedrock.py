@@ -1,5 +1,8 @@
 """Test Bedrock chat model."""
+<<<<<<< HEAD
 
+=======
+>>>>>>> langchan/master
 from typing import Any, cast
 
 import pytest

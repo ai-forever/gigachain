@@ -1,5 +1,8 @@
 """Integration test for Dataforseo API Wrapper."""
+<<<<<<< HEAD
 
+=======
+>>>>>>> langchan/master
 from langchain_community.utilities.dataforseo_api_search import DataForSeoAPIWrapper
 
 

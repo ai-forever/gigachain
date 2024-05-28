@@ -3,7 +3,10 @@
 No setup required. Free.
 https://pypi.org/project/duckduckgo-search/
 """
+<<<<<<< HEAD
 
+=======
+>>>>>>> langchan/master
 from typing import Dict, List, Optional
 
 from langchain_core.pydantic_v1 import BaseModel, Extra, root_validator

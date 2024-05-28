@@ -1,6 +1,10 @@
 import os
 import time
+<<<<<<< HEAD
 from typing import Optional
+=======
+from typing import Any, Optional
+>>>>>>> langchan/master
 
 from langchain.memory import ConversationBufferMemory
 from langchain_core.messages import AIMessage, HumanMessage
@@ -37,13 +41,23 @@ def _chat_message_history(
     # drop table if required
     if drop:
         session.execute(f"DROP TABLE IF EXISTS {keyspace}.{table_name}")
+<<<<<<< HEAD
     #
+=======
+
+    kwargs: Any = {} if ttl_seconds is None else {"ttl_seconds": ttl_seconds}
+
+>>>>>>> langchan/master
     return CassandraChatMessageHistory(
         session_id=session_id,
         session=session,
         keyspace=keyspace,
         table_name=table_name,
+<<<<<<< HEAD
         **({} if ttl_seconds is None else {"ttl_seconds": ttl_seconds}),
+=======
+        **kwargs,
+>>>>>>> langchan/master
     )
 
 

@@ -1,5 +1,8 @@
 """Test Clarifai vector store functionality."""
+<<<<<<< HEAD
 
+=======
+>>>>>>> langchan/master
 import time
 
 from langchain_core.documents import Document

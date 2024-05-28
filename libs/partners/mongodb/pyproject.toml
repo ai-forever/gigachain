@@ -1,5 +1,9 @@
 [tool.poetry]
+<<<<<<< HEAD
 name = "gigachain-mongodb"
+=======
+name = "langchain-mongodb"
+>>>>>>> langchan/master
 version = "0.1.5"
 description = "An integration package connecting MongoDB and LangChain"
 authors = []
@@ -13,7 +17,11 @@ license = "MIT"
 [tool.poetry.dependencies]
 python = ">=3.8.1,<4.0"
 pymongo = ">=4.6.1,<5.0"
+<<<<<<< HEAD
 gigachain-core = ">=0.1.46,<0.3"
+=======
+langchain-core = ">=0.1.46,<0.3"
+>>>>>>> langchan/master
 numpy = "^1"
 
 [tool.poetry.group.test]
@@ -26,9 +34,15 @@ pytest-mock = "^3.10.0"
 syrupy = "^4.0.2"
 pytest-watcher = "^0.3.4"
 pytest-asyncio = "^0.21.1"
+<<<<<<< HEAD
 gigachain = { path = "../../langchain", develop = true }
 gigachain-core = { path = "../../core", develop = true }
 gigachain-text-splitters = { path = "../../text-splitters", develop = true }
+=======
+langchain = { path = "../../langchain", develop = true }
+langchain-core = { path = "../../core", develop = true }
+langchain-text-splitters = { path = "../../text-splitters", develop = true }
+>>>>>>> langchan/master
 
 [tool.poetry.group.codespell]
 optional = true
@@ -49,13 +63,21 @@ ruff = "^0.1.5"
 
 [tool.poetry.group.typing.dependencies]
 mypy = "^0.991"
+<<<<<<< HEAD
 gigachain-core = { path = "../../core", develop = true }
+=======
+langchain-core = { path = "../../core", develop = true }
+>>>>>>> langchan/master
 
 [tool.poetry.group.dev]
 optional = true
 
 [tool.poetry.group.dev.dependencies]
+<<<<<<< HEAD
 gigachain-core = { path = "../../core", develop = true }
+=======
+langchain-core = { path = "../../core", develop = true }
+>>>>>>> langchan/master
 
 [tool.ruff.lint]
 select = [

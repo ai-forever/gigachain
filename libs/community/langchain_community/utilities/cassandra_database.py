@@ -1,5 +1,8 @@
 """Apache Cassandra database wrapper."""
+<<<<<<< HEAD
 
+=======
+>>>>>>> langchan/master
 from __future__ import annotations
 
 import re

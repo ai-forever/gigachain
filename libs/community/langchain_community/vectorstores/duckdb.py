@@ -2,13 +2,30 @@
 from __future__ import annotations
 
 import json
+<<<<<<< HEAD
 import uuid
+=======
+import logging
+import uuid
+import warnings
+>>>>>>> langchan/master
 from typing import Any, Iterable, List, Optional, Type
 
 from langchain_core.documents import Document
 from langchain_core.embeddings import Embeddings
 from langchain_core.vectorstores import VST, VectorStore
 
+<<<<<<< HEAD
+=======
+logger = logging.getLogger(__name__)
+
+DEFAULT_VECTOR_KEY = "embedding"
+DEFAULT_ID_KEY = "id"
+DEFAULT_TEXT_KEY = "text"
+DEFAULT_TABLE_NAME = "embeddings"
+SIMILARITY_ALIAS = "similarity_score"
+
+>>>>>>> langchan/master
 
 class DuckDB(VectorStore):
     """`DuckDB` vector store.
@@ -76,10 +93,17 @@ class DuckDB(VectorStore):
         *,
         connection: Optional[Any] = None,
         embedding: Embeddings,
+<<<<<<< HEAD
         vector_key: str = "embedding",
         id_key: str = "id",
         text_key: str = "text",
         table_name: str = "vectorstore",
+=======
+        vector_key: str = DEFAULT_VECTOR_KEY,
+        id_key: str = DEFAULT_ID_KEY,
+        text_key: str = DEFAULT_TEXT_KEY,
+        table_name: str = DEFAULT_TABLE_NAME,
+>>>>>>> langchan/master
     ):
         """Initialize with DuckDB connection and setup for vector storage."""
         try:
@@ -100,8 +124,11 @@ class DuckDB(VectorStore):
             raise ValueError("An embedding function or model must be provided.")
 
         if connection is None:
+<<<<<<< HEAD
             import warnings
 
+=======
+>>>>>>> langchan/master
             warnings.warn(
                 "No DuckDB connection provided. A new connection will be created."
                 "This connection is running in memory and no data will be persisted."
@@ -138,6 +165,20 @@ class DuckDB(VectorStore):
         Returns:
             List of ids of the added texts.
         """
+<<<<<<< HEAD
+=======
+        have_pandas = False
+        try:
+            import pandas as pd
+
+            have_pandas = True
+        except ImportError:
+            logger.info(
+                "Unable to import pandas. "
+                "Install it with `pip install -U pandas` "
+                "to improve performance of add_texts()."
+            )
+>>>>>>> langchan/master
 
         # Extract ids from kwargs or generate new ones if not provided
         ids = kwargs.pop("ids", [str(uuid.uuid4()) for _ in texts])
@@ -145,6 +186,10 @@ class DuckDB(VectorStore):
         # Embed texts and create documents
         ids = ids or [str(uuid.uuid4()) for _ in texts]
         embeddings = self._embedding.embed_documents(list(texts))
+<<<<<<< HEAD
+=======
+        data = []
+>>>>>>> langchan/master
         for idx, text in enumerate(texts):
             embedding = embeddings[idx]
             # Serialize metadata if present, else default to None
@@ -153,9 +198,32 @@ class DuckDB(VectorStore):
                 if metadatas and idx < len(metadatas)
                 else None
             )
+<<<<<<< HEAD
             self._connection.execute(
                 f"INSERT INTO {self._table_name} VALUES (?,?,?,?)",
                 [ids[idx], text, embedding, metadata],
+=======
+            if have_pandas:
+                data.append(
+                    {
+                        self._id_key: ids[idx],
+                        self._text_key: text,
+                        self._vector_key: embedding,
+                        "metadata": metadata,
+                    }
+                )
+            else:
+                self._connection.execute(
+                    f"INSERT INTO {self._table_name} VALUES (?,?,?,?)",
+                    [ids[idx], text, embedding, metadata],
+                )
+
+        if have_pandas:
+            # noinspection PyUnusedLocal
+            df = pd.DataFrame.from_dict(data)  # noqa: F841
+            self._connection.execute(
+                f"INSERT INTO {self._table_name} SELECT * FROM df",
+>>>>>>> langchan/master
             )
         return ids
 
@@ -181,6 +249,7 @@ class DuckDB(VectorStore):
             self._table.select(
                 *[
                     self.duckdb.StarExpression(exclude=[]),
+<<<<<<< HEAD
                     list_cosine_similarity.alias("similarity"),
                 ]
             )
@@ -189,12 +258,27 @@ class DuckDB(VectorStore):
             .select(
                 self.duckdb.StarExpression(exclude=["similarity", self._vector_key])
             )
+=======
+                    list_cosine_similarity.alias(SIMILARITY_ALIAS),
+                ]
+            )
+            .order(f"{SIMILARITY_ALIAS} desc")
+            .limit(k)
+>>>>>>> langchan/master
             .fetchdf()
         )
         return [
             Document(
                 page_content=docs[self._text_key][idx],
+<<<<<<< HEAD
                 metadata=json.loads(docs["metadata"][idx])
+=======
+                metadata={
+                    **json.loads(docs["metadata"][idx]),
+                    # using underscore prefix to avoid conflicts with user metadata keys
+                    f"_{SIMILARITY_ALIAS}": docs[SIMILARITY_ALIAS][idx],
+                }
+>>>>>>> langchan/master
                 if docs["metadata"][idx]
                 else {},
             )
@@ -231,10 +315,17 @@ class DuckDB(VectorStore):
 
         # Extract kwargs for DuckDB instance creation
         connection = kwargs.get("connection", None)
+<<<<<<< HEAD
         vector_key = kwargs.get("vector_key", "vector")
         id_key = kwargs.get("id_key", "id")
         text_key = kwargs.get("text_key", "text")
         table_name = kwargs.get("table_name", "embeddings")
+=======
+        vector_key = kwargs.get("vector_key", DEFAULT_VECTOR_KEY)
+        id_key = kwargs.get("id_key", DEFAULT_ID_KEY)
+        text_key = kwargs.get("text_key", DEFAULT_TEXT_KEY)
+        table_name = kwargs.get("table_name", DEFAULT_TABLE_NAME)
+>>>>>>> langchan/master
 
         # Create an instance of DuckDB
         instance = DuckDB(

@@ -1,5 +1,8 @@
 """Test Atlas functionality."""
+<<<<<<< HEAD
 
+=======
+>>>>>>> langchan/master
 import time
 
 from langchain_community.vectorstores import AtlasDB

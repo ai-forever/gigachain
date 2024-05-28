@@ -1,5 +1,8 @@
 """Test cohere embeddings."""
+<<<<<<< HEAD
 
+=======
+>>>>>>> langchan/master
 from langchain_community.embeddings.cohere import CohereEmbeddings
 
 

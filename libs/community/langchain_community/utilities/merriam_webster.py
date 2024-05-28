@@ -1,5 +1,8 @@
 """Util that calls Merriam-Webster."""
+<<<<<<< HEAD
 
+=======
+>>>>>>> langchan/master
 import json
 from typing import Dict, Iterator, List, Optional
 from urllib.parse import quote

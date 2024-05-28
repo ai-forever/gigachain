@@ -27,6 +27,10 @@ if __name__ == "__main__":
 
     sidebar_hidden = """---
 sidebar_class_name: hidden
+<<<<<<< HEAD
+=======
+custom_edit_url:
+>>>>>>> langchan/master
 ---
 
 """

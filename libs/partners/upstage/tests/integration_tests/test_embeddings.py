@@ -35,3 +35,20 @@ async def test_langchain_upstage_aembed_query() -> None:
     embedding = UpstageEmbeddings(model="solar-embedding-1-large")
     output = await embedding.aembed_query(query)
     assert len(output) > 0
+<<<<<<< HEAD
+=======
+
+
+def test_langchain_upstage_embed_documents_with_empty_list() -> None:
+    """Test Upstage embeddings with empty list."""
+    embedding = UpstageEmbeddings(model="solar-embedding-1-large")
+    output = embedding.embed_documents([])
+    assert len(output) == 0
+
+
+async def test_langchain_upstage_aembed_documents_with_empty_list() -> None:
+    """Test Upstage embeddings asynchronous with empty list."""
+    embedding = UpstageEmbeddings(model="solar-embedding-1-large")
+    output = await embedding.aembed_documents([])
+    assert len(output) == 0
+>>>>>>> langchan/master

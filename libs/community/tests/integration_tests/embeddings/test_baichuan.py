@@ -1,5 +1,8 @@
 """Test Baichuan Text Embedding."""
+<<<<<<< HEAD
 
+=======
+>>>>>>> langchan/master
 from langchain_community.embeddings.baichuan import BaichuanTextEmbeddings
 
 

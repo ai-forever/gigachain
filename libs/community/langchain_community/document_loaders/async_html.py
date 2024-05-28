@@ -64,6 +64,10 @@ class AsyncHtmlLoader(BaseLoader):
         ignore_load_errors: bool = False,
         *,
         preserve_order: bool = True,
+<<<<<<< HEAD
+=======
+        trust_env: bool = False,
+>>>>>>> langchan/master
     ):
         """Initialize with a webpage path."""
 
@@ -92,7 +96,10 @@ class AsyncHtmlLoader(BaseLoader):
         self.session.headers = dict(headers)
         self.session.verify = verify_ssl
 
+<<<<<<< HEAD
         self.proxies = proxies
+=======
+>>>>>>> langchan/master
         if proxies:
             self.session.proxies.update(proxies)
 
@@ -105,6 +112,11 @@ class AsyncHtmlLoader(BaseLoader):
         self.ignore_load_errors = ignore_load_errors
         self.preserve_order = preserve_order
 
+<<<<<<< HEAD
+=======
+        self.trust_env = trust_env
+
+>>>>>>> langchan/master
     def _fetch_valid_connection_docs(self, url: str) -> Any:
         if self.ignore_load_errors:
             try:
@@ -125,6 +137,7 @@ class AsyncHtmlLoader(BaseLoader):
             )
 
     async def _fetch(
+<<<<<<< HEAD
         self,
         url: str,
         retries: int = 2,
@@ -138,11 +151,21 @@ class AsyncHtmlLoader(BaseLoader):
                     proxy = None
                     if self.proxies and "https" in self.proxies:
                         proxy = self.proxies["https"]
+=======
+        self, url: str, retries: int = 3, cooldown: int = 2, backoff: float = 1.5
+    ) -> str:
+        async with aiohttp.ClientSession(trust_env=self.trust_env) as session:
+            for i in range(retries):
+                try:
+>>>>>>> langchan/master
                     async with session.get(
                         url,
                         headers=self.session.headers,
                         ssl=None if self.session.verify else False,
+<<<<<<< HEAD
                         proxy=proxy,
+=======
+>>>>>>> langchan/master
                     ) as response:
                         try:
                             text = await response.text()
@@ -150,7 +173,11 @@ class AsyncHtmlLoader(BaseLoader):
                             logger.error(f"Failed to decode content from {url}")
                             text = ""
                         return text
+<<<<<<< HEAD
                 except Exception as e:
+=======
+                except aiohttp.ClientConnectionError as e:
+>>>>>>> langchan/master
                     if i == retries - 1 and self.ignore_load_errors:
                         logger.warning(f"Error fetching {url} after {retries} retries.")
                         return ""

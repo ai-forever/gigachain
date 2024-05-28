@@ -20,6 +20,12 @@ if TYPE_CHECKING:
     from langchain_community.utilities.arxiv import (
         ArxivAPIWrapper,
     )
+<<<<<<< HEAD
+=======
+    from langchain_community.utilities.asknews import (
+        AskNewsAPIWrapper,
+    )
+>>>>>>> langchan/master
     from langchain_community.utilities.awslambda import (
         LambdaWrapper,
     )
@@ -32,6 +38,10 @@ if TYPE_CHECKING:
     from langchain_community.utilities.brave_search import (
         BraveSearchWrapper,
     )
+<<<<<<< HEAD
+=======
+    from langchain_community.utilities.dataherald import DataheraldAPIWrapper
+>>>>>>> langchan/master
     from langchain_community.utilities.dria_index import (
         DriaAPIWrapper,
     )
@@ -101,7 +111,11 @@ if TYPE_CHECKING:
         OpenWeatherMapAPIWrapper,
     )
     from langchain_community.utilities.oracleai import (
+<<<<<<< HEAD
         OracleSummary,  # noqa: F401
+=======
+        OracleSummary,
+>>>>>>> langchan/master
     )
     from langchain_community.utilities.outline import (
         OutlineAPIWrapper,
@@ -121,6 +135,10 @@ if TYPE_CHECKING:
     from langchain_community.utilities.python import (
         PythonREPL,
     )
+<<<<<<< HEAD
+=======
+    from langchain_community.utilities.rememberizer import RememberizerAPIWrapper
+>>>>>>> langchan/master
     from langchain_community.utilities.requests import (
         Requests,
         RequestsWrapper,
@@ -174,10 +192,18 @@ __all__ = [
     "ApifyWrapper",
     "ArceeWrapper",
     "ArxivAPIWrapper",
+<<<<<<< HEAD
+=======
+    "AskNewsAPIWrapper",
+>>>>>>> langchan/master
     "AudioStream",
     "BibtexparserWrapper",
     "BingSearchAPIWrapper",
     "BraveSearchWrapper",
+<<<<<<< HEAD
+=======
+    "DataheraldAPIWrapper",
+>>>>>>> langchan/master
     "DriaAPIWrapper",
     "DuckDuckGoSearchAPIWrapper",
     "GoldenQueryAPIWrapper",
@@ -209,13 +235,23 @@ __all__ = [
     "PowerBIDataset",
     "PubMedAPIWrapper",
     "PythonREPL",
+<<<<<<< HEAD
+=======
+    "RememberizerAPIWrapper",
+>>>>>>> langchan/master
     "Requests",
     "RequestsWrapper",
     "RivaASR",
     "RivaTTS",
+<<<<<<< HEAD
     "SQLDatabase",
     "SceneXplainAPIWrapper",
     "SearchApiAPIWrapper",
+=======
+    "SceneXplainAPIWrapper",
+    "SearchApiAPIWrapper",
+    "SQLDatabase",
+>>>>>>> langchan/master
     "SearxSearchWrapper",
     "SerpAPIWrapper",
     "SparkSQL",
@@ -235,6 +271,10 @@ _module_lookup = {
     "ApifyWrapper": "langchain_community.utilities.apify",
     "ArceeWrapper": "langchain_community.utilities.arcee",
     "ArxivAPIWrapper": "langchain_community.utilities.arxiv",
+<<<<<<< HEAD
+=======
+    "AskNewsAPIWrapper": "langchain_community.utilities.asknews",
+>>>>>>> langchan/master
     "AudioStream": "langchain_community.utilities.nvidia_riva",
     "BibtexparserWrapper": "langchain_community.utilities.bibtex",
     "BingSearchAPIWrapper": "langchain_community.utilities.bing_search",
@@ -299,6 +339,9 @@ def __getattr__(name: str) -> Any:
         module = importlib.import_module(_module_lookup[name])
         return getattr(module, name)
     raise AttributeError(f"module {__name__} has no attribute {name}")
+<<<<<<< HEAD
 
 
 __all__ = list(_module_lookup.keys())
+=======
+>>>>>>> langchan/master

@@ -111,15 +111,49 @@ def _process_path(tup: Tuple[Path, Path, Path]):
     notebook_path, intermediate_docs_dir, output_docs_dir = tup
     relative = notebook_path.relative_to(intermediate_docs_dir)
     output_path = output_docs_dir / relative.parent / (relative.stem + ".md")
+<<<<<<< HEAD
     _convert_notebook(notebook_path, output_path)
 
 
 def _convert_notebook(notebook_path: Path, output_path: Path):
+=======
+    _convert_notebook(notebook_path, output_path, intermediate_docs_dir)
+
+
+def _modify_frontmatter(
+    body: str, notebook_path: Path, intermediate_docs_dir: Path
+) -> str:
+    # if frontmatter exists
+    rel_path = notebook_path.relative_to(intermediate_docs_dir).as_posix()
+    edit_url = (
+        f"https://github.com/langchain-ai/langchain/edit/master/docs/docs/{rel_path}"
+    )
+    if re.match(r"^[\s\n]*---\n", body):
+        # if custom_edit_url already exists, leave it
+        if re.match(r"custom_edit_url: ", body):
+            return body
+        else:
+            return re.sub(
+                r"^[\s\n]*---\n", f"---\ncustom_edit_url: {edit_url}\n", body, count=1
+            )
+    else:
+        return f"---\ncustom_edit_url: {edit_url}\n---\n{body}"
+
+
+def _convert_notebook(
+    notebook_path: Path, output_path: Path, intermediate_docs_dir: Path
+) -> Path:
+>>>>>>> langchan/master
     with open(notebook_path) as f:
         nb = nbformat.read(f, as_version=4)
 
     body, resources = exporter.from_notebook_node(nb)
 
+<<<<<<< HEAD
+=======
+    body = _modify_frontmatter(body, notebook_path, intermediate_docs_dir)
+
+>>>>>>> langchan/master
     output_path.parent.mkdir(parents=True, exist_ok=True)
 
     with open(output_path, "w") as f:

@@ -1,5 +1,8 @@
 """Test dashscope embeddings."""
+<<<<<<< HEAD
 
+=======
+>>>>>>> langchan/master
 import numpy as np
 
 from langchain_community.embeddings.dashscope import DashScopeEmbeddings

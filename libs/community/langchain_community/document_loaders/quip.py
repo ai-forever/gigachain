@@ -1,10 +1,17 @@
 import logging
 import re
+<<<<<<< HEAD
 import xml.etree.cElementTree
 import xml.sax.saxutils
 from io import BytesIO
 from typing import List, Optional, Sequence
 from xml.etree.ElementTree import ElementTree
+=======
+import xml.etree.cElementTree  # OK: user-must-opt-in
+from io import BytesIO
+from typing import List, Optional, Sequence
+from xml.etree.ElementTree import ElementTree  # OK: user-must-opt-in
+>>>>>>> langchan/master
 
 from langchain_core.documents import Document
 
@@ -22,14 +29,29 @@ class QuipLoader(BaseLoader):
     """
 
     def __init__(
+<<<<<<< HEAD
         self, api_url: str, access_token: str, request_timeout: Optional[int] = 60
+=======
+        self,
+        api_url: str,
+        access_token: str,
+        request_timeout: Optional[int] = 60,
+        *,
+        allow_dangerous_xml_parsing: bool = False,
+>>>>>>> langchan/master
     ):
         """
         Args:
             api_url: https://platform.quip.com
             access_token: token of access quip API. Please refer:
+<<<<<<< HEAD
             https://quip.com/dev/automation/documentation/current#section/Authentication/Get-Access-to-Quip's-APIs
             request_timeout: timeout of request, default 60s.
+=======
+                https://quip.com/dev/automation/documentation/current#section/Authentication/Get-Access-to-Quip's-APIs
+            request_timeout: timeout of request, default 60s.
+            allow_dangerous_xml_parsing: Allow dangerous XML parsing, defaults to False
+>>>>>>> langchan/master
         """
         try:
             from quip_api.quip import QuipClient
@@ -42,6 +64,20 @@ class QuipLoader(BaseLoader):
             access_token=access_token, base_url=api_url, request_timeout=request_timeout
         )
 
+<<<<<<< HEAD
+=======
+        if not allow_dangerous_xml_parsing:
+            raise ValueError(
+                "The quip client uses the built-in XML parser which may cause"
+                "security issues when parsing XML data in some cases. "
+                "Please see "
+                "https://docs.python.org/3/library/xml.html#xml-vulnerabilities "
+                "For more information, set `allow_dangerous_xml_parsing` as True "
+                "if you are sure that your distribution of the standard library "
+                "is not vulnerable to XML vulnerabilities."
+            )
+
+>>>>>>> langchan/master
     def load(
         self,
         folder_ids: Optional[List[str]] = None,

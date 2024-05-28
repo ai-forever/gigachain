@@ -1,5 +1,9 @@
 """Test `Kinetica` chat models"""
 
+<<<<<<< HEAD
+=======
+
+>>>>>>> langchan/master
 import logging
 from typing import Any
 

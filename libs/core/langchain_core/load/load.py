@@ -90,7 +90,11 @@ class Reviver:
                 if key not in ALL_SERIALIZABLE_MAPPINGS:
                     raise ValueError(
                         "Trying to deserialize something that cannot "
+<<<<<<< HEAD
                         "be deserialized in current version of gigachain-core: "
+=======
+                        "be deserialized in current version of langchain-core: "
+>>>>>>> langchan/master
                         f"{key}"
                     )
                 import_path = ALL_SERIALIZABLE_MAPPINGS[key]

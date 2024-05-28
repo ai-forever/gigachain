@@ -25,7 +25,11 @@ class ElasticsearchEmbeddings(Embeddings):
     In Elasticsearch you need to have an embedding model loaded and deployed.
     - https://www.elastic.co/guide/en/elasticsearch/reference/current/infer-trained-model.html
     - https://www.elastic.co/guide/en/machine-learning/current/ml-nlp-deploy-models.html
+<<<<<<< HEAD
     """  # noqa: E501
+=======
+    """
+>>>>>>> langchan/master
 
     def __init__(
         self,

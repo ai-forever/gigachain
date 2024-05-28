@@ -1,5 +1,8 @@
 """Test LLM Bash functionality."""
+<<<<<<< HEAD
 
+=======
+>>>>>>> langchan/master
 import sys
 from typing import Type
 

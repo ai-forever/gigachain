@@ -164,7 +164,11 @@ class PydanticOutputFunctionsParser(OutputFunctionsParser):
         else:
             fn_name = _result["name"]
             _args = _result["arguments"]
+<<<<<<< HEAD
             pydantic_args = self.pydantic_schema[fn_name].parse_raw(_args)  # type: ignore  # noqa: E501
+=======
+            pydantic_args = self.pydantic_schema[fn_name].parse_raw(_args)  # type: ignore
+>>>>>>> langchan/master
         return pydantic_args
 
 

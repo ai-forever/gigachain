@@ -1,5 +1,8 @@
 """Prompt for trajectory evaluation chain."""
+<<<<<<< HEAD
 
+=======
+>>>>>>> langchan/master
 # flake8: noqa
 from langchain_core.messages import HumanMessage, AIMessage, SystemMessage
 
@@ -9,28 +12,47 @@ from langchain_core.prompts.chat import (
 )
 
 
+<<<<<<< HEAD
 EVAL_TEMPLATE = """Языковая модель AI получила доступ к следующему набору инструментов, чтобы помочь ответить на вопрос пользователя.
 
 Инструменты, предоставленные модели AI:
+=======
+EVAL_TEMPLATE = """An AI language model has been given access to the following set of tools to help answer a user's question.
+
+The tools given to the AI model are:
+>>>>>>> langchan/master
 [TOOL_DESCRIPTIONS]
 {tool_descriptions}
 [END_TOOL_DESCRIPTIONS]
 
+<<<<<<< HEAD
 Вопрос, который человек задал модели AI:
+=======
+The question the human asked the AI model was:
+>>>>>>> langchan/master
 [QUESTION]
 {question}
 [END_QUESTION]{reference}
 
+<<<<<<< HEAD
 Языковая модель AI решила использовать следующий набор инструментов для ответа на вопрос:
+=======
+The AI language model decided to use the following set of tools to answer the question:
+>>>>>>> langchan/master
 [AGENT_TRAJECTORY]
 {agent_trajectory}
 [END_AGENT_TRAJECTORY]
 
+<<<<<<< HEAD
 Окончательный ответ языковой модели AI на вопрос был:
+=======
+The AI language model's final answer to the question was:
+>>>>>>> langchan/master
 [RESPONSE]
 {answer}
 [END_RESPONSE]
 
+<<<<<<< HEAD
 Давай проведем подробную оценку ответа языковой модели AI шаг за шагом.
 
 Мы учитываем следующие критерии перед тем, как дать оценку от 1 до 5:
@@ -96,11 +118,82 @@ EXAMPLE_OUTPUT = """Во-первых, давайте оценим оконча�
 Оценка: Учитывая хорошее обоснование в окончательном ответе, но в остальном слабую работу, мы даем модели оценку 2.
 
 Оценка: 2"""
+=======
+Let's to do a detailed evaluation of the AI language model's answer step by step.
+
+We consider the following criteria before giving a score from 1 to 5:
+
+i. Is the final answer helpful?
+ii. Does the AI language use a logical sequence of tools to answer the question?
+iii. Does the AI language model use the tools in a helpful way?
+iv. Does the AI language model use too many steps to answer the question?
+v. Are the appropriate tools used to answer the question?"""
+
+EXAMPLE_INPUT = """An AI language model has been given access to the following set of tools to help answer a user's question.
+
+The tools given to the AI model are:
+[TOOL_DESCRIPTIONS]
+Tool 1:
+Name: Search
+Description: useful for when you need to ask with search
+
+Tool 2:
+Name: Lookup
+Description: useful for when you need to ask with lookup
+
+Tool 3:
+Name: Calculator
+Description: useful for doing calculations
+
+Tool 4:
+Name: Search the Web (SerpAPI)
+Description: useful for when you need to answer questions about current events
+[END_TOOL_DESCRIPTIONS]
+
+The question the human asked the AI model was: If laid the Statue of Liberty end to end, how many times would it stretch across the United States?
+
+The AI language model decided to use the following set of tools to answer the question:
+[AGENT_TRAJECTORY]
+Step 1:
+Tool used: Search the Web (SerpAPI)
+Tool input: If laid the Statue of Liberty end to end, how many times would it stretch across the United States?
+Tool output: The Statue of Liberty was given to the United States by France, as a symbol of the two countries' friendship. It was erected atop an American-designed ...
+[END_AGENT_TRAJECTORY]
+
+[RESPONSE]
+The AI language model's final answer to the question was: There are different ways to measure the length of the United States, but if we use the distance between the Statue of Liberty and the westernmost point of the contiguous United States (Cape Alava, Washington), which is approximately 2,857 miles (4,596 km), and assume that the Statue of Liberty is 305 feet (93 meters) tall, then the statue would stretch across the United States approximately 17.5 times if laid end to end.
+[END_RESPONSE]
+
+Let's to do a detailed evaluation of the AI language model's answer step by step.
+
+We consider the following criteria before giving a score from 1 to 5:
+
+i. Is the final answer helpful?
+ii. Does the AI language use a logical sequence of tools to answer the question?
+iii. Does the AI language model use the tools in a helpful way?
+iv. Does the AI language model use too many steps to answer the question?
+v. Are the appropriate tools used to answer the question?"""
+
+EXAMPLE_OUTPUT = """First, let's evaluate the final answer. The final uses good reasoning but is wrong. 2,857 divided by 305 is not 17.5.\
+The model should have used the calculator to figure this out. Second does the model use a logical sequence of tools to answer the question?\
+The way model uses the search is not helpful. The model should have used the search tool to figure the width of the US or the height of the statue.\
+The model didn't use the calculator tool and gave an incorrect answer. The search API should be used for current events or specific questions.\
+The tools were not used in a helpful way. The model did not use too many steps to answer the question.\
+The model did not use the appropriate tools to answer the question.\
+    
+Judgment: Given the good reasoning in the final answer but otherwise poor performance, we give the model a score of 2.
+
+Score: 2"""
+>>>>>>> langchan/master
 
 EVAL_CHAT_PROMPT = ChatPromptTemplate.from_messages(
     messages=[
         SystemMessage(
+<<<<<<< HEAD
             content="Ты полезный помощник, который оценивает языковые модели."
+=======
+            content="You are a helpful assistant that evaluates language models."
+>>>>>>> langchan/master
         ),
         HumanMessage(content=EXAMPLE_INPUT),
         AIMessage(content=EXAMPLE_OUTPUT),
@@ -109,23 +202,38 @@ EVAL_CHAT_PROMPT = ChatPromptTemplate.from_messages(
 )
 
 
+<<<<<<< HEAD
 TOOL_FREE_EVAL_TEMPLATE = """Языковая модель AI получила доступ к набору инструментов, чтобы помочь ответить на вопрос пользователя.
 
 Вопрос, который человек задал модели AI:
+=======
+TOOL_FREE_EVAL_TEMPLATE = """An AI language model has been given access to a set of tools to help answer a user's question.
+
+The question the human asked the AI model was:
+>>>>>>> langchan/master
 [QUESTION]
 {question}
 [END_QUESTION]{reference}
 
+<<<<<<< HEAD
 Языковая модель AI решила использовать следующий набор инструментов для ответа на вопрос:
+=======
+The AI language model decided to use the following set of tools to answer the question:
+>>>>>>> langchan/master
 [AGENT_TRAJECTORY]
 {agent_trajectory}
 [END_AGENT_TRAJECTORY]
 
+<<<<<<< HEAD
 Окончательный ответ языковой модели AI на вопрос был:
+=======
+The AI language model's final answer to the question was:
+>>>>>>> langchan/master
 [RESPONSE]
 {answer}
 [END_RESPONSE]
 
+<<<<<<< HEAD
 Давай проведем подробную оценку ответа языковой модели AI шаг за шагом.
 
 Мы учитываем следующие критерии перед тем, как дать оценку от 1 до 5:
@@ -135,12 +243,27 @@ ii. Использует ли AI логическую последователь
 iii. Использует ли модель языка AI инструменты полезным образом?
 iv. Использует ли модель языка AI слишком много шагов для ответа на вопрос?
 v. Используются ли подходящие инструменты для ответа на вопрос?"""
+=======
+Let's to do a detailed evaluation of the AI language model's answer step by step.
+
+We consider the following criteria before giving a score from 1 to 5:
+
+i. Is the final answer helpful?
+ii. Does the AI language use a logical sequence of tools to answer the question?
+iii. Does the AI language model use the tools in a helpful way?
+iv. Does the AI language model use too many steps to answer the question?
+v. Are the appropriate tools used to answer the question?"""
+>>>>>>> langchan/master
 
 
 TOOL_FREE_EVAL_CHAT_PROMPT = ChatPromptTemplate.from_messages(
     messages=[
         SystemMessage(
+<<<<<<< HEAD
             content="Ты полезный помощник, который оценивает языковые модели."
+=======
+            content="You are a helpful assistant that evaluates language models."
+>>>>>>> langchan/master
         ),
         HumanMessage(content=EXAMPLE_INPUT),
         AIMessage(content=EXAMPLE_OUTPUT),

@@ -170,6 +170,10 @@ EXPECTED_ALL = [
     "XorbitsLoader",
     "YoutubeAudioLoader",
     "YoutubeLoader",
+<<<<<<< HEAD
+=======
+    "YuqueLoader",
+>>>>>>> langchan/master
 ]
 
 

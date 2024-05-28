@@ -1,5 +1,8 @@
 """Simple in memory docstore in the form of a dict."""
+<<<<<<< HEAD
 
+=======
+>>>>>>> langchan/master
 from typing import Dict, List, Optional, Union
 
 from langchain_core.documents import Document

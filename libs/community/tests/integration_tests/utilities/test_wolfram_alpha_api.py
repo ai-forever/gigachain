@@ -1,5 +1,8 @@
 """Integration test for Wolfram Alpha API Wrapper."""
+<<<<<<< HEAD
 
+=======
+>>>>>>> langchan/master
 from langchain_community.utilities.wolfram_alpha import WolframAlphaAPIWrapper
 
 

@@ -162,7 +162,11 @@ def format_chat_history(chain_input: dict) -> dict:
 
 
 # if you update the name of this, you MUST also update ../pyproject.toml
+<<<<<<< HEAD
 # with the new `tool.gigaserve.export_attr`
+=======
+# with the new `tool.langserve.export_attr`
+>>>>>>> langchan/master
 chain = (
     (format_chat_history | _prompt | _model | StrOutputParser())
     # This is to add the evaluators as "listeners"

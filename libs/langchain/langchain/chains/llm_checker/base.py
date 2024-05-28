@@ -1,5 +1,8 @@
 """Chain for question-answering with self-verification."""
+<<<<<<< HEAD
 
+=======
+>>>>>>> langchan/master
 from __future__ import annotations
 
 import warnings

@@ -18,7 +18,10 @@ and retrieve the data that are 'most similar' to the embedded query.
 
     Embeddings, Document
 """  # noqa: E501
+<<<<<<< HEAD
 
+=======
+>>>>>>> langchan/master
 from __future__ import annotations
 
 import logging

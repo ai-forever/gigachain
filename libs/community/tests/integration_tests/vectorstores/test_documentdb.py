@@ -1,5 +1,8 @@
 """Test DocumentDBVectorSearch functionality."""
+<<<<<<< HEAD
 
+=======
+>>>>>>> langchan/master
 import logging
 import os
 from time import sleep
@@ -71,7 +74,11 @@ class TestDocumentDBVectorSearch:
 
         # insure the test collection is empty
         collection = prepare_collection()
+<<<<<<< HEAD
         assert collection.count_documents({}) == 0  # type: ignore[index]  # noqa: E501
+=======
+        assert collection.count_documents({}) == 0  # type: ignore[index]
+>>>>>>> langchan/master
 
     @classmethod
     def teardown_class(cls) -> None:

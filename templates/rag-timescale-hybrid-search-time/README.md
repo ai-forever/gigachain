@@ -47,7 +47,11 @@ Set the `OPENAI_API_KEY` environment variable to access the OpenAI models.
 To use this package, you should first have the LangChain CLI installed:
 
 ```shell
+<<<<<<< HEAD
 pip install -U gigachain-cli
+=======
+pip install -U langchain-cli
+>>>>>>> langchan/master
 ```
 
 To create a new LangChain project and install this as the only package, you can do:
@@ -83,7 +87,11 @@ export LANGCHAIN_PROJECT=<your-project>  # if not specified, defaults to "defaul
 If you are inside this directory, then you can spin up a LangServe instance directly by:
 
 ```shell
+<<<<<<< HEAD
 gigachain serve
+=======
+langchain serve
+>>>>>>> langchan/master
 ```
 
 This will start the FastAPI app with a server is running locally at
@@ -105,6 +113,7 @@ runnable = RemoteRunnable("http://localhost:8000/rag-timescale-hybrid-search")
 To load your own dataset you will have to modify the code in the `DATASET SPECIFIC CODE` section of `chain.py`.
 This code defines the name of the collection, how to load the data, and the human-language description of both the
 contents of the collection and all of the metadata. The human-language descriptions are used by the self-query retriever
+<<<<<<< HEAD
 to help the LLM convert the question into filters on the metadata when searching the data in Timescale-vector.
 
 ## Using in your own applications
@@ -112,3 +121,6 @@ to help the LLM convert the question into filters on the metadata when searching
 This is a standard GigaServe template. Instructions on how to use it with your LangServe applications are [here](https://github.com/ai-forever/gigachain/blob/master/templates/README.md).
 
 
+=======
+to help the LLM convert the question into filters on the metadata when searching the data in Timescale-vector.
+>>>>>>> langchan/master

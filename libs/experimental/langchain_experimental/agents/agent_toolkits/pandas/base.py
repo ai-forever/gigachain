@@ -220,7 +220,11 @@ def create_pandas_dataframe_agent(
                 verbose=True
             )
 
+<<<<<<< HEAD
     """  # noqa: E501
+=======
+    """
+>>>>>>> langchan/master
     try:
         if engine == "modin":
             import modin.pandas as pd

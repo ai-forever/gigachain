@@ -225,7 +225,11 @@ def _wrap_in_chain_factory(
             return lambda: RunnableLambda(constructor)
         else:
             # Typical correct case
+<<<<<<< HEAD
             return constructor  # noqa
+=======
+            return constructor
+>>>>>>> langchan/master
     return llm_or_chain_factory
 
 

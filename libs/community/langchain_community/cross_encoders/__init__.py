@@ -9,7 +9,10 @@
 
     BaseCrossEncoder --> <name>CrossEncoder  # Examples: SagemakerEndpointCrossEncoder
 """
+<<<<<<< HEAD
 
+=======
+>>>>>>> langchan/master
 import importlib
 from typing import TYPE_CHECKING, Any
 

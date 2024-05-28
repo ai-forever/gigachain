@@ -1,5 +1,9 @@
 """Test base tool child implementations."""
 
+<<<<<<< HEAD
+=======
+
+>>>>>>> langchan/master
 import inspect
 import re
 from typing import List, Type

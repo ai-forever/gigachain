@@ -1,5 +1,8 @@
 """Utilities for formatting strings."""
+<<<<<<< HEAD
 
+=======
+>>>>>>> langchan/master
 from string import Formatter
 from typing import Any, List, Mapping, Sequence
 

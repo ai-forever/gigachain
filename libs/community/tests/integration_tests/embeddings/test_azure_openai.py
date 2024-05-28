@@ -1,5 +1,8 @@
 """Test openai embeddings."""
+<<<<<<< HEAD
 
+=======
+>>>>>>> langchan/master
 import os
 from typing import Any
 

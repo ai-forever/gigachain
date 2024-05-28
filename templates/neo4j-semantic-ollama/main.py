@@ -11,7 +11,12 @@ if __name__ == "__main__":
             "\n\n1. John Travolta\n2. John McDonough",
         )
     ]
+<<<<<<< HEAD
     print(agent_executor.invoke({"input": original_query}))  # noqa: T201
     print(  # noqa: T201
+=======
+    print(agent_executor.invoke({"input": original_query}))
+    print(
+>>>>>>> langchan/master
         agent_executor.invoke({"input": followup_query, "chat_history": chat_history})
     )

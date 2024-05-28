@@ -1,5 +1,8 @@
 """Integration test for Arxiv API Wrapper."""
+<<<<<<< HEAD
 
+=======
+>>>>>>> langchan/master
 from typing import List
 
 import pytest

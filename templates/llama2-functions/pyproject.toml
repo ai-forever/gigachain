@@ -9,6 +9,7 @@ readme = "README.md"
 
 [tool.poetry.dependencies]
 python = ">=3.8.1,<4.0"
+<<<<<<< HEAD
 gigachain = ">=0.0.325"
 replicate = ">=0.15.4"
 
@@ -16,6 +17,15 @@ replicate = ">=0.15.4"
 gigachain-cli = ">=0.0.21"
 
 [tool.gigaserve]
+=======
+langchain = "^0.1"
+replicate = ">=0.15.4"
+
+[tool.poetry.group.dev.dependencies]
+langchain-cli = ">=0.0.21"
+
+[tool.langserve]
+>>>>>>> langchan/master
 export_module = "llama2_functions"
 export_attr = "chain"
 

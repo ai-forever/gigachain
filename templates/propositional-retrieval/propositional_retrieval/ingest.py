@@ -68,7 +68,11 @@ if __name__ == "__main__":
     from langchain_text_splitters import RecursiveCharacterTextSplitter  # noqa
     from langchain_community.document_loaders.recursive_url_loader import (
         RecursiveUrlLoader,
+<<<<<<< HEAD
     )  # noqa
+=======
+    )
+>>>>>>> langchan/master
 
     # The attention is all you need paper
     # Could add more parsing here, as it's very raw.

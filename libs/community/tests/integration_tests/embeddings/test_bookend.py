@@ -1,5 +1,8 @@
 """Test Bookend AI embeddings."""
+<<<<<<< HEAD
 
+=======
+>>>>>>> langchan/master
 from langchain_community.embeddings.bookend import BookendEmbeddings
 
 

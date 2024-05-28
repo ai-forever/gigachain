@@ -1,6 +1,12 @@
+<<<<<<< HEAD
 # 🦜️🧪 GigaChain Experimental
 
 This package holds experimental GigaChain code, intended for research and experimental
+=======
+# 🦜️🧪 LangChain Experimental
+
+This package holds experimental LangChain code, intended for research and experimental
+>>>>>>> langchan/master
 uses.
 
 > [!WARNING]

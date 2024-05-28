@@ -75,7 +75,14 @@ def test_final_answer_after_parsable_action() -> None:
         """
     with pytest.raises(OutputParserException) as exception_info:
         mrkl_output_parser.parse(llm_output)
+<<<<<<< HEAD
         assert (
             "Parsing LLM output produced both a final answer and a parse-able action"
             in exception_info.value.args[0]
         )
+=======
+    assert (
+        "Parsing LLM output produced both a final answer and a parse-able action"
+        in exception_info.value.args[0]
+    )
+>>>>>>> langchan/master

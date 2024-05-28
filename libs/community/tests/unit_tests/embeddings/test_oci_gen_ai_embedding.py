@@ -1,5 +1,8 @@
 """Test OCI Generative AI embedding service."""
+<<<<<<< HEAD
 
+=======
+>>>>>>> langchan/master
 from unittest.mock import MagicMock
 
 import pytest

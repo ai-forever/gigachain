@@ -1,9 +1,14 @@
 [tool.poetry]
+<<<<<<< HEAD
 name = "gigachain-groq"
+=======
+name = "langchain-groq"
+>>>>>>> langchan/master
 version = "0.1.4"
 description = "An integration package connecting Groq and LangChain"
 authors = []
 readme = "README.md"
+<<<<<<< HEAD
 repository = "https://github.com/gigachain-ai/gigachain"
 license = "MIT"
 
@@ -13,6 +18,17 @@ license = "MIT"
 [tool.poetry.dependencies]
 python = ">=3.8.1,<4.0"
 gigachain-core = ">=0.1.45,<0.3"
+=======
+repository = "https://github.com/langchain-ai/langchain"
+license = "MIT"
+
+[tool.poetry.urls]
+"Source Code" = "https://github.com/langchain-ai/langchain/tree/master/libs/partners/groq"
+
+[tool.poetry.dependencies]
+python = ">=3.8.1,<4.0"
+langchain-core = ">=0.1.45,<0.3"
+>>>>>>> langchan/master
 groq = ">=0.4.1,<1"
 
 [tool.poetry.group.test]
@@ -23,8 +39,13 @@ pytest = "^7.3.0"
 pytest-mock = "^3.10.0"
 pytest-watcher = "^0.3.4"
 pytest-asyncio = "^0.21.1"
+<<<<<<< HEAD
 gigachain-core = { path = "../../core", develop = true }
 gigachain-standard-tests = { path = "../../standard-tests", develop = true }
+=======
+langchain-core = { path = "../../core", develop = true }
+langchain-standard-tests = { path = "../../standard-tests", develop = true }
+>>>>>>> langchan/master
 
 [tool.poetry.group.codespell]
 optional = true
@@ -40,19 +61,31 @@ ruff = "^0.1.5"
 
 [tool.poetry.group.typing.dependencies]
 mypy = "^0.991"
+<<<<<<< HEAD
 gigachain-core = { path = "../../core", develop = true }
+=======
+langchain-core = { path = "../../core", develop = true }
+>>>>>>> langchan/master
 
 [tool.poetry.group.dev]
 optional = true
 
 [tool.poetry.group.dev.dependencies]
+<<<<<<< HEAD
 gigachain-core = { path = "../../core", develop = true }
+=======
+langchain-core = { path = "../../core", develop = true }
+>>>>>>> langchan/master
 
 [tool.poetry.group.test_integration]
 optional = true
 
 [tool.poetry.group.test_integration.dependencies]
+<<<<<<< HEAD
 gigachain-core = { path = "../../core", develop = true }
+=======
+langchain-core = { path = "../../core", develop = true }
+>>>>>>> langchan/master
 
 [tool.ruff.lint]
 select = [

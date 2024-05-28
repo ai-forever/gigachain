@@ -1,5 +1,8 @@
 """Test LLM chain."""
+<<<<<<< HEAD
 
+=======
+>>>>>>> langchan/master
 from tempfile import TemporaryDirectory
 from typing import Dict, List, Union
 from unittest.mock import patch

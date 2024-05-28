@@ -305,7 +305,11 @@ class FewShotChatMessagePromptTemplate(
 
             # Use within an LLM
             from langchain_core.chat_models import ChatAnthropic
+<<<<<<< HEAD
             chain = final_prompt | ChatAnthropic()
+=======
+            chain = final_prompt | ChatAnthropic(model="claude-3-haiku-20240307")
+>>>>>>> langchan/master
             chain.invoke({"input": "What's 3+3?"})
     """
 

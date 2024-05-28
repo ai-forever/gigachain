@@ -187,7 +187,11 @@ def _load_package_modules(
             modules_by_namespace[top_namespace] = _module_members
 
         except ImportError as e:
+<<<<<<< HEAD
             print(f"Error: Unable to import module '{namespace}' with error: {e}")  # noqa: T201
+=======
+            print(f"Error: Unable to import module '{namespace}' with error: {e}")
+>>>>>>> langchan/master
 
     return modules_by_namespace
 
@@ -364,7 +368,11 @@ def main(dirs: Optional[list] = None) -> None:
         dirs += [
             dir_
             for dir_ in os.listdir(ROOT_DIR / "libs" / "partners")
+<<<<<<< HEAD
             if os.path.isdir(dir_)
+=======
+            if os.path.isdir(ROOT_DIR / "libs" / "partners" / dir_)
+>>>>>>> langchan/master
             and "pyproject.toml" in os.listdir(ROOT_DIR / "libs" / "partners" / dir_)
         ]
     for dir_ in dirs:

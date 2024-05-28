@@ -1,5 +1,8 @@
 """Wrapper around Minimax chat models."""
+<<<<<<< HEAD
 
+=======
+>>>>>>> langchan/master
 import logging
 from typing import Any, Dict, List, Optional, cast
 

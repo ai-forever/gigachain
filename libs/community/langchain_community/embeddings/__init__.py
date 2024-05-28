@@ -43,6 +43,12 @@ if TYPE_CHECKING:
     from langchain_community.embeddings.clarifai import (
         ClarifaiEmbeddings,
     )
+<<<<<<< HEAD
+=======
+    from langchain_community.embeddings.clova import (
+        ClovaEmbeddings,
+    )
+>>>>>>> langchan/master
     from langchain_community.embeddings.cohere import (
         CohereEmbeddings,
     )
@@ -170,7 +176,11 @@ if TYPE_CHECKING:
         QuantizedBiEncoderEmbeddings,
     )
     from langchain_community.embeddings.oracleai import (
+<<<<<<< HEAD
         OracleEmbeddings,  # noqa: F401
+=======
+        OracleEmbeddings,
+>>>>>>> langchan/master
     )
     from langchain_community.embeddings.premai import (
         PremAIEmbeddings,
@@ -203,6 +213,12 @@ if TYPE_CHECKING:
     from langchain_community.embeddings.tensorflow_hub import (
         TensorflowHubEmbeddings,
     )
+<<<<<<< HEAD
+=======
+    from langchain_community.embeddings.titan_takeoff import (
+        TitanTakeoffEmbed,
+    )
+>>>>>>> langchan/master
     from langchain_community.embeddings.vertexai import (
         VertexAIEmbeddings,
     )
@@ -229,6 +245,10 @@ __all__ = [
     "BedrockEmbeddings",
     "BookendEmbeddings",
     "ClarifaiEmbeddings",
+<<<<<<< HEAD
+=======
+    "ClovaEmbeddings",
+>>>>>>> langchan/master
     "CohereEmbeddings",
     "DashScopeEmbeddings",
     "DatabricksEmbeddings",
@@ -288,6 +308,10 @@ __all__ = [
     "SpacyEmbeddings",
     "SparkLLMTextEmbeddings",
     "TensorflowHubEmbeddings",
+<<<<<<< HEAD
+=======
+    "TitanTakeoffEmbed",
+>>>>>>> langchan/master
     "VertexAIEmbeddings",
     "VolcanoEmbeddings",
     "VoyageEmbeddings",
@@ -305,6 +329,10 @@ _module_lookup = {
     "BedrockEmbeddings": "langchain_community.embeddings.bedrock",
     "BookendEmbeddings": "langchain_community.embeddings.bookend",
     "ClarifaiEmbeddings": "langchain_community.embeddings.clarifai",
+<<<<<<< HEAD
+=======
+    "ClovaEmbeddings": "langchain_community.embeddings.clova",
+>>>>>>> langchan/master
     "CohereEmbeddings": "langchain_community.embeddings.cohere",
     "DashScopeEmbeddings": "langchain_community.embeddings.dashscope",
     "DatabricksEmbeddings": "langchain_community.embeddings.databricks",
@@ -380,8 +408,11 @@ def __getattr__(name: str) -> Any:
     raise AttributeError(f"module {__name__} has no attribute {name}")
 
 
+<<<<<<< HEAD
 __all__ = list(_module_lookup.keys())
 
+=======
+>>>>>>> langchan/master
 logger = logging.getLogger(__name__)
 
 

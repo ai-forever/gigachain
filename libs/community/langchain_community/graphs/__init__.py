@@ -29,6 +29,11 @@ if TYPE_CHECKING:
         Neo4jGraph,
     )
     from langchain_community.graphs.neptune_graph import (
+<<<<<<< HEAD
+=======
+        BaseNeptuneGraph,
+        NeptuneAnalyticsGraph,
+>>>>>>> langchan/master
         NeptuneGraph,
     )
     from langchain_community.graphs.neptune_rdf_graph import (
@@ -53,11 +58,19 @@ __all__ = [
     "GremlinGraph",
     "HugeGraph",
     "KuzuGraph",
+<<<<<<< HEAD
+=======
+    "BaseNeptuneGraph",
+>>>>>>> langchan/master
     "MemgraphGraph",
     "NebulaGraph",
     "Neo4jGraph",
     "NeptuneGraph",
     "NeptuneRdfGraph",
+<<<<<<< HEAD
+=======
+    "NeptuneAnalyticsGraph",
+>>>>>>> langchan/master
     "NetworkxEntityGraph",
     "OntotextGraphDBGraph",
     "RdfGraph",
@@ -89,6 +102,9 @@ def __getattr__(name: str) -> Any:
         module = importlib.import_module(_module_lookup[name])
         return getattr(module, name)
     raise AttributeError(f"module {__name__} has no attribute {name}")
+<<<<<<< HEAD
 
 
 __all__ = list(_module_lookup.keys())
+=======
+>>>>>>> langchan/master

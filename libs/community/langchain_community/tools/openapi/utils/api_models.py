@@ -1,5 +1,8 @@
 """Pydantic models for parsing an OpenAPI spec."""
+<<<<<<< HEAD
 
+=======
+>>>>>>> langchan/master
 from __future__ import annotations
 
 import logging
@@ -56,6 +59,10 @@ class APIPropertyLocation(Enum):
 _SUPPORTED_MEDIA_TYPES = ("application/json",)
 
 SUPPORTED_LOCATIONS = {
+<<<<<<< HEAD
+=======
+    APIPropertyLocation.HEADER,
+>>>>>>> langchan/master
     APIPropertyLocation.QUERY,
     APIPropertyLocation.PATH,
 }

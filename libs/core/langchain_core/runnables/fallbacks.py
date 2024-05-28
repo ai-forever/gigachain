@@ -61,7 +61,13 @@ class RunnableWithFallbacks(RunnableSerializable[Input, Output]):
             from langchain_core.chat_models.openai import ChatOpenAI
             from langchain_core.chat_models.anthropic import ChatAnthropic
 
+<<<<<<< HEAD
             model = ChatAnthropic().with_fallbacks([ChatOpenAI()])
+=======
+            model = ChatAnthropic(
+                model="claude-3-haiku-20240307"
+            ).with_fallbacks([ChatOpenAI(model="gpt-3.5-turbo-0125")])
+>>>>>>> langchan/master
             # Will usually use ChatAnthropic, but fallback to ChatOpenAI
             # if ChatAnthropic fails.
             model.invoke('hello')

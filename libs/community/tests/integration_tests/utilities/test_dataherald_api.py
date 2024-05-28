@@ -1,5 +1,8 @@
 """Integration test for Dataherald API Wrapper."""
+<<<<<<< HEAD
 
+=======
+>>>>>>> langchan/master
 from langchain_community.utilities.dataherald import DataheraldAPIWrapper
 
 

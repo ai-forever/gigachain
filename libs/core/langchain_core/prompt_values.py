@@ -3,7 +3,10 @@
 Prompt values are used to represent different pieces of prompts.
 They can be used to represent text, images, or chat message pieces.
 """
+<<<<<<< HEAD
 
+=======
+>>>>>>> langchan/master
 from __future__ import annotations
 
 from abc import ABC, abstractmethod

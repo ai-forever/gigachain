@@ -1,5 +1,8 @@
 """Test OpenAI API wrapper."""
+<<<<<<< HEAD
 
+=======
+>>>>>>> langchan/master
 from pathlib import Path
 from typing import Generator
 

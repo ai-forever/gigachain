@@ -3,9 +3,13 @@ name: CI
 
 on:
   push:
+<<<<<<< HEAD
     branches:
       - master
       - dev
+=======
+    branches: [master]
+>>>>>>> langchan/master
   pull_request:
 
 # If another push to the same PR or branch happens while this workflow is still running,
@@ -33,7 +37,11 @@ jobs:
         uses: Ana06/get-changed-files@v2.2.0
       - id: set-matrix
         run: |
+<<<<<<< HEAD
           python .github/scripts/check_diff.py ${{ steps.files.outputs.added_modified_renamed }} >> $GITHUB_OUTPUT
+=======
+          python .github/scripts/check_diff.py ${{ steps.files.outputs.all }} >> $GITHUB_OUTPUT
+>>>>>>> langchan/master
     outputs:
       dirs-to-lint: ${{ steps.set-matrix.outputs.dirs-to-lint }}
       dirs-to-test: ${{ steps.set-matrix.outputs.dirs-to-test }}

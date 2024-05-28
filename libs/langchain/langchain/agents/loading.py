@@ -16,7 +16,11 @@ from langchain.chains.loading import load_chain, load_chain_from_config
 
 logger = logging.getLogger(__file__)
 
+<<<<<<< HEAD
 URL_BASE = "https://raw.githubusercontent.com/ai-forever/gigachain/hub/master/agents/"
+=======
+URL_BASE = "https://raw.githubusercontent.com/hwchase17/langchain-hub/master/agents/"
+>>>>>>> langchan/master
 
 
 def _load_agent_from_tools(
@@ -121,10 +125,17 @@ def _load_agent_from_file(
         file_path = file
     # Load from either json or yaml.
     if file_path.suffix[1:] == "json":
+<<<<<<< HEAD
         with open(file_path, encoding="utf-8") as f:
             config = json.load(f)
     elif file_path.suffix[1:] == "yaml":
         with open(file_path, "r", encoding="utf-8") as f:
+=======
+        with open(file_path) as f:
+            config = json.load(f)
+    elif file_path.suffix[1:] == "yaml":
+        with open(file_path, "r") as f:
+>>>>>>> langchan/master
             config = yaml.safe_load(f)
     else:
         raise ValueError(f"Unsupported file type, must be one of {valid_suffixes}.")

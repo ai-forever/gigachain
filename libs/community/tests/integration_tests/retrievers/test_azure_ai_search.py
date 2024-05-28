@@ -1,5 +1,8 @@
 """Test Azure AI Search wrapper."""
+<<<<<<< HEAD
 
+=======
+>>>>>>> langchan/master
 from langchain_core.documents import Document
 
 from langchain_community.retrievers.azure_ai_search import (

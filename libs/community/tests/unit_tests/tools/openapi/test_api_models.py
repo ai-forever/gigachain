@@ -1,5 +1,8 @@
 """Test the APIOperation class."""
+<<<<<<< HEAD
 
+=======
+>>>>>>> langchan/master
 import json
 import os
 from pathlib import Path

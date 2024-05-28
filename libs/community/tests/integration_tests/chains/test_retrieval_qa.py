@@ -1,5 +1,8 @@
 """Test RetrievalQA functionality."""
+<<<<<<< HEAD
 
+=======
+>>>>>>> langchan/master
 from pathlib import Path
 
 from langchain.chains import RetrievalQA

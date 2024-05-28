@@ -13,6 +13,7 @@ from langchain_experimental.plan_and_execute.schema import (
 )
 
 SYSTEM_PROMPT = (
+<<<<<<< HEAD
     "Давай сначала поймем проблему и разработаем план для ее решения."
     " Пожалуйста, выведи план, начиная с заголовка 'План:', "
     "а затем следуя нумерованным шагам. "
@@ -21,11 +22,25 @@ SYSTEM_PROMPT = (
     "то последним шагом почти всегда должно быть 'Учитывая приведенные выше шаги, "
     "пожалуйста, ответь на исходный вопрос пользователя'. "
     "В конце своего плана скажи '<END_OF_PLAN>'"
+=======
+    "Let's first understand the problem and devise a plan to solve the problem."
+    " Please output the plan starting with the header 'Plan:' "
+    "and then followed by a numbered list of steps. "
+    "Please make the plan the minimum number of steps required "
+    "to accurately complete the task. If the task is a question, "
+    "the final step should almost always be 'Given the above steps taken, "
+    "please respond to the users original question'. "
+    "At the end of your plan, say '<END_OF_PLAN>'"
+>>>>>>> langchan/master
 )
 
 
 class PlanningOutputParser(PlanOutputParser):
+<<<<<<< HEAD
     """Парсер выходных данных планирования."""
+=======
+    """Planning output parser."""
+>>>>>>> langchan/master
 
     def parse(self, text: str) -> Plan:
         steps = [Step(value=v) for v in re.split("\n\s*\d+\. ", text)[1:]]
@@ -36,11 +51,19 @@ def load_chat_planner(
     llm: BaseLanguageModel, system_prompt: str = SYSTEM_PROMPT
 ) -> LLMPlanner:
     """
+<<<<<<< HEAD
     Загрузить планировщик чата.
 
     Args:
         llm: Языковая модель.
         system_prompt: Системный запрос.
+=======
+    Load a chat planner.
+
+    Args:
+        llm: Language model.
+        system_prompt: System prompt.
+>>>>>>> langchan/master
 
     Returns:
         LLMPlanner

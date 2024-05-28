@@ -1,5 +1,8 @@
 """Wrapper around a Power BI endpoint."""
+<<<<<<< HEAD
 
+=======
+>>>>>>> langchan/master
 from __future__ import annotations
 
 import asyncio
@@ -62,7 +65,11 @@ class PowerBIDataset(BaseModel):
         """Get the request url."""
         if self.group_id:
             return f"{BASE_URL}/groups/{self.group_id}/datasets/{self.dataset_id}/executeQueries"  # noqa: E501 # pylint: disable=C0301
+<<<<<<< HEAD
         return f"{BASE_URL}/datasets/{self.dataset_id}/executeQueries"  # noqa: E501 # pylint: disable=C0301
+=======
+        return f"{BASE_URL}/datasets/{self.dataset_id}/executeQueries"  # pylint: disable=C0301
+>>>>>>> langchan/master
 
     @property
     def headers(self) -> Dict[str, str]:

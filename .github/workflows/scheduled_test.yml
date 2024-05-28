@@ -2,9 +2,14 @@ name: Scheduled tests
 
 on:
   workflow_dispatch:  # Allows to trigger the workflow manually in GitHub UI
+<<<<<<< HEAD
   # TODO: Support this feature!
   # schedule:
   #   - cron:  '0 13 * * *'
+=======
+  schedule:
+    - cron:  '0 13 * * *'
+>>>>>>> langchan/master
 
 env:
   POETRY_VERSION: "1.7.1"

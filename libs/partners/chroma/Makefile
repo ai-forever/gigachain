@@ -10,6 +10,10 @@ integration_test integration_tests: TEST_FILE = tests/integration_tests/
 test tests integration_test integration_tests:
 	poetry run pytest $(TEST_FILE)
 
+<<<<<<< HEAD
+=======
+
+>>>>>>> langchan/master
 ######################
 # LINTING AND FORMATTING
 ######################
@@ -27,7 +31,11 @@ lint lint_diff lint_package lint_tests:
 	poetry run ruff .
 	poetry run ruff format $(PYTHON_FILES) --diff
 	poetry run ruff --select I $(PYTHON_FILES)
+<<<<<<< HEAD
 	mkdir -p $(MYPY_CACHE); poetry run mypy $(PYTHON_FILES) --cache-dir $(MYPY_CACHE)
+=======
+	mkdir $(MYPY_CACHE); poetry run mypy $(PYTHON_FILES) --cache-dir $(MYPY_CACHE)
+>>>>>>> langchan/master
 
 format format_diff:
 	poetry run ruff format $(PYTHON_FILES)

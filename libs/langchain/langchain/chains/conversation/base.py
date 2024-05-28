@@ -1,5 +1,8 @@
 """Chain that carries on a conversation and calls an LLM."""
+<<<<<<< HEAD
 
+=======
+>>>>>>> langchan/master
 from typing import Dict, List
 
 from langchain_core.memory import BaseMemory

@@ -1,5 +1,8 @@
 """Test vector store utility functions."""
+<<<<<<< HEAD
 
+=======
+>>>>>>> langchan/master
 import numpy as np
 from langchain_core.documents import Document
 

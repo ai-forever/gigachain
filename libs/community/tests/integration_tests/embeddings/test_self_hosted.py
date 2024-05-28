@@ -1,5 +1,8 @@
 """Test self-hosted embeddings."""
+<<<<<<< HEAD
 
+=======
+>>>>>>> langchan/master
 from typing import Any
 
 from langchain_community.embeddings import (

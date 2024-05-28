@@ -5,7 +5,10 @@ You can obtain a key by following the steps below.
 - Sign up for a free account at https://scenex.jina.ai/.
 - Navigate to the API Access page (https://scenex.jina.ai/api) and create a new API key.
 """
+<<<<<<< HEAD
 
+=======
+>>>>>>> langchan/master
 from typing import Dict
 
 import requests

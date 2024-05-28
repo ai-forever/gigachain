@@ -1,6 +1,9 @@
 # flake8: noqa
 """Test llamacpp embeddings."""
+<<<<<<< HEAD
 
+=======
+>>>>>>> langchan/master
 import os
 from urllib.request import urlretrieve
 

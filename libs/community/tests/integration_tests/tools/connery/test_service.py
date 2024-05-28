@@ -1,5 +1,8 @@
 """Integration test for Connery API Wrapper."""
+<<<<<<< HEAD
 
+=======
+>>>>>>> langchan/master
 from langchain_community.tools.connery import ConneryService
 
 

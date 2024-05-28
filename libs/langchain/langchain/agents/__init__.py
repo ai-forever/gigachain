@@ -15,20 +15,33 @@ Agents select and use **Tools** and **Toolkits** for actions.
                               OpenAIFunctionsAgent
                               XMLAgent
                               Agent --> <name>Agent  # Examples: ZeroShotAgent, ChatAgent
+<<<<<<< HEAD
 
 
     BaseMultiActionAgent  --> OpenAIMultiFunctionsAgent
 
 
+=======
+                                        
+
+    BaseMultiActionAgent  --> OpenAIMultiFunctionsAgent
+    
+    
+>>>>>>> langchan/master
 **Main helpers:**
 
 .. code-block::
 
     AgentType, AgentExecutor, AgentOutputParser, AgentExecutorIterator,
     AgentAction, AgentFinish
+<<<<<<< HEAD
 
 """  # noqa: E501
 
+=======
+    
+"""  # noqa: E501
+>>>>>>> langchan/master
 from pathlib import Path
 from typing import TYPE_CHECKING, Any
 
@@ -52,9 +65,12 @@ from langchain.agents.agent_toolkits.vectorstore.base import (
 from langchain.agents.agent_types import AgentType
 from langchain.agents.conversational.base import ConversationalAgent
 from langchain.agents.conversational_chat.base import ConversationalChatAgent
+<<<<<<< HEAD
 from langchain.agents.gigachat_functions_agent.base import (
     create_gigachat_functions_agent,
 )
+=======
+>>>>>>> langchan/master
 from langchain.agents.initialize import initialize_agent
 from langchain.agents.json_chat.base import create_json_chat_agent
 from langchain.agents.loading import load_agent
@@ -173,7 +189,10 @@ __all__ = [
     "tool",
     "XMLAgent",
     "create_openai_functions_agent",
+<<<<<<< HEAD
     "create_gigachat_functions_agent",
+=======
+>>>>>>> langchan/master
     "create_xml_agent",
     "create_react_agent",
     "create_openai_tools_agent",

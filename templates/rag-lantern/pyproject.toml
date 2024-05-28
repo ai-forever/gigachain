@@ -15,7 +15,11 @@ tiktoken = "^0.5.1"
 rag-lantern = {path = "packages/rag-lantern", develop = true}
 
 [tool.poetry.group.dev.dependencies]
+<<<<<<< HEAD
 gigachain-cli = ">=0.0.15"
+=======
+langchain-cli = ">=0.0.15"
+>>>>>>> langchan/master
 [tool.poetry.group.dev.dependencies.python-dotenv]
 extras = [
     "cli",

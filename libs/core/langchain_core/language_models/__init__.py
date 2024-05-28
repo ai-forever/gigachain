@@ -1,5 +1,9 @@
 """**Language Model** is a type of model that can generate text or complete
+<<<<<<< HEAD
 text prompts.
+=======
+text prompts. 
+>>>>>>> langchan/master
 
 LangChain has two main classes to work with language models:
 - **LLM** classes provide access to the large language model (**LLM**) APIs and services.

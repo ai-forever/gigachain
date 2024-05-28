@@ -25,11 +25,14 @@ class GigaChatEmbeddings(BaseModel, Embeddings):
             )
     """
 
+<<<<<<< HEAD
     """ DEPRECATED: Send texts one-by-one to server (to increase token limit) """
     one_by_one_mode: bool = False
     """ DEPRECATED: Debug timeout for limit rps to server """
     _debug_delay: float = 0
 
+=======
+>>>>>>> langchan/master
     base_url: Optional[str] = None
     """ Base API URL """
     auth_url: Optional[str] = None
@@ -60,12 +63,15 @@ class GigaChatEmbeddings(BaseModel, Embeddings):
     key_file_password: Optional[str] = None
     # Support for connection to GigaChat through SSL certificates
 
+<<<<<<< HEAD
     prefix_query: str = (
         "Дано предложение, необходимо найти его парафраз \nпредложение: "
     )
 
     use_prefix_query: bool = False
 
+=======
+>>>>>>> langchan/master
     @cached_property
     def _client(self) -> Any:
         """Returns GigaChat API client"""
@@ -183,8 +189,11 @@ class GigaChatEmbeddings(BaseModel, Embeddings):
         Returns:
             Embeddings for the text.
         """
+<<<<<<< HEAD
         if self.use_prefix_query:
             text = self.prefix_query + text
+=======
+>>>>>>> langchan/master
         return self.embed_documents(texts=[text])[0]
 
     async def aembed_query(self, text: str) -> List[float]:
@@ -196,7 +205,10 @@ class GigaChatEmbeddings(BaseModel, Embeddings):
         Returns:
             Embeddings for the text.
         """
+<<<<<<< HEAD
         if self.use_prefix_query:
             text = self.prefix_query + text
+=======
+>>>>>>> langchan/master
         docs = await self.aembed_documents(texts=[text])
         return docs[0]

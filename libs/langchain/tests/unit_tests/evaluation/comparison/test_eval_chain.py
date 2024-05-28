@@ -1,5 +1,9 @@
 """Test the comparison chains."""
 
+<<<<<<< HEAD
+=======
+
+>>>>>>> langchan/master
 import re
 
 import pytest

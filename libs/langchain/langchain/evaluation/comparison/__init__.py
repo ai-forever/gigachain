@@ -27,7 +27,10 @@ Example:
     # .     " by explaining what the formula means.\\n[[B]]"
     # }
 """
+<<<<<<< HEAD
 
+=======
+>>>>>>> langchan/master
 from langchain.evaluation.comparison.eval_chain import (
     LabeledPairwiseStringEvalChain,
     PairwiseStringEvalChain,

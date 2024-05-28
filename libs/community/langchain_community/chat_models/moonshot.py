@@ -1,5 +1,8 @@
 """Wrapper around Moonshot chat models."""
+<<<<<<< HEAD
 
+=======
+>>>>>>> langchan/master
 from typing import Dict
 
 from langchain_core.pydantic_v1 import root_validator

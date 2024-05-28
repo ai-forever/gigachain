@@ -1,5 +1,11 @@
+<<<<<<< HEAD
 """**Chat Sessions** are a collection of messages and function calls."""
 
+=======
+"""**Chat Sessions** are a collection of messages and function calls.
+
+"""
+>>>>>>> langchan/master
 from typing import Sequence, TypedDict
 
 from langchain_core.messages import BaseMessage

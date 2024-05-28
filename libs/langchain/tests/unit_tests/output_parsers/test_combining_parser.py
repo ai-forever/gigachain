@@ -1,5 +1,8 @@
 """Test in memory docstore."""
+<<<<<<< HEAD
 
+=======
+>>>>>>> langchan/master
 from langchain.output_parsers.combining import CombiningOutputParser
 from langchain.output_parsers.regex import RegexParser
 from langchain.output_parsers.structured import ResponseSchema, StructuredOutputParser

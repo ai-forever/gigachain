@@ -1,13 +1,26 @@
 """Cassandra-based chat message history, based on cassIO."""
+<<<<<<< HEAD
 
+=======
+>>>>>>> langchan/master
 from __future__ import annotations
 
 import json
 import uuid
+<<<<<<< HEAD
 from typing import TYPE_CHECKING, List, Optional
 
 if TYPE_CHECKING:
     from cassandra.cluster import Session
+=======
+from typing import TYPE_CHECKING, Any, Dict, Iterable, List, Optional, Sequence
+
+from langchain_community.utilities.cassandra import SetupMode
+
+if TYPE_CHECKING:
+    from cassandra.cluster import Session
+    from cassio.table.table_types import RowType
+>>>>>>> langchan/master
 
 from langchain_core.chat_history import BaseChatMessageHistory
 from langchain_core.messages import (
@@ -20,6 +33,7 @@ DEFAULT_TABLE_NAME = "message_store"
 DEFAULT_TTL_SECONDS = None
 
 
+<<<<<<< HEAD
 class CassandraChatMessageHistory(BaseChatMessageHistory):
     """Chat message history that stores history in Cassandra.
 
@@ -33,6 +47,16 @@ class CassandraChatMessageHistory(BaseChatMessageHistory):
             of stored entries. None (default) for no expiration.
     """
 
+=======
+def _rows_to_messages(rows: Iterable[RowType]) -> List[BaseMessage]:
+    message_blobs = [row["body_blob"] for row in rows][::-1]
+    items = [json.loads(message_blob) for message_blob in message_blobs]
+    messages = messages_from_dict(items)
+    return messages
+
+
+class CassandraChatMessageHistory(BaseChatMessageHistory):
+>>>>>>> langchan/master
     def __init__(
         self,
         session_id: str,
@@ -40,7 +64,26 @@ class CassandraChatMessageHistory(BaseChatMessageHistory):
         keyspace: Optional[str] = None,
         table_name: str = DEFAULT_TABLE_NAME,
         ttl_seconds: Optional[int] = DEFAULT_TTL_SECONDS,
+<<<<<<< HEAD
     ) -> None:
+=======
+        *,
+        setup_mode: SetupMode = SetupMode.SYNC,
+    ) -> None:
+        """Chat message history that stores history in Cassandra.
+
+        Args:
+            session_id: arbitrary key that is used to store the messages
+                of a single chat session.
+            session: Cassandra driver session.
+                If not provided, it is resolved from cassio.
+            keyspace: Cassandra key space. If not provided, it is resolved from cassio.
+            table_name: name of the table to use.
+            ttl_seconds: time-to-live (seconds) for automatic expiration
+                of stored entries. None (default) for no expiration.
+            setup_mode: mode used to create the Cassandra table (SYNC, ASYNC or OFF).
+        """
+>>>>>>> langchan/master
         try:
             from cassio.table import ClusteredCassandraTable
         except (ImportError, ModuleNotFoundError):
@@ -50,6 +93,12 @@ class CassandraChatMessageHistory(BaseChatMessageHistory):
             )
         self.session_id = session_id
         self.ttl_seconds = ttl_seconds
+<<<<<<< HEAD
+=======
+        kwargs: Dict[str, Any] = {}
+        if setup_mode == SetupMode.ASYNC:
+            kwargs["async_setup"] = True
+>>>>>>> langchan/master
         self.table = ClusteredCassandraTable(
             session=session,
             keyspace=keyspace,
@@ -57,12 +106,18 @@ class CassandraChatMessageHistory(BaseChatMessageHistory):
             ttl_seconds=ttl_seconds,
             primary_key_type=["TEXT", "TIMEUUID"],
             ordering_in_partition="DESC",
+<<<<<<< HEAD
+=======
+            skip_provisioning=setup_mode == SetupMode.OFF,
+            **kwargs,
+>>>>>>> langchan/master
         )
 
     @property
     def messages(self) -> List[BaseMessage]:  # type: ignore
         """Retrieve all session messages from DB"""
         # The latest are returned, in chronological order
+<<<<<<< HEAD
         message_blobs = [
             row["body_blob"]
             for row in self.table.get_partition(
@@ -72,6 +127,20 @@ class CassandraChatMessageHistory(BaseChatMessageHistory):
         items = [json.loads(message_blob) for message_blob in message_blobs]
         messages = messages_from_dict(items)
         return messages
+=======
+        rows = self.table.get_partition(
+            partition_id=self.session_id,
+        )
+        return _rows_to_messages(rows)
+
+    async def aget_messages(self) -> List[BaseMessage]:
+        """Retrieve all session messages from DB"""
+        # The latest are returned, in chronological order
+        rows = await self.table.aget_partition(
+            partition_id=self.session_id,
+        )
+        return _rows_to_messages(rows)
+>>>>>>> langchan/master
 
     def add_message(self, message: BaseMessage) -> None:
         """Write a message to the table
@@ -87,6 +156,26 @@ class CassandraChatMessageHistory(BaseChatMessageHistory):
             ttl_seconds=self.ttl_seconds,
         )
 
+<<<<<<< HEAD
     def clear(self) -> None:
         """Clear session memory from DB"""
         self.table.delete_partition(self.session_id)
+=======
+    async def aadd_messages(self, messages: Sequence[BaseMessage]) -> None:
+        for message in messages:
+            this_row_id = uuid.uuid1()
+            await self.table.aput(
+                partition_id=self.session_id,
+                row_id=this_row_id,
+                body_blob=json.dumps(message_to_dict(message)),
+                ttl_seconds=self.ttl_seconds,
+            )
+
+    def clear(self) -> None:
+        """Clear session memory from DB"""
+        self.table.delete_partition(self.session_id)
+
+    async def aclear(self) -> None:
+        """Clear session memory from DB"""
+        await self.table.adelete_partition(self.session_id)
+>>>>>>> langchan/master

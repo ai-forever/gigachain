@@ -383,6 +383,19 @@ def test_schemas(snapshot: SnapshotAssertion) -> None:
                 },
                 "required": ["name", "args", "id", "error"],
             },
+<<<<<<< HEAD
+=======
+            "UsageMetadata": {
+                "title": "UsageMetadata",
+                "type": "object",
+                "properties": {
+                    "input_tokens": {"title": "Input Tokens", "type": "integer"},
+                    "output_tokens": {"title": "Output Tokens", "type": "integer"},
+                    "total_tokens": {"title": "Total Tokens", "type": "integer"},
+                },
+                "required": ["input_tokens", "output_tokens", "total_tokens"],
+            },
+>>>>>>> langchan/master
             "AIMessage": {
                 "title": "AIMessage",
                 "description": "Message from an AI.",
@@ -433,6 +446,10 @@ def test_schemas(snapshot: SnapshotAssertion) -> None:
                         "type": "array",
                         "items": {"$ref": "#/definitions/InvalidToolCall"},
                     },
+<<<<<<< HEAD
+=======
+                    "usage_metadata": {"$ref": "#/definitions/UsageMetadata"},
+>>>>>>> langchan/master
                 },
                 "required": ["content"],
             },
@@ -1440,7 +1457,10 @@ async def test_with_config_metadata_passthrough(mocker: MockerFixture) -> None:
             recursion_limit=25,
             configurable={"hello": "there"},
             metadata={"hello": "there", "bye": "now"},
+<<<<<<< HEAD
             run_id=None,
+=======
+>>>>>>> langchan/master
         ),
     )
     spy.reset_mock()
@@ -1582,7 +1602,10 @@ async def test_with_config(mocker: MockerFixture) -> None:
                 tags=["c"],
                 callbacks=None,
                 recursion_limit=5,
+<<<<<<< HEAD
                 run_id=None,
+=======
+>>>>>>> langchan/master
             ),
         ),
         mocker.call(
@@ -1592,7 +1615,10 @@ async def test_with_config(mocker: MockerFixture) -> None:
                 tags=["c"],
                 callbacks=None,
                 recursion_limit=5,
+<<<<<<< HEAD
                 run_id=None,
+=======
+>>>>>>> langchan/master
             ),
         ),
     ]
@@ -1618,7 +1644,10 @@ async def test_with_config(mocker: MockerFixture) -> None:
             tags=["c"],
             callbacks=None,
             recursion_limit=5,
+<<<<<<< HEAD
             run_id=None,
+=======
+>>>>>>> langchan/master
         ),
     )
     second_call = next(call for call in spy.call_args_list if call.args[0] == "wooorld")
@@ -1629,7 +1658,10 @@ async def test_with_config(mocker: MockerFixture) -> None:
             tags=["c"],
             callbacks=None,
             recursion_limit=5,
+<<<<<<< HEAD
             run_id=None,
+=======
+>>>>>>> langchan/master
         ),
     )
 
@@ -1700,7 +1732,10 @@ async def test_default_method_implementations(mocker: MockerFixture) -> None:
             tags=[],
             callbacks=None,
             recursion_limit=25,
+<<<<<<< HEAD
             run_id=None,
+=======
+>>>>>>> langchan/master
         )
 
 

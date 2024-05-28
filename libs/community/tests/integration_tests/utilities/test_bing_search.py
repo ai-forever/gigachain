@@ -1,5 +1,8 @@
 """Integration test for Bing Search API Wrapper."""
+<<<<<<< HEAD
 
+=======
+>>>>>>> langchan/master
 from langchain_community.utilities.bing_search import BingSearchAPIWrapper
 
 

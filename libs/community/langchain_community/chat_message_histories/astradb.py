@@ -1,5 +1,8 @@
 """Astra DB - based chat message history, based on astrapy."""
+<<<<<<< HEAD
 
+=======
+>>>>>>> langchan/master
 from __future__ import annotations
 
 import json

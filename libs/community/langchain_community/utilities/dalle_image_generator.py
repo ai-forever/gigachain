@@ -1,5 +1,8 @@
 """Utility that calls OpenAI's Dall-E Image Generator."""
+<<<<<<< HEAD
 
+=======
+>>>>>>> langchan/master
 import logging
 import os
 from typing import Any, Dict, Mapping, Optional, Tuple, Union

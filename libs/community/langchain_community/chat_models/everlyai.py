@@ -1,5 +1,8 @@
 """EverlyAI Endpoints chat wrapper. Relies heavily on ChatOpenAI."""
+<<<<<<< HEAD
 
+=======
+>>>>>>> langchan/master
 from __future__ import annotations
 
 import logging

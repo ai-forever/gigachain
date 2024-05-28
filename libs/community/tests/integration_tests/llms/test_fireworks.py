@@ -1,5 +1,8 @@
 """Test Fireworks AI API Wrapper."""
+<<<<<<< HEAD
 
+=======
+>>>>>>> langchan/master
 from typing import Generator
 
 import pytest

@@ -65,4 +65,8 @@ class JsonFormer(HuggingFacePipeline):
             debug=self.debug,
         )
         text = model()
+<<<<<<< HEAD
         return json.dumps(text, ensure_ascii=False)
+=======
+        return json.dumps(text)
+>>>>>>> langchan/master

@@ -1,5 +1,8 @@
 """Module for parsing text files.."""
+<<<<<<< HEAD
 
+=======
+>>>>>>> langchan/master
 from typing import Iterator
 
 from langchain_core.documents import Document

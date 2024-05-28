@@ -1,5 +1,8 @@
 """Wrapper around Google VertexAI chat-based models."""
+<<<<<<< HEAD
 
+=======
+>>>>>>> langchan/master
 from __future__ import annotations
 
 import base64

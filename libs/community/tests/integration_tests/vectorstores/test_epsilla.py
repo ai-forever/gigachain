@@ -1,5 +1,8 @@
 """Test Epsilla functionality."""
+<<<<<<< HEAD
 
+=======
+>>>>>>> langchan/master
 from langchain_community.vectorstores import Epsilla
 from tests.integration_tests.vectorstores.fake_embeddings import (
     FakeEmbeddings,

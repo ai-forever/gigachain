@@ -1,5 +1,8 @@
 """Fake ChatModel for testing purposes."""
+<<<<<<< HEAD
 
+=======
+>>>>>>> langchan/master
 import asyncio
 import re
 import time

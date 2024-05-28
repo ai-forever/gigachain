@@ -14,6 +14,15 @@ class XinferenceEmbeddings(Embeddings):
 
         pip install xinference
 
+<<<<<<< HEAD
+=======
+    If you're simply using the services provided by Xinference, you can utilize the xinference_client package:
+
+    .. code-block:: bash
+
+        pip install xinference_client
+
+>>>>>>> langchan/master
     Check out: https://github.com/xorbitsai/inference
     To run, you need to start a Xinference supervisor on one server and Xinference workers on the other servers.
 
@@ -32,6 +41,15 @@ class XinferenceEmbeddings(Embeddings):
 
            $ xinference-supervisor
 
+<<<<<<< HEAD
+=======
+        If you're simply using the services provided by Xinference, you can utilize the xinference_client package:
+
+        .. code-block:: bash
+
+            pip install xinference_client
+
+>>>>>>> langchan/master
         Starting the worker:
 
         .. code-block:: bash
@@ -72,11 +90,22 @@ class XinferenceEmbeddings(Embeddings):
     ):
         try:
             from xinference.client import RESTfulClient
+<<<<<<< HEAD
         except ImportError as e:
             raise ImportError(
                 "Could not import RESTfulClient from xinference. Please install it"
                 " with `pip install xinference`."
             ) from e
+=======
+        except ImportError:
+            try:
+                from xinference_client import RESTfulClient
+            except ImportError as e:
+                raise ImportError(
+                    "Could not import RESTfulClient from xinference. Please install it"
+                    " with `pip install xinference` or `pip install xinference_client`."
+                ) from e
+>>>>>>> langchan/master
 
         super().__init__()
 

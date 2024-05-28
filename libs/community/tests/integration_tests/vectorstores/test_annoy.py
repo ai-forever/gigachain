@@ -1,5 +1,8 @@
 """Test Annoy functionality."""
+<<<<<<< HEAD
 
+=======
+>>>>>>> langchan/master
 import tempfile
 
 import pytest

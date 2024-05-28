@@ -1,16 +1,31 @@
 import asyncio
 from typing import (
     Any,
+<<<<<<< HEAD
+=======
+    Dict,
+>>>>>>> langchan/master
     Iterable,
     List,
     Optional,
     Tuple,
 )
 
+<<<<<<< HEAD
+=======
+import numpy as np
+>>>>>>> langchan/master
 from langchain_core.documents import Document
 from langchain_core.embeddings import Embeddings
 from langchain_core.vectorstores import VectorStore
 
+<<<<<<< HEAD
+=======
+from langchain_community.vectorstores.utils import maximal_marginal_relevance
+
+DEFAULT_K = 4  # Number of Documents to return.
+
+>>>>>>> langchan/master
 
 class SurrealDBStore(VectorStore):
     """
@@ -202,14 +217,28 @@ class SurrealDBStore(VectorStore):
         return asyncio.run(_delete(ids, **kwargs))
 
     async def _asimilarity_search_by_vector_with_score(
+<<<<<<< HEAD
         self, embedding: List[float], k: int = 4, **kwargs: Any
     ) -> List[Tuple[Document, float]]:
+=======
+        self,
+        embedding: List[float],
+        k: int = DEFAULT_K,
+        *,
+        filter: Optional[Dict[str, str]] = None,
+        **kwargs: Any,
+    ) -> List[Tuple[Document, float, Any]]:
+>>>>>>> langchan/master
         """Run similarity search for query embedding asynchronously
         and return documents and scores
 
         Args:
             embedding (List[float]): Query embedding.
             k (int): Number of results to return. Defaults to 4.
+<<<<<<< HEAD
+=======
+            filter (Optional[Dict[str, str]]): Filter by metadata. Defaults to None.
+>>>>>>> langchan/master
 
         Returns:
             List of Documents most similar along with scores
@@ -220,14 +249,38 @@ class SurrealDBStore(VectorStore):
             "k": k,
             "score_threshold": kwargs.get("score_threshold", 0),
         }
+<<<<<<< HEAD
+=======
+
+        # build additional filter criteria
+        custom_filter = ""
+        if filter:
+            for key in filter:
+                # check value type
+                if type(filter[key]) in [str, bool]:
+                    filter_value = f"'{filter[key]}'"
+                else:
+                    filter_value = f"{filter[key]}"
+
+                custom_filter += f"and metadata.{key} = {filter_value} "
+
+>>>>>>> langchan/master
         query = f"""
         select
             id,
             text,
             metadata,
+<<<<<<< HEAD
             vector::similarity::cosine(embedding, $embedding) as similarity
         from ⟨{args["collection"]}⟩
         where vector::similarity::cosine(embedding, $embedding) >= $score_threshold
+=======
+            embedding,
+            vector::similarity::cosine(embedding, $embedding) as similarity
+        from ⟨{args["collection"]}⟩
+        where vector::similarity::cosine(embedding, $embedding) >= $score_threshold
+          {custom_filter}
+>>>>>>> langchan/master
         order by similarity desc LIMIT $k;
         """
         results = await self.sdb.query(query, args)
@@ -247,21 +300,41 @@ class SurrealDBStore(VectorStore):
             (
                 Document(
                     page_content=doc["text"],
+<<<<<<< HEAD
                     metadata={"id": doc["id"], **(doc.get("metadata", None) or {})},
                 ),
                 doc["similarity"],
+=======
+                    metadata={"id": doc["id"], **(doc.get("metadata") or {})},
+                ),
+                doc["similarity"],
+                doc["embedding"],
+>>>>>>> langchan/master
             )
             for doc in result["result"]
         ]
 
     async def asimilarity_search_with_relevance_scores(
+<<<<<<< HEAD
         self, query: str, k: int = 4, **kwargs: Any
+=======
+        self,
+        query: str,
+        k: int = DEFAULT_K,
+        *,
+        filter: Optional[Dict[str, str]] = None,
+        **kwargs: Any,
+>>>>>>> langchan/master
     ) -> List[Tuple[Document, float]]:
         """Run similarity search asynchronously and return relevance scores
 
         Args:
             query (str): Query
             k (int): Number of results to return. Defaults to 4.
+<<<<<<< HEAD
+=======
+            filter (Optional[Dict[str, str]]): Filter by metadata. Defaults to None.
+>>>>>>> langchan/master
 
         Returns:
             List of Documents most similar along with relevance scores
@@ -269,21 +342,40 @@ class SurrealDBStore(VectorStore):
         query_embedding = self.embedding_function.embed_query(query)
         return [
             (document, similarity)
+<<<<<<< HEAD
             for document, similarity in (
                 await self._asimilarity_search_by_vector_with_score(
                     query_embedding, k, **kwargs
+=======
+            for document, similarity, _ in (
+                await self._asimilarity_search_by_vector_with_score(
+                    query_embedding, k, filter=filter, **kwargs
+>>>>>>> langchan/master
                 )
             )
         ]
 
     def similarity_search_with_relevance_scores(
+<<<<<<< HEAD
         self, query: str, k: int = 4, **kwargs: Any
+=======
+        self,
+        query: str,
+        k: int = DEFAULT_K,
+        *,
+        filter: Optional[Dict[str, str]] = None,
+        **kwargs: Any,
+>>>>>>> langchan/master
     ) -> List[Tuple[Document, float]]:
         """Run similarity search synchronously and return relevance scores
 
         Args:
             query (str): Query
             k (int): Number of results to return. Defaults to 4.
+<<<<<<< HEAD
+=======
+            filter (Optional[Dict[str, str]]): Filter by metadata. Defaults to None.
+>>>>>>> langchan/master
 
         Returns:
             List of Documents most similar along with relevance scores
@@ -294,19 +386,36 @@ class SurrealDBStore(VectorStore):
         ):
             await self.initialize()
             return await self.asimilarity_search_with_relevance_scores(
+<<<<<<< HEAD
                 query, k, **kwargs
+=======
+                query, k, filter=filter, **kwargs
+>>>>>>> langchan/master
             )
 
         return asyncio.run(_similarity_search_with_relevance_scores())
 
     async def asimilarity_search_with_score(
+<<<<<<< HEAD
         self, query: str, k: int = 4, **kwargs: Any
+=======
+        self,
+        query: str,
+        k: int = DEFAULT_K,
+        *,
+        filter: Optional[Dict[str, str]] = None,
+        **kwargs: Any,
+>>>>>>> langchan/master
     ) -> List[Tuple[Document, float]]:
         """Run similarity search asynchronously and return distance scores
 
         Args:
             query (str): Query
             k (int): Number of results to return. Defaults to 4.
+<<<<<<< HEAD
+=======
+            filter (Optional[Dict[str, str]]): Filter by metadata. Defaults to None.
+>>>>>>> langchan/master
 
         Returns:
             List of Documents most similar along with relevance distance scores
@@ -314,21 +423,40 @@ class SurrealDBStore(VectorStore):
         query_embedding = self.embedding_function.embed_query(query)
         return [
             (document, similarity)
+<<<<<<< HEAD
             for document, similarity in (
                 await self._asimilarity_search_by_vector_with_score(
                     query_embedding, k, **kwargs
+=======
+            for document, similarity, _ in (
+                await self._asimilarity_search_by_vector_with_score(
+                    query_embedding, k, filter=filter, **kwargs
+>>>>>>> langchan/master
                 )
             )
         ]
 
     def similarity_search_with_score(
+<<<<<<< HEAD
         self, query: str, k: int = 4, **kwargs: Any
+=======
+        self,
+        query: str,
+        k: int = DEFAULT_K,
+        *,
+        filter: Optional[Dict[str, str]] = None,
+        **kwargs: Any,
+>>>>>>> langchan/master
     ) -> List[Tuple[Document, float]]:
         """Run similarity search synchronously and return distance scores
 
         Args:
             query (str): Query
             k (int): Number of results to return. Defaults to 4.
+<<<<<<< HEAD
+=======
+            filter (Optional[Dict[str, str]]): Filter by metadata. Defaults to None.
+>>>>>>> langchan/master
 
         Returns:
             List of Documents most similar along with relevance distance scores
@@ -336,37 +464,74 @@ class SurrealDBStore(VectorStore):
 
         async def _similarity_search_with_score() -> List[Tuple[Document, float]]:
             await self.initialize()
+<<<<<<< HEAD
             return await self.asimilarity_search_with_score(query, k, **kwargs)
+=======
+            return await self.asimilarity_search_with_score(
+                query, k, filter=filter, **kwargs
+            )
+>>>>>>> langchan/master
 
         return asyncio.run(_similarity_search_with_score())
 
     async def asimilarity_search_by_vector(
+<<<<<<< HEAD
         self, embedding: List[float], k: int = 4, **kwargs: Any
+=======
+        self,
+        embedding: List[float],
+        k: int = DEFAULT_K,
+        *,
+        filter: Optional[Dict[str, str]] = None,
+        **kwargs: Any,
+>>>>>>> langchan/master
     ) -> List[Document]:
         """Run similarity search on query embedding asynchronously
 
         Args:
             embedding (List[float]): Query embedding
             k (int): Number of results to return. Defaults to 4.
+<<<<<<< HEAD
+=======
+            filter (Optional[Dict[str, str]]): Filter by metadata. Defaults to None.
+>>>>>>> langchan/master
 
         Returns:
             List of Documents most similar to the query
         """
         return [
             document
+<<<<<<< HEAD
             for document, _ in await self._asimilarity_search_by_vector_with_score(
                 embedding, k, **kwargs
+=======
+            for document, _, _ in await self._asimilarity_search_by_vector_with_score(
+                embedding, k, filter=filter, **kwargs
+>>>>>>> langchan/master
             )
         ]
 
     def similarity_search_by_vector(
+<<<<<<< HEAD
         self, embedding: List[float], k: int = 4, **kwargs: Any
+=======
+        self,
+        embedding: List[float],
+        k: int = DEFAULT_K,
+        *,
+        filter: Optional[Dict[str, str]] = None,
+        **kwargs: Any,
+>>>>>>> langchan/master
     ) -> List[Document]:
         """Run similarity search on query embedding
 
         Args:
             embedding (List[float]): Query embedding
             k (int): Number of results to return. Defaults to 4.
+<<<<<<< HEAD
+=======
+            filter (Optional[Dict[str, str]]): Filter by metadata. Defaults to None.
+>>>>>>> langchan/master
 
         Returns:
             List of Documents most similar to the query
@@ -374,33 +539,70 @@ class SurrealDBStore(VectorStore):
 
         async def _similarity_search_by_vector() -> List[Document]:
             await self.initialize()
+<<<<<<< HEAD
             return await self.asimilarity_search_by_vector(embedding, k, **kwargs)
+=======
+            return await self.asimilarity_search_by_vector(
+                embedding, k, filter=filter, **kwargs
+            )
+>>>>>>> langchan/master
 
         return asyncio.run(_similarity_search_by_vector())
 
     async def asimilarity_search(
+<<<<<<< HEAD
         self, query: str, k: int = 4, **kwargs: Any
+=======
+        self,
+        query: str,
+        k: int = DEFAULT_K,
+        *,
+        filter: Optional[Dict[str, str]] = None,
+        **kwargs: Any,
+>>>>>>> langchan/master
     ) -> List[Document]:
         """Run similarity search on query asynchronously
 
         Args:
             query (str): Query
             k (int): Number of results to return. Defaults to 4.
+<<<<<<< HEAD
+=======
+            filter (Optional[Dict[str, str]]): Filter by metadata. Defaults to None.
+>>>>>>> langchan/master
 
         Returns:
             List of Documents most similar to the query
         """
         query_embedding = self.embedding_function.embed_query(query)
+<<<<<<< HEAD
         return await self.asimilarity_search_by_vector(query_embedding, k, **kwargs)
 
     def similarity_search(
         self, query: str, k: int = 4, **kwargs: Any
+=======
+        return await self.asimilarity_search_by_vector(
+            query_embedding, k, filter=filter, **kwargs
+        )
+
+    def similarity_search(
+        self,
+        query: str,
+        k: int = DEFAULT_K,
+        *,
+        filter: Optional[Dict[str, str]] = None,
+        **kwargs: Any,
+>>>>>>> langchan/master
     ) -> List[Document]:
         """Run similarity search on query
 
         Args:
             query (str): Query
             k (int): Number of results to return. Defaults to 4.
+<<<<<<< HEAD
+=======
+            filter (Optional[Dict[str, str]]): Filter by metadata. Defaults to None.
+>>>>>>> langchan/master
 
         Returns:
             List of Documents most similar to the query
@@ -408,10 +610,171 @@ class SurrealDBStore(VectorStore):
 
         async def _similarity_search() -> List[Document]:
             await self.initialize()
+<<<<<<< HEAD
             return await self.asimilarity_search(query, k, **kwargs)
 
         return asyncio.run(_similarity_search())
 
+=======
+            return await self.asimilarity_search(query, k, filter=filter, **kwargs)
+
+        return asyncio.run(_similarity_search())
+
+    async def amax_marginal_relevance_search_by_vector(
+        self,
+        embedding: List[float],
+        k: int = DEFAULT_K,
+        fetch_k: int = 20,
+        lambda_mult: float = 0.5,
+        *,
+        filter: Optional[Dict[str, str]] = None,
+        **kwargs: Any,
+    ) -> List[Document]:
+        """Return docs selected using the maximal marginal relevance.
+        Maximal marginal relevance optimizes for similarity to query AND diversity
+        among selected documents.
+
+        Args:
+            embedding: Embedding to look up documents similar to.
+            k: Number of Documents to return. Defaults to 4.
+            fetch_k: Number of Documents to fetch to pass to MMR algorithm.
+            lambda_mult: Number between 0 and 1 that determines the degree
+                        of diversity among the results with 0 corresponding
+                        to maximum diversity and 1 to minimum diversity.
+                        Defaults to 0.5.
+            filter (Optional[Dict[str, str]]): Filter by metadata. Defaults to None.
+
+        Returns:
+            List of Documents selected by maximal marginal relevance.
+        """
+
+        result = await self._asimilarity_search_by_vector_with_score(
+            embedding, fetch_k, filter=filter, **kwargs
+        )
+
+        # extract only document from result
+        docs = [sub[0] for sub in result]
+        # extract only embedding from result
+        embeddings = [sub[-1] for sub in result]
+
+        mmr_selected = maximal_marginal_relevance(
+            np.array(embedding, dtype=np.float32),
+            embeddings,
+            k=k,
+            lambda_mult=lambda_mult,
+        )
+
+        return [docs[i] for i in mmr_selected]
+
+    def max_marginal_relevance_search_by_vector(
+        self,
+        embedding: List[float],
+        k: int = DEFAULT_K,
+        fetch_k: int = 20,
+        lambda_mult: float = 0.5,
+        *,
+        filter: Optional[Dict[str, str]] = None,
+        **kwargs: Any,
+    ) -> List[Document]:
+        """Return docs selected using the maximal marginal relevance.
+
+        Maximal marginal relevance optimizes for similarity to query AND diversity
+        among selected documents.
+
+        Args:
+            embedding: Embedding to look up documents similar to.
+            k: Number of Documents to return. Defaults to 4.
+            fetch_k: Number of Documents to fetch to pass to MMR algorithm.
+            lambda_mult: Number between 0 and 1 that determines the degree
+                        of diversity among the results with 0 corresponding
+                        to maximum diversity and 1 to minimum diversity.
+                        Defaults to 0.5.
+            filter (Optional[Dict[str, str]]): Filter by metadata. Defaults to None.
+
+        Returns:
+            List of Documents selected by maximal marginal relevance.
+        """
+
+        async def _max_marginal_relevance_search_by_vector() -> List[Document]:
+            await self.initialize()
+            return await self.amax_marginal_relevance_search_by_vector(
+                embedding, k, fetch_k, lambda_mult, filter=filter, **kwargs
+            )
+
+        return asyncio.run(_max_marginal_relevance_search_by_vector())
+
+    async def amax_marginal_relevance_search(
+        self,
+        query: str,
+        k: int = 4,
+        fetch_k: int = 20,
+        lambda_mult: float = 0.5,
+        *,
+        filter: Optional[Dict[str, str]] = None,
+        **kwargs: Any,
+    ) -> List[Document]:
+        """Return docs selected using the maximal marginal relevance.
+
+        Maximal marginal relevance optimizes for similarity to query AND diversity
+        among selected documents.
+
+        Args:
+            query: Text to look up documents similar to.
+            k: Number of Documents to return. Defaults to 4.
+            fetch_k: Number of Documents to fetch to pass to MMR algorithm.
+            lambda_mult: Number between 0 and 1 that determines the degree
+                        of diversity among the results with 0 corresponding
+                        to maximum diversity and 1 to minimum diversity.
+                        Defaults to 0.5.
+            filter (Optional[Dict[str, str]]): Filter by metadata. Defaults to None.
+
+        Returns:
+            List of Documents selected by maximal marginal relevance.
+        """
+
+        embedding = self.embedding_function.embed_query(query)
+        docs = await self.amax_marginal_relevance_search_by_vector(
+            embedding, k, fetch_k, lambda_mult, filter=filter, **kwargs
+        )
+        return docs
+
+    def max_marginal_relevance_search(
+        self,
+        query: str,
+        k: int = DEFAULT_K,
+        fetch_k: int = 20,
+        lambda_mult: float = 0.5,
+        *,
+        filter: Optional[Dict[str, str]] = None,
+        **kwargs: Any,
+    ) -> List[Document]:
+        """Return docs selected using the maximal marginal relevance.
+        Maximal marginal relevance optimizes for similarity to query AND diversity
+        among selected documents.
+
+        Args:
+            query: Text to look up documents similar to.
+            k: Number of Documents to return. Defaults to 4.
+            fetch_k: Number of Documents to fetch to pass to MMR algorithm.
+            lambda_mult: Number between 0 and 1 that determines the degree
+                        of diversity among the results with 0 corresponding
+                        to maximum diversity and 1 to minimum diversity.
+                        Defaults to 0.5.
+            filter (Optional[Dict[str, str]]): Filter by metadata. Defaults to None.
+
+        Returns:
+            List of Documents selected by maximal marginal relevance.
+        """
+
+        async def _max_marginal_relevance_search() -> List[Document]:
+            await self.initialize()
+            return await self.amax_marginal_relevance_search(
+                query, k, fetch_k, lambda_mult, filter=filter, **kwargs
+            )
+
+        return asyncio.run(_max_marginal_relevance_search())
+
+>>>>>>> langchan/master
     @classmethod
     async def afrom_texts(
         cls,

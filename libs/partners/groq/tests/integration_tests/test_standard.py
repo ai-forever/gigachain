@@ -14,6 +14,20 @@ class TestMistralStandard(ChatModelIntegrationTests):
     def chat_model_class(self) -> Type[BaseChatModel]:
         return ChatGroq
 
+<<<<<<< HEAD
+=======
+    @pytest.mark.xfail(reason="Not implemented.")
+    def test_usage_metadata(
+        self,
+        chat_model_class: Type[BaseChatModel],
+        chat_model_params: dict,
+    ) -> None:
+        super().test_usage_metadata(
+            chat_model_class,
+            chat_model_params,
+        )
+
+>>>>>>> langchan/master
     @pytest.mark.xfail(reason="Not yet implemented.")
     def test_tool_message_histories_list_content(
         self,

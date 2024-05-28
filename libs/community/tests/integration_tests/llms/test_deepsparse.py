@@ -1,5 +1,8 @@
 """Test DeepSparse wrapper."""
+<<<<<<< HEAD
 
+=======
+>>>>>>> langchan/master
 from langchain_community.llms import DeepSparse
 
 

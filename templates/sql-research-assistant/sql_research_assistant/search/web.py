@@ -40,7 +40,11 @@ def scrape_text(url: str):
         else:
             return f"Failed to retrieve the webpage: Status code {response.status_code}"
     except Exception as e:
+<<<<<<< HEAD
         print(e)  # noqa: T201
+=======
+        print(e)
+>>>>>>> langchan/master
         return f"Failed to retrieve the webpage: {e}"
 
 

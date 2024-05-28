@@ -1,10 +1,16 @@
 """Test Xata vector store functionality.
 
 Before running this test, please create a Xata database by following
+<<<<<<< HEAD
 the instructions from:
 https://python.langchain.com/docs/integrations/vectorstores/xata
 """
 
+=======
+the instructions from: 
+https://python.langchain.com/docs/integrations/vectorstores/xata
+"""
+>>>>>>> langchan/master
 import os
 
 from langchain_core.documents import Document

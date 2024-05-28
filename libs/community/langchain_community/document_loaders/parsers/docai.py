@@ -4,7 +4,10 @@ You need to install two libraries to use this parser:
 pip install google-cloud-documentai
 pip install google-cloud-documentai-toolbox
 """
+<<<<<<< HEAD
 
+=======
+>>>>>>> langchan/master
 import logging
 import re
 import time

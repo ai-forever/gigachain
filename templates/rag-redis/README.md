@@ -46,12 +46,20 @@ pip install -U langchain-cli pydantic==1.10.13
 To create a new LangChain project and install this as the only package, you can do:
 
 ```shell
+<<<<<<< HEAD
 gigachain app new my-app --package rag-redis
+=======
+langchain app new my-app --package rag-redis
+>>>>>>> langchan/master
 ```
 
 If you want to add this to an existing project, you can just run:
 ```shell
+<<<<<<< HEAD
 gigachain app add rag-redis
+=======
+langchain app add rag-redis
+>>>>>>> langchan/master
 ```
 
 And add the following code snippet to your `app/server.py` file:
@@ -76,7 +84,11 @@ export LANGCHAIN_PROJECT=<your-project>  # if not specified, defaults to "defaul
 If you are inside this directory, then you can spin up a LangServe instance directly by:
 
 ```shell
+<<<<<<< HEAD
 gigachain serve
+=======
+langchain serve
+>>>>>>> langchan/master
 ```
 
 This will start the FastAPI app with a server is running locally at

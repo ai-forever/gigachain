@@ -1,5 +1,8 @@
 """Util that calls bibtexparser."""
+<<<<<<< HEAD
 
+=======
+>>>>>>> langchan/master
 import logging
 from typing import Any, Dict, List, Mapping
 

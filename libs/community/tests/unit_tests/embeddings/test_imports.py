@@ -1,6 +1,10 @@
 from langchain_community.embeddings import __all__, _module_lookup
 
 EXPECTED_ALL = [
+<<<<<<< HEAD
+=======
+    "ClovaEmbeddings",
+>>>>>>> langchan/master
     "OpenAIEmbeddings",
     "AnyscaleEmbeddings",
     "AzureOpenAIEmbeddings",
@@ -14,7 +18,10 @@ EXPECTED_ALL = [
     "HuggingFaceInferenceAPIEmbeddings",
     "InfinityEmbeddings",
     "InfinityEmbeddingsLocal",
+<<<<<<< HEAD
     "GigaChatEmbeddings",
+=======
+>>>>>>> langchan/master
     "GradientEmbeddings",
     "JinaEmbeddings",
     "LaserEmbeddings",

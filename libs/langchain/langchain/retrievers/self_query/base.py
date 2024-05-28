@@ -148,6 +148,7 @@ def _get_builtin_translator(vectorstore: VectorStore) -> Visitor:
             if isinstance(vectorstore, PineconeVectorStore):
                 return PineconeTranslator()
 
+<<<<<<< HEAD
         try:
             from langchain_elasticsearch.vectorstores import ElasticsearchStore
 
@@ -156,6 +157,8 @@ def _get_builtin_translator(vectorstore: VectorStore) -> Visitor:
         except ImportError:
             pass
 
+=======
+>>>>>>> langchan/master
         raise ValueError(
             f"Self query retriever with Vector Store type {vectorstore.__class__}"
             f" not supported."

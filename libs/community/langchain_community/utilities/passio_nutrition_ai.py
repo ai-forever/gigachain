@@ -1,5 +1,10 @@
+<<<<<<< HEAD
 """Util that invokes the Passio Nutrition AI API."""
 
+=======
+"""Util that invokes the Passio Nutrition AI API.
+"""
+>>>>>>> langchan/master
 from datetime import datetime, timedelta
 from typing import Any, Callable, Dict, Optional, final
 

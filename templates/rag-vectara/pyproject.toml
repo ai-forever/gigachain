@@ -9,14 +9,29 @@ readme = "README.md"
 
 [tool.poetry.dependencies]
 python = ">=3.8.1,<4.0"
+<<<<<<< HEAD
 gigachain = ">=0.0.325"
+=======
+langchain = "^0.1"
+>>>>>>> langchan/master
 openai = "<2"
 tiktoken = "^0.5.1"
 
 [tool.poetry.group.dev.dependencies]
+<<<<<<< HEAD
 gigachain-cli = ">=0.0.21"
 
 [tool.gigaserve]
+=======
+langchain-cli = ">=0.0.21"
+[tool.poetry.group.dev.dependencies.python-dotenv]
+extras = [
+    "cli",
+]
+version = "^1.0.0"
+
+[tool.langserve]
+>>>>>>> langchan/master
 export_module = "rag_vectara"
 export_attr = "chain"
 

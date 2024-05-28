@@ -52,7 +52,15 @@ Matrix = Union[List[List[float]], List[np.ndarray], np.ndarray]
 
 
 def cosine_similarity(X: Matrix, Y: Matrix) -> np.ndarray:
+<<<<<<< HEAD
     """Row-wise cosine similarity between two equal-width matrices."""
+=======
+    """Row-wise cosine similarity between two equal-width matrices.
+
+    Raises:
+        ValueError: If the number of columns in X and Y are not the same.
+    """
+>>>>>>> langchan/master
     if len(X) == 0 or len(Y) == 0:
         return np.array([])
 
@@ -80,7 +88,25 @@ def maximal_marginal_relevance(
     lambda_mult: float = 0.5,
     k: int = 4,
 ) -> List[int]:
+<<<<<<< HEAD
     """Calculate maximal marginal relevance."""
+=======
+    """Calculate maximal marginal relevance.
+
+    Args:
+        query_embedding: Query embedding.
+        embedding_list: List of embeddings to select from.
+        lambda_mult: Number between 0 and 1 that determines the degree
+                of diversity among the results with 0 corresponding
+                to maximum diversity and 1 to minimum diversity.
+                Defaults to 0.5.
+        k: Number of Documents to return. Defaults to 4.
+
+    Returns:
+        List of indices of embeddings selected by maximal marginal relevance.
+    """
+
+>>>>>>> langchan/master
     if min(k, len(embedding_list)) <= 0:
         return []
     if query_embedding.ndim == 1:
@@ -136,8 +162,26 @@ class Chroma(VectorStore):
         relevance_score_fn: Optional[Callable[[float], float]] = None,
         create_collection_if_not_exists: Optional[bool] = True,
     ) -> None:
+<<<<<<< HEAD
         """Initialize with a Chroma client."""
 
+=======
+        """Initialize with a Chroma client.
+
+        Args:
+            collection_name: Name of the collection to create.
+            embedding_function: Embedding class object. Used to embed texts.
+            persist_director: Directory to persist the collection.
+            client_settings: Chroma client settings
+            collection_metadata: Collection configurations.
+            client: Chroma client. Documentation:
+                    https://docs.trychroma.com/reference/js-client#class:-chromaclient
+            relevance_score_fn: Function to calculate relevance score from distance.
+                    Used only in `similarity_search_with_relevance_scores`
+            create_collection_if_not_exists: Whether to create collection
+                    if it doesn't exist. Defaults to True.
+        """
+>>>>>>> langchan/master
         if client is not None:
             self._client_settings = client_settings
             self._client = client
@@ -163,6 +207,7 @@ class Chroma(VectorStore):
             )
 
         self._embedding_function = embedding_function
+<<<<<<< HEAD
         if create_collection_if_not_exists:
             self._collection = self._client.get_or_create_collection(
                 name=collection_name,
@@ -173,6 +218,35 @@ class Chroma(VectorStore):
             self._collection = self._client.get_collection(name=collection_name)
         self.override_relevance_score_fn = relevance_score_fn
 
+=======
+        self._chroma_collection: Optional[chromadb.Collection] = None
+        self._collection_name = collection_name
+        self._collection_metadata = collection_metadata
+        if create_collection_if_not_exists:
+            self.__ensure_collection()
+        else:
+            self._chroma_collection = self._client.get_collection(name=collection_name)
+        self.override_relevance_score_fn = relevance_score_fn
+
+    def __ensure_collection(self) -> None:
+        """Ensure that the collection exists or create it."""
+        self._chroma_collection = self._client.get_or_create_collection(
+            name=self._collection_name,
+            embedding_function=None,
+            metadata=self._collection_metadata,
+        )
+
+    @property
+    def _collection(self) -> chromadb.Collection:
+        """Returns the underlying Chroma collection or throws an exception."""
+        if self._chroma_collection is None:
+            raise ValueError(
+                "Chroma collection not initialized. "
+                "Use `reset_collection` to re-create and initialize the collection. "
+            )
+        return self._chroma_collection
+
+>>>>>>> langchan/master
     @property
     def embeddings(self) -> Optional[Embeddings]:
         return self._embedding_function
@@ -187,7 +261,27 @@ class Chroma(VectorStore):
         where_document: Optional[Dict[str, str]] = None,
         **kwargs: Any,
     ) -> Union[List[Document], chromadb.QueryResult]:
+<<<<<<< HEAD
         """Query the chroma collection."""
+=======
+        """Query the chroma collection.
+
+        Args:
+            query_texts: List of query texts.
+            query_embeddings: List of query embeddings.
+            n_results: Number of results to return. Defaults to 4.
+            where: dict used to filter results by
+                    e.g. {"color" : "red", "price": 4.20}.
+            where_document: dict used to filter by the documents.
+                    E.g. {$contains: {"text": "hello"}}.
+
+        Returns:
+            List of `n_results` nearest neighbor embeddings for provided
+            query_embeddings or query_texts.
+
+        See more: https://docs.trychroma.com/reference/py-collection#query
+        """
+>>>>>>> langchan/master
         return self._collection.query(
             query_texts=query_texts,
             query_embeddings=query_embeddings,  # type: ignore
@@ -212,12 +306,25 @@ class Chroma(VectorStore):
         """Run more images through the embeddings and add to the vectorstore.
 
         Args:
+<<<<<<< HEAD
             uris List[str]: File path to the image.
             metadatas (Optional[List[dict]], optional): Optional list of metadatas.
             ids (Optional[List[str]], optional): Optional list of IDs.
 
         Returns:
             List[str]: List of IDs of the added images.
+=======
+            uris: File path to the image.
+            metadatas: Optional list of metadatas.
+                    When querying, you can filter on this metadata.
+            ids: Optional list of IDs.
+
+        Returns:
+            List of IDs of the added images.
+
+        Raises:
+            ValueError: When metadata is incorrect.
+>>>>>>> langchan/master
         """
         # Map from uris to b64 encoded strings
         b64_texts = [self.encode_image(uri=uri) for uri in uris]
@@ -295,6 +402,7 @@ class Chroma(VectorStore):
         """Run more texts through the embeddings and add to the vectorstore.
 
         Args:
+<<<<<<< HEAD
             texts (Iterable[str]): Texts to add to the vectorstore.
             metadatas (Optional[List[dict]], optional): Optional list of metadatas.
             ids (Optional[List[str]], optional): Optional list of IDs.
@@ -303,6 +411,20 @@ class Chroma(VectorStore):
             List[str]: List of IDs of the added texts.
         """
         # TODO: Handle the case where the user doesn't provide ids on the Collection
+=======
+            texts: Texts to add to the vectorstore.
+            metadatas: Optional list of metadatas.
+                    When querying, you can filter on this metadata.
+            ids: Optional list of IDs.
+
+        Returns:
+            List of IDs of the added texts.
+
+        Raises:
+            ValueError: When metadata is incorrect.
+        """
+
+>>>>>>> langchan/master
         if ids is None:
             ids = [str(uuid.uuid4()) for _ in texts]
         embeddings = None
@@ -374,12 +496,21 @@ class Chroma(VectorStore):
         """Run similarity search with Chroma.
 
         Args:
+<<<<<<< HEAD
             query (str): Query text to search for.
             k (int): Number of results to return. Defaults to 4.
             filter (Optional[Dict[str, str]]): Filter by metadata. Defaults to None.
 
         Returns:
             List[Document]: List of documents most similar to the query text.
+=======
+            query: Query text to search for.
+            k: Number of results to return. Defaults to 4.
+            filter: Filter by metadata. Defaults to None.
+
+        Returns:
+            List of documents most similar to the query text.
+>>>>>>> langchan/master
         """
         docs_and_scores = self.similarity_search_with_score(
             query, k, filter=filter, **kwargs
@@ -395,10 +526,21 @@ class Chroma(VectorStore):
         **kwargs: Any,
     ) -> List[Document]:
         """Return docs most similar to embedding vector.
+<<<<<<< HEAD
         Args:
             embedding (List[float]): Embedding to look up documents similar to.
             k (int): Number of Documents to return. Defaults to 4.
             filter (Optional[Dict[str, str]]): Filter by metadata. Defaults to None.
+=======
+
+        Args:
+            embedding: Embedding to look up documents similar to.
+            k: Number of Documents to return. Defaults to 4.
+            filter: Filter by metadata. Defaults to None.
+            where_document: dict used to filter by the documents.
+                    E.g. {$contains: {"text": "hello"}}.
+
+>>>>>>> langchan/master
         Returns:
             List of Documents most similar to the query vector.
         """
@@ -424,6 +566,7 @@ class Chroma(VectorStore):
 
         Args:
             embedding (List[float]): Embedding to look up documents similar to.
+<<<<<<< HEAD
             k (int): Number of Documents to return. Defaults to 4.
             filter (Optional[Dict[str, str]]): Filter by metadata. Defaults to None.
 
@@ -431,6 +574,16 @@ class Chroma(VectorStore):
             List[Tuple[Document, float]]: List of documents most similar to
             the query text and cosine distance in float for each.
             Lower score represents more similarity.
+=======
+            k: Number of Documents to return. Defaults to 4.
+            filter: Filter by metadata. Defaults to None.
+            where_document: dict used to filter by the documents.
+                    E.g. {$contains: {"text": "hello"}}.
+
+        Returns:
+            List of documents most similar to the query text and relevance score
+            in float for each. Lower score represents more similarity.
+>>>>>>> langchan/master
         """
         results = self.__query_collection(
             query_embeddings=embedding,
@@ -452,6 +605,7 @@ class Chroma(VectorStore):
         """Run similarity search with Chroma with distance.
 
         Args:
+<<<<<<< HEAD
             query (str): Query text to search for.
             k (int): Number of results to return. Defaults to 4.
             filter (Optional[Dict[str, str]]): Filter by metadata. Defaults to None.
@@ -460,6 +614,17 @@ class Chroma(VectorStore):
             List[Tuple[Document, float]]: List of documents most similar to
             the query text and cosine distance in float for each.
             Lower score represents more similarity.
+=======
+            query: Query text to search for.
+            k: Number of results to return. Defaults to 4.
+            filter: Filter by metadata. Defaults to None.
+            where_document: dict used to filter by the documents.
+                    E.g. {$contains: {"text": "hello"}}.
+
+        Returns:
+            List of documents most similar to the query text and
+            distance in float for each. Lower score represents more similarity.
+>>>>>>> langchan/master
         """
         if self._embedding_function is None:
             results = self.__query_collection(
@@ -482,6 +647,7 @@ class Chroma(VectorStore):
         return _results_to_docs_and_scores(results)
 
     def _select_relevance_score_fn(self) -> Callable[[float], float]:
+<<<<<<< HEAD
         """
         The 'correct' relevance function
         may differ depending on a few things, including:
@@ -490,6 +656,23 @@ class Chroma(VectorStore):
         - embedding dimensionality
         - etc.
         """
+=======
+        """Select the relevance score function based on collections distance metric.
+
+        The most similar documents will have the lowest relevance score. Default
+        relevance score function is euclidean distance. Distance metric must be
+        provided in `collection_metadata` during initizalition of Chroma object.
+        Example: collection_metadata={"hnsw:space": "cosine"}. Available distance
+        metrics are: 'cosine', 'l2' and 'ip'.
+
+        Returns:
+            The relevance score function.
+
+        Raises:
+            ValueError: If the distance metric is not supported.
+        """
+
+>>>>>>> langchan/master
         if self.override_relevance_score_fn:
             return self.override_relevance_score_fn
 
@@ -524,18 +707,32 @@ class Chroma(VectorStore):
         **kwargs: Any,
     ) -> List[Document]:
         """Return docs selected using the maximal marginal relevance.
+<<<<<<< HEAD
+=======
+
+>>>>>>> langchan/master
         Maximal marginal relevance optimizes for similarity to query AND diversity
         among selected documents.
 
         Args:
             embedding: Embedding to look up documents similar to.
             k: Number of Documents to return. Defaults to 4.
+<<<<<<< HEAD
             fetch_k: Number of Documents to fetch to pass to MMR algorithm.
             lambda_mult: Number between 0 and 1 that determines the degree
                         of diversity among the results with 0 corresponding
                         to maximum diversity and 1 to minimum diversity.
                         Defaults to 0.5.
             filter (Optional[Dict[str, str]]): Filter by metadata. Defaults to None.
+=======
+            fetch_k: Number of Documents to fetch to pass to MMR algorithm. Defaults to
+                20.
+            lambda_mult: Number between 0 and 1 that determines the degree
+                of diversity among the results with 0 corresponding
+                to maximum diversity and 1 to minimum diversity.
+                Defaults to 0.5.
+            filter: Filter by metadata. Defaults to None.
+>>>>>>> langchan/master
 
         Returns:
             List of Documents selected by maximal marginal relevance.
@@ -583,10 +780,22 @@ class Chroma(VectorStore):
                         of diversity among the results with 0 corresponding
                         to maximum diversity and 1 to minimum diversity.
                         Defaults to 0.5.
+<<<<<<< HEAD
             filter (Optional[Dict[str, str]]): Filter by metadata. Defaults to None.
 
         Returns:
             List of Documents selected by maximal marginal relevance.
+=======
+            filter: Filter by metadata. Defaults to None.
+            where_document: dict used to filter by the documents.
+                    E.g. {$contains: {"text": "hello"}}.
+
+        Returns:
+            List of Documents selected by maximal marginal relevance.
+
+        Raises:
+            ValueError: If the embedding function is not provided.
+>>>>>>> langchan/master
         """
         if self._embedding_function is None:
             raise ValueError(
@@ -594,7 +803,11 @@ class Chroma(VectorStore):
             )
 
         embedding = self._embedding_function.embed_query(query)
+<<<<<<< HEAD
         docs = self.max_marginal_relevance_search_by_vector(
+=======
+        return self.max_marginal_relevance_search_by_vector(
+>>>>>>> langchan/master
             embedding,
             k,
             fetch_k,
@@ -602,11 +815,24 @@ class Chroma(VectorStore):
             filter=filter,
             where_document=where_document,
         )
+<<<<<<< HEAD
         return docs
+=======
+>>>>>>> langchan/master
 
     def delete_collection(self) -> None:
         """Delete the collection."""
         self._client.delete_collection(self._collection.name)
+<<<<<<< HEAD
+=======
+        self._chroma_collection = None
+
+    def reset_collection(self) -> None:
+        """Resets the collection by deleting the collection
+        and recreating an empty one."""
+        self.delete_collection()
+        self.__ensure_collection()
+>>>>>>> langchan/master
 
     def get(
         self,
@@ -632,6 +858,12 @@ class Chroma(VectorStore):
                      Can contain `"embeddings"`, `"metadatas"`, `"documents"`.
                      Ids are always included.
                      Defaults to `["metadatas", "documents"]`. Optional.
+<<<<<<< HEAD
+=======
+
+        Return:
+            A dict with the keys `"ids"`, `"embeddings"`, `"metadatas"`, `"documents"`.
+>>>>>>> langchan/master
         """
         kwargs = {
             "ids": ids,
@@ -650,8 +882,13 @@ class Chroma(VectorStore):
         """Update a document in the collection.
 
         Args:
+<<<<<<< HEAD
             document_id (str): ID of the document to update.
             document (Document): Document to update.
+=======
+            document_id: ID of the document to update.
+            document: Document to update.
+>>>>>>> langchan/master
         """
         return self.update_documents([document_id], [document])
 
@@ -660,8 +897,16 @@ class Chroma(VectorStore):
         """Update a document in the collection.
 
         Args:
+<<<<<<< HEAD
             ids (List[str]): List of ids of the document to update.
             documents (List[Document]): List of documents to update.
+=======
+            ids: List of ids of the document to update.
+            documents: List of documents to update.
+
+        Raises:
+            ValueError: If the embedding function is not provided.
+>>>>>>> langchan/master
         """
         text = [document.page_content for document in documents]
         metadata = [document.metadata for document in documents]
@@ -717,6 +962,7 @@ class Chroma(VectorStore):
         Otherwise, the data will be ephemeral in-memory.
 
         Args:
+<<<<<<< HEAD
             texts (List[str]): List of texts to add to the collection.
             collection_name (str): Name of the collection to create.
             persist_directory (Optional[str]): Directory to persist the collection.
@@ -725,6 +971,16 @@ class Chroma(VectorStore):
             ids (Optional[List[str]]): List of document IDs. Defaults to None.
             client_settings (Optional[chromadb.config.Settings]): Chroma client settings
             collection_metadata (Optional[Dict]): Collection configurations.
+=======
+            texts: List of texts to add to the collection.
+            collection_name: Name of the collection to create.
+            persist_directory: Directory to persist the collection.
+            embedding: Embedding function. Defaults to None.
+            metadatas: List of metadatas. Defaults to None.
+            ids: List of document IDs. Defaults to None.
+            client_settings: Chroma client settings
+            collection_metadata: Collection configurations.
+>>>>>>> langchan/master
                                                   Defaults to None.
 
         Returns:
@@ -780,6 +1036,7 @@ class Chroma(VectorStore):
         Otherwise, the data will be ephemeral in-memory.
 
         Args:
+<<<<<<< HEAD
             collection_name (str): Name of the collection to create.
             persist_directory (Optional[str]): Directory to persist the collection.
             ids (Optional[List[str]]): List of document IDs. Defaults to None.
@@ -787,6 +1044,15 @@ class Chroma(VectorStore):
             embedding (Optional[Embeddings]): Embedding function. Defaults to None.
             client_settings (Optional[chromadb.config.Settings]): Chroma client settings
             collection_metadata (Optional[Dict]): Collection configurations.
+=======
+            collection_name: Name of the collection to create.
+            persist_directory: Directory to persist the collection.
+            ids : List of document IDs. Defaults to None.
+            documents: List of documents to add to the vectorstore.
+            embedding: Embedding function. Defaults to None.
+            client_settings: Chroma client settings
+            collection_metadata: Collection configurations.
+>>>>>>> langchan/master
                                                   Defaults to None.
 
         Returns:

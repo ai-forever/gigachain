@@ -18,7 +18,11 @@ from langchain_core.outputs import (
     ChatGeneration,
     ChatResult,
 )
+<<<<<<< HEAD
 from langchain_core.pydantic_v1 import BaseModel, Extra, SecretStr
+=======
+from langchain_core.pydantic_v1 import BaseModel, Extra, Field, SecretStr
+>>>>>>> langchan/master
 
 logger = logging.getLogger(__name__)
 
@@ -65,9 +69,20 @@ class ChatJavelinAIGateway(BaseChatModel):
     client: Any
     """javelin client."""
 
+<<<<<<< HEAD
     javelin_api_key: Optional[SecretStr] = None
     """The API key for the Javelin AI Gateway."""
 
+=======
+    javelin_api_key: Optional[SecretStr] = Field(None, alias="api_key")
+    """The API key for the Javelin AI Gateway."""
+
+    class Config:
+        """Configuration for this pydantic object."""
+
+        allow_population_by_field_name = True
+
+>>>>>>> langchan/master
     def __init__(self, **kwargs: Any):
         try:
             from javelin_sdk import (

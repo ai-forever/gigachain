@@ -1,5 +1,8 @@
 """DEPRECATED: Kept for backwards compatibility."""
+<<<<<<< HEAD
 
+=======
+>>>>>>> langchan/master
 from langchain_core.utils.input import (
     get_bolded_text,
     get_color_mapping,

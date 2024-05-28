@@ -32,7 +32,11 @@ if importlib.util.find_spec("libcst"):
 
 def version_callback(show_version: bool) -> None:
     if show_version:
+<<<<<<< HEAD
         typer.echo(f"gigachain-cli {__version__}")
+=======
+        typer.echo(f"langchain-cli {__version__}")
+>>>>>>> langchan/master
         raise typer.Exit()
 
 
@@ -61,7 +65,11 @@ def serve(
     ] = None,
 ) -> None:
     """
+<<<<<<< HEAD
     Start the GigaServe app, whether it's a template or an app.
+=======
+    Start the LangServe app, whether it's a template or an app.
+>>>>>>> langchan/master
     """
 
     # see if is a template
@@ -77,6 +85,7 @@ def serve(
         template_namespace.serve(port=port, host=host)
 
 
+<<<<<<< HEAD
 @app.command()
 def install_rus_certs() -> None:
     """
@@ -102,5 +111,7 @@ def install_rus_certs() -> None:
         exit("Сертификат Минцифры установлен!")
 
 
+=======
+>>>>>>> langchan/master
 if __name__ == "__main__":
     app()

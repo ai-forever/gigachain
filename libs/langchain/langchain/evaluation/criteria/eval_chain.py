@@ -142,7 +142,11 @@ def resolve_criteria(
     >>> criterion = "relevance"
     >>> CriteriaEvalChain.resolve_criteria(criteria)
     {'relevance': 'Is the submission referring to a real quote from the text?'}
+<<<<<<< HEAD
     """  # noqa: E501
+=======
+    """
+>>>>>>> langchan/master
     if criteria is None:
         return {
             "helpfulness": _SUPPORTED_CRITERIA[Criteria.HELPFULNESS],
@@ -307,7 +311,11 @@ class CriteriaEvalChain(StringEvaluator, LLMEvalChain, LLMChain):
         >>> criterion = "relevance"
         >>> CriteriaEvalChain.resolve_criteria(criteria)
         {'relevance': 'Is the submission referring to a real quote from the text?'}
+<<<<<<< HEAD
         """  # noqa: E501
+=======
+        """
+>>>>>>> langchan/master
         return resolve_criteria(criteria)
 
     @classmethod

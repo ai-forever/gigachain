@@ -1,5 +1,8 @@
 """Integration test for JIRA API Wrapper."""
+<<<<<<< HEAD
 
+=======
+>>>>>>> langchan/master
 from langchain_community.utilities.jira import JiraAPIWrapper
 
 

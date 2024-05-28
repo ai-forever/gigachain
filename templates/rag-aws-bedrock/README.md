@@ -29,19 +29,31 @@ You should also set the following environment variables to reflect your AWS prof
 First, install the LangChain CLI:
 
 ```shell
+<<<<<<< HEAD
 pip install -U gigachain-cli
+=======
+pip install -U langchain-cli
+>>>>>>> langchan/master
 ```
 
 To create a new LangChain project and install this as the only package:
 
 ```shell
+<<<<<<< HEAD
 gigachain app new my-app --package rag-aws-bedrock
+=======
+langchain app new my-app --package rag-aws-bedrock
+>>>>>>> langchan/master
 ```
 
 To add this package to an existing project:
 
 ```shell
+<<<<<<< HEAD
 gigachain app add rag-aws-bedrock
+=======
+langchain app add rag-aws-bedrock
+>>>>>>> langchan/master
 ```
 
 Then add the following code to your `server.py` file:
@@ -62,7 +74,11 @@ export LANGCHAIN_PROJECT=<your-project>  # if not specified, defaults to "defaul
 If you are inside this directory, you can spin up a LangServe instance directly by:
 
 ```shell
+<<<<<<< HEAD
 gigachain serve
+=======
+langchain serve
+>>>>>>> langchan/master
 ```
 
 This will start the FastAPI app with a server running locally at [http://localhost:8000](http://localhost:8000)

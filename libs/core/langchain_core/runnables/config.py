@@ -124,7 +124,10 @@ def ensure_config(config: Optional[RunnableConfig] = None) -> RunnableConfig:
         metadata={},
         callbacks=None,
         recursion_limit=25,
+<<<<<<< HEAD
         run_id=None,
+=======
+>>>>>>> langchan/master
     )
     if var_config := var_child_runnable_config.get():
         empty.update(

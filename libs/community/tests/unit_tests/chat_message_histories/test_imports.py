@@ -22,6 +22,10 @@ EXPECTED_ALL = [
     "UpstashRedisChatMessageHistory",
     "XataChatMessageHistory",
     "ZepChatMessageHistory",
+<<<<<<< HEAD
+=======
+    "ZepCloudChatMessageHistory",
+>>>>>>> langchan/master
 ]
 
 

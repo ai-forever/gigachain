@@ -18,7 +18,11 @@ FULL_PROMPT = """# Context
 ```json
 {json_format}
 ```
+<<<<<<< HEAD
 """  # noqa: E50
+=======
+"""
+>>>>>>> langchan/master
 
 NUM_PLATES_PROMPT = """- There {num_plates_str} in this data."""
 ROWS_PROMPT = """- Each plate has {num_rows} rows."""

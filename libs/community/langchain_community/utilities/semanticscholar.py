@@ -1,5 +1,8 @@
 """Utils for interacting with the Semantic Scholar API."""
+<<<<<<< HEAD
 
+=======
+>>>>>>> langchan/master
 import logging
 from typing import Any, Dict, Optional
 

@@ -28,7 +28,11 @@ from langchain_openai import AzureOpenAI
 >[Azure OpenAI](https://learn.microsoft.com/en-us/azure/cognitive-services/openai/) is an `Azure` service with powerful language models from `OpenAI` including the `GPT-3`, `Codex` and `Embeddings model` series for content generation, summarization, semantic search, and natural language to code translation.
 
 ```bash
+<<<<<<< HEAD
 pip install gigachain-openai
+=======
+pip install langchain-openai
+>>>>>>> langchan/master
 ```
 
 Set the environment variables to get access to the `Azure OpenAI` service.
@@ -271,6 +275,29 @@ See a [usage example](/docs/integrations/retrievers/azure_ai_search).
 from langchain.retrievers import AzureAISearchRetriever
 ```
 
+<<<<<<< HEAD
+=======
+## Tools
+
+### Azure Container Apps dynamic sessions
+
+We need to get the `POOL_MANAGEMENT_ENDPOINT` environment variable from the Azure Container Apps service.
+See the instructions [here](https://python.langchain.com/v0.2/docs/integrations/tools/azure_dynamic_sessions/#setup).
+
+We need to install a python package.
+
+```bash
+pip install langchain-azure-dynamic-sessions
+```
+
+See a [usage example](/docs/integrations/tools/azure_dynamic_sessions).
+
+```python
+from langchain_azure_dynamic_sessions import SessionsPythonREPLTool
+```
+
+
+>>>>>>> langchan/master
 ## Toolkits
 
 ### Azure AI Services
@@ -360,7 +387,11 @@ from langchain_community.utilities import BingSearchAPIWrapper
 First, you need to install several python packages and download a `SpaCy` model.
 
 ```bash
+<<<<<<< HEAD
 pip install gigachain-experimental openai presidio-analyzer presidio-anonymizer spacy Faker
+=======
+pip install langchain-experimental openai presidio-analyzer presidio-anonymizer spacy Faker
+>>>>>>> langchan/master
 python -m spacy download en_core_web_lg
 ```
 

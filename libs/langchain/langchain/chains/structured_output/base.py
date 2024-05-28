@@ -547,15 +547,24 @@ def _create_openai_functions_structured_output_runnable(
         function: Any = {
             "name": "output_formatter",
             "description": (
+<<<<<<< HEAD
                 "Output formatter. Всегда используй его чтобы отформатировать свой"
                 " ответ пользователю."
+=======
+                "Output formatter. Should always be used to format your response to the"
+                " user."
+>>>>>>> langchan/master
             ),
             "parameters": output_schema,
         }
     else:
 
         class _OutputFormatter(BaseModel):
+<<<<<<< HEAD
             """Output formatter. Всегда используй его чтобы отформатировать свой ответ пользователю."""  # noqa: E501
+=======
+            """Output formatter. Should always be used to format your response to the user."""  # noqa: E501
+>>>>>>> langchan/master
 
             output: output_schema  # type: ignore
 

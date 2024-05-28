@@ -1,5 +1,8 @@
 """Firestore Chat Message History."""
+<<<<<<< HEAD
 
+=======
+>>>>>>> langchan/master
 from __future__ import annotations
 
 import logging

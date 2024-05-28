@@ -1,5 +1,8 @@
 """Chain for question-answering against a vector database."""
+<<<<<<< HEAD
 
+=======
+>>>>>>> langchan/master
 from __future__ import annotations
 
 import inspect

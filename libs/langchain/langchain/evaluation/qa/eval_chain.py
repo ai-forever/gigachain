@@ -1,5 +1,8 @@
 """LLM Chains for evaluating question answering."""
+<<<<<<< HEAD
 
+=======
+>>>>>>> langchan/master
 from __future__ import annotations
 
 import re

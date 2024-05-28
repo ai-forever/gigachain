@@ -1,5 +1,8 @@
 """Web base loader class."""
+<<<<<<< HEAD
 
+=======
+>>>>>>> langchan/master
 import asyncio
 import logging
 import warnings
@@ -135,6 +138,11 @@ class WebBaseLoader(BaseLoader):
                         ssl=None if self.session.verify else False,
                         cookies=self.session.cookies.get_dict(),
                     ) as response:
+<<<<<<< HEAD
+=======
+                        if self.raise_for_status:
+                            response.raise_for_status()
+>>>>>>> langchan/master
                         return await response.text()
                 except aiohttp.ClientConnectionError as e:
                     if i == retries - 1:

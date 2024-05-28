@@ -1,5 +1,8 @@
 """Test Baidu Qianfan LLM Endpoint."""
+<<<<<<< HEAD
 
+=======
+>>>>>>> langchan/master
 from typing import Generator
 
 from langchain_core.outputs import LLMResult

@@ -1,5 +1,8 @@
 """Test the telegram chat loader."""
+<<<<<<< HEAD
 
+=======
+>>>>>>> langchan/master
 import pathlib
 import tempfile
 import zipfile

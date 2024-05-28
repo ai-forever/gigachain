@@ -1,5 +1,8 @@
 """Simple reader that reads weather data from OpenWeatherMap API"""
+<<<<<<< HEAD
 
+=======
+>>>>>>> langchan/master
 from __future__ import annotations
 
 from datetime import datetime

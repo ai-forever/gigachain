@@ -537,7 +537,13 @@ if __name__ == "__main__":
         "nfcampos",
         "efriis",
         "eyurtsev",
+<<<<<<< HEAD
         "rlancemartin"
+=======
+        "rlancemartin",
+        "ccurme",
+        "vbarda",
+>>>>>>> langchan/master
     }
     hidden_logins = {
         "dev2049",

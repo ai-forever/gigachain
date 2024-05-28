@@ -1,5 +1,8 @@
 """Chain that interprets a prompt and executes python code to do math."""
+<<<<<<< HEAD
 
+=======
+>>>>>>> langchan/master
 from __future__ import annotations
 
 import math

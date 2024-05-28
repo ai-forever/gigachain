@@ -1,5 +1,6 @@
 [tool.poetry]
 name = "__package_name__"
+<<<<<<< HEAD
 version = "0.0.1"
 description = "An integration package connecting __ModuleName__ and Gigachain"
 authors = []
@@ -13,6 +14,21 @@ license = "MIT"
 [tool.poetry.dependencies]
 python = ">=3.8.1,<4.0"
 gigachain-core = ">=0.1,<0.3"
+=======
+version = "0.1.0"
+description = "An integration package connecting __ModuleName__ and LangChain"
+authors = []
+readme = "README.md"
+repository = "https://github.com/langchain-ai/langchain"
+license = "MIT"
+
+[tool.poetry.urls]
+"Source Code" = "https://github.com/langchain-ai/langchain/tree/master/libs/partners/__package_name_short__"
+
+[tool.poetry.dependencies]
+python = ">=3.8.1,<4.0"
+langchain-core = "^0.2.0"
+>>>>>>> langchan/master
 
 [tool.poetry.group.test]
 optional = true
@@ -21,7 +37,11 @@ optional = true
 pytest = "^7.4.3"
 pytest-asyncio = "^0.23.2"
 pytest-socket = "^0.7.0"
+<<<<<<< HEAD
 gigachain-core = {path = "../../core", develop = true}
+=======
+langchain-core = { path = "../../core", develop = true }
+>>>>>>> langchan/master
 
 [tool.poetry.group.codespell]
 optional = true
@@ -42,12 +62,17 @@ ruff = "^0.1.8"
 
 [tool.poetry.group.typing.dependencies]
 mypy = "^1.7.1"
+<<<<<<< HEAD
 gigachain-core = {path = "../../core", develop = true}
+=======
+langchain-core = { path = "../../core", develop = true }
+>>>>>>> langchan/master
 
 [tool.poetry.group.dev]
 optional = true
 
 [tool.poetry.group.dev.dependencies]
+<<<<<<< HEAD
 gigachain-core = {path = "../../core", develop = true}
 
 [tool.ruff.lint]
@@ -55,6 +80,15 @@ select = [
   "E",  # pycodestyle
   "F",  # pyflakes
   "I",  # isort
+=======
+langchain-core = { path = "../../core", develop = true }
+
+[tool.ruff.lint]
+select = [
+  "E",    # pycodestyle
+  "F",    # pyflakes
+  "I",    # isort
+>>>>>>> langchan/master
   "T201", # print
 ]
 
@@ -62,9 +96,13 @@ select = [
 disallow_untyped_defs = "True"
 
 [tool.coverage.run]
+<<<<<<< HEAD
 omit = [
     "tests/*",
 ]
+=======
+omit = ["tests/*"]
+>>>>>>> langchan/master
 
 [build-system]
 requires = ["poetry-core>=1.0.0"]
@@ -86,4 +124,8 @@ addopts = "--snapshot-warn-unused --strict-markers --strict-config --durations=5
 markers = [
   "compile: mark placeholder test used to compile integration tests without running them",
 ]
+<<<<<<< HEAD
 asyncio_mode = "auto"
+=======
+asyncio_mode = "auto"
+>>>>>>> langchan/master

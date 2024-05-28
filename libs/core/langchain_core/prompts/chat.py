@@ -431,7 +431,11 @@ class _StringImageMessagePromptTemplate(BaseMessagePromptTemplate):
                     if isinstance(tmpl, str):
                         text: str = tmpl
                     else:
+<<<<<<< HEAD
                         text = cast(_TextTemplateParam, tmpl)["text"]  # type: ignore[assignment]  # noqa: E501
+=======
+                        text = cast(_TextTemplateParam, tmpl)["text"]  # type: ignore[assignment]
+>>>>>>> langchan/master
                     prompt.append(
                         PromptTemplate.from_template(
                             text, template_format=template_format

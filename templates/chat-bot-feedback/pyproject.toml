@@ -1,4 +1,7 @@
+<<<<<<< HEAD
 
+=======
+>>>>>>> langchan/master
 [tool.poetry]
 name = "chat-bot-feedback"
 version = "0.0.1"
@@ -8,13 +11,21 @@ readme = "README.md"
 
 [tool.poetry.dependencies]
 python = ">=3.8.1,<4.0"
+<<<<<<< HEAD
 gigachain = ">=0.0.329"
+=======
+langchain = "^0.1"
+>>>>>>> langchan/master
 openai = "<2"
 langsmith = ">=0.0.54"
 langchainhub = ">=0.1.13"
 
 [tool.poetry.group.dev.dependencies]
+<<<<<<< HEAD
 gigachain-cli = ">=0.0.21"
+=======
+langchain-cli = ">=0.0.21"
+>>>>>>> langchan/master
 fastapi = ">=0.104.0,<1"
 sse-starlette = "^1.6.5"
 

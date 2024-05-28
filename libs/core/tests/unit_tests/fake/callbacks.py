@@ -1,5 +1,8 @@
 """A fake callback handler for testing purposes."""
+<<<<<<< HEAD
 
+=======
+>>>>>>> langchan/master
 from itertools import chain
 from typing import Any, Dict, List, Optional, Union
 from uuid import UUID
@@ -23,7 +26,11 @@ class BaseFakeCallbackHandler(BaseModel):
     ignore_retriever_: bool = False
     ignore_chat_model_: bool = False
 
+<<<<<<< HEAD
     # to allow for similar callback handlers that are not technicall equal
+=======
+    # to allow for similar callback handlers that are not technically equal
+>>>>>>> langchan/master
     fake_id: Union[str, None] = None
 
     # add finer-grained counters for easier debugging of failing tests

@@ -1,5 +1,8 @@
 """Utilities to init Vertex AI."""
+<<<<<<< HEAD
 
+=======
+>>>>>>> langchan/master
 from importlib import metadata
 from typing import TYPE_CHECKING, Any, Callable, Optional, Union
 

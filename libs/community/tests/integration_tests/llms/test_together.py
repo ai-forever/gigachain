@@ -6,7 +6,10 @@ A test key can be found at https://api.together.xyz/settings/api-keys
 
 You'll then need to set TOGETHER_API_KEY environment variable to your api key.
 """
+<<<<<<< HEAD
 
+=======
+>>>>>>> langchan/master
 import pytest as pytest
 
 from langchain_community.llms import Together

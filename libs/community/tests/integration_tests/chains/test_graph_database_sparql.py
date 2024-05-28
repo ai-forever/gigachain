@@ -1,5 +1,8 @@
 """Test RDF/ SPARQL Graph Database Chain."""
+<<<<<<< HEAD
 
+=======
+>>>>>>> langchan/master
 import pathlib
 import re
 from unittest.mock import MagicMock, Mock

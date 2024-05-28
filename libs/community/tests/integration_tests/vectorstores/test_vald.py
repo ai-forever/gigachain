@@ -1,5 +1,8 @@
 """Test Vald functionality."""
+<<<<<<< HEAD
 
+=======
+>>>>>>> langchan/master
 import time
 from typing import List, Optional
 

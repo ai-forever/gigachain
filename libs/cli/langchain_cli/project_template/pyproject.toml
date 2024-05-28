@@ -11,12 +11,20 @@ packages = [
 [tool.poetry.dependencies]
 python = "^3.11"
 uvicorn = "^0.23.2"
+<<<<<<< HEAD
 gigaserve = {extras = ["server"], version = ">=0.0.30"}
+=======
+langserve = {extras = ["server"], version = ">=0.0.30"}
+>>>>>>> langchan/master
 pydantic = "<2"
 
 
 [tool.poetry.group.dev.dependencies]
+<<<<<<< HEAD
 gigachain-cli = ">=0.0.15"
+=======
+langchain-cli = ">=0.0.15"
+>>>>>>> langchan/master
 
 [build-system]
 requires = ["poetry-core"]

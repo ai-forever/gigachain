@@ -1,5 +1,8 @@
 """Test OCI Data Science Model Deployment Endpoint."""
+<<<<<<< HEAD
 
+=======
+>>>>>>> langchan/master
 import pytest
 import responses
 from pytest_mock import MockerFixture

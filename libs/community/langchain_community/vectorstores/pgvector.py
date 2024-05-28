@@ -175,7 +175,10 @@ def _get_embedding_collection_store(
                     postgresql_ops={"cmetadata": "jsonb_path_ops"},
                 ),
             )
+<<<<<<< HEAD
 
+=======
+>>>>>>> langchan/master
     else:
         # For backwards comaptibilty with older versions of pgvector
         # This should be removed in the future (remove during migration)

@@ -27,6 +27,12 @@ if TYPE_CHECKING:
         VectorStore,
     )
 
+<<<<<<< HEAD
+=======
+    from langchain_community.vectorstores.aerospike import (
+        Aerospike,
+    )
+>>>>>>> langchan/master
     from langchain_community.vectorstores.alibabacloud_opensearch import (
         AlibabaCloudOpenSearch,
         AlibabaCloudOpenSearchSettings,
@@ -150,6 +156,13 @@ if TYPE_CHECKING:
     from langchain_community.vectorstores.llm_rails import (
         LLMRails,
     )
+<<<<<<< HEAD
+=======
+    from langchain_community.vectorstores.manticore_search import (
+        ManticoreSearch,
+        ManticoreSearchSettings,
+    )
+>>>>>>> langchan/master
     from langchain_community.vectorstores.marqo import (
         Marqo,
     )
@@ -179,7 +192,11 @@ if TYPE_CHECKING:
         OpenSearchVectorSearch,
     )
     from langchain_community.vectorstores.oraclevs import (
+<<<<<<< HEAD
         OracleVS,  # noqa: F401
+=======
+        OracleVS,
+>>>>>>> langchan/master
     )
     from langchain_community.vectorstores.pathway import (
         PathwayVectorClient,
@@ -287,11 +304,21 @@ if TYPE_CHECKING:
     from langchain_community.vectorstores.zep import (
         ZepVectorStore,
     )
+<<<<<<< HEAD
+=======
+    from langchain_community.vectorstores.zep_cloud import (
+        ZepCloudVectorStore,
+    )
+>>>>>>> langchan/master
     from langchain_community.vectorstores.zilliz import (
         Zilliz,
     )
 
 __all__ = [
+<<<<<<< HEAD
+=======
+    "Aerospike",
+>>>>>>> langchan/master
     "AlibabaCloudOpenSearch",
     "AlibabaCloudOpenSearchSettings",
     "AnalyticDB",
@@ -337,6 +364,11 @@ __all__ = [
     "LLMRails",
     "LanceDB",
     "Lantern",
+<<<<<<< HEAD
+=======
+    "ManticoreSearch",
+    "ManticoreSearchSettings",
+>>>>>>> langchan/master
     "Marqo",
     "MatchingEngine",
     "Meilisearch",
@@ -385,10 +417,18 @@ __all__ = [
     "Weaviate",
     "Yellowbrick",
     "ZepVectorStore",
+<<<<<<< HEAD
+=======
+    "ZepCloudVectorStore",
+>>>>>>> langchan/master
     "Zilliz",
 ]
 
 _module_lookup = {
+<<<<<<< HEAD
+=======
+    "Aerospike": "langchain_community.vectorstores.aerospike",
+>>>>>>> langchan/master
     "AlibabaCloudOpenSearch": "langchain_community.vectorstores.alibabacloud_opensearch",  # noqa: E501
     "AlibabaCloudOpenSearchSettings": "langchain_community.vectorstores.alibabacloud_opensearch",  # noqa: E501
     "AnalyticDB": "langchain_community.vectorstores.analyticdb",
@@ -434,6 +474,11 @@ _module_lookup = {
     "LLMRails": "langchain_community.vectorstores.llm_rails",
     "LanceDB": "langchain_community.vectorstores.lancedb",
     "Lantern": "langchain_community.vectorstores.lantern",
+<<<<<<< HEAD
+=======
+    "ManticoreSearch": "langchain_community.vectorstores.manticore_search",
+    "ManticoreSearchSettings": "langchain_community.vectorstores.manticore_search",
+>>>>>>> langchan/master
     "Marqo": "langchain_community.vectorstores.marqo",
     "MatchingEngine": "langchain_community.vectorstores.matching_engine",
     "Meilisearch": "langchain_community.vectorstores.meilisearch",
@@ -443,7 +488,11 @@ _module_lookup = {
     "MyScale": "langchain_community.vectorstores.myscale",
     "MyScaleSettings": "langchain_community.vectorstores.myscale",
     "Neo4jVector": "langchain_community.vectorstores.neo4j_vector",
+<<<<<<< HEAD
     "NeuralDBClientVectorStore": "langchain_community.vectorstores.thirdai_neuraldb",  # noqa: E501
+=======
+    "NeuralDBClientVectorStore": "langchain_community.vectorstores.thirdai_neuraldb",
+>>>>>>> langchan/master
     "NeuralDBVectorStore": "langchain_community.vectorstores.thirdai_neuraldb",
     "OpenSearchVectorSearch": "langchain_community.vectorstores.opensearch_vector_search",  # noqa: E501
     "OracleVS": "langchain_community.vectorstores.oraclevs",
@@ -482,6 +531,10 @@ _module_lookup = {
     "Weaviate": "langchain_community.vectorstores.weaviate",
     "Yellowbrick": "langchain_community.vectorstores.yellowbrick",
     "ZepVectorStore": "langchain_community.vectorstores.zep",
+<<<<<<< HEAD
+=======
+    "ZepCloudVectorStore": "langchain_community.vectorstores.zep_cloud",
+>>>>>>> langchan/master
     "Zilliz": "langchain_community.vectorstores.zilliz",
 }
 
@@ -491,6 +544,9 @@ def __getattr__(name: str) -> Any:
         module = importlib.import_module(_module_lookup[name])
         return getattr(module, name)
     raise AttributeError(f"module {__name__} has no attribute {name}")
+<<<<<<< HEAD
 
 
 __all__ = list(_module_lookup.keys())
+=======
+>>>>>>> langchan/master

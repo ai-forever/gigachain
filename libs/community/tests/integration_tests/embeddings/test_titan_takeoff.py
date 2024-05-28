@@ -1,12 +1,24 @@
 """Test Titan Takeoff Embedding wrapper."""
 
+<<<<<<< HEAD
+=======
+
+>>>>>>> langchan/master
 import json
 from typing import Any
 
 import pytest
 
 from langchain_community.embeddings import TitanTakeoffEmbed
+<<<<<<< HEAD
 from langchain_community.embeddings.titan_takeoff import MissingConsumerGroup
+=======
+from langchain_community.embeddings.titan_takeoff import (
+    Device,
+    MissingConsumerGroup,
+    ReaderConfig,
+)
+>>>>>>> langchan/master
 
 
 @pytest.mark.requires("pytest_httpx")
@@ -23,7 +35,11 @@ def test_titan_takeoff_call(httpx_mock: Any) -> None:
 
     embedding = TitanTakeoffEmbed(port=port)
 
+<<<<<<< HEAD
     output_1 = embedding.embed_documents("What is 2 + 2?", "primary")
+=======
+    output_1 = embedding.embed_documents(["What is 2 + 2?"], "primary")
+>>>>>>> langchan/master
     output_2 = embedding.embed_query("What is 2 + 2?", "primary")
 
     assert isinstance(output_1, list)
@@ -52,12 +68,20 @@ def test_no_consumer_group_fails(httpx_mock: Any) -> None:
     embedding = TitanTakeoffEmbed(port=port)
 
     with pytest.raises(MissingConsumerGroup):
+<<<<<<< HEAD
         embedding.embed_documents("What is 2 + 2?")
+=======
+        embedding.embed_documents(["What is 2 + 2?"])
+>>>>>>> langchan/master
     with pytest.raises(MissingConsumerGroup):
         embedding.embed_query("What is 2 + 2?")
 
     # Check specifying a consumer group works
+<<<<<<< HEAD
     embedding.embed_documents("What is 2 + 2?", "primary")
+=======
+    embedding.embed_documents(["What is 2 + 2?"], "primary")
+>>>>>>> langchan/master
     embedding.embed_query("What is 2 + 2?", "primary")
 
 
@@ -69,6 +93,7 @@ def test_takeoff_initialization(httpx_mock: Any) -> None:
     inf_port = 46253
     mgnt_url = f"http://localhost:{mgnt_port}/reader"
     embed_url = f"http://localhost:{inf_port}/embed"
+<<<<<<< HEAD
     reader_1 = {
         "model_name": "test",
         "device": "cpu",
@@ -77,6 +102,18 @@ def test_takeoff_initialization(httpx_mock: Any) -> None:
     reader_2 = reader_1.copy()
     reader_2["model_name"] = "test2"
     reader_2["device"] = "cuda"
+=======
+    reader_1 = ReaderConfig(
+        model_name="test",
+        device=Device.cpu,
+        consumer_group="embed",
+    )
+    reader_2 = ReaderConfig(
+        model_name="test2",
+        device=Device.cuda,
+        consumer_group="embed",
+    )
+>>>>>>> langchan/master
 
     httpx_mock.add_response(
         method="POST", url=mgnt_url, json={"key": "value"}, status_code=201
@@ -93,18 +130,30 @@ def test_takeoff_initialization(httpx_mock: Any) -> None:
     )
     # Shouldn't need to specify consumer group as there is only one specified during
     # initialization
+<<<<<<< HEAD
     output_1 = llm.embed_documents("What is 2 + 2?")
+=======
+    output_1 = llm.embed_documents(["What is 2 + 2?"])
+>>>>>>> langchan/master
     output_2 = llm.embed_query("What is 2 + 2?")
 
     assert isinstance(output_1, list)
     assert isinstance(output_2, list)
     # Ensure the management api was called to create the reader
     assert len(httpx_mock.get_requests()) == 4
+<<<<<<< HEAD
     for key, value in reader_1.items():
         assert json.loads(httpx_mock.get_requests()[0].content)[key] == value
     assert httpx_mock.get_requests()[0].url == mgnt_url
     # Also second call should be made to spin uo reader 2
     for key, value in reader_2.items():
+=======
+    for key, value in reader_1.dict().items():
+        assert json.loads(httpx_mock.get_requests()[0].content)[key] == value
+    assert httpx_mock.get_requests()[0].url == mgnt_url
+    # Also second call should be made to spin uo reader 2
+    for key, value in reader_2.dict().items():
+>>>>>>> langchan/master
         assert json.loads(httpx_mock.get_requests()[1].content)[key] == value
     assert httpx_mock.get_requests()[1].url == mgnt_url
     # Ensure the third call is to generate endpoint to inference
@@ -125,6 +174,7 @@ def test_takeoff_initialization_with_more_than_one_consumer_group(
     inf_port = 46253
     mgnt_url = f"http://localhost:{mgnt_port}/reader"
     embed_url = f"http://localhost:{inf_port}/embed"
+<<<<<<< HEAD
     reader_1 = {
         "model_name": "test",
         "device": "cpu",
@@ -134,6 +184,18 @@ def test_takeoff_initialization_with_more_than_one_consumer_group(
     reader_2["model_name"] = "test2"
     reader_2["device"] = "cuda"
     reader_2["consumer_group"] = "embed2"
+=======
+    reader_1 = ReaderConfig(
+        model_name="test",
+        device=Device.cpu,
+        consumer_group="embed",
+    )
+    reader_2 = ReaderConfig(
+        model_name="test2",
+        device=Device.cuda,
+        consumer_group="embed2",
+    )
+>>>>>>> langchan/master
 
     httpx_mock.add_response(
         method="POST", url=mgnt_url, json={"key": "value"}, status_code=201
@@ -151,22 +213,38 @@ def test_takeoff_initialization_with_more_than_one_consumer_group(
     # There was more than one consumer group specified during initialization so we
     # need to specify which one to use
     with pytest.raises(MissingConsumerGroup):
+<<<<<<< HEAD
         llm.embed_documents("What is 2 + 2?")
     with pytest.raises(MissingConsumerGroup):
         llm.embed_query("What is 2 + 2?")
 
     output_1 = llm.embed_documents("What is 2 + 2?", "embed")
+=======
+        llm.embed_documents(["What is 2 + 2?"])
+    with pytest.raises(MissingConsumerGroup):
+        llm.embed_query("What is 2 + 2?")
+
+    output_1 = llm.embed_documents(["What is 2 + 2?"], "embed")
+>>>>>>> langchan/master
     output_2 = llm.embed_query("What is 2 + 2?", "embed2")
 
     assert isinstance(output_1, list)
     assert isinstance(output_2, list)
     # Ensure the management api was called to create the reader
     assert len(httpx_mock.get_requests()) == 4
+<<<<<<< HEAD
     for key, value in reader_1.items():
         assert json.loads(httpx_mock.get_requests()[0].content)[key] == value
     assert httpx_mock.get_requests()[0].url == mgnt_url
     # Also second call should be made to spin uo reader 2
     for key, value in reader_2.items():
+=======
+    for key, value in reader_1.dict().items():
+        assert json.loads(httpx_mock.get_requests()[0].content)[key] == value
+    assert httpx_mock.get_requests()[0].url == mgnt_url
+    # Also second call should be made to spin uo reader 2
+    for key, value in reader_2.dict().items():
+>>>>>>> langchan/master
         assert json.loads(httpx_mock.get_requests()[1].content)[key] == value
     assert httpx_mock.get_requests()[1].url == mgnt_url
     # Ensure the third call is to generate endpoint to inference

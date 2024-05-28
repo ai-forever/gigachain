@@ -29,8 +29,11 @@ if TYPE_CHECKING:
         Wikipedia,
     )
 
+<<<<<<< HEAD
 __all__ = ["DocstoreFn", "InMemoryDocstore", "Wikipedia"]
 
+=======
+>>>>>>> langchan/master
 _module_lookup = {
     "DocstoreFn": "langchain_community.docstore.arbitrary_fn",
     "InMemoryDocstore": "langchain_community.docstore.in_memory",
@@ -45,4 +48,8 @@ def __getattr__(name: str) -> Any:
     raise AttributeError(f"module {__name__} has no attribute {name}")
 
 
+<<<<<<< HEAD
 __all__ = list(_module_lookup.keys())
+=======
+__all__ = ["DocstoreFn", "InMemoryDocstore", "Wikipedia"]
+>>>>>>> langchan/master

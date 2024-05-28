@@ -14,7 +14,11 @@ from typing import (
 from langchain_core.documents import Document
 
 from langchain_community.document_loaders.base import BaseLoader
+<<<<<<< HEAD
 from langchain_community.utilities.cassandra import wrapped_response_future
+=======
+from langchain_community.utilities.cassandra import aexecute_cql
+>>>>>>> langchan/master
 
 _NOT_SET = object()
 
@@ -118,11 +122,15 @@ class CassandraLoader(BaseLoader):
             )
 
     async def alazy_load(self) -> AsyncIterator[Document]:
+<<<<<<< HEAD
         for row in await wrapped_response_future(
             self.session.execute_async,
             self.query,
             **self.query_kwargs,
         ):
+=======
+        for row in await aexecute_cql(self.session, self.query, **self.query_kwargs):
+>>>>>>> langchan/master
             metadata = self.metadata.copy()
             metadata.update(self.metadata_mapper(row))
             yield Document(

@@ -1,5 +1,8 @@
 """SQL agent."""
+<<<<<<< HEAD
 
+=======
+>>>>>>> langchan/master
 from __future__ import annotations
 
 from typing import (

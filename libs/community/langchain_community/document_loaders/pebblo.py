@@ -208,9 +208,15 @@ class PebbloSafeLoader(BaseLoader):
         if loading_end is True:
             payload["loading_end"] = "true"
             if "loader_details" in payload:
+<<<<<<< HEAD
                 payload["loader_details"]["source_aggregate_size"] = (  # noqa
                     self.source_aggregate_size
                 )
+=======
+                payload["loader_details"][
+                    "source_aggregate_size"
+                ] = self.source_aggregate_size
+>>>>>>> langchan/master
         payload = Doc(**payload).dict(exclude_unset=True)
         load_doc_url = f"{self.classifier_url}{LOADER_DOC_URL}"
         classified_docs = []
@@ -303,12 +309,15 @@ class PebbloSafeLoader(BaseLoader):
             pebblo_resp = requests.post(
                 app_discover_url, headers=headers, json=payload, timeout=20
             )
+<<<<<<< HEAD
             if self.api_key:
                 pebblo_cloud_url = f"{PEBBLO_CLOUD_URL}/v1/discover"
                 headers.update({"x-api-key": self.api_key})
                 _ = requests.post(
                     pebblo_cloud_url, headers=headers, json=payload, timeout=20
                 )
+=======
+>>>>>>> langchan/master
             logger.debug(
                 "send_discover[local]: request url %s, body %s len %s\
                     response status %s body %s",
@@ -333,6 +342,7 @@ class PebbloSafeLoader(BaseLoader):
             try:
                 headers.update({"x-api-key": self.api_key})
                 if pebblo_resp:
+<<<<<<< HEAD
                     pebblo_resp_docs = json.loads(pebblo_resp.text).get("docs")
                     payload.update(
                         {
@@ -340,6 +350,15 @@ class PebbloSafeLoader(BaseLoader):
                                 "pebbloServerVersion"
                             ),
                             "pebbloClientVersion": pebblo_resp_docs.get(
+=======
+                    pebblo_resp_docs = json.loads(pebblo_resp.text).get("ai_apps_data")
+                    payload.update(
+                        {
+                            "pebblo_server_version": pebblo_resp_docs.get(
+                                "pebbloServerVersion"
+                            ),
+                            "pebblo_client_version": pebblo_resp_docs.get(
+>>>>>>> langchan/master
                                 "pebbloClientVersion"
                             ),
                         }
@@ -369,6 +388,7 @@ class PebbloSafeLoader(BaseLoader):
             except Exception as e:
                 logger.warning("An Exception caught in _send_discover: cloud %s", e)
 
+<<<<<<< HEAD
         if self.api_key:
             try:
                 headers.update({"x-api-key": self.api_key})
@@ -397,6 +417,8 @@ class PebbloSafeLoader(BaseLoader):
             except Exception as e:
                 logger.warning("An Exception caught in _send_discover: %s", e)
 
+=======
+>>>>>>> langchan/master
     def _get_app_details(self) -> App:
         """Fetch app details. Internal method.
 

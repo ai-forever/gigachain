@@ -1,5 +1,8 @@
 """Test MongoDB Atlas Vector Search functionality."""
+<<<<<<< HEAD
 
+=======
+>>>>>>> langchan/master
 from __future__ import annotations
 
 import os
@@ -35,7 +38,11 @@ class TestMongoDBAtlasVectorSearch:
     def setup_class(cls) -> None:
         # insure the test collection is empty
         collection = get_collection()
+<<<<<<< HEAD
         assert collection.count_documents({}) == 0  # type: ignore[index]  # noqa: E501
+=======
+        assert collection.count_documents({}) == 0  # type: ignore[index]
+>>>>>>> langchan/master
 
     @classmethod
     def teardown_class(cls) -> None:

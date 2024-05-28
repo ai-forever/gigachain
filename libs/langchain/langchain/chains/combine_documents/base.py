@@ -185,10 +185,13 @@ class AnalyzeDocumentChain(Chain):
         """
         return self.combine_docs_chain.output_keys
 
+<<<<<<< HEAD
     @property
     def _chain_type(self) -> str:
         return "analyze_document_chain"
 
+=======
+>>>>>>> langchan/master
     def get_input_schema(
         self, config: Optional[RunnableConfig] = None
     ) -> Type[BaseModel]:

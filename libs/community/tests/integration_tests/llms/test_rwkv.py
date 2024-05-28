@@ -1,6 +1,9 @@
 # flake8: noqa
 """Test rwkv wrapper."""
+<<<<<<< HEAD
 
+=======
+>>>>>>> langchan/master
 import os
 from urllib.request import urlretrieve
 

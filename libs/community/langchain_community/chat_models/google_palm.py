@@ -1,5 +1,8 @@
 """Wrapper around Google's PaLM Chat API."""
+<<<<<<< HEAD
 
+=======
+>>>>>>> langchan/master
 from __future__ import annotations
 
 import logging

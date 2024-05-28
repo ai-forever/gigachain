@@ -7,17 +7,29 @@ readme = "README.md"
 
 [tool.poetry.dependencies]
 python = ">=3.8.1,<4.0"
+<<<<<<< HEAD
 gigachain = "^0.1"
+=======
+langchain = "^0.1"
+>>>>>>> langchan/master
 openai = "<2"
 tiktoken = "^0.5.1"
 faiss-cpu = "^1.7.4"
 
 [tool.poetry.group.dev.dependencies]
+<<<<<<< HEAD
 gigachain-cli = ">=0.0.21"
 fastapi = ">=0.104.0,<1"
 sse-starlette = "^1.6.5"
 
 [tool.gigaserve]
+=======
+langchain-cli = ">=0.0.21"
+fastapi = ">=0.104.0,<1"
+sse-starlette = "^1.6.5"
+
+[tool.langserve]
+>>>>>>> langchan/master
 export_module = "openai_functions_tool_retrieval_agent"
 export_attr = "agent_executor"
 

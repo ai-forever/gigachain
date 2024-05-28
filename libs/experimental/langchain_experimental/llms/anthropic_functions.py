@@ -21,6 +21,7 @@ from langchain_core.messages import (
 
 from langchain_experimental.pydantic_v1 import root_validator
 
+<<<<<<< HEAD
 prompt = """Помимо ответов, ты можешь использовать инструменты. \
 У тебя есть доступ к следующим инструментам.
 
@@ -37,6 +38,23 @@ prompt = """Помимо ответов, ты можешь использова�
 Например, если у тебя есть инструмент под названием 'search', который принимает один \
 параметр 'query', который может выполнять поиск в Google, чтобы найти \
 погоду в Сан-Франциско, ты должен ответить:
+=======
+prompt = """In addition to responding, you can use tools. \
+You have access to the following tools.
+
+{tools}
+
+In order to use a tool, you can use <tool></tool> to specify the name, \
+and the <tool_input></tool_input> tags to specify the parameters. \
+Each parameter should be passed in as <$param_name>$value</$param_name>, \
+Where $param_name is the name of the specific parameter, and $value \
+is the value for that parameter.
+
+You will then get back a response in the form <observation></observation>
+For example, if you have a tool called 'search' that accepts a single \
+parameter 'query' that could run a google search, in order to search \
+for the weather in SF you would respond:
+>>>>>>> langchan/master
 
 <tool>search</tool><tool_input><query>weather in SF</query></tool_input>
 <observation>64 degrees</observation>"""

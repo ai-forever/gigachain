@@ -16,7 +16,10 @@ an interface where "chat messages" are the inputs and outputs.
 
     AIMessage, BaseMessage, HumanMessage
 """  # noqa: E501
+<<<<<<< HEAD
 
+=======
+>>>>>>> langchan/master
 import warnings
 
 from langchain_core._api import LangChainDeprecationWarning
@@ -30,11 +33,19 @@ def __getattr__(name: str) -> None:
     # If not in interactive env, raise warning.
     if not is_interactive_env():
         warnings.warn(
+<<<<<<< HEAD
             "Importing chat models from gigachain is deprecated. Importing from "
             "gigachain will no longer be supported as of gigachain==0.2.0. "
             "Please import from gigachain-community instead:\n\n"
             f"`from langchain_community.chat_models import {name}`.\n\n"
             "To install gigachain-community run `pip install -U gigachain-community`.",
+=======
+            "Importing chat models from langchain is deprecated. Importing from "
+            "langchain will no longer be supported as of langchain==0.2.0. "
+            "Please import from langchain-community instead:\n\n"
+            f"`from langchain_community.chat_models import {name}`.\n\n"
+            "To install langchain-community run `pip install -U langchain-community`.",
+>>>>>>> langchan/master
             category=LangChainDeprecationWarning,
         )
 
@@ -62,7 +73,10 @@ __all__ = [
     "ChatAnyscale",
     "ChatLiteLLM",
     "ErnieBotChat",
+<<<<<<< HEAD
     "GigaChat",
+=======
+>>>>>>> langchan/master
     "ChatJavelinAIGateway",
     "ChatKonko",
     "PaiEasChatEndpoint",

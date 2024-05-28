@@ -91,7 +91,11 @@ class ToTChain(Chain):
                 ThoughtValidity.VALID_INTERMEDIATE: "yellow",
                 ThoughtValidity.INVALID: "red",
             }
+<<<<<<< HEAD
             text = indent(f"Мысль: {thought.text}\n", prefix="    " * level)
+=======
+            text = indent(f"Thought: {thought.text}\n", prefix="    " * level)
+>>>>>>> langchan/master
             run_manager.on_text(
                 text=text, color=colors[thought.validity], verbose=self.verbose
             )

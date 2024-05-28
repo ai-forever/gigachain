@@ -6,7 +6,11 @@ sidebar_position: 2
 
 ## Official release
 
+<<<<<<< HEAD
 To install GigaChain run:
+=======
+To install LangChain run:
+>>>>>>> langchan/master
 
 import Tabs from '@theme/Tabs';
 import TabItem from '@theme/TabItem';
@@ -14,6 +18,7 @@ import CodeBlock from "@theme/CodeBlock";
 
 <Tabs>
   <TabItem value="pip" label="Pip" default>
+<<<<<<< HEAD
     <CodeBlock language="bash">pip install gigachain</CodeBlock>
   </TabItem>
   <TabItem value="conda" label="Conda">
@@ -23,6 +28,17 @@ import CodeBlock from "@theme/CodeBlock";
 
 This will install the bare minimum requirements of GigaChain.
 A lot of the value of GigaChain comes when integrating it with various model providers, datastores, etc.
+=======
+    <CodeBlock language="bash">pip install langchain</CodeBlock>
+  </TabItem>
+  <TabItem value="conda" label="Conda">
+    <CodeBlock language="bash">conda install langchain -c conda-forge</CodeBlock>
+  </TabItem>
+</Tabs>
+
+This will install the bare minimum requirements of LangChain.
+A lot of the value of LangChain comes when integrating it with various model providers, datastores, etc.
+>>>>>>> langchan/master
 By default, the dependencies needed to do that are NOT installed. You will need to install the dependencies for specific integrations separately.
 
 ## From source
@@ -33,6 +49,7 @@ If you want to install from source, you can do so by cloning the repo and be sur
 pip install -e .
 ```
 
+<<<<<<< HEAD
 ## GigaChain core
 The `gigachain-core` package contains base abstractions that the rest of the GigaChain ecosystem uses, along with the GigaChain Expression Language. It is automatically installed by `gigachain`, but can also be used separately. Install with:
 
@@ -88,6 +105,58 @@ pip install gigachain-cli
 ## LangSmith SDK
 The LangSmith SDK is automatically installed by GigaChain.
 If not using GigaChain, install with:
+=======
+## LangChain core
+The `langchain-core` package contains base abstractions that the rest of the LangChain ecosystem uses, along with the LangChain Expression Language. It is automatically installed by `langchain`, but can also be used separately. Install with:
+
+```bash
+pip install langchain-core
+```
+
+## LangChain community
+The `langchain-community` package contains third-party integrations. Install with:
+
+```bash
+pip install langchain-community
+```
+
+## LangChain experimental
+The `langchain-experimental` package holds experimental LangChain code, intended for research and experimental uses.
+Install with:
+
+```bash
+pip install langchain-experimental
+```
+
+## LangGraph
+`langgraph` is a library for building stateful, multi-actor applications with LLMs, built on top of (and intended to be used with) LangChain.
+Install with:
+
+```bash
+pip install langgraph
+```
+## LangServe
+LangServe helps developers deploy LangChain runnables and chains as a REST API.
+LangServe is automatically installed by LangChain CLI.
+If not using LangChain CLI, install with:
+
+```bash
+pip install "langserve[all]"
+```
+for both client and server dependencies. Or `pip install "langserve[client]"` for client code, and `pip install "langserve[server]"` for server code.
+
+## LangChain CLI
+The LangChain CLI is useful for working with LangChain templates and other LangServe projects.
+Install with:
+
+```bash
+pip install langchain-cli
+```
+
+## LangSmith SDK
+The LangSmith SDK is automatically installed by LangChain.
+If not using LangChain, install with:
+>>>>>>> langchan/master
 
 ```bash
 pip install langsmith

@@ -7,7 +7,11 @@ readme = "README.md"
 
 [tool.poetry.dependencies]
 python = ">=3.8.1,<4.0"
+<<<<<<< HEAD
 gigachain = ">=0.0.313, <0.1"
+=======
+langchain = "^0.1"
+>>>>>>> langchan/master
 openai = "<2"
 fastapi = ">=0.104.0,<1"
 sse-starlette = "^1.6.5"
@@ -17,7 +21,15 @@ tiktoken = "^0.5.1"
 langchain-text-splitters = ">=0.0.1,<0.1"
 
 [tool.poetry.group.dev.dependencies]
+<<<<<<< HEAD
 gigachain-cli = ">=0.0.21"
+=======
+langchain-cli = ">=0.0.21"
+
+[tool.langserve]
+export_module = "rag_timescale_hybrid_search_time.chain"
+export_attr = "chain"
+>>>>>>> langchan/master
 
 [tool.templates-hub]
 use-case = "rag"

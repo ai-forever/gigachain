@@ -1,5 +1,8 @@
 """Interface to access to place that stores documents."""
+<<<<<<< HEAD
 
+=======
+>>>>>>> langchan/master
 from abc import ABC, abstractmethod
 from typing import Dict, List, Union
 

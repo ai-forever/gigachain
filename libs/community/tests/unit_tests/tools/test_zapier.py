@@ -1,5 +1,8 @@
 """Test building the Zapier tool, not running it."""
+<<<<<<< HEAD
 
+=======
+>>>>>>> langchan/master
 from unittest.mock import MagicMock, patch
 
 import pytest

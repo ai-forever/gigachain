@@ -122,12 +122,21 @@ def serve(
     host_str = host if host is not None else "127.0.0.1"
 
     script = (
+<<<<<<< HEAD
         "gigachain_cli.dev_scripts:create_demo_server_chat"
         if chat_playground
         else (
             "gigachain_cli.dev_scripts:create_demo_server_configurable"
             if configurable
             else "gigachain_cli.dev_scripts:create_demo_server"
+=======
+        "langchain_cli.dev_scripts:create_demo_server_chat"
+        if chat_playground
+        else (
+            "langchain_cli.dev_scripts:create_demo_server_configurable"
+            if configurable
+            else "langchain_cli.dev_scripts:create_demo_server"
+>>>>>>> langchan/master
         )
     )
 

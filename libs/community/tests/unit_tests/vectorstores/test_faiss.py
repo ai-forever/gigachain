@@ -1,5 +1,8 @@
 """Test FAISS functionality."""
+<<<<<<< HEAD
 
+=======
+>>>>>>> langchan/master
 import datetime
 import math
 import tempfile

@@ -1,5 +1,8 @@
 """Tools for interacting with a Power BI dataset."""
+<<<<<<< HEAD
 
+=======
+>>>>>>> langchan/master
 import logging
 from time import perf_counter
 from typing import Any, Dict, Optional, Tuple
@@ -52,7 +55,11 @@ class QueryPowerBITool(BaseTool):
         for var in llm_chain.prompt.input_variables:
             if var not in ["tool_input", "tables", "schemas", "examples"]:
                 raise ValueError(
+<<<<<<< HEAD
                     "LLM chain for QueryPowerBITool must have input variables ['tool_input', 'tables', 'schemas', 'examples'], found %s",  # noqa: C0301 E501 # pylint: disable=C0301
+=======
+                    "LLM chain for QueryPowerBITool must have input variables ['tool_input', 'tables', 'schemas', 'examples'], found %s",  # noqa: E501 # pylint: disable=C0301
+>>>>>>> langchan/master
                     llm_chain.prompt.input_variables,
                 )
         return llm_chain

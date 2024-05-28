@@ -1,15 +1,26 @@
+<<<<<<< HEAD
 
 [tool.poetry]
 name = "gigachain-core"
 version = "0.2.0.1"
+=======
+[tool.poetry]
+name = "langchain-core"
+version = "0.2.2rc1"
+>>>>>>> langchan/master
 description = "Building applications with LLMs through composability"
 authors = []
 license = "MIT"
 readme = "README.md"
+<<<<<<< HEAD
 repository = "https://github.com/ai-forever/gigachain"
 packages = [
     {include = "langchain_core"}
 ]
+=======
+repository = "https://github.com/langchain-ai/langchain"
+
+>>>>>>> langchan/master
 
 [tool.poetry.dependencies]
 python = ">=3.8.1,<4.0"
@@ -35,7 +46,11 @@ mypy = "^1"
 types-pyyaml = "^6.0.12.2"
 types-requests = "^2.28.11.5"
 types-jinja2 = "^2.11.9"
+<<<<<<< HEAD
 gigachain-text-splitters = { path = "../text-splitters", develop = true }
+=======
+langchain-text-splitters = { path = "../text-splitters", develop = true }
+>>>>>>> langchan/master
 
 [tool.poetry.group.dev]
 optional = true
@@ -81,7 +96,10 @@ select = [
 
 [tool.mypy]
 disallow_untyped_defs = "True"
+<<<<<<< HEAD
 ignore_missing_imports = "True"
+=======
+>>>>>>> langchan/master
 exclude = ["notebooks", "examples", "example_data", "langchain_core/pydantic"]
 
 [[tool.mypy.overrides]]
@@ -115,4 +133,7 @@ markers = [
   "compile: mark placeholder test used to compile integration tests without running them",
 ]
 asyncio_mode = "auto"
+<<<<<<< HEAD
 
+=======
+>>>>>>> langchan/master

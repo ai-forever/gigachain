@@ -1,12 +1,17 @@
 from __future__ import annotations
 
+<<<<<<< HEAD
 import json
 import logging
 from operator import itemgetter
+=======
+import logging
+>>>>>>> langchan/master
 from typing import (
     TYPE_CHECKING,
     Any,
     AsyncIterator,
+<<<<<<< HEAD
     Callable,
     Dict,
     Iterator,
@@ -24,11 +29,24 @@ from typing import (
 from uuid import uuid4
 
 from langchain_core._api import beta
+=======
+    Dict,
+    Iterator,
+    List,
+    Mapping,
+    Optional,
+    Type,
+)
+
+>>>>>>> langchan/master
 from langchain_core.callbacks import (
     AsyncCallbackManagerForLLMRun,
     CallbackManagerForLLMRun,
 )
+<<<<<<< HEAD
 from langchain_core.language_models import LanguageModelInput
+=======
+>>>>>>> langchan/master
 from langchain_core.language_models.chat_models import (
     BaseChatModel,
     agenerate_from_stream,
@@ -47,6 +65,7 @@ from langchain_core.messages import (
     HumanMessageChunk,
     SystemMessage,
     SystemMessageChunk,
+<<<<<<< HEAD
     ToolCall,
     ToolCallChunk,
     ToolMessage,
@@ -65,6 +84,11 @@ from langchain_community.chat_models.gigachat_tools import (
     JsonOutputKeyToolsParser,
     PydanticToolsParser,
 )
+=======
+)
+from langchain_core.outputs import ChatGeneration, ChatGenerationChunk, ChatResult
+
+>>>>>>> langchan/master
 from langchain_community.llms.gigachat import _BaseGigaChat
 
 if TYPE_CHECKING:
@@ -77,12 +101,16 @@ def _convert_dict_to_message(message: gm.Messages) -> BaseMessage:
     from gigachat.models import FunctionCall, MessagesRole
 
     additional_kwargs: Dict = {}
+<<<<<<< HEAD
     tool_calls = []
+=======
+>>>>>>> langchan/master
     if function_call := message.function_call:
         if isinstance(function_call, FunctionCall):
             additional_kwargs["function_call"] = dict(function_call)
         elif isinstance(function_call, dict):
             additional_kwargs["function_call"] = function_call
+<<<<<<< HEAD
         if additional_kwargs.get("function_call") is not None:
             tool_calls = [
                 ToolCall(
@@ -91,21 +119,28 @@ def _convert_dict_to_message(message: gm.Messages) -> BaseMessage:
                     id=str(uuid4()),
                 )
             ]
+=======
+>>>>>>> langchan/master
 
     if message.role == MessagesRole.SYSTEM:
         return SystemMessage(content=message.content)
     elif message.role == MessagesRole.USER:
         return HumanMessage(content=message.content)
     elif message.role == MessagesRole.ASSISTANT:
+<<<<<<< HEAD
         return AIMessage(
             content=message.content,
             additional_kwargs=additional_kwargs,
             tool_calls=tool_calls,
         )
+=======
+        return AIMessage(content=message.content, additional_kwargs=additional_kwargs)
+>>>>>>> langchan/master
     else:
         raise TypeError(f"Got unknown role {message.role} {message}")
 
 
+<<<<<<< HEAD
 def _convert_message_to_dict(message: BaseMessage) -> gm.Messages:
     from gigachat.models import Messages, MessagesRole
 
@@ -143,6 +178,27 @@ def _convert_message_to_dict(message: BaseMessage) -> gm.Messages:
     else:
         raise TypeError(f"Got unknown type {message}")
     return Messages(**kwargs)
+=======
+def _convert_message_to_dict(message: gm.BaseMessage) -> gm.Messages:
+    from gigachat.models import Messages, MessagesRole
+
+    if isinstance(message, SystemMessage):
+        return Messages(role=MessagesRole.SYSTEM, content=message.content)
+    elif isinstance(message, HumanMessage):
+        return Messages(role=MessagesRole.USER, content=message.content)
+    elif isinstance(message, AIMessage):
+        return Messages(
+            role=MessagesRole.ASSISTANT,
+            content=message.content,
+            function_call=message.additional_kwargs.get("function_call", None),
+        )
+    elif isinstance(message, ChatMessage):
+        return Messages(role=MessagesRole(message.role), content=message.content)
+    elif isinstance(message, FunctionMessage):
+        return Messages(role=MessagesRole.FUNCTION, content=message.content)
+    else:
+        raise TypeError(f"Got unknown type {message}")
+>>>>>>> langchan/master
 
 
 def _convert_delta_to_message_chunk(
@@ -151,12 +207,16 @@ def _convert_delta_to_message_chunk(
     role = _dict.get("role")
     content = _dict.get("content") or ""
     additional_kwargs: Dict = {}
+<<<<<<< HEAD
     tool_call_chunks = []
+=======
+>>>>>>> langchan/master
     if _dict.get("function_call"):
         function_call = dict(_dict["function_call"])
         if "name" in function_call and function_call["name"] is None:
             function_call["name"] = ""
         additional_kwargs["function_call"] = function_call
+<<<<<<< HEAD
         if additional_kwargs.get("function_call") is not None:
             tool_call_chunks = [
                 ToolCallChunk(
@@ -166,15 +226,21 @@ def _convert_delta_to_message_chunk(
                     index=0,
                 )
             ]
+=======
+>>>>>>> langchan/master
 
     if role == "user" or default_class == HumanMessageChunk:
         return HumanMessageChunk(content=content)
     elif role == "assistant" or default_class == AIMessageChunk:
+<<<<<<< HEAD
         return AIMessageChunk(
             content=content,
             additional_kwargs=additional_kwargs,
             tool_call_chunks=tool_call_chunks,
         )
+=======
+        return AIMessageChunk(content=content, additional_kwargs=additional_kwargs)
+>>>>>>> langchan/master
     elif role == "system" or default_class == SystemMessageChunk:
         return SystemMessageChunk(content=content)
     elif role == "function" or default_class == FunctionMessageChunk:
@@ -185,6 +251,7 @@ def _convert_delta_to_message_chunk(
         return default_class(content=content)  # type: ignore[call-arg]
 
 
+<<<<<<< HEAD
 def _convert_function_to_dict(function: Dict) -> Any:
     from gigachat.models import Function, FunctionParameters
 
@@ -229,6 +296,8 @@ class _AllReturnType(TypedDict):
     parsing_error: Optional[BaseException]
 
 
+=======
+>>>>>>> langchan/master
 class GigaChat(_BaseGigaChat, BaseChatModel):
     """`GigaChat` large language models API.
 
@@ -248,6 +317,7 @@ class GigaChat(_BaseGigaChat, BaseChatModel):
             messages=[_convert_message_to_dict(m) for m in messages],
         )
 
+<<<<<<< HEAD
         payload.functions = kwargs.get("functions", [])
         payload.function_call = kwargs.get("function_call", None)
 
@@ -256,6 +326,10 @@ class GigaChat(_BaseGigaChat, BaseChatModel):
                 payload.functions, List
             ):
                 payload.functions.append(tool["function"])
+=======
+        payload.functions = kwargs.get("functions", None)
+        payload.model = self.model
+>>>>>>> langchan/master
 
         if self.profanity_check is not None:
             payload.profanity_check = self.profanity_check
@@ -271,9 +345,13 @@ class GigaChat(_BaseGigaChat, BaseChatModel):
             payload.update_interval = self.update_interval
 
         if self.verbose:
+<<<<<<< HEAD
             logger.warning(
                 "Giga request: %s", json.dumps(payload.dict(), ensure_ascii=False)
             )
+=======
+            logger.warning("Giga request: %s", payload.dict())
+>>>>>>> langchan/master
 
         return payload
 
@@ -346,18 +424,28 @@ class GigaChat(_BaseGigaChat, BaseChatModel):
     ) -> Iterator[ChatGenerationChunk]:
         payload = self._build_payload(messages, **kwargs)
 
+<<<<<<< HEAD
         for chunk_d in self._client.stream(payload):
             chunk = {}
             if not isinstance(chunk_d, dict):
                 chunk = chunk_d.dict()
             else:
                 chunk = chunk_d
+=======
+        for chunk in self._client.stream(payload):
+            if not isinstance(chunk, dict):
+                chunk = chunk.dict()
+>>>>>>> langchan/master
             if len(chunk["choices"]) == 0:
                 continue
 
             choice = chunk["choices"][0]
             content = choice.get("delta", {}).get("content", {})
+<<<<<<< HEAD
             chunk_m = _convert_delta_to_message_chunk(choice["delta"], AIMessageChunk)
+=======
+            chunk = _convert_delta_to_message_chunk(choice["delta"], AIMessageChunk)
+>>>>>>> langchan/master
 
             finish_reason = choice.get("finish_reason")
 
@@ -368,7 +456,11 @@ class GigaChat(_BaseGigaChat, BaseChatModel):
             if run_manager:
                 run_manager.on_llm_new_token(content)
 
+<<<<<<< HEAD
             yield ChatGenerationChunk(message=chunk_m, generation_info=generation_info)
+=======
+            yield ChatGenerationChunk(message=chunk, generation_info=generation_info)
+>>>>>>> langchan/master
 
     async def _astream(
         self,
@@ -379,18 +471,28 @@ class GigaChat(_BaseGigaChat, BaseChatModel):
     ) -> AsyncIterator[ChatGenerationChunk]:
         payload = self._build_payload(messages, **kwargs)
 
+<<<<<<< HEAD
         async for chunk_d in self._client.astream(payload):
             chunk = {}
             if not isinstance(chunk_d, dict):
                 chunk = chunk_d.dict()
             else:
                 chunk = chunk_d
+=======
+        async for chunk in self._client.astream(payload):
+            if not isinstance(chunk, dict):
+                chunk = chunk.dict()
+>>>>>>> langchan/master
             if len(chunk["choices"]) == 0:
                 continue
 
             choice = chunk["choices"][0]
             content = choice.get("delta", {}).get("content", {})
+<<<<<<< HEAD
             chunk_m = _convert_delta_to_message_chunk(choice["delta"], AIMessageChunk)
+=======
+            chunk = _convert_delta_to_message_chunk(choice["delta"], AIMessageChunk)
+>>>>>>> langchan/master
 
             finish_reason = choice.get("finish_reason")
 
@@ -398,6 +500,7 @@ class GigaChat(_BaseGigaChat, BaseChatModel):
                 dict(finish_reason=finish_reason) if finish_reason is not None else None
             )
 
+<<<<<<< HEAD
             yield ChatGenerationChunk(message=chunk_m, generation_info=generation_info)
             if run_manager:
                 await run_manager.on_llm_new_token(content)
@@ -599,3 +702,8 @@ class GigaChat(_BaseGigaChat, BaseChatModel):
 
 def _is_pydantic_class(obj: Any) -> bool:
     return isinstance(obj, type) and issubclass(obj, BaseModel)
+=======
+            yield ChatGenerationChunk(message=chunk, generation_info=generation_info)
+            if run_manager:
+                await run_manager.on_llm_new_token(content)
+>>>>>>> langchan/master

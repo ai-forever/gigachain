@@ -1,5 +1,8 @@
 """Test EcloudESVectorStore functionality."""
+<<<<<<< HEAD
 
+=======
+>>>>>>> langchan/master
 from __future__ import annotations
 
 from typing import TYPE_CHECKING, List, Optional

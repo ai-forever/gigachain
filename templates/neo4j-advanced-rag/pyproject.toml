@@ -9,7 +9,11 @@ readme = "README.md"
 
 [tool.poetry.dependencies]
 python = ">=3.8.1,<4.0"
+<<<<<<< HEAD
 gigachain = ">=0.0.325"
+=======
+langchain = "^0.1"
+>>>>>>> langchan/master
 tiktoken = "^0.5.1"
 openai = "<2"
 neo4j = "^5.14.0"
@@ -17,7 +21,11 @@ langchain-text-splitters = ">=0.0.1,<0.1"
 langchain-openai = "^0.1.1"
 
 [tool.poetry.group.dev.dependencies]
+<<<<<<< HEAD
 gigachain-cli = ">=0.0.21"
+=======
+langchain-cli = ">=0.0.21"
+>>>>>>> langchan/master
 
 [tool.langserve]
 export_module = "neo4j_advanced_rag"

@@ -1,4 +1,8 @@
+<<<<<<< HEAD
 # gigachain-standard-tests
+=======
+# langchain-standard-tests
+>>>>>>> langchan/master
 
 This is an INTERNAL library for the LangChain project. It contains the base classes for
 a standard set of tests.

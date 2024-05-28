@@ -11,6 +11,10 @@ _EXPECTED = [
     "AIPluginTool",
     "APIOperation",
     "ArxivQueryRun",
+<<<<<<< HEAD
+=======
+    "AskNewsSearch",
+>>>>>>> langchan/master
     "AzureAiServicesDocumentIntelligenceTool",
     "AzureAiServicesImageAnalysisTool",
     "AzureAiServicesSpeechToTextTool",

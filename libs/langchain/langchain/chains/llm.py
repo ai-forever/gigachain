@@ -1,5 +1,8 @@
 """Chain that just formats a prompt and calls an LLM."""
+<<<<<<< HEAD
 
+=======
+>>>>>>> langchan/master
 from __future__ import annotations
 
 import warnings
@@ -194,11 +197,15 @@ class LLMChain(Chain):
             stop = input_list[0]["stop"]
         prompts = []
         for inputs in input_list:
+<<<<<<< HEAD
             all_inputs = self.prompt.input_variables + list(
                 self.prompt.partial_variables.keys()
             )
             selected_inputs = {k: inputs[k] for k in all_inputs if k in inputs}
 
+=======
+            selected_inputs = {k: inputs[k] for k in self.prompt.input_variables}
+>>>>>>> langchan/master
             prompt = self.prompt.format_prompt(**selected_inputs)
             _colored_text = get_colored_text(prompt.to_string(), "green")
             _text = "Prompt after formatting:\n" + _colored_text
@@ -224,11 +231,15 @@ class LLMChain(Chain):
             stop = input_list[0]["stop"]
         prompts = []
         for inputs in input_list:
+<<<<<<< HEAD
             all_inputs = self.prompt.input_variables + list(
                 self.prompt.partial_variables.keys()
             )
             selected_inputs = {k: inputs[k] for k in all_inputs if k in inputs}
 
+=======
+            selected_inputs = {k: inputs[k] for k in self.prompt.input_variables}
+>>>>>>> langchan/master
             prompt = self.prompt.format_prompt(**selected_inputs)
             _colored_text = get_colored_text(prompt.to_string(), "green")
             _text = "Prompt after formatting:\n" + _colored_text

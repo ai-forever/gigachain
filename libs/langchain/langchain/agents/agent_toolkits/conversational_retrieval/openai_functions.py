@@ -1,4 +1,8 @@
+<<<<<<< HEAD
 from typing import Any, List, Optional  # noqa: E501
+=======
+from typing import Any, List, Optional
+>>>>>>> langchan/master
 
 from langchain_core.language_models import BaseLanguageModel
 from langchain_core.memory import BaseMemory

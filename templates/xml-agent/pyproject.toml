@@ -1,4 +1,7 @@
+<<<<<<< HEAD
 
+=======
+>>>>>>> langchan/master
 [tool.poetry]
 name = "xml-agent"
 version = "0.1.0"
@@ -8,15 +11,25 @@ readme = "README.md"
 
 [tool.poetry.dependencies]
 python = ">=3.8.1,<4.0"
+<<<<<<< HEAD
 gigachain = "^0.1"
+=======
+langchain = "^0.1"
+>>>>>>> langchan/master
 langchainhub = ">=0.1.13"
 duckduckgo-search = "^3.8.3"
 langchain-anthropic = "^0.1.4"
 
 [tool.poetry.group.dev.dependencies]
+<<<<<<< HEAD
 gigachain-cli = ">=0.0.21"
 
 [tool.gigaserve]
+=======
+langchain-cli = ">=0.0.21"
+
+[tool.langserve]
+>>>>>>> langchan/master
 export_module = "xml_agent"
 export_attr = "agent_executor"
 

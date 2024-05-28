@@ -5,7 +5,11 @@
 Install the LangChain CLI if you haven't yet
 
 ```bash
+<<<<<<< HEAD
 pip install -U "gigachain-cli"
+=======
+pip install -U langchain-cli
+>>>>>>> langchan/master
 ```
 
 ## Adding packages
@@ -13,6 +17,7 @@ pip install -U "gigachain-cli"
 ```bash
 # adding packages from 
 # https://github.com/langchain-ai/langchain/tree/master/templates
+<<<<<<< HEAD
 gigachain app add $PROJECT_NAME
 
 # adding custom GitHub repo packages
@@ -22,12 +27,27 @@ gigachain app add --repo $OWNER/$REPO
 
 # with a custom api mount point (defaults to `/{package_name}`)
 gigachain app add $PROJECT_NAME --api_path=/my/custom/path/rag
+=======
+langchain app add $PROJECT_NAME
+
+# adding custom GitHub repo packages
+langchain app add --repo $OWNER/$REPO
+# or with whole git string (supports other git providers):
+# langchain app add git+https://github.com/hwchase17/chain-of-verification
+
+# with a custom api mount point (defaults to `/{package_name}`)
+langchain app add $PROJECT_NAME --api_path=/my/custom/path/rag
+>>>>>>> langchan/master
 ```
 
 Note: you remove packages by their api path
 
 ```bash
+<<<<<<< HEAD
 gigachain app remove my/custom/path/rag
+=======
+langchain app remove my/custom/path/rag
+>>>>>>> langchan/master
 ```
 
 ## Setup LangSmith (Optional)
@@ -45,7 +65,11 @@ export LANGCHAIN_PROJECT=<your-project>  # if not specified, defaults to "defaul
 ## Launch LangServe
 
 ```bash
+<<<<<<< HEAD
 gigachain serve
+=======
+langchain serve
+>>>>>>> langchan/master
 ```
 
 ## Running in Docker

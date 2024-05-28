@@ -244,7 +244,11 @@ def test_load_empty_jsonlines(mocker: MockerFixture) -> None:
         ),
     ),
 )
+<<<<<<< HEAD
 def test_json_meta(
+=======
+def test_json_meta_01(
+>>>>>>> langchan/master
     patch_func: str, patch_func_value: Any, kwargs: Dict, mocker: MockerFixture
 ) -> None:
     mocker.patch("builtins.open", mocker.mock_open())

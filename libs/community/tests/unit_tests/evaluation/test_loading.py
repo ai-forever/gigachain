@@ -1,5 +1,8 @@
 """Test the loading function for evaluators."""
+<<<<<<< HEAD
 
+=======
+>>>>>>> langchan/master
 from typing import List
 
 import pytest

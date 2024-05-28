@@ -1,5 +1,8 @@
 """Test SparkLLM."""
+<<<<<<< HEAD
 
+=======
+>>>>>>> langchan/master
 from langchain_core.outputs import LLMResult
 
 from langchain_community.llms.sparkllm import SparkLLM

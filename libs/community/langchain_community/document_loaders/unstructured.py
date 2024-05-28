@@ -1,5 +1,8 @@
 """Loader that uses unstructured to load files."""
+<<<<<<< HEAD
 
+=======
+>>>>>>> langchan/master
 import collections
 from abc import ABC, abstractmethod
 from pathlib import Path

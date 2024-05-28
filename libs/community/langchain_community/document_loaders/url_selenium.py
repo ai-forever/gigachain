@@ -1,5 +1,10 @@
+<<<<<<< HEAD
 """Loader that uses Selenium to load a page, then uses unstructured to load the html."""
 
+=======
+"""Loader that uses Selenium to load a page, then uses unstructured to load the html.
+"""
+>>>>>>> langchan/master
 import logging
 from typing import TYPE_CHECKING, List, Literal, Optional, Union
 

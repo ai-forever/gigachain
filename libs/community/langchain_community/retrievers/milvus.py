@@ -1,5 +1,8 @@
 """Milvus Retriever"""
+<<<<<<< HEAD
 
+=======
+>>>>>>> langchan/master
 import warnings
 from typing import Any, Dict, List, Optional
 

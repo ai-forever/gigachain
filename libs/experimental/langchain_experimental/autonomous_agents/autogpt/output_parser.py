@@ -56,8 +56,13 @@ class AutoGPTOutputParser(BaseAutoGPTOutputParser):
                 )
         try:
             return AutoGPTAction(
+<<<<<<< HEAD
                 name=parsed["команда"]["name"],
                 args=parsed["команда"]["args"],
+=======
+                name=parsed["command"]["name"],
+                args=parsed["command"]["args"],
+>>>>>>> langchan/master
             )
         except (KeyError, TypeError):
             # If the command is null or incomplete, return an erroneous tool

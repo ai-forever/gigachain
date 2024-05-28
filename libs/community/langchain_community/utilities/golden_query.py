@@ -1,5 +1,8 @@
 """Util that calls Golden."""
+<<<<<<< HEAD
 
+=======
+>>>>>>> langchan/master
 import json
 from typing import Dict, Optional
 

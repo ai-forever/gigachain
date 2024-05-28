@@ -143,8 +143,11 @@ class VoyageEmbeddings(BaseModel, Embeddings):
             },
             "timeout": self.request_timeout,
         }
+<<<<<<< HEAD
         if self.truncation is not None:
             params["json"]["truncation"] = self.truncation
+=======
+>>>>>>> langchan/master
         return params
 
     def _get_embeddings(

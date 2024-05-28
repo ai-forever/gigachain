@@ -28,6 +28,12 @@ if TYPE_CHECKING:
     from langchain_community.retrievers.arxiv import (
         ArxivRetriever,
     )
+<<<<<<< HEAD
+=======
+    from langchain_community.retrievers.asknews import (
+        AskNewsRetriever,
+    )
+>>>>>>> langchan/master
     from langchain_community.retrievers.azure_ai_search import (
         AzureAISearchRetriever,
         AzureCognitiveSearchRetriever,
@@ -133,6 +139,12 @@ if TYPE_CHECKING:
     from langchain_community.retrievers.zep import (
         ZepRetriever,
     )
+<<<<<<< HEAD
+=======
+    from langchain_community.retrievers.zep_cloud import (
+        ZepCloudRetriever,
+    )
+>>>>>>> langchan/master
     from langchain_community.retrievers.zilliz import (
         ZillizRetriever,
     )
@@ -143,6 +155,10 @@ _module_lookup = {
     "AmazonKnowledgeBasesRetriever": "langchain_community.retrievers.bedrock",
     "ArceeRetriever": "langchain_community.retrievers.arcee",
     "ArxivRetriever": "langchain_community.retrievers.arxiv",
+<<<<<<< HEAD
+=======
+    "AskNewsRetriever": "langchain_community.retrievers.asknews",
+>>>>>>> langchan/master
     "AzureAISearchRetriever": "langchain_community.retrievers.azure_ai_search",
     "AzureCognitiveSearchRetriever": "langchain_community.retrievers.azure_ai_search",
     "BM25Retriever": "langchain_community.retrievers.bm25",
@@ -179,6 +195,10 @@ _module_lookup = {
     "WikipediaRetriever": "langchain_community.retrievers.wikipedia",
     "YouRetriever": "langchain_community.retrievers.you",
     "ZepRetriever": "langchain_community.retrievers.zep",
+<<<<<<< HEAD
+=======
+    "ZepCloudRetriever": "langchain_community.retrievers.zep_cloud",
+>>>>>>> langchan/master
     "ZillizRetriever": "langchain_community.retrievers.zilliz",
     "NeuralDBRetriever": "langchain_community.retrievers.thirdai_neuraldb",
 }
@@ -196,6 +216,10 @@ __all__ = [
     "AmazonKnowledgeBasesRetriever",
     "ArceeRetriever",
     "ArxivRetriever",
+<<<<<<< HEAD
+=======
+    "AskNewsRetriever",
+>>>>>>> langchan/master
     "AzureAISearchRetriever",
     "AzureCognitiveSearchRetriever",
     "BM25Retriever",
@@ -233,5 +257,9 @@ __all__ = [
     "WikipediaRetriever",
     "YouRetriever",
     "ZepRetriever",
+<<<<<<< HEAD
+=======
+    "ZepCloudRetriever",
+>>>>>>> langchan/master
     "ZillizRetriever",
 ]

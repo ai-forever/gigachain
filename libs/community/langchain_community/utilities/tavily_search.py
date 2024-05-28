@@ -2,7 +2,10 @@
 
 In order to set this up, follow instructions at:
 """
+<<<<<<< HEAD
 
+=======
+>>>>>>> langchan/master
 import json
 from typing import Dict, List, Optional
 
@@ -98,7 +101,11 @@ class TavilySearchAPIWrapper(BaseModel):
                 content: The content of the result.
                 score: The score of the result.
                 raw_content: The raw content of the result.
+<<<<<<< HEAD
         """  # noqa: E501
+=======
+        """
+>>>>>>> langchan/master
         raw_search_results = self.raw_results(
             query,
             max_results=max_results,

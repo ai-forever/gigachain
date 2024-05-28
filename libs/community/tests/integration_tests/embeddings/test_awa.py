@@ -1,5 +1,8 @@
 """Test Awa Embedding"""
+<<<<<<< HEAD
 
+=======
+>>>>>>> langchan/master
 from langchain_community.embeddings.awa import AwaEmbeddings
 
 

@@ -186,7 +186,11 @@ def replace_imports(file):
     data = code_block_re.sub(replacer, data)
 
     # if all_imports:
+<<<<<<< HEAD
     #     print(f"Adding {len(all_imports)} links for imports in {file}")  # noqa: T201
+=======
+    #     print(f"Adding {len(all_imports)} links for imports in {file}")
+>>>>>>> langchan/master
     with open(file, "w") as f:
         f.write(data)
     return all_imports

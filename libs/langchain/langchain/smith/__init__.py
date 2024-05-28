@@ -54,6 +54,7 @@ or LangSmith's `RunEvaluator` classes.
     from langchain.evaluation import StringEvaluator
 
     class MyStringEvaluator(StringEvaluator):
+<<<<<<< HEAD
 
         @property
         def requires_input(self) -> bool:
@@ -67,6 +68,21 @@ or LangSmith's `RunEvaluator` classes.
         def evaluation_name(self) -> str:
             return "exact_match"
 
+=======
+        
+        @property
+        def requires_input(self) -> bool:
+            return False
+        
+        @property
+        def requires_reference(self) -> bool:
+            return True
+        
+        @property
+        def evaluation_name(self) -> str:
+            return "exact_match"
+        
+>>>>>>> langchan/master
         def _evaluate_strings(self, prediction, reference=None, input=None, **kwargs) -> dict:
             return {"score": prediction == reference}
 
@@ -80,7 +96,11 @@ or LangSmith's `RunEvaluator` classes.
         "<my_dataset_name>",
         construct_chain,
         evaluation=evaluation_config,
+<<<<<<< HEAD
     )
+=======
+    )    
+>>>>>>> langchan/master
 
 **Primary Functions**
 
@@ -88,7 +108,10 @@ or LangSmith's `RunEvaluator` classes.
 - :func:`run_on_dataset <langchain.smith.evaluation.runner_utils.run_on_dataset>`: Function to evaluate a chain, agent, or other LangChain component over a dataset.
 - :class:`RunEvalConfig <langchain.smith.evaluation.config.RunEvalConfig>`: Class representing the configuration for running evaluation. You can select evaluators by :class:`EvaluatorType <langchain.evaluation.schema.EvaluatorType>` or config, or you can pass in `custom_evaluators`
 """  # noqa: E501
+<<<<<<< HEAD
 
+=======
+>>>>>>> langchan/master
 from langchain.smith.evaluation import (
     RunEvalConfig,
     arun_on_dataset,

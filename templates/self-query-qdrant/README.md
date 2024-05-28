@@ -24,19 +24,31 @@ export OPENAI_API_KEY=
 To use this package, install the LangChain CLI first:
 
 ```shell
+<<<<<<< HEAD
 pip install -U gigachain
+=======
+pip install -U "langchain-cli[serve]"
+>>>>>>> langchan/master
 ```
 
 Create a new LangChain project and install this package as the only one:
 
 ```shell
+<<<<<<< HEAD
 gigachain app new my-app --package self-query-qdrant
+=======
+langchain app new my-app --package self-query-qdrant
+>>>>>>> langchan/master
 ```
 
 To add this to an existing project, run:
 
 ```shell
+<<<<<<< HEAD
 gigachain app add self-query-qdrant
+=======
+langchain app add self-query-qdrant
+>>>>>>> langchan/master
 ```
 
 ### Defaults
@@ -141,7 +153,11 @@ export LANGCHAIN_PROJECT=<your-project>  # if not specified, defaults to "defaul
 If you are inside this directory, then you can spin up a LangServe instance directly by:
 
 ```shell
+<<<<<<< HEAD
 gigachain serve
+=======
+langchain serve
+>>>>>>> langchan/master
 ```
 
 ### Local Server

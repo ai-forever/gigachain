@@ -1,5 +1,8 @@
 """Abstract interface for document loader implementations."""
+<<<<<<< HEAD
 
+=======
+>>>>>>> langchan/master
 from __future__ import annotations
 
 from abc import ABC, abstractmethod

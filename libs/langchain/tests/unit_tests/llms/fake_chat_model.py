@@ -1,5 +1,8 @@
 """Fake Chat Model wrapper for testing purposes."""
+<<<<<<< HEAD
 
+=======
+>>>>>>> langchan/master
 import re
 from typing import Any, AsyncIterator, Dict, Iterator, List, Optional, cast
 

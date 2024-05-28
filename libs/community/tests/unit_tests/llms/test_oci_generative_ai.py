@@ -1,5 +1,8 @@
 """Test OCI Generative AI LLM service"""
+<<<<<<< HEAD
 
+=======
+>>>>>>> langchan/master
 from unittest.mock import MagicMock
 
 import pytest

@@ -46,6 +46,10 @@ def test_compatible_vectorstore_documentation() -> None:
 
     # These are mentioned in the indexing.ipynb documentation
     documented = {
+<<<<<<< HEAD
+=======
+        "Aerospike",
+>>>>>>> langchan/master
         "AnalyticDB",
         "AstraDB",
         "AzureCosmosDBVectorSearch",
@@ -97,6 +101,10 @@ def test_compatible_vectorstore_documentation() -> None:
         "Weaviate",
         "Yellowbrick",
         "ZepVectorStore",
+<<<<<<< HEAD
+=======
+        "ZepCloudVectorStore",
+>>>>>>> langchan/master
         "Zilliz",
         "Lantern",
         "OpenSearchVectorSearch",

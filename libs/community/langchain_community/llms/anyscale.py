@@ -1,5 +1,8 @@
 """Wrapper around Anyscale Endpoint"""
+<<<<<<< HEAD
 
+=======
+>>>>>>> langchan/master
 from typing import (
     Any,
     Dict,

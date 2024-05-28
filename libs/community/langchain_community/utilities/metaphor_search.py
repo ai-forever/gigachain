@@ -2,7 +2,10 @@
 
 In order to set this up, follow instructions at:
 """
+<<<<<<< HEAD
 
+=======
+>>>>>>> langchan/master
 import json
 from typing import Dict, List, Optional
 

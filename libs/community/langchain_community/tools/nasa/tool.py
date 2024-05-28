@@ -1,5 +1,9 @@
 """
+<<<<<<< HEAD
 This tool allows agents to interact with the NASA API, specifically
+=======
+This tool allows agents to interact with the NASA API, specifically 
+>>>>>>> langchan/master
 the the NASA Image & Video Library and Exoplanet
 """
 

@@ -24,6 +24,10 @@ CHAT_MODEL_FEAT_TABLE = {
     "ChatMistralAI": {
         "tool_calling": True,
         "structured_output": True,
+<<<<<<< HEAD
+=======
+        "json_model": True,
+>>>>>>> langchan/master
         "package": "langchain-mistralai",
         "link": "/docs/integrations/chat/mistralai/",
     },
@@ -80,6 +84,10 @@ CHAT_MODEL_FEAT_TABLE = {
         "link": "/docs/integrations/chat/bedrock/",
     },
     "ChatHuggingFace": {
+<<<<<<< HEAD
+=======
+        "tool_calling": True,
+>>>>>>> langchan/master
         "local": True,
         "package": "langchain-huggingface",
         "link": "/docs/integrations/chat/huggingface/",
@@ -102,6 +110,10 @@ LLM_TEMPLATE = """\
 sidebar_position: 1
 sidebar_class_name: hidden
 keywords: [compatibility]
+<<<<<<< HEAD
+=======
+custom_edit_url:
+>>>>>>> langchan/master
 ---
 
 # LLMs
@@ -116,13 +128,21 @@ Each LLM integration can optionally provide native implementations for async, st
 
 {table}
 
+<<<<<<< HEAD
 """  # noqa: E501
+=======
+"""
+>>>>>>> langchan/master
 
 CHAT_MODEL_TEMPLATE = """\
 ---
 sidebar_position: 0
 sidebar_class_name: hidden
 keywords: [compatibility, bind_tools, tool calling, function calling, structured output, with_structured_output, json mode, local model]
+<<<<<<< HEAD
+=======
+custom_edit_url:
+>>>>>>> langchan/master
 ---
 
 # Chat models
@@ -133,7 +153,11 @@ The following table shows all the chat models that support one or more advanced 
 
 {table}
 
+<<<<<<< HEAD
 """  # noqa: E501
+=======
+"""
+>>>>>>> langchan/master
 
 
 def get_llm_table():

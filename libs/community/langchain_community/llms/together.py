@@ -1,5 +1,8 @@
 """Wrapper around Together AI's Completion API."""
+<<<<<<< HEAD
 
+=======
+>>>>>>> langchan/master
 import logging
 from typing import Any, Dict, List, Optional
 

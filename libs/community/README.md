@@ -6,7 +6,11 @@
 ## Quick Install
 
 ```bash
+<<<<<<< HEAD
 pip install gigachain-community
+=======
+pip install langchain-community
+>>>>>>> langchan/master
 ```
 
 ## What is it?

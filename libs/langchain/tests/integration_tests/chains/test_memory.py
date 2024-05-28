@@ -1,5 +1,8 @@
 """Test memory functionality."""
+<<<<<<< HEAD
 
+=======
+>>>>>>> langchan/master
 from langchain.memory.summary_buffer import ConversationSummaryBufferMemory
 from tests.unit_tests.llms.fake_llm import FakeLLM
 

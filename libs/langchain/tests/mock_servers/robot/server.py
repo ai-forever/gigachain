@@ -1,5 +1,8 @@
 """A mock Robot server."""
+<<<<<<< HEAD
 
+=======
+>>>>>>> langchan/master
 from enum import Enum
 from typing import Any, Dict, List, Optional, Union
 from uuid import uuid4

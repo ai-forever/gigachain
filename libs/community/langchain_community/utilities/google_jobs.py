@@ -1,5 +1,8 @@
 """Util that calls Google Scholar Search."""
+<<<<<<< HEAD
 
+=======
+>>>>>>> langchan/master
 from typing import Any, Dict, Optional, cast
 
 from langchain_core.pydantic_v1 import BaseModel, Extra, SecretStr, root_validator

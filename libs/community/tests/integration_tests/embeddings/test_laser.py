@@ -1,5 +1,8 @@
 """Test LASER embeddings."""
+<<<<<<< HEAD
 
+=======
+>>>>>>> langchan/master
 import pytest
 
 from langchain_community.embeddings.laser import LaserEmbeddings

@@ -1,5 +1,8 @@
 """VectorStore wrapper around a Postgres-TimescaleVector database."""
+<<<<<<< HEAD
 
+=======
+>>>>>>> langchan/master
 from __future__ import annotations
 
 import enum
@@ -67,7 +70,11 @@ class TimescaleVector(VectorStore):
                 collection_name=COLLECTION_NAME,
                 service_url=SERVICE_URL,
             )
+<<<<<<< HEAD
     """  # noqa: E501
+=======
+    """
+>>>>>>> langchan/master
 
     def __init__(
         self,

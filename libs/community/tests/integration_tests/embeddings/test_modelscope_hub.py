@@ -1,5 +1,8 @@
 """Test modelscope embeddings."""
+<<<<<<< HEAD
 
+=======
+>>>>>>> langchan/master
 from langchain_community.embeddings.modelscope_hub import ModelScopeEmbeddings
 
 

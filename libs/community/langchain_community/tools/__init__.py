@@ -46,6 +46,12 @@ if TYPE_CHECKING:
     from langchain_community.tools.arxiv.tool import (
         ArxivQueryRun,
     )
+<<<<<<< HEAD
+=======
+    from langchain_community.tools.asknews.tool import (
+        AskNewsSearch,
+    )
+>>>>>>> langchan/master
     from langchain_community.tools.azure_ai_services import (
         AzureAiServicesDocumentIntelligenceTool,
         AzureAiServicesImageAnalysisTool,
@@ -87,6 +93,10 @@ if TYPE_CHECKING:
     from langchain_community.tools.convert_to_openai import (
         format_tool_to_openai_function,
     )
+<<<<<<< HEAD
+=======
+    from langchain_community.tools.dataherald import DataheraldTextToSQL
+>>>>>>> langchan/master
     from langchain_community.tools.ddg_search.tool import (
         DuckDuckGoSearchResults,
         DuckDuckGoSearchRun,
@@ -324,6 +334,10 @@ __all__ = [
     "AIPluginTool",
     "APIOperation",
     "ArxivQueryRun",
+<<<<<<< HEAD
+=======
+    "AskNewsSearch",
+>>>>>>> langchan/master
     "AzureAiServicesDocumentIntelligenceTool",
     "AzureAiServicesImageAnalysisTool",
     "AzureAiServicesSpeechToTextTool",
@@ -352,6 +366,10 @@ __all__ = [
     "CopyFileTool",
     "CurrentWebPageTool",
     "DeleteFileTool",
+<<<<<<< HEAD
+=======
+    "DataheraldTextToSQL",
+>>>>>>> langchan/master
     "DuckDuckGoSearchResults",
     "DuckDuckGoSearchRun",
     "E2BDataAnalysisTool",
@@ -467,6 +485,10 @@ _module_lookup = {
     "AIPluginTool": "langchain_community.tools.plugin",
     "APIOperation": "langchain_community.tools.openapi.utils.api_models",
     "ArxivQueryRun": "langchain_community.tools.arxiv.tool",
+<<<<<<< HEAD
+=======
+    "AskNewsSearch": "langchain_community.tools.asknews.tool",
+>>>>>>> langchan/master
     "AzureAiServicesDocumentIntelligenceTool": "langchain_community.tools.azure_ai_services",  # noqa: E501
     "AzureAiServicesImageAnalysisTool": "langchain_community.tools.azure_ai_services",
     "AzureAiServicesSpeechToTextTool": "langchain_community.tools.azure_ai_services",
@@ -605,6 +627,9 @@ def __getattr__(name: str) -> Any:
         module = importlib.import_module(_module_lookup[name])
         return getattr(module, name)
     raise AttributeError(f"module {__name__} has no attribute {name}")
+<<<<<<< HEAD
 
 
 __all__ = list(_module_lookup.keys())
+=======
+>>>>>>> langchan/master

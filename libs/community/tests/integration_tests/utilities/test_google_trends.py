@@ -1,5 +1,8 @@
 """Unit test for Google Trends API Wrapper."""
+<<<<<<< HEAD
 
+=======
+>>>>>>> langchan/master
 import os
 from unittest.mock import patch
 

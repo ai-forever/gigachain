@@ -1,5 +1,8 @@
 """Util that calls Arxiv."""
+<<<<<<< HEAD
 
+=======
+>>>>>>> langchan/master
 import logging
 import os
 import re
@@ -49,7 +52,11 @@ class ArxivAPIWrapper(BaseModel):
                 load_all_available_meta = False,
                 doc_content_chars_max = 40000
             )
+<<<<<<< HEAD
             arxiv.run("tree of thought llm)
+=======
+            arxiv.run("tree of thought llm")
+>>>>>>> langchan/master
     """
 
     arxiv_search: Any  #: :meta private:
@@ -104,7 +111,11 @@ class ArxivAPIWrapper(BaseModel):
 
         Args:
             query: a plaintext search query
+<<<<<<< HEAD
         """  # noqa: E501
+=======
+        """
+>>>>>>> langchan/master
         try:
             if self.is_arxiv_identifier(query):
                 results = self.arxiv_search(
@@ -143,7 +154,11 @@ class ArxivAPIWrapper(BaseModel):
 
         Args:
             query: a plaintext search query
+<<<<<<< HEAD
         """  # noqa: E501
+=======
+        """
+>>>>>>> langchan/master
         try:
             if self.is_arxiv_identifier(query):
                 results = self.arxiv_search(

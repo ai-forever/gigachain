@@ -1,5 +1,8 @@
 """Test Baidu Qianfan Embedding Endpoint."""
+<<<<<<< HEAD
 
+=======
+>>>>>>> langchan/master
 from langchain_community.embeddings.baidu_qianfan_endpoint import (
     QianfanEmbeddingsEndpoint,
 )

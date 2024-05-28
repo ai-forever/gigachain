@@ -7,7 +7,10 @@ To use this tool, you must first set as environment variables:
     GITHUB_REPOSITORY -> format: {owner}/{repo}
 
 """
+<<<<<<< HEAD
 
+=======
+>>>>>>> langchan/master
 from typing import Optional, Type
 
 from langchain_core.callbacks import CallbackManagerForToolRun

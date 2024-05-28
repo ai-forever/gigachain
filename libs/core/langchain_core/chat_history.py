@@ -14,7 +14,10 @@
     AIMessage, HumanMessage, BaseMessage
 
 """  # noqa: E501
+<<<<<<< HEAD
 
+=======
+>>>>>>> langchan/master
 from __future__ import annotations
 
 from abc import ABC, abstractmethod

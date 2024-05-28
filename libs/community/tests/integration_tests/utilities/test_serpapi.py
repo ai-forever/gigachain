@@ -1,5 +1,8 @@
 """Integration test for SerpAPI."""
+<<<<<<< HEAD
 
+=======
+>>>>>>> langchan/master
 from langchain_community.utilities import SerpAPIWrapper
 
 
