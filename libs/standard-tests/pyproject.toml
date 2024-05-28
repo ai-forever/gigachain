@@ -1,7 +1,7 @@
 [tool.poetry]
-name = "gigachain-standard-tests"
+name = "langchain-standard-tests"
 version = "0.1.0"
-description = "Standard tests for gigachain implementations"
+description = "Standard tests for LangChain implementations"
 authors = ["Erick Friis <erick@langchain.dev>"]
 readme = "README.md"
 repository = "https://github.com/langchain-ai/langchain"
@@ -12,14 +12,14 @@ license = "MIT"
 
 [tool.poetry.dependencies]
 python = ">=3.8.1,<4.0"
-gigachain-core = ">=0.1.40,<0.3"
+langchain-core = ">=0.1.40,<0.3"
 pytest = ">=7,<9"
 
 [tool.poetry.group.test]
 optional = true
 
 [tool.poetry.group.test.dependencies]
-gigachain-core = { path = "../core", develop = true }
+langchain-core = { path = "../core", develop = true }
 
 [tool.poetry.group.test_integration]
 optional = true
@@ -40,7 +40,7 @@ ruff = "^0.1.5"
 
 [tool.poetry.group.typing.dependencies]
 mypy = "^0.991"
-gigachain-core = { path = "../core", develop = true }
+langchain-core = { path = "../core", develop = true }
 
 [tool.ruff.lint]
 select = [
