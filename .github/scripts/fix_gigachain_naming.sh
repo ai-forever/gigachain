@@ -1,7 +1,9 @@
 #!/bin/bash
 
+DIRECTORY = $1
+
 # Find all .toml files in the current directory and subdirectories
-find . -type f -name '*.toml' | while read -r file; do
+find "$DIRECTORY" -type f -name '*.toml' | while read -r file; do
   # Use sed to perform the replacements and create a temporary file
   sed -e 's/\blang\b/giga/g' -e 's/\bLang\b/Giga/g' "$file" > "${file}.tmp"
   
