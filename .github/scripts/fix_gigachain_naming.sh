@@ -1,6 +1,6 @@
 #!/bin/bash
 
-DIRECTORY = $1
+DIRECTORY=$1
 
 # Find all .toml files in the current directory and subdirectories
 find "$DIRECTORY" -type f -name '*.toml' | while read -r file; do
