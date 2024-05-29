@@ -145,14 +145,14 @@ jobs:
           # .github/scripts/fix_gigachain_naming.sh ./templates/
           find ./libs -type f -name '*.toml' -print
           sed -e 's/\blang\b/giga/g' -e 's/\bLang\b/Giga/g' ./libs/community/pyproject.toml
-          find ./libs -type f -name '*.toml' | while read -r file; do
-            # Use sed to perform the replacements and create a temporary file
-            sed -e 's/\blang\b/giga/g' -e 's/\bLang\b/Giga/g' "$file" > "${file}.tmp"
+          # find ./libs -type f -name '*.toml' | while read -r file; do
+          #   # Use sed to perform the replacements and create a temporary file
+          #   sed -e 's/\blang\b/giga/g' -e 's/\bLang\b/Giga/g' "$file" > "${file}.tmp"
             
-            # Move the temporary file to replace the original file
-            mv "${file}.tmp" "$file"
-            git add $file
-          done
+          #   # Move the temporary file to replace the original file
+          #   mv "${file}.tmp" "$file"
+          #   git add $file
+          # done
           
           echo "Replacements completed in all .toml files."
           git add .
