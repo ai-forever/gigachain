@@ -74,6 +74,9 @@ jobs:
         run: |
           git commit -m "Merge langchain/master into gigachain/dev with automated conflict resolution for .toml and .lock files" || echo "No changes to commit"
 
+      - name: Merge changes from upstream
+        run: git merge -Xours --allow-unrelated-histories langchain/master
+      
       - name: Create pull request
         uses: peter-evans/create-pull-request@v3
         with:
