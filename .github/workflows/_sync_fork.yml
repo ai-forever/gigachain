@@ -23,6 +23,7 @@ jobs:
           git remote add langchain https://github.com/langchain-ai/langchain.git
           git fetch langchain
 
+
       - name: Merge .toml files from langchain/master into gigachain/dev
         run: |
           # Create a temporary branch for the merge
@@ -30,18 +31,51 @@ jobs:
           
           # Merge only the .toml files
           git checkout langchain/master -- '**/*.toml'
-          
-          # Handle .toml conflicts
+
+          # Handle .toml conflicts by taking lines containing 'name' or 'version' from langchain
+          # and everything else from gigachain
           for file in $(git diff --name-only --diff-filter=U | grep '\.toml$'); do
-            sed -i '/<<<<<<< HEAD/,/>>>>>>>/d' $file
-            sed -i 's/=======//' $file
+            awk '
+            BEGIN {FS=" = "; OFS=" = "}
+            /<<<<<<< HEAD/ {in_gigachain = 1; next}
+            /=======/ {in_gigachain = 0; in_langchain = 1; next}
+            />>>>>>>/ {in_langchain = 0; next}
+            {
+              if (in_gigachain) {
+                gigachain_lines[NR] = $0;
+                if ($1 ~ /name/ || $1 ~ /version/) {
+                  conflict_keys[NR] = $0;
+                }
+              } else if (in_langchain) {
+                langchain_lines[NR] = $0;
+                if ($1 ~ /name/ || $1 ~ /version/) {
+                  conflict_keys[NR] = $0;
+                }
+              } else {
+                gigachain_lines[NR] = $0; # no conflict lines
+              }
+            }
+            END {
+              for (i = 1; i <= NR; i++) {
+                if (i in conflict_keys) {
+                  print langchain_lines[i]; # Use langchain line for 'name' or 'version'
+                } else {
+                  print gigachain_lines[i]; # Use gigachain line for other fields
+                }
+              }
+            }
+            ' $file > temp_file
+    
+            # Replace "langchain" with "gigachain" in the resolved content
+            sed -i 's/langchain/gigachain/g' temp_file
+    
+            # Overwrite the original file with the resolved content
+            mv temp_file $file
             
             # Add the resolved file to the staging area
-            sed -i -E '/packages = \[/,/^\s*\]/! s/lang/giga/' $file
             git add $file
           done
 
-    
           # Commit the changes
           git commit -m "Merge .toml files from langchain/master into gigachain/dev with conflict resolution" || echo "No changes to commit"
     
@@ -51,6 +85,35 @@ jobs:
     
           # Delete the temporary branch
           git branch -d temp-merge-branch
+
+      # - name: Merge .toml files from langchain/master into gigachain/dev
+      #   run: |
+      #     # Create a temporary branch for the merge
+      #     git checkout -b temp-merge-branch
+          
+      #     # Merge only the .toml files
+      #     git checkout langchain/master -- '**/*.toml'
+          
+      #     # Handle .toml conflicts
+      #     for file in $(git diff --name-only --diff-filter=U | grep '\.toml$'); do
+      #       sed -i '/<<<<<<< HEAD/,/>>>>>>>/d' $file
+      #       sed -i 's/=======//' $file
+            
+      #       # Add the resolved file to the staging area
+      #       sed -i -E '/packages = \[/,/^\s*\]/! s/lang/giga/' $file
+      #       git add $file
+      #     done
+
+    
+          # # Commit the changes
+          # git commit -m "Merge .toml files from langchain/master into gigachain/dev with conflict resolution" || echo "No changes to commit"
+    
+          # # Switch back to the dev branch and merge the temporary branch
+          # git checkout dev
+          # git merge temp-merge-branch
+    
+          # # Delete the temporary branch
+          # git branch -d temp-merge-branch
 
       # - name: Merge changes from upstream
       #   run: git merge  --allow-unrelated-histories langchain/master || true
