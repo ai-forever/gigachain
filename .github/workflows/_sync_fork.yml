@@ -148,7 +148,8 @@ jobs:
             # Use sed to perform the replacements and create a temporary file
             sed -i -E '/packages = \[/,/^\s*\]/! s/langchain-ai/ai-forever/g' $file
             sed -i -E '/packages = \[/,/^\s*\]/! s/LangChain/gigachain/g' $file
-            sed -i -E '/path = /!{/packages = \[/,/^\s*\]/! s/langchain/gigachain/g}' $file
+            sed -i -E '/langchain_cli/!{/packages = \[/,/^\s*\]/! s/langchain/gigachain/g}' $file
+            sed -i -E 's|\.\./gigachain|\.\./langchain|g' $file
             sed -i -E '/packages = \[/,/^\s*\]/! s/langserve/gigaserve/g' $file
           done
           
@@ -156,7 +157,8 @@ jobs:
             # Use sed to perform the replacements and create a temporary file
             sed -i -E '/packages = \[/,/^\s*\]/! s/langchain-ai/ai-forever/g' $file
             sed -i -E '/packages = \[/,/^\s*\]/! s/LangChain/gigachain/g' $file
-            sed -i -E '/path = /!{/packages = \[/,/^\s*\]/! s/langchain/gigachain/g}' $file
+            sed -i -E '/langchain_cli/!{/packages = \[/,/^\s*\]/! s/langchain/gigachain/g}' $file
+            sed -i -E 's|\.\./gigachain|\.\./langchain|g' $file
             sed -i -E '/packages = \[/,/^\s*\]/! s/langserve/gigaserve/g' $file
           done
 
