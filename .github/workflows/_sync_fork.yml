@@ -149,6 +149,7 @@ jobs:
             
             # Move the temporary file to replace the original file
             mv "${file}.tmp" "$file"
+            git add $file
           done
           
           echo "Replacements completed in all .toml files."
