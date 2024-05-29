@@ -139,6 +139,14 @@ jobs:
 
       - name: Merge changes from upstream
         run: git merge -Xours --allow-unrelated-histories langchain/master
+
+      - name: Fix gigachain naming
+        run: |
+          echo "Fix gigachain naming"
+          chmod +x .github/scripts/fix_gigachain_naming.sh
+          .github/scripts/fix_gigachain_naming.sh
+          git add .
+          git commit -m "fix naming"
       
       - name: Create pull request
         uses: peter-evans/create-pull-request@v3
