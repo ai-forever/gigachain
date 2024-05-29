@@ -9,21 +9,21 @@ packages = [{include = "self_query_qdrant"}]
 
 [tool.poetry.dependencies]
 python = ">=3.9,<3.13"
-gigachain = "^0.1"
+langchain = "^0.1"
 qdrant-client = ">=1.6"
 lark = "^1.1.8"
 tiktoken = "^0.5.1"
-gigachain-openai = "^0.0.8"
+langchain-openai = "^0.0.8"
 
 [tool.poetry.group.dev.dependencies]
-gigachain-cli = ">=0.0.21"
+langchain-cli = ">=0.0.21"
 [tool.poetry.group.dev.dependencies.python-dotenv]
 extras = [
     "cli",
 ]
 version = "^1.0.0"
 
-[tool.gigaserve]
+[tool.langserve]
 export_module = "self_query_qdrant"
 export_attr = "chain"
 

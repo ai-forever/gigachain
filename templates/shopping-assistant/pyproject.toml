@@ -10,11 +10,11 @@ python = ">=3.8.12,<4.0"
 langchain = "^0.1"
 openai = "<2"
 ionic-langchain = "^0.2.2"
-gigachain-openai = "^0.0.5"
+langchain-openai = "^0.0.5"
 langchainhub = "^0.1"
 
 [tool.poetry.group.dev.dependencies]
-gigachain-cli = ">=0.0.21"
+langchain-cli = ">=0.0.21"
 
 [tool.langserve]
 export_module = "shopping_assistant.agent"
