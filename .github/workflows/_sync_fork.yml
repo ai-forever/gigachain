@@ -150,6 +150,16 @@ jobs:
             sed -i -E '/packages = \[/,/^\s*\]/! s/langchain/gigachain/g' $file
             sed -i -E '/packages = \[/,/^\s*\]/! s/langserve/gigaserve/g' $file
           done
+
+          find ./templates -type f -name '*.toml' -print
+          # sed -i -E '/packages = \[/,/^\s*\]/! s/langchain/gigachain/g' ./libs/community/pyproject.toml
+          find ./libs -type f -name '*.toml' | while read -r file; do
+            # Use sed to perform the replacements and create a temporary file
+            sed -i -E '/packages = \[/,/^\s*\]/! s/langchain-ai/ai-forever/g' $file
+            sed -i -E '/packages = \[/,/^\s*\]/! s/LangChain/gigachain/g' $file
+            sed -i -E '/packages = \[/,/^\s*\]/! s/langchain/gigachain/g' $file
+            sed -i -E '/packages = \[/,/^\s*\]/! s/langserve/gigaserve/g' $file
+          done
           
           echo "Replacements completed in all .toml files."
           git add -A
