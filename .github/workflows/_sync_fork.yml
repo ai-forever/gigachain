@@ -145,8 +145,9 @@ jobs:
           echo "Fix gigachain naming"
           chmod +x .github/scripts/fix_gigachain_naming.sh
           cd libs/
-          .github/scripts/fix_gigachain_naming.sh
+          ../.github/scripts/fix_gigachain_naming.sh
           cd ../templates
+          ../.github/scripts/fix_gigachain_naming.sh
           git add .
           git commit -m "fix naming"
       
