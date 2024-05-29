@@ -155,7 +155,7 @@ jobs:
           # done
           
           echo "Replacements completed in all .toml files."
-          git add .
+          git add -A
           git diff HEAD
           git commit -m "fix naming"
       
