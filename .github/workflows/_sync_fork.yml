@@ -144,6 +144,7 @@ jobs:
           .github/scripts/fix_gigachain_naming.sh ./libs
           .github/scripts/fix_gigachain_naming.sh ./templates
           git add .
+          git diff
           git commit -m "fix naming"
       
       - name: Create pull request
