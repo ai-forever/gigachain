@@ -126,18 +126,15 @@ jobs:
             sed -i -E 's/langchain =/gigachain =/g' $file
             sed -i -E 's|langserve|gigaserve|g' $file
             sed -i -E 's|name = "langchain"|name = "gigachain"|g' $file
-            
           done
 
           
-          # find ./templates -type f -name '*.toml' | while read -r file; do
-          #   # Use sed to perform the replacements and create a temporary file
-          #   sed -i -E '/packages = \[/,/^\s*\]/! s/langchain-ai/ai-forever/g' $file
-          #   sed -i -E '/packages = \[/,/^\s*\]/! s/LangChain/Gigachain/g' $file
-          #   sed -i -E '/langchain_cli/!{/packages = \[/,/^\s*\]/! s/langchain/gigachain/g}' $file
-          #   sed -i -E 's|\.\./gigachain|\.\./langchain|g' $file
-          #   sed -i -E '/packages = \[/,/^\s*\]/! s/langserve/gigaserve/g' $file
-          # done
+          find ./templates -type f -name '*.toml' | while read -r file; do
+            # Use sed to perform the replacements and create a temporary file
+            sed -i -E 's/langchain-/gigachain-/g}' $file
+            sed -i -E 's/langchain =/gigachain =/g' $file
+            sed -i -E 's|tool.langserve|tool.gigaserve|g' $file
+          done
           
           echo "Replacements completed in all .toml files."
           git add -A
