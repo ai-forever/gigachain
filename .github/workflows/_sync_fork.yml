@@ -117,9 +117,12 @@ jobs:
             sed -i -E 's/langchain-core/gigachain-core/g' $file
             sed -i -E 's/LangChain/Gigachain/g' $file
             sed -i -E 's/langchain-cli/gigachain-cli/g' $file
-            sed -i -E 's|gigachain-community|langchain-community|g' $file
+            sed -i -E 's|langchain-community|gigachain-community|g' $file
+            sed -i -E 's|langchain-standard-tests|gigachain-standard-tests|g' $file
             sed -i -E 's/langchain-openai/gigachain-openai/g' $file
             sed -i -E 's/langchain-text-splitters/gigachain-text-splitters/g' $file
+            sed -i -E 's|langchain|gigachain|g' $file
+            sed -i -E 's|\.\./gigachain|\.\./langchain|g' $file
           done
           
           # find ./templates -type f -name '*.toml' | while read -r file; do
@@ -130,8 +133,6 @@ jobs:
           #   sed -i -E 's|\.\./gigachain|\.\./langchain|g' $file
           #   sed -i -E '/packages = \[/,/^\s*\]/! s/langserve/gigaserve/g' $file
           # done
-
-          sed -i -E '/packages = \[/,/^\s*\]/! s/langchain/gigachain/' pyproject.toml
           
           echo "Replacements completed in all .toml files."
           git add -A
