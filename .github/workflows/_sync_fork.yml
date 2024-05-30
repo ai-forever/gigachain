@@ -105,37 +105,38 @@ jobs:
       - name: Merge changes from upstream
         run: git merge -Xours --allow-unrelated-histories langchain/master
 
-      # - name: Fix gigachain naming
-      #   run: |
-      #     echo "Fix gigachain naming"
-      #     # chmod +x .github/scripts/fix_gigachain_naming.sh
-      #     # .github/scripts/fix_gigachain_naming.sh ./libs/
-      #     # .github/scripts/fix_gigachain_naming.sh ./templates/
+      - name: Fix gigachain naming
+        run: |
+          echo "Fix gigachain naming"
+          # chmod +x .github/scripts/fix_gigachain_naming.sh
+          # .github/scripts/fix_gigachain_naming.sh ./libs/
+          # .github/scripts/fix_gigachain_naming.sh ./templates/
           
-      #     find ./libs -type f -name '*.toml' | while read -r file; do
-      #       # Use sed to perform the replacements and create a temporary file
-      #       sed -i -E '/packages = \[/,/^\s*\]/! s/langchain-ai/ai-forever/g' $file
-      #       sed -i -E '/packages = \[/,/^\s*\]/! s/LangChain/Gigachain/g' $file
-      #       sed -i -E '/langchain_cli/!{/packages = \[/,/^\s*\]/! s/langchain/gigachain/g}' $file
-      #       sed -i -E 's|\.\./gigachain|\.\./langchain|g' $file
-      #       sed -i -E '/packages = \[/,/^\s*\]/! s/langserve/gigaserve/g' $file
-      #     done
+          find ./libs -type f -name '*.toml' | while read -r file; do
+            # Use sed to perform the replacements and create a temporary file
+            sed -i -E 's/langchain-core/gigachain-core/g' $file
+            sed -i -E 's/LangChain/Gigachain/g' $file
+            sed -i -E 's/langchain-cli/gigachain-cli/g}' $file
+            sed -i -E 's|gigachain-community|langchain-community|g' $file
+            sed -i -E 's/langchain-openai/gigachain-openai/g' $file
+            sed -i -E 's/langchain-text-splitters/gigachain-text-splitters/g' $file
+          done
           
-      #     find ./templates -type f -name '*.toml' | while read -r file; do
-      #       # Use sed to perform the replacements and create a temporary file
-      #       sed -i -E '/packages = \[/,/^\s*\]/! s/langchain-ai/ai-forever/g' $file
-      #       sed -i -E '/packages = \[/,/^\s*\]/! s/LangChain/Gigachain/g' $file
-      #       sed -i -E '/langchain_cli/!{/packages = \[/,/^\s*\]/! s/langchain/gigachain/g}' $file
-      #       sed -i -E 's|\.\./gigachain|\.\./langchain|g' $file
-      #       sed -i -E '/packages = \[/,/^\s*\]/! s/langserve/gigaserve/g' $file
-      #     done
+          # find ./templates -type f -name '*.toml' | while read -r file; do
+          #   # Use sed to perform the replacements and create a temporary file
+          #   sed -i -E '/packages = \[/,/^\s*\]/! s/langchain-ai/ai-forever/g' $file
+          #   sed -i -E '/packages = \[/,/^\s*\]/! s/LangChain/Gigachain/g' $file
+          #   sed -i -E '/langchain_cli/!{/packages = \[/,/^\s*\]/! s/langchain/gigachain/g}' $file
+          #   sed -i -E 's|\.\./gigachain|\.\./langchain|g' $file
+          #   sed -i -E '/packages = \[/,/^\s*\]/! s/langserve/gigaserve/g' $file
+          # done
 
-      #     sed -i -E '/packages = \[/,/^\s*\]/! s/langchain/gigachain/' pyproject.toml
+          sed -i -E '/packages = \[/,/^\s*\]/! s/langchain/gigachain/' pyproject.toml
           
-      #     echo "Replacements completed in all .toml files."
-      #     git add -A
-      #     git diff HEAD
-      #     git commit -m "fix naming"
+          echo "Replacements completed in all .toml files."
+          git add -A
+          git diff HEAD
+          git commit -m "fix naming"
       
       - name: Create pull request
         uses: peter-evans/create-pull-request@v3
