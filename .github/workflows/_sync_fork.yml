@@ -125,6 +125,8 @@ jobs:
             sed -i -E '/langchain-ai/! {/langchain-server/! s/langchain-/gigachain-/g}' $file
             sed -i -E 's/langchain =/gigachain =/g' $file
             sed -i -E 's|langserve|gigaserve|g' $file
+            sed -i -E 's|name = "langchain"|name = "gigachain"|g' $file
+            
           done
 
           
