@@ -131,7 +131,7 @@ jobs:
           
           find ./templates -type f -name '*.toml' | while read -r file; do
             # Use sed to perform the replacements and create a temporary file
-            sed -i -E 's/langchain-/gigachain-/g}' $file
+            sed -i -E 's/langchain-/gigachain-/g' $file
             sed -i -E 's/langchain =/gigachain =/g' $file
             sed -i -E 's|tool.langserve|tool.gigaserve|g' $file
           done
