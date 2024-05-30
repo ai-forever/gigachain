@@ -46,6 +46,10 @@ jobs:
               }
               return 0
             }
+            function replace_lang_with_giga(line) {
+              gsub(/lang/, "giga", line)
+              return line
+            }
             BEGIN {FS=" = "; OFS=" = "}
             /<<<<<<< HEAD/ {in_gigachain = 1; next}
             /=======/ {in_gigachain = 0; in_langchain = 1; next}
@@ -65,7 +69,7 @@ jobs:
               for (i = 1; i <= NR; i++) {
                 if (i in langchain_lines && gigachain_lines[i] ~ /version/) {
                   if (compare_versions(langchain_version[$1], gigachain_version[$1])) {
-                    print langchain_lines[i] # Use langchain line for newer version
+                    print replace_lang_with_giga(langchain_lines[i]) # Use langchain line for newer version and replace "lang" with "giga"
                   } else {
                     print gigachain_lines[i] # Use gigachain line if version is not newer
                   }
@@ -76,16 +80,13 @@ jobs:
             }
             ' $file > temp_file
 
-            # Replace "langchain" with "gigachain" in the resolved content
-            sed -i 's/langchain/gigachain/g' temp_file
-
             # Overwrite the original file with the resolved content
             mv temp_file $file
             
             # Add the resolved file to the staging area
             git add $file
           done
-
+          
           # Commit the changes
           git commit -m "Merge .toml files from langchain/master into gigachain/dev with conflict resolution" || echo "No changes to commit"
     
