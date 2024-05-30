@@ -115,6 +115,7 @@ jobs:
           find ./libs -type f -name '*.toml' | while read -r file; do
             # Use sed to perform the replacements and create a temporary file
             sed -i -E 's/LangChain/Gigachain/g' $file
+            sed -i -E '/langchain-ai/! {/langchain-server/! s/langchain-/gigachain-/g}' $file
             sed -i -E 's/langchain =/gigachain =/g' $file
             sed -i -E 's|langserve|gigaserve|g' $file
             sed -i -E 's|name = "langchain"|name = "gigachain"|g' $file
