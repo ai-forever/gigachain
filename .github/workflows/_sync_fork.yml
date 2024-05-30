@@ -116,7 +116,7 @@ jobs:
             # Use sed to perform the replacements and create a temporary file
             sed -i -E 's/langchain-core/gigachain-core/g' $file
             sed -i -E 's/LangChain/Gigachain/g' $file
-            sed -i -E 's/langchain-cli/gigachain-cli/g}' $file
+            sed -i -E 's/langchain-cli/gigachain-cli/g' $file
             sed -i -E 's|gigachain-community|langchain-community|g' $file
             sed -i -E 's/langchain-openai/gigachain-openai/g' $file
             sed -i -E 's/langchain-text-splitters/gigachain-text-splitters/g' $file
