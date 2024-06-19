@@ -99,7 +99,7 @@
 Библиотеку можно установить с помощью pip:
 
 ```sh
-pip install gigachain
+pip install gigachain gigachain_community
 ```
 
 ### Миграция с LangChain
@@ -113,7 +113,7 @@ pip uninstall langchain langchain_experimental langchain_core langchain_communit
 После чего установить библиотеку `gigachain`:
 
 ```sh
-pip install gigachain
+pip install gigachain gigachain_community
 ```
 
 ## Работа с GigaChain
@@ -125,7 +125,9 @@ pip install gigachain
 Для авторизации запросов к GigaChat вам понадобится получить авторизационные данные для работы с GigaChat API.
 
 > [!NOTE]
-> О том как получить авторизационные данные для доступа к GigaChat читайте в [официальной документации](https://developers.sber.ru/docs/ru/gigachat/api/integration).
+> О том как получить авторизационные данные для доступа к GigaChat — в разделах [Быстрый старт для физических лиц
+](https://developers.sber.ru/docs/ru/gigachat/individuals-quickstart) и [Быстрый старт для ИП и юридических лиц
+](https://developers.sber.ru/docs/ru/gigachat/legal-quickstart) документации GigaChat API.
 
 Для работы с сервисом GigaChat передайте полученные авторизационные данные в параметре `credentials` объекта `GigaChat`.
 
