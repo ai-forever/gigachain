@@ -1,0 +1,419 @@
+# Работа с историей сообщений
+
+:::note
+
+С этим руководством будет проще работать, если ознакомиться с разделами:
+- [LangChain Expression Language (LCEL)](/docs/concepts/#langchain-expression-language)
+- [Соединение Runnable в цепочку](/docs/how_to/sequence/)
+- [Изменение параметров в процессе выполнения](/docs/how_to/configure)
+- [Prompt templates](/docs/concepts/#prompt-templates)
+- [Chat Messages](/docs/concepts/#message-types)
+
+:::
+
+Для добавления истории сообщений в некоторые цепочки можно использовать обертку [`RunnableWithMessageHistory`](https://api.python.langchain.com/en/latest/runnables/langchain_core.runnables.history.RunnableWithMessageHistory.html#langchain_core.runnables.history.RunnableWithMessageHistory).
+
+Так, обертку можно использовать при работе с Runnable-объектом, который принимает на вход:
+
+* последовательность экземпляров [`BaseMessage`](/docs/concepts/#message-types);
+* словар с полем, в котором можно передать последовательность экземпляров `BaseMessage`;
+* словарь полем, в котором можно передать последнее сообщение или несколько сообщений в формате строки, либо последовательность экземпляров `BaseMessage`. И отдельным полем, в котором можно историю сообщений.
+
+И возвращает на выходе:
+
+* строку, которая можно передать внутри экземпляра `AIMessage`;
+* последовательность экземпляров `BaseMessage`;
+* словарь с полем, содержащим последовательность экземпляров `BaseMessage`.
+
+Раздел содержит несколько примеров работы с истории сообщений.
+
+Первый пример демонстрирует экземпляр Runnable, который принимает на вход словарь и возвращает сообщение.
+
+```python
+from langchain.chat_models.gigachat import GigaChat
+from langchain_core.prompts import ChatPromptTemplate, MessagesPlaceholder
+
+model = GigaChat(credentials="<авторизационные_данные>", verify_ssl_certs=False)
+prompt = ChatPromptTemplate.from_messages(
+    [
+        (
+            "system",
+            "Ты ассистент в сфере {ability}. Твой ответ должен быть не длиннее 20 слов.",
+        ),
+        MessagesPlaceholder(variable_name="history"),
+        ("human", "{input}"),
+    ]
+)
+runnable = prompt | model
+```
+
+Для дальней работы с историей сообщений вам потребуется:
+
+* Runnable из примера;
+* вызываемый объект, который возвращает экземпляр `BaseChatMessageHistory`.
+
+Раздел содержит как примеры in-memory памяти, реализованной с помощью объектов `ChatMessageHistory`, так и более надежный способ хранения с помощью Redis — `RedisChatMessageHistory`.
+
+:::note
+
+В разделе интеграций вы найдете описание других провайдеров для реализации памяти.
+
+:::
+## Хранение in-memory
+
+В примере ниже история сообщений хранится в оперативной памяти внутри глобального словаря Python.
+
+Экземпляр `ChatMessageHistory` возвращается с помощью вызываемого объекта `get_session_history`, который ссылается на заданный словарь.
+Аргументы `get_session_history` можно передать в процессе выполнения с помощью в экземпляре `RunnableWithMessageHistory`.
+По умолчанию параметр конфигурации ожидается в виде строки `session_id`.
+Это можно изменить с помощью kwarg `history_factory_config`.
+
+Пример работы по умолчанию:
+
+```python
+from langchain_community.chat_message_histories import ChatMessageHistory
+from langchain_core.chat_history import BaseChatMessageHistory
+from langchain_core.runnables.history import RunnableWithMessageHistory
+
+store = {}
+
+
+def get_session_history(session_id: str) -> BaseChatMessageHistory:
+    if session_id not in store:
+        store[session_id] = ChatMessageHistory()
+    return store[session_id]
+
+
+with_message_history = RunnableWithMessageHistory(
+    runnable,
+    get_session_history,
+    input_messages_key="input",
+    history_messages_key="history",
+)
+```
+
+В примере задано два поля:
+
+* `input_messages_key` — содержимое поля должно обрабатыватья как последнее входное сообщение;
+* `history_messages_key` — поле в котором сохраняется история сообщений.
+
+При вызове этого Runnable соответствующую историю сообщений можно задать с помощью параметра конфигурации:
+
+```python
+with_message_history.invoke(
+    {"ability": "математика", "input": "Что такое косинус?"},
+    config={"configurable": {"session_id": "abc123"}},
+)
+```
+
+
+<CodeOutputBlock lang="python">
+
+```python
+    AIMessage(content='Косинус - это тригонометрическая функция, которая равна синусу угла в прямоугольном треугольнике, противолежащего данному катету.', response_metadata={'token_usage': Usage(prompt_tokens=42, completion_tokens=40, total_tokens=82), 'model_name': 'GigaChat:3.1.24.3', 'finish_reason': 'stop'}, id='run-21e71c2f-1e0b-442e-98c0-54d52991fbb3-0')
+```
+
+</CodeOutputBlock>
+
+
+```python
+# Обращение к памяти
+with_message_history.invoke(
+    {"ability": "математика", "input": "Что?"},
+    config={"configurable": {"session_id": "abc123"}},
+)
+```
+
+
+<CodeOutputBlock lang="python">
+
+```python
+    AIMessage(content='Проще говоря, это отношение длины катета к гипотенузе.', response_metadata={'token_usage': Usage(prompt_tokens=91, completion_tokens=21, total_tokens=112), 'model_name': 'GigaChat:3.1.24.3', 'finish_reason': 'stop'}, id='run-49195640-4bf8-408f-ab87-81fcfba19b19-0')
+```
+
+</CodeOutputBlock>
+
+:::note
+
+В примере контекст сохраняется с помозью истории сообщений для заданного параметра `session_id`.
+Таким образом модель понимает к чему относится заданный вопрос.
+
+:::
+Вот так будет выглядеть ответ с другим `session_id`:
+
+```python
+# Новая сессия session_id --> память отсутствует.
+with_message_history.invoke(
+    {"ability": "математика", "input": "Что?"},
+    config={"configurable": {"session_id": "def234"}},
+)
+```
+
+
+<CodeOutputBlock lang="python">
+
+```python
+    AIMessage(content='Я не совсем понимаю ваш вопрос. Можете уточнить, пожалуйста?', response_metadata={'token_usage': Usage(prompt_tokens=37, completion_tokens=17, total_tokens=54), 'model_name': 'GigaChat:3.1.24.3', 'finish_reason': 'stop'}, id='run-82a1ae88-27e9-4a0b-970c-28d01f41a9bc-0')
+```
+
+</CodeOutputBlock>
+
+При передаче другого значения `session_id` начинается новая история чата, поэтому модель не понимает к чему относится вопрос.
+
+## Настройка
+
+Конфигурационные параметры, которые используются для ведения историй сообщений, можно изменить, если передать в параметр `history_factory_config` список объектов `ConfigurableFieldSpec`.
+Пример ниже показывает как использовать два параметра — `user_id` и `conversation_id`.
+
+```python
+from langchain_core.runnables import ConfigurableFieldSpec
+
+store = {}
+
+
+def get_session_history(user_id: str, conversation_id: str) -> BaseChatMessageHistory:
+    if (user_id, conversation_id) not in store:
+        store[(user_id, conversation_id)] = ChatMessageHistory()
+    return store[(user_id, conversation_id)]
+
+
+with_message_history = RunnableWithMessageHistory(
+    runnable,
+    get_session_history,
+    input_messages_key="input",
+    history_messages_key="history",
+    history_factory_config=[
+        ConfigurableFieldSpec(
+            id="user_id",
+            annotation=str,
+            name="ID пользоватея",
+            description="Уникальный идентификатор пользователя.",
+            default="",
+            is_shared=True,
+        ),
+        ConfigurableFieldSpec(
+            id="conversation_id",
+            annotation=str,
+            name="ID диалого",
+            description="Уникальный идентификатор диалога.",
+            default="",
+            is_shared=True,
+        ),
+    ],
+)
+
+with_message_history.invoke(
+    {"ability": "математика", "input": "Привет"},
+    config={"configurable": {"user_id": "123", "conversation_id": "1"}},
+)
+```
+
+
+<CodeOutputBlock lang="python">
+
+```python
+    AIMessage(content='Hello! How can I assist you with math today?', response_metadata={'id': 'msg_01UdhnwghuSE7oRM57STFhHL', 'model': 'claude-3-haiku-20240307', 'stop_reason': 'end_turn', 'stop_sequence': None, 'usage': {'input_tokens': 27, 'output_tokens': 14}}, id='run-3d53f67a-4ea7-4d78-8e67-37db43d4af5d-0')
+```
+
+</CodeOutputBlock>
+
+
+```python
+# Обращение к памяти
+with_message_history.invoke(
+    {"ability": "jokes", "input": "What was the joke about?"},
+    config={"configurable": {"user_id": "123", "conversation_id": "1"}},
+)
+```
+
+
+```python
+# Новый пользователь user_id --> память отсутствует
+with_message_history.invoke(
+    {"ability": "jokes", "input": "What was the joke about?"},
+    config={"configurable": {"user_id": "456", "conversation_id": "1"}},
+)
+```
+
+История чата сохранилась для одного `user_id`, но после изменения параметра запустилась новая история чата несмотря на прежнее значение `conversation_id`.
+### Примеры реализации Runnable
+
+В предыдущем примере Runnable принимает на вход словарь и возвращает `BaseMessage`.
+
+Примеры ниже показывают как можно решить ту же задачу другими способами.
+#### Сообщения на входе, словарь на выходе
+
+```python
+from langchain_core.messages import HumanMessage
+from langchain_core.runnables import RunnableParallel
+
+chain = RunnableParallel(
+    {
+        "output_message": GigaChat(
+            credentials="<авторизационные_данные>", verify_ssl_certs=False
+        )
+    }
+)
+
+
+def get_session_history(session_id: str) -> BaseChatMessageHistory:
+    if session_id not in store:
+        store[session_id] = ChatMessageHistory()
+    return store[session_id]
+
+
+with_message_history = RunnableWithMessageHistory(
+    chain,
+    get_session_history,
+    output_messages_key="output_message",
+)
+
+with_message_history.invoke(
+    [HumanMessage(content="Что Симона де Бовуар думала о свободе воли")],
+    config={"configurable": {"session_id": "baz"}},
+)
+```
+
+
+<CodeOutputBlock lang="python">
+
+```python
+    {'output_message': AIMessage(content='Симона де Бовуар считала, что свобода воли является ключевым аспектом человеческого существования. Она утверждала, что свобода воли позволяет людям принимать решения и действовать на основе своих собственных убеждений и ценностей. Однако, де Бовуар также подчеркивала, что свобода воли ограничена социальными и культурными условиями, в которых мы живем.', response_metadata={'token_usage': Usage(prompt_tokens=304, completion_tokens=80, total_tokens=384), 'model_name': 'GigaChat:3.1.24.3', 'finish_reason': 'stop'}, id='run-f6725c40-2f24-42c3-b26e-aef2d5b09176-0')}
+```
+
+</CodeOutputBlock>
+
+
+```python
+with_message_history.invoke(
+    [HumanMessage(content="Как эти идеи отличаются от того, что думал Сартр")],
+    config={"configurable": {"session_id": "baz"}},
+)
+```
+
+
+<CodeOutputBlock lang="python">
+
+```python
+    {'output_message': AIMessage(content='Идеи Симоны де Бовуар о свободе воли отличаются от идей Жан-Поля Сартра, другого известного французского философа.\n\nСартр утверждал, что человек изначально свободен, но эта свобода не является благом. Он считал, что свобода воли приводит к тому, что люди становятся ответственными за свои собственные действия и их последствия. Однако, он также утверждал, что эта ответственность может быть невыносимой, поскольку она требует от нас принятия решений и действий, которые мы не можем контролировать.\n\nВ отличие от Сартра, де Бовуар считала, что свобода воли является основой для самореализации и самоопределения. Она утверждала, что свобода воли позволяет нам принимать решения и действовать на основе наших собственных убеждений и ценностей.\n\nТаким образом, идеи де Бовуар и Сартра о свободе воли различаются в том, как они рассматривают эту свободу и ее последствия. Де Бовуар видит в свободе воли возможность для самореализации и самоопределения, в то время как Сартр считает, что она приводит к ответственности и невыносимой свободе.', response_metadata={'token_usage': Usage(prompt_tokens=403, completion_tokens=257, total_tokens=660), 'model_name': 'GigaChat:3.1.24.3', 'finish_reason': 'stop'}, id='run-47bcaac0-b807-49cc-a162-7ee948013814-0')}
+```
+
+</CodeOutputBlock>
+
+#### Сообщения на входе и сообщения на выходе
+
+```python
+RunnableWithMessageHistory(
+    GigaChat(credentials="<авторизационные_данные>", verify_ssl_certs=False),
+    get_session_history,
+)
+```
+
+
+<CodeOutputBlock lang="python">
+
+```python
+    RunnableWithMessageHistory(bound=RunnableBinding(bound=RunnableBinding(bound=RunnableLambda(_enter_history), config={'run_name': 'load_history'})
+| RunnableBinding(bound=ChatAnthropic(model='claude-3-haiku-20240307', temperature=0.0, anthropic_api_url='https://api.anthropic.com', anthropic_api_key=SecretStr('**********'), _client=<anthropic.Anthropic object at 0x1077ff5b0>, _async_client=<anthropic.AsyncAnthropic object at 0x1321c71f0>), config_factories=[<function Runnable.with_listeners.<locals>.<lambda> at 0x1473dd000>]), config={'run_name': 'RunnableWithMessageHistory'}), get_session_history=<function get_session_history at 0x1374c7be0>, history_factory_config=[ConfigurableFieldSpec(id='session_id', annotation=<class 'str'>, name='Session ID', description='Unique identifier for a session.', default='', is_shared=True, dependencies=None)])
+```
+
+</CodeOutputBlock>
+
+#### Словарь с полем, хранящим все сообщения на входе, сообщения на выходе
+
+```python
+from operator import itemgetter
+
+RunnableWithMessageHistory(
+    itemgetter("input_messages")
+    | GigaChat(credentials="<авторизационные_данные>", verify_ssl_certs=False),
+    get_session_history,
+    input_messages_key="input_messages",
+)
+```
+
+
+<CodeOutputBlock lang="python">
+
+```python
+    RunnableWithMessageHistory(bound=RunnableBinding(bound=RunnableBinding(bound=RunnableAssign(mapper={
+  input_messages: RunnableBinding(bound=RunnableLambda(_enter_history), config={'run_name': 'load_history'})
+}), config={'run_name': 'insert_history'})
+| RunnableBinding(bound=RunnableLambda(itemgetter('input_messages'))
+  | ChatAnthropic(model='claude-3-haiku-20240307', temperature=0.0, anthropic_api_url='https://api.anthropic.com', anthropic_api_key=SecretStr('**********'), _client=<anthropic.Anthropic object at 0x1077ff5b0>, _async_client=<anthropic.AsyncAnthropic object at 0x1321c71f0>), config_factories=[<function Runnable.with_listeners.<locals>.<lambda> at 0x1473df6d0>]), config={'run_name': 'RunnableWithMessageHistory'}), get_session_history=<function get_session_history at 0x1374c7be0>, input_messages_key='input_messages', history_factory_config=[ConfigurableFieldSpec(id='session_id', annotation=<class 'str'>, name='Session ID', description='Unique identifier for a session.', default='', is_shared=True, dependencies=None)])
+```
+
+</CodeOutputBlock>
+
+## Постоянное хранение
+
+Вам может потребоваться организовать постоянное хранение истории диалогов.
+Для `RunnableWithMessageHistory` не важно, как `get_session_history` получает историю сообщений — из файловой системы или как-то иначе.
+Пример ниже показывает как для этого можно использовать базу данных Redis.
+
+:::note
+
+Описание интеграций с другими провайдерами памяти ищите в [официальной документации LangChain](https://integrations.langchain.com/memory).
+
+:::
+### Подготовка к работе
+
+Установите Redis с помощью менеджера пакетов:
+
+```python
+%pip install --upgrade --quiet redis
+```
+
+Запустите локальные сервер Redis Stack, если у вас нет равзвернутого сервера, к которому можно подключиться:
+
+```bash
+docker run -d -p 6379:6379 -p 8001:8001 redis/redis-stack:latest
+```
+
+```python
+REDIS_URL = "redis://localhost:6379/0"
+```
+
+Для использования Redis достаточно определить новую вызываемую функцию, которая будет возвращать экземпляр `RedisChatMessageHistory`:
+
+```python
+from langchain_community.chat_message_histories import RedisChatMessageHistory
+
+
+def get_message_history(session_id: str) -> RedisChatMessageHistory:
+    return RedisChatMessageHistory(session_id, url=REDIS_URL)
+
+
+with_message_history = RunnableWithMessageHistory(
+    runnable,
+    get_message_history,
+    input_messages_key="input",
+    history_messages_key="history",
+)
+```
+
+Вызывать цепочку можно так же, как и раньше:
+
+```python
+with_message_history.invoke(
+    {"ability": "математика", "input": "Что такое косинус?"},
+    config={"configurable": {"session_id": "foobar"}},
+)
+```
+
+
+```python
+with_message_history.invoke(
+    {"ability": "math", "input": "Какая у него обратная функция?"},
+    config={"configurable": {"session_id": "foobar"}},
+)
+```
+
+
+<CodeOutputBlock lang="python">
+
+```python
+    AIMessage(content='The inverse of cosine is the arccosine function, denoted as acos or cos^-1, which gives the angle corresponding to a given cosine value.')
+```
+
+</CodeOutputBlock>

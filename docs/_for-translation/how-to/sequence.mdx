@@ -1,0 +1,155 @@
+# Соединение Runnable в цепочку
+
+:::note
+
+С этим руководством будет проще работать, если ознакомиться с разделами:
+
+- [LangChain Expression Language (LCEL)](/docs/concepts/#langchain-expression-language)
+- [Prompt templates](/docs/concepts/#prompt-templates)
+- [Chat models](/docs/concepts/#chat-models)
+- [Output parser](/docs/concepts/#output-parsers)
+
+:::
+
+Одно из ключевых преимуществ интерфейса `Runnable` — то, что любые два экземпляра этого интерфейса можно последовательно соединить в цепочку.
+Выходной результат предыдущего вызова `.invoke()` передается в качестве входного параметра следующему экземпляру.
+Это можно сделать с помощью оператора конвейера (`|`) или явного вызова метода `.pipe()`, который делает то же самое.
+
+Итоговая последовательность `RunnableSequence` также является экземпляром интерфейса `Runnable`.
+Это значит, что ее можно вызвать, преобразовать в поток или передать по конвейеру так же, как и любой другой экземпляр интерфейса `Runnable`.
+Соединение Runnable в цепочку позволяет эффективно работать с потоковой генерацией (цепочка транслирует вывод как только он становится доступен), а также облегчает отладку.
+
+## Оператор конвейера
+
+В этом разделе представлен пример, который демонстрирует:
+
+1. Использование [шаблона промптов](/docs/how_to#prompt-templates) для форматирования данных.
+2. Передачу отформатированых данных в [чат-модель](/docs/how_to#chat-models).
+3. Преобразование сообщения модели в строку с помощью [парсера выходных данных](/docs/how_to#output-parsers).
+
+```python
+%pip install --upgrade --quiet gigachain
+```
+
+
+```python
+from langchain.chat_models.gigachat import GigaChat
+from langchain_core.output_parsers import StrOutputParser
+from langchain_core.prompts import ChatPromptTemplate
+
+prompt = ChatPromptTemplate.from_template("tell me a joke about {topic}")
+model = GigaChat(credentials="<авторизационные_данные>", verify_ssl_certs=False)
+
+chain = prompt | model | StrOutputParser()
+```
+
+Объекты промптов и моделей являются экземплярами `Runnable`, а тип выходных данных при вызове промпта, соответствует типу входных данных чат-модели, поэтому их можно соединить в цепочку.
+Полученную цепочку можно вызвать с помощью метода `invoke()` также, как и любой другой экземпляр `Runnable`:
+
+```python
+chain.invoke({"topic": "bears"})
+```
+
+
+<CodeOutputBlock lang="python">
+
+```python
+    "Here's a bear joke for you:\n\nWhy did the bear dissolve in water?\nBecause it was a polar bear!"
+```
+
+</CodeOutputBlock>
+
+### Принудительное преобразование
+
+В цепочку можно добавить разные Runnable-объекты.
+При этом может понадобиться обработка входных и выходных данных для других типов Runnable, в зависимости от требований компонентов цепочки.
+
+Допустим, что нужно соединить цепочку для генерации шуток с другой цепочкой, которая оценивает, была шутка смешной или нет.
+
+Нужно внимательно обрабатывать данные перед тем, как передать их в следующую цепочкую.
+В примере ниже словарь в цепочке автоматически анализируется и преобразуется в экземпляр [`RunnableParallel`](/docs/how_to/parallel), который запускает все свои значения параллельно и возвращает словарь с результатами.
+
+Именно такой формат данных ожидает на вход следующий шаблон промпта:
+
+```python
+from langchain_core.output_parsers import StrOutputParser
+
+analysis_prompt = ChatPromptTemplate.from_template("is this a funny joke? {joke}")
+
+composed_chain = {"joke": chain} | analysis_prompt | model | StrOutputParser()
+
+composed_chain.invoke({"topic": "bears"})
+```
+
+
+<CodeOutputBlock lang="python">
+
+```python
+    'Haha, that\'s a clever play on words! Using "polar" to imply the bear dissolved or became polar/polarized when put in water. Not the most hilarious joke ever, but it has a cute, groan-worthy pun that makes it mildly amusing. I appreciate a good pun or wordplay joke.'
+```
+
+</CodeOutputBlock>
+
+Функции также преобразуются в Runnable-объекты, поэтому в цепочки можно добавлять собственную логику.
+Цепочка из примера ниже работает также, как и цепочка из прошлого примера.
+
+```python
+composed_chain_with_lambda = (
+    chain
+    | (lambda input: {"joke": input})
+    | analysis_prompt
+    | model
+    | StrOutputParser()
+)
+
+composed_chain_with_lambda.invoke({"topic": "beets"})
+```
+
+
+<CodeOutputBlock lang="python">
+
+```python
+    "Haha, that's a cute and punny joke! I like how it plays on the idea of beets blushing or turning red like someone blushing. Food puns can be quite amusing. While not a total knee-slapper, it's a light-hearted, groan-worthy dad joke that would make me chuckle and shake my head. Simple vegetable humor!"
+```
+
+</CodeOutputBlock>
+
+При использовании таких функций следует учитывать, что они могут мешать операциям вроде потоковой передачи данных.
+Подробнее — в разделе [Запуск собственных функций](/docs/how_to/functions).
+## Метод `.pipe()`
+
+Пример составления такой же цепочки с помощью метода `.pipe()`:
+
+```python
+from langchain_core.runnables import RunnableParallel
+
+composed_chain_with_pipe = (
+    RunnableParallel({"joke": chain})
+    .pipe(analysis_prompt)
+    .pipe(model)
+    .pipe(StrOutputParser())
+)
+
+composed_chain_with_pipe.invoke({"topic": "battlestar galactica"})
+```
+
+
+<CodeOutputBlock lang="python">
+
+```python
+    "I cannot reproduce any copyrighted material verbatim, but I can try to analyze the humor in the joke you provided without quoting it directly.\n\nThe joke plays on the idea that the Cylon raiders, who are the antagonists in the Battlestar Galactica universe, failed to locate the human survivors after attacking their home planets (the Twelve Colonies) due to using an outdated and poorly performing operating system (Windows Vista) for their targeting systems.\n\nThe humor stems from the juxtaposition of a futuristic science fiction setting with a relatable real-world frustration – the use of buggy, slow, or unreliable software or technology. It pokes fun at the perceived inadequacies of Windows Vista, which was widely criticized for its performance issues and other problems when it was released.\n\nBy attributing the Cylons' failure to locate the humans to their use of Vista, the joke creates an amusing and unexpected connection between a fictional advanced race of robots and a familiar technological annoyance experienced by many people in the real world.\n\nOverall, the joke relies on incongruity and relatability to generate humor, but without reproducing any copyrighted material directly."
+```
+
+</CodeOutputBlock>
+
+Сокращенный вызов:
+
+```python
+composed_chain_with_pipe = RunnableParallel({"joke": chain}).pipe(
+    analysis_prompt, model, StrOutputParser()
+)
+```
+
+## Смотрите также
+
+* [Потоковая передача данных](/docs/how_to/streaming/)

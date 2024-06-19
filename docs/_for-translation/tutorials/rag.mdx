@@ -1,0 +1,686 @@
+# Создание RAG-приложения (Retrieval Augmented Generation)
+
+Большие языковые модели (LLM) позволяют разрабатывать развитые вопросно-ответные приложения (или *Q&A приложения*), которые могут использовать для ответов заданные данные.
+В основе таких приложений лежит методика известная как «генерация, дополненная извлечением данных» (retrieval-augmented generation или RAG).
+
+В этом разделе приведен пример создания простого Q&A приложения на основе текстового источника данных.
+Здесь вы также найдете пример типичной Q&A-архитектуры и сможете ознакомиться с дополнительными материалами, которые рассматривают более продвинутые методики, применяемые при разработке вопросно-ответных приложений.
+
+## Что такое RAG?
+
+RAG — это методика, которая позволяет расширить знания LLM дополнительными данными.
+
+Большие языковые модели имеют представление о различных темах, но их знания ограничены общими данными, доступными на момент обучения.
+Если вам нужно, чтобы модель знала о какой-то специфической информации или информации, которая появилась после ее обучения, вам понадобится предоставить ей соответствующие данные.
+Предоставление таких данных и применение их в промпте это и есть RAG — генерация, дополненная извлечением данных.
+
+GigaChain предоставляет компоненты для разработки вопросно-ответных приложений и поддержки RAG-методики в целом.
+
+:::note
+
+В этом разделе приводится пример разработки Q&A приложения, которое использует неструктурированные данные.
+Пример использования RAG со структурированными данными — в разделе [Разработка Q&A приложения на основе SQL-данных](/docs/tutorials/sql_qa).
+
+:::
+
+## Архитектура RAG
+
+В общем случае RAG приложение включает два компонента:
+
+* Конвейер для загрузки данных из источника и их индексирование. Как правило индексирование работает в автономном режиме.
+* Цепочка RAG, которая в реальном времени обрабатывает запрос пользователя, извлекает соответствующие данные из индекса и передает их модели.
+
+Процесс генерации ответа на основе необработанных данных можно представить следующим образом:
+
+```mermaid
+flowchart LR
+    A(Индексирование)
+    B(Извлечение данных и генерация)
+    A -->  B
+```
+
+Индексирование включает этапы:
+
+1. Загрузка документов с помощью [DocumentLoaders](/docs/concepts/#document-loaders).
+2. Использование [разделителей текста](/docs/concepts/#text-splitters) для разбивки `Documents` на мелкие фрагменты. Это удобно как для индексации данных, так и для передачи их в модель, поскольку большие фрагменты труднее искать и использовать в рамках контекста модели.
+3. Сохранение данных с помощью [векторных хранилищ](/docs/concepts/#vectorstores) и создание [эмбеддингов](/docs/concepts/#embedding-models) для поиска. 
+
+<Image img={require('../../static/img/rag_indexing.png')} alt="index_diagram" />
+
+Извлечение данных и генерация включает этапы:
+
+1. Извлечение данных, которые соответствуют запросу пользователя, с помощью [ретривера](/docs/concepts/#retrievers).
+2. Передача промпта, включающего вопрос пользователя и извлеченные данные, в [чат-модель](/docs/concepts/#chat-models) / [LLM](/docs/concepts/#llms) для генерации ответа.
+
+<Image img={require('../../static/img/rag_retrieval_generation.png')} alt="retrieval_diagram" />
+
+
+## Подготовка
+
+### Jupyter
+
+Как и многие другие руководства в документации GigaChain это руководство основано на [блокноте Jupyter](https://jupyter.org/).
+Блокноты предоставляют интерактивность, которая значительно упрощает изучение работы с LLM.
+
+Об установке Jupyter читайте в [официальной документации](https://jupyter.org/install).
+
+### Установка Зависимостей
+
+В примере используются модели GigaChat (чат-модель и эмбеддинги), а также векторное хранилище Chroma, но в своем приложении вы можете использовать любой из доступных компонентов.
+
+Для работы с примером нужно установить пакеты:
+
+```python
+%pip install --upgrade --quiet  gigachain langchainhub chromadb bs4
+```
+
+
+For more details, see our [Installation guide](/docs/how_to/installation).
+
+<!--
+### LangSmith
+
+Many of the applications you build with LangChain will contain multiple steps with multiple invocations of LLM calls.
+As these applications get more and more complex, it becomes crucial to be able to inspect what exactly is going on inside your chain or agent.
+The best way to do this is with [LangSmith](https://smith.langchain.com).
+
+After you sign up at the link above, make sure to set your environment variables to start logging traces:
+
+```shell
+export LANGCHAIN_TRACING_V2="true"
+export LANGCHAIN_API_KEY="..."
+```
+
+Or, if in a notebook, you can set them with:
+
+```python
+import getpass
+import os
+
+os.environ["LANGCHAIN_TRACING_V2"] = "true"
+os.environ["LANGCHAIN_API_KEY"] = getpass.getpass()
+```
+-->
+## Обзор решения
+
+Пример демонстрирует вопросно-ответное приложение, которое генерирует ответы на основе содержания поста в блоге Лилиан Вэнг [LLM Powered Autonomous Agents](https://lilianweng.github.io/posts/2023-06-23-agent/).
+
+Итоговое решение, которое включает конвейер индексации и цепочку RAG, может занимать всего около 20 строк кода:
+
+```python
+import bs4
+from langchain import hub
+from langchain_chroma import Chroma
+from langchain_community.document_loaders import WebBaseLoader
+from langchain_core.output_parsers import StrOutputParser
+from langchain_core.runnables import RunnablePassthrough
+from langchain_openai import OpenAIEmbeddings
+from langchain_text_splitters import RecursiveCharacterTextSplitter
+
+# Загрузка, разделение на части и индексация содержимого блога.
+loader = WebBaseLoader(
+    web_paths=("https://lilianweng.github.io/posts/2023-06-23-agent/",),
+    bs_kwargs=dict(
+        parse_only=bs4.SoupStrainer(
+            class_=("post-content", "post-title", "post-header")
+        )
+    ),
+)
+docs = loader.load()
+
+text_splitter = RecursiveCharacterTextSplitter(chunk_size=1000, chunk_overlap=200)
+splits = text_splitter.split_documents(docs)
+vectorstore = Chroma.from_documents(documents=splits, embedding=OpenAIEmbeddings())
+
+# Извлечение данных и генерация с помощью релевантных фрагментов блога.
+retriever = vectorstore.as_retriever()
+prompt = hub.pull("rlm/rag-prompt")
+
+
+def format_docs(docs):
+    return "\n\n".join(doc.page_content for doc in docs)
+
+
+rag_chain = (
+    {"context": retriever | format_docs, "question": RunnablePassthrough()}
+    | prompt
+    | llm
+    | StrOutputParser()
+)
+
+rag_chain.invoke("What is Task Decomposition?")
+```
+
+
+<CodeOutputBlock lang="python">
+
+```python
+    'Task Decomposition is a process where a complex task is broken down into smaller, simpler steps or subtasks. This technique is utilized to enhance model performance on complex tasks by making them more manageable. It can be done by using language models with simple prompting, task-specific instructions, or with human inputs.'
+```
+
+</CodeOutputBlock>
+
+
+```python
+# Очистка хранилища
+vectorstore.delete_collection()
+```
+
+## Разбор решения
+
+Ниже описаны этапы разработки приведенного примера.
+
+## 1. Индексирование. Загрузка данных {#indexing-load}
+
+Cначала загружается содержимое поста.
+Для этого используются загрузчики [DocumentLoaders](/docs/concepts#document-loaders), которые загружают данные из источника и возвращают список документов [`Documents`](https://api.python.langchain.com/en/latest/documents/langchain_core.documents.base.Document.html).
+Экземпляр `Document` — объект с полями:
+
+* `page_content` (str) — содержимое страницы;
+* `metadata` (dict) — метаданные.
+
+Код в примере загружает HTML по заданному адресу и преобразовывает его в текст с помощью компонента [WebBaseLoader](/docs/integrations/document_loaders/web_base), который использует библиотеки `urllib` и `BeautifulSoup`.
+Правила преобразования можно задать с помощью параметров парсера `BeautifulSoup` переданных в `bs_kwargs` (подробнее в [документации BeautifulSoup](https://beautiful-soup-4.readthedocs.io/en/latest/#beautifulsoup)).
+Для представленного примера актуальны только HTML-теги с классами `post-content`, `post-title` и `post-header`.
+
+```python
+import bs4
+from langchain_community.document_loaders import WebBaseLoader
+
+# Сохраняются только название поста, заголовки и содержимое из полного HTML.
+bs4_strainer = bs4.SoupStrainer(class_=("post-title", "post-header", "post-content"))
+loader = WebBaseLoader(
+    web_paths=("https://lilianweng.github.io/posts/2023-06-23-agent/",),
+    bs_kwargs={"parse_only": bs4_strainer},
+)
+docs = loader.load()
+
+len(docs[0].page_content)
+```
+
+
+<CodeOutputBlock lang="python">
+
+```python
+    43131
+```
+
+</CodeOutputBlock>
+
+
+```python
+print(docs[0].page_content[:500])
+```
+
+
+<CodeOutputBlock lang="python">
+
+```default
+    
+    
+          LLM Powered Autonomous Agents
+        
+    Date: June 23, 2023  |  Estimated Reading Time: 31 min  |  Author: Lilian Weng
+    
+    
+    Building agents with LLM (large language model) as its core controller is a cool concept. Several proof-of-concepts demos, such as AutoGPT, GPT-Engineer and BabyAGI, serve as inspiring examples. The potentiality of LLM extends beyond generating well-written copies, stories, essays and programs; it can be framed as a powerful general problem solver.
+    Agent System Overview#
+    In
+```
+
+</CodeOutputBlock>
+
+### Дополнительная информация
+
+`DocumentLoader` — объект, который загружает данные в виде списка документов `Documents`. 
+
+* [Руководства по работе с `DocumentLoaders`](/docs/how_to#document-loaders).
+* [Справка API](https://api.python.langchain.com/en/latest/document_loaders/langchain_core.document_loaders.base.BaseLoader.html) базового интерфейса.
+
+<!--
+[Integrations](../../../docs/integrations/document_loaders/): 160+
+-->
+
+## 2. Индексирование. Разделение данных {#indexing-split}
+
+Размер загруженного документа превышает 42 тысячи символов. Это слишком много для контекста многих моделей.
+Даже если модель уместит в контексте весь пост, у нее могут быть проблемы с поиском информации в большом объеме входных данных.
+
+Чтобы сгенерировать эмбеддинги из данных `Document` и сохранить их в векторном хранилище, их нужно разделить на фрагменты.
+Это позволит упростить извлечение релевантных частей поста на этапе выполнения. 
+
+В примере документы делятся на фрагменты по 1000 символов с перекрытием в 200 символов между каждым фрагментами. Перекрытие помогает избежать разделения утверждения и важного контекста, связанного с ним.
+Для разделения текста используется [`RecursiveCharacterTextSplitter`](/docs/how_to/recursive_text_splitter), который рекурсивно делит документ с помощью общепринятых разделителей, таких как переводы строк `\n`, до тех пор, пока каждый фрагмент не достигнет нужного размера. Используйте `RecursiveCharacterTextSplitter` для решения типичных задач, связанных с обработкой текста.
+
+Атрибут `add_start_index=True` используется для сохранения индекса символа, с которого начинается каждый фрагмент начального документа `Document`.
+
+```python
+from langchain_text_splitters import RecursiveCharacterTextSplitter
+
+text_splitter = RecursiveCharacterTextSplitter(
+    chunk_size=1000, chunk_overlap=200, add_start_index=True
+)
+all_splits = text_splitter.split_documents(docs)
+
+len(all_splits)
+```
+
+
+<CodeOutputBlock lang="python">
+
+```python
+    66
+```
+
+</CodeOutputBlock>
+
+
+```python
+len(all_splits[0].page_content)
+```
+
+
+<CodeOutputBlock lang="python">
+
+```python
+    969
+```
+
+</CodeOutputBlock>
+
+
+```python
+all_splits[10].metadata
+```
+
+
+<CodeOutputBlock lang="python">
+
+```python
+    {'source': 'https://lilianweng.github.io/posts/2023-06-23-agent/',
+ 'start_index': 7056}
+```
+
+</CodeOutputBlock>
+
+### Дополнительная информация
+
+`TextSplitter` — объект, который разделяет список документов `Document` на более мелкие фрагменты. Подкласс `DocumentTransformer`.
+
+* Ознакомьтесь с [«контекстно-зависимыми разделителями»](/docs/how_to#text-splitters), которые сохраняют положение (контекст) каждого деления в исходном документе `Document`:
+  * [Код (py или js)](/docs/integrations/document_loaders/source_code) 
+  * [Научные публикации](/docs/integrations/document_loaders/grobid) 
+* [Справка API](https://api.python.langchain.com/en/latest/base/langchain_text_splitters.base.TextSplitter.html) базового интерфейса.
+
+`DocumentTransformer` — объект, который выполняет преобразование списка документов `Document`.
+* [Руководства по работе с `DocumentTransformers`](/docs/how_to#text-splitters).
+* [Справка API](https://api.python.langchain.com/en/latest/documents/langchain_core.documents.transformers.BaseDocumentTransformer.html) базового интерфейса.
+
+<!--
+- [Integrations](../../../docs/integrations/document_transformers/) 
+-->
+
+## 3. Индексирование. Хранение данных {#indexing-store}
+
+Теперь полученные фрагменты текста нужно проиндексировать, чтобы иметь возможность выполнять поиск в процессе выполнения.
+Распространенным решением такой задачи является создание эмбеддингов для фрагментов и сохранение их в векторной базе данных (или векторном хранилище).
+Поиск по полученным фрагментам выполняется на основе «сходства» эмбеддинга запроса и эмбеддингов в хранилище.
+Самая простая мера сходства — это косинусное сходство, при котором измеряется косинус угла между каждой парой эмбеддингов, представляющих собой высокоразмерные вектора.
+
+Создать эмбеддинги с помощью `GigaChatEmbeddings` и сохранить их в векторном хранилище Chroma можно с помощью одной команды.
+
+```python
+from langchain_community.vectorstores import Chroma
+from langchain_community.embeddings.gigachat import GigaChatEmbeddings
+
+vectorstore = Chroma.from_documents(documents=all_splits, embedding=GigaChatEmbeddings(credentials="<авторизационные_данные>", verify_ssl_certs=False))
+```
+
+### Дополнительная информация
+
+`Embeddings` — обертка для работы с моделью, которая преобразует текст в эмбеддинги.
+
+* [Руководство по работе с эмбеддингами](/docs/how_to/embed_text). 
+* [Справка API](https://api.python.langchain.com/en/latest/embeddings/langchain_core.embeddings.Embeddings.html) базового интерфейса.
+
+<!--
+- [Integrations](../../../docs/integrations/text_embedding/): 30+ integrations to choose from. 
+-->
+
+`VectorStore` — обертка для работы с векторной базой данных, которая используется для хранения эмбеддингов и выполнения запросов.
+
+* [Руководства по работе с векторными хранилищами](/docs/how_to/vectorstores). 
+* [Справка API](https://api.python.langchain.com/en/latest/vectorstores/langchain_core.vectorstores.VectorStore.html) для базового интерфейса.
+
+<!--
+- [Integrations](../../../docs/integrations/vectorstores/): 40+ integrations to choose from. 
+-->
+
+На этом завершается этап индексирования.
+К этому моменту в примере реализовано векторное хранилище, которое содержит фрагменты поста и может возвращать их в соответствии с запросом пользователя.
+
+## 4. Извлечение данных и генерация. Извлечение данных{#retrieval-and-generation-retrieve}
+
+Теперь добавим логику приложения.
+Приложение должно уметь:
+* принимать вопрос пользователя;
+* искать документы, соответствующие этому вопросу;
+* передавать в модель вопрос и полученные документы;
+* возвращать ответ.
+
+Сперва определим логику поиска по документам.
+GigaChain предоставляет интерфейсу [Retriever](/docs/concepts#retrievers/) — обертку для работы с индексом. Ретривер может возвращать подходящие документы `Documents` в ответ на строковый запрос.
+
+Наиболее распространенным типом `Retriever` является [VectorStoreRetriever](/docs/how_to/vectorstore_retriever) — объект, который использует возможности поиска по сходству в векторном хранилище для облегчения получения данных. Любой экземпляр `VectorStore` можно преобразовать в `Retriever` с помощью метода `VectorStore.as_retriever()`:
+
+```python
+retriever = vectorstore.as_retriever(search_type="similarity", search_kwargs={"k": 6})
+
+retrieved_docs = retriever.invoke("What are the approaches to Task Decomposition?")
+
+len(retrieved_docs)
+```
+
+
+<CodeOutputBlock lang="python">
+
+```python
+    6
+```
+
+</CodeOutputBlock>
+
+
+```python
+print(retrieved_docs[0].page_content)
+```
+
+
+<CodeOutputBlock lang="python">
+
+```default
+    Tree of Thoughts (Yao et al. 2023) extends CoT by exploring multiple reasoning possibilities at each step. It first decomposes the problem into multiple thought steps and generates multiple thoughts per step, creating a tree structure. The search process can be BFS (breadth-first search) or DFS (depth-first search) with each state evaluated by a classifier (via a prompt) or majority vote.
+    Task decomposition can be done (1) by LLM with simple prompting like "Steps for XYZ.\n1.", "What are the subgoals for achieving XYZ?", (2) by using task-specific instructions; e.g. "Write a story outline." for writing a novel, or (3) with human inputs.
+```
+
+</CodeOutputBlock>
+
+### Дополнительная информация
+
+Как правило, для извлечения данных используются векторные хранилища, но существуют и другие подходы.
+
+`Retriever` — объект, который возвращает документы `Document` на основе текстового запроса.
+
+* [Дополнительная документация](/docs/how_to#retrievers) по интерфейсу и встроенным методикам получения данных. Которые, среди прочего, включают:
+  * [`MultiQueryRetriever`](/docs/how_to/MultiQueryRetriever) генерирует вариации запроса, что позволяет повысить точность получаемых данных.
+  * [`MultiVectorRetriever`](/docs/how_to/multi_vector) генерирует вариации эмбеддингов, для повышения точности получаемых данных.
+  * [Self Query Retriever](/docs/how_to/self_queryy) фильтрует документы на основе метаданных при их получении из векторного хранилища.
+* [Справка API](https://api.python.langchain.com/en/latest/retrievers/langchain_core.retrievers.BaseRetriever.html) для базового интерфейса.
+
+<!--
+    -   `Max marginal relevance` selects for [relevance and diversity](https://www.cs.cmu.edu/~jgc/publication/The_Use_MMR_Diversity_Based_LTMIR_1998.pdf) among the retrieved documents to avoid passing in duplicate context.
+-->
+<!--
+-   [Integrations](../../../docs/integrations/retrievers/): Integrations
+-->
+
+## 5. Извлечение данных и генерация. Генерация  {#retrieval-and-generation-generate}
+
+Объединим полученный код в цепочку, которая принимает вопрос, извлекает соответствующие документы, создает промпт, передает его модели, а затем анализирует выходные данные.
+
+```python
+from langchain.chat_models.gigachat import GigaChat
+
+llm = GigaChat(credentials="<авторизационные_данные>", verify_ssl_certs=False)
+```
+
+Используем промпт для RAG, который хранится хабе промптов [LangChain](https://smith.langchain.com/hub/rlm/rag-prompt).
+
+```python
+from langchain import hub
+
+prompt = hub.pull("rlm/rag-prompt")
+
+example_messages = prompt.invoke(
+    {"context": "filler context", "question": "filler question"}
+).to_messages()
+
+example_messages
+```
+
+
+<CodeOutputBlock lang="python">
+
+```python
+    [HumanMessage(content="You are an assistant for question-answering tasks. Use the following pieces of retrieved context to answer the question. If you don't know the answer, just say that you don't know. Use three sentences maximum and keep the answer concise.\nQuestion: filler question \nContext: filler context \nAnswer:")]
+```
+
+</CodeOutputBlock>
+
+
+```python
+print(example_messages[0].content)
+```
+
+
+<CodeOutputBlock lang="python">
+
+```default
+    You are an assistant for question-answering tasks. Use the following pieces of retrieved context to answer the question. If you don't know the answer, just say that you don't know. Use three sentences maximum and keep the answer concise.
+    Question: filler question 
+    Context: filler context 
+    Answer:
+```
+
+</CodeOutputBlock>
+
+Для создания цепочки используем протокол [LCEL Runnable](/docs/concepts#langchain-expression-language), который позволяет объединять компоненты и функции, получать потоковую, асинхронную и пакетную передачу данных из коробки.
+
+```python
+from langchain_core.output_parsers import StrOutputParser
+from langchain_core.runnables import RunnablePassthrough
+
+
+def format_docs(docs):
+    return "\n\n".join(doc.page_content for doc in docs)
+
+
+rag_chain = (
+    {"context": retriever | format_docs, "question": RunnablePassthrough()}
+    | prompt
+    | llm
+    | StrOutputParser()
+)
+
+for chunk in rag_chain.stream("What is Task Decomposition?"):
+    print(chunk, end="", flush=True)
+```
+
+
+<CodeOutputBlock lang="python">
+
+```default
+    Task Decomposition is a process where a complex task is broken down into smaller, more manageable steps or parts. This is often done using techniques like "Chain of Thought" or "Tree of Thoughts", which instruct a model to "think step by step" and transform large tasks into multiple simple tasks. Task decomposition can be prompted in a model, guided by task-specific instructions, or influenced by human inputs.
+```
+
+</CodeOutputBlock>
+
+Разберем реализацию на LCEL, чтобы понять, что происходит.
+
+Каждый из компонентов (`retriever`, `prompt`, `llm` и других) является экземпляром [Runnable](/docs/concepts#langchain-expression-language).
+То есть они реализуют одни и те же методы, такие как sync и async `.invoke`, `.stream` или `.batch`.
+Это позволяет соединять их с помощью оператора конвейера `|` в [RunnableSequence](https://api.python.langchain.com/en/latest/runnables/langchain_core.runnables.base.RunnableSequence.html) — последовательность, котора я также является Runnable-объектом.
+
+При обнаружении оператора `|` GigaChain автоматически приводит определенные объекты к Runnable.
+Здесь `format_docs` приводится к [RunnableLambda](https://api.python.langchain.com/en/latest/runnables/langchain_core.runnables.base.RunnableLambda.html), а dict с `«context»` и `«question»` приводится к [RunnableParallel](https://api.python.langchain.com/en/latest/runnables/langchain_core.runnables.base.RunnableParallel.html).
+Самое важное на этом этапе это то, что каждый объект являетя Runnable
+
+Проследим, как входной вопрос проходит через представленные Runnable.
+
+Как уже было показано, на входе в `prompt` ожидается dict с ключами `«context»` и `«question»`. Поэтому первый элемент этой цепочки создает Runnable-объекты, которые вычисляют оба этих ключа из входного вопроса:
+* `retriever | format_docs` передает вопрос через ретривер, генерирующий объекты [Document](https://api.python.langchain.com/en/latest/documents/langchain_core.documents.base.Document.html), а затем в `format_docs` для генерации строк;
+* `RunnablePassthrough()` передает входной вопрос без изменений.
+
+Таким образом, если собрать цепочку вида
+
+```python
+chain = (
+    {"context": retriever | format_docs, "question": RunnablePassthrough()}
+    | prompt
+)
+```
+
+То вызов метода `chain.invoke(question)` создаст отформатированный промпт, готовый к выводу.
+
+:::note
+
+Тестирование с помощью таких подцепочек упрощает разработку на LCEL.
+
+:::
+
+Последними шагами цепочки являются обращение к `llm`, который запускает вывод, и вызов `StrOutputParser()`, который просто извлекает строковое содержимое из выходного сообщения модели.
+
+### Встроенные цепочки
+
+При желании вы можете возспользоваться встроенными в GigaChain функциями, которые делают то же самое, что и описанная реализация на LCEL:
+
+- [`create_stuff_documents_chain`](https://api.python.langchain.com/en/latest/chains/langchain.chains.combine_documents.stuff.create_stuff_documents_chain.html) определяет, как извлеченный контекст будет подаваться в промпт и LLM. Цепочка помещает в промпт весь найденный контекст без какой-либо суммаризации или другой обработки. По большому счету она реализует описанную выше цепочку `rag_chain`, с входными ключами `context` и `input` — функция генерирует ответ, используя извлеченный контекст и запрос.
+- [`create_retrieval_chain`](https://api.python.langchain.com/en/latest/chains/langchain.chains.retrieval.create_retrieval_chain.html)  добавляет шаг извлечения и распространяет извлеченный контекст по цепочке, предоставляя его вместе с окончательным ответом. Цепочка имеет входной ключ `input` и включает `input`, `context` и `answer` в свой вывод.
+
+```python
+from langchain.chains import create_retrieval_chain
+from langchain.chains.combine_documents import create_stuff_documents_chain
+from langchain_core.prompts import ChatPromptTemplate
+
+system_prompt = (
+    "You are an assistant for question-answering tasks. "
+    "Use the following pieces of retrieved context to answer "
+    "the question. If you don't know the answer, say that you "
+    "don't know. Use three sentences maximum and keep the "
+    "answer concise."
+    "\n\n"
+    "{context}"
+)
+
+prompt = ChatPromptTemplate.from_messages(
+    [
+        ("system", system_prompt),
+        ("human", "{input}"),
+    ]
+)
+
+
+question_answer_chain = create_stuff_documents_chain(llm, prompt)
+rag_chain = create_retrieval_chain(retriever, question_answer_chain)
+
+response = rag_chain.invoke({"input": "What is Task Decomposition?"})
+print(response["answer"])
+```
+
+
+<CodeOutputBlock lang="python">
+
+```default
+    Task Decomposition is a process in which complex tasks are broken down into smaller and simpler steps. Techniques like Chain of Thought (CoT) and Tree of Thoughts are used to enhance model performance on these tasks. The CoT method instructs the model to think step by step, decomposing hard tasks into manageable ones, while Tree of Thoughts extends CoT by exploring multiple reasoning possibilities at each step, creating a tree structure of thoughts.
+```
+
+</CodeOutputBlock>
+
+#### Возврат источников
+
+Зачастую в вопросно-ответных приложениях важно показать пользователю источники, использованые для генерации ответа. Цепочка `create_retrieval_chain`, встроенная в GigaChain, будет распространять полученные источники в выводе, в ключе `«context»`:
+
+```python
+for document in response["context"]:
+    print(document)
+    print()
+```
+
+
+<CodeOutputBlock lang="python">
+
+```default
+    page_content='Fig. 1. Overview of a LLM-powered autonomous agent system.\nComponent One: Planning#\nA complicated task usually involves many steps. An agent needs to know what they are and plan ahead.\nTask Decomposition#\nChain of thought (CoT; Wei et al. 2022) has become a standard prompting technique for enhancing model performance on complex tasks. The model is instructed to “think step by step” to utilize more test-time computation to decompose hard tasks into smaller and simpler steps. CoT transforms big tasks into multiple manageable tasks and shed lights into an interpretation of the model’s thinking process.' metadata={'source': 'https://lilianweng.github.io/posts/2023-06-23-agent/'}
+    
+    page_content='Fig. 1. Overview of a LLM-powered autonomous agent system.\nComponent One: Planning#\nA complicated task usually involves many steps. An agent needs to know what they are and plan ahead.\nTask Decomposition#\nChain of thought (CoT; Wei et al. 2022) has become a standard prompting technique for enhancing model performance on complex tasks. The model is instructed to “think step by step” to utilize more test-time computation to decompose hard tasks into smaller and simpler steps. CoT transforms big tasks into multiple manageable tasks and shed lights into an interpretation of the model’s thinking process.' metadata={'source': 'https://lilianweng.github.io/posts/2023-06-23-agent/', 'start_index': 1585}
+    
+    page_content='Tree of Thoughts (Yao et al. 2023) extends CoT by exploring multiple reasoning possibilities at each step. It first decomposes the problem into multiple thought steps and generates multiple thoughts per step, creating a tree structure. The search process can be BFS (breadth-first search) or DFS (depth-first search) with each state evaluated by a classifier (via a prompt) or majority vote.\nTask decomposition can be done (1) by LLM with simple prompting like "Steps for XYZ.\\n1.", "What are the subgoals for achieving XYZ?", (2) by using task-specific instructions; e.g. "Write a story outline." for writing a novel, or (3) with human inputs.' metadata={'source': 'https://lilianweng.github.io/posts/2023-06-23-agent/', 'start_index': 2192}
+    
+    page_content='Tree of Thoughts (Yao et al. 2023) extends CoT by exploring multiple reasoning possibilities at each step. It first decomposes the problem into multiple thought steps and generates multiple thoughts per step, creating a tree structure. The search process can be BFS (breadth-first search) or DFS (depth-first search) with each state evaluated by a classifier (via a prompt) or majority vote.\nTask decomposition can be done (1) by LLM with simple prompting like "Steps for XYZ.\\n1.", "What are the subgoals for achieving XYZ?", (2) by using task-specific instructions; e.g. "Write a story outline." for writing a novel, or (3) with human inputs.' metadata={'source': 'https://lilianweng.github.io/posts/2023-06-23-agent/'}
+    
+    page_content='Resources:\n1. Internet access for searches and information gathering.\n2. Long Term memory management.\n3. GPT-3.5 powered Agents for delegation of simple tasks.\n4. File output.\n\nPerformance Evaluation:\n1. Continuously review and analyze your actions to ensure you are performing to the best of your abilities.\n2. Constructively self-criticize your big-picture behavior constantly.\n3. Reflect on past decisions and strategies to refine your approach.\n4. Every command has a cost, so be smart and efficient. Aim to complete tasks in the least number of steps.' metadata={'source': 'https://lilianweng.github.io/posts/2023-06-23-agent/'}
+    
+    page_content='Resources:\n1. Internet access for searches and information gathering.\n2. Long Term memory management.\n3. GPT-3.5 powered Agents for delegation of simple tasks.\n4. File output.\n\nPerformance Evaluation:\n1. Continuously review and analyze your actions to ensure you are performing to the best of your abilities.\n2. Constructively self-criticize your big-picture behavior constantly.\n3. Reflect on past decisions and strategies to refine your approach.\n4. Every command has a cost, so be smart and efficient. Aim to complete tasks in the least number of steps.' metadata={'source': 'https://lilianweng.github.io/posts/2023-06-23-agent/', 'start_index': 29630}
+    
+```
+
+</CodeOutputBlock>
+
+### Дополнительная информация
+
+#### Выбор модели
+
+`ChatModel` — чат-модель, в основе которой лежит LLM. Объект принимает на вход последовательность сообщений и возвращает ответ модели в виде сообщения. 
+
+* [Документация](/docs/how_to#chat-models);
+* [Справка API](https://api.python.langchain.com/en/latest/language_models/langchain_core.language_models.chat_models.BaseChatModel.html) для базового интерфейса.
+
+<!--
+- [Integrations](../../../docs/integrations/chat/): 25+ integrations to choose from.
+-->
+
+`LLM` — LLM, которая принимает и возвращает строку.
+
+* [Документация](/docs/how_to#llms);
+* [Справка API](https://api.python.langchain.com/en/latest/language_models/langchain_core.language_models.llms.BaseLLM.html) для базового интерфейса.
+
+<!--
+- [Integrations](../../../docs/integrations/llms): 75+ integrations to choose from. 
+-->
+
+Руководство по реализации [RAG с помощью локальных моделей](/docs/tutorials/local_rag).
+
+#### Настройка промпта
+
+В примере выше RAG-промпт загружается из [хаба промптов LangChain](https://smith.langchain.com/hub/rlm/rag-prompt).
+Текст промпта можно настроить:
+
+```python
+from langchain_core.prompts import PromptTemplate
+
+template = """Use the following pieces of context to answer the question at the end.
+If you don't know the answer, just say that you don't know, don't try to make up an answer.
+Use three sentences maximum and keep the answer as concise as possible.
+Always say "thanks for asking!" at the end of the answer.
+
+{context}
+
+Question: {question}
+
+Helpful Answer:"""
+custom_rag_prompt = PromptTemplate.from_template(template)
+
+rag_chain = (
+    {"context": retriever | format_docs, "question": RunnablePassthrough()}
+    | custom_rag_prompt
+    | llm
+    | StrOutputParser()
+)
+
+rag_chain.invoke("What is Task Decomposition?")
+```
+
+
+<CodeOutputBlock lang="python">
+
+```python
+    'Task decomposition is the process of breaking down a complex task into smaller, more manageable parts. Techniques like Chain of Thought (CoT) and Tree of Thoughts allow an agent to "think step by step" and explore multiple reasoning possibilities, respectively. This process can be executed by a Language Model with simple prompts, task-specific instructions, or human inputs. Thanks for asking!'
+```
+
+</CodeOutputBlock>
+
+## Смотрите также
+
+* [Возврат исходных документов](/docs/how_to/qa_sources).
+* [Потоковая передача выходных данных и промежуточных шагов](/docs/how_to/streaming).
+* [Добавление истории чата](/docs/how_to/message_history).

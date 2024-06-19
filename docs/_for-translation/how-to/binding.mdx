@@ -1,0 +1,189 @@
+# Привязка аргументов
+
+:::note
+
+С этим руководством будет проще работать, если ознакомиться с разделами:
+- [LangChain Expression Language (LCEL)](/docs/concepts/#langchain-expression-language)
+- [Chaining runnables](/docs/how_to/sequence/)
+- [Tool calling](/docs/how_to/tool_calling/)
+
+:::
+
+Существуют ситуации, когда нужно вызвать экземпляр [`Runnable`](https://api.python.langchain.com/en/latest/runnables/langchain_core.runnables.base.Runnable.html) внутри [RunnableSequence](https://api.python.langchain.com/en/latest/runnables/langchain_core.runnables.base.RunnableSequence.html) с постоянными аргументами, которые не были предоставлены пользователем или не являются результатом работы других Runnable в последовательности.
+В таких случаях вы можете передать эти аргументы с помощью метода [`Runnable.bind()`](https://api.python.langchain.com/en/latest/runnables/langchain_core.runnables.base.Runnable.html#langchain_core.runnables.base.Runnable.bind).
+
+Продемонстрируем привязку на примере цепочки из промпта и модели:
+
+```python
+%pip install --upgrade --quiet  gigachain
+```
+
+
+```python
+from langchain.chat_models.gigachat import GigaChat
+from langchain_core.output_parsers import StrOutputParser
+from langchain_core.prompts import ChatPromptTemplate
+from langchain_core.runnables import RunnablePassthrough
+```
+
+
+```python
+from langchain_core.output_parsers import StrOutputParser
+from langchain_core.prompts import ChatPromptTemplate
+from langchain_core.runnables import RunnablePassthrough
+from langchain_openai import ChatOpenAI
+
+prompt = ChatPromptTemplate.from_messages(
+    [
+        (
+            "system",
+            "Write out the following equation using algebraic symbols then solve it. Use the format\n\nEQUATION:...\nSOLUTION:...\n\n",
+        ),
+        ("human", "{equation_statement}"),
+    ]
+)
+model = GigaChat(
+    credentials="<авторизационные_данные>", verify_ssl_certs=False, model="GigaChat-Pro"
+)
+runnable = (
+    {"equation_statement": RunnablePassthrough()} | prompt | model | StrOutputParser()
+)
+
+print(runnable.invoke("x raised to the third plus seven equals 12"))
+```
+
+
+<CodeOutputBlock lang="python">
+
+```default
+    EQUATION: x^3 + 7 = 12
+    
+    SOLUTION: 
+    Subtract 7 from both sides:
+    x^3 = 5
+    
+    Take the cube root of both sides:
+    x = ∛5
+```
+
+</CodeOutputBlock>
+
+Передадим в модель `model` слова, после которых она должна останавливаться (`stop`):
+
+```python
+runnable = (
+    {"equation_statement": RunnablePassthrough()}
+    | prompt
+    | model.bind(stop="SOLUTION")
+    | StrOutputParser()
+)
+print(runnable.invoke("x raised to the third plus seven equals 12"))
+```
+
+
+<CodeOutputBlock lang="python">
+
+```default
+    EQUATION: x^3 + 7 = 12
+    
+    
+```
+
+</CodeOutputBlock>
+
+## Привязка функций GigaChat
+
+Привязка может быть полезна при работе с функциями GigaChat:
+
+```python
+function = {
+    "name": "solver",
+    "description": "Formulates and solves an equation",
+    "parameters": {
+        "type": "object",
+        "properties": {
+            "equation": {
+                "type": "string",
+                "description": "The algebraic expression of the equation",
+            },
+            "solution": {
+                "type": "string",
+                "description": "The solution to the equation",
+            },
+        },
+        "required": ["equation", "solution"],
+    },
+}
+```
+
+
+```python
+# Для корректной работы примера используйте модель GigaChat-Pro
+prompt = ChatPromptTemplate.from_messages(
+    [
+        (
+            "system",
+            "Write out the following equation using algebraic symbols then solve it.",
+        ),
+        ("human", "{equation_statement}"),
+    ]
+)
+model = GigaChat(
+    credentials="<авторизационные_данные>", verify_ssl_certs=False, model="GigaChat-Pro"
+).bind(function_call={"name": "solver"}, functions=[function])
+runnable = {"equation_statement": RunnablePassthrough()} | prompt | model
+runnable.invoke("x raised to the third plus seven equals 12")
+```
+
+
+<CodeOutputBlock lang="python">
+
+```python
+    AIMessage(content='', additional_kwargs={'function_call': {'name': 'solver', 'arguments': '{\n"equation": "x^3 + 7 = 12",\n"solution": "x = ∛5"\n}'}}, example=False)
+```
+
+</CodeOutputBlock>
+
+## Привязка OpenAI-инструментов
+
+```python
+tools = [
+    {
+        "type": "function",
+        "function": {
+            "name": "get_current_weather",
+            "description": "Get the current weather in a given location",
+            "parameters": {
+                "type": "object",
+                "properties": {
+                    "location": {
+                        "type": "string",
+                        "description": "The city and state, e.g. San Francisco, CA",
+                    },
+                    "unit": {"type": "string", "enum": ["celsius", "fahrenheit"]},
+                },
+                "required": ["location"],
+            },
+        },
+    }
+]
+```
+
+
+```python
+model = ChatOpenAI(model="gpt-3.5-turbo-1106").bind(tools=tools)
+model.invoke("What's the weather in SF, NYC and LA?")
+```
+
+
+<CodeOutputBlock lang="python">
+
+```python
+    AIMessage(content='', additional_kwargs={'tool_calls': [{'id': 'call_z0OU2CytqENVrRTI6T8DkI3u', 'function': {'arguments': '{"location": "San Francisco, CA", "unit": "celsius"}', 'name': 'get_current_weather'}, 'type': 'function'}, {'id': 'call_ft96IJBh0cMKkQWrZjNg4bsw', 'function': {'arguments': '{"location": "New York, NY", "unit": "celsius"}', 'name': 'get_current_weather'}, 'type': 'function'}, {'id': 'call_tfbtGgCLmuBuWgZLvpPwvUMH', 'function': {'arguments': '{"location": "Los Angeles, CA", "unit": "celsius"}', 'name': 'get_current_weather'}, 'type': 'function'}]}, response_metadata={'token_usage': {'completion_tokens': 84, 'prompt_tokens': 85, 'total_tokens': 169}, 'model_name': 'gpt-3.5-turbo-1106', 'system_fingerprint': 'fp_77a673219d', 'finish_reason': 'tool_calls', 'logprobs': None}, id='run-d57ad5fa-b52a-4822-bc3e-74f838697e18-0', tool_calls=[{'name': 'get_current_weather', 'args': {'location': 'San Francisco, CA', 'unit': 'celsius'}, 'id': 'call_z0OU2CytqENVrRTI6T8DkI3u'}, {'name': 'get_current_weather', 'args': {'location': 'New York, NY', 'unit': 'celsius'}, 'id': 'call_ft96IJBh0cMKkQWrZjNg4bsw'}, {'name': 'get_current_weather', 'args': {'location': 'Los Angeles, CA', 'unit': 'celsius'}, 'id': 'call_tfbtGgCLmuBuWgZLvpPwvUMH'}])
+```
+
+</CodeOutputBlock>
+
+## Смотрите также
+
+- [Изменение параметров в процессе выполнения](/docs/how_to/configure)

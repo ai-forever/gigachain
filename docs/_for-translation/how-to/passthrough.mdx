@@ -1,0 +1,95 @@
+# Передача данных между шагами цепочки
+
+:::note
+
+С этим руководством будет проще работать, если ознакомиться с разделами:
+- [LangChain Expression Language (LCEL)](/docs/concepts/#langchain-expression-language)
+- [Соединение Runnable в цепочку](/docs/how_to/sequence/)
+- [Обработка входных и выходных данных](/docs/how_to/parallel/)
+- [Запуск собственных функций](/docs/how_to/functions/)
+
+:::
+
+При составлении цепочек из нескольких шагов иногда возникает необходимость передать данные из предыдущих шагов без изменений для использования в качестве входных данных для последующего шага. Эту задачу можно решить с помощью класса [`RunnablePassthrough`](https://api.python.langchain.com/en/latest/runnables/langchain_core.runnables.passthrough.RunnablePassthrough.html), который обычно используется в сочетании с [`RunnableParallel`](/docs/how_to/parallel/) для передачи данных на последующий шаг цепочки.
+
+Пример:
+
+```python
+%pip install --upgrade --quiet  gigachain
+```
+
+
+```python
+from langchain_core.runnables import RunnableParallel, RunnablePassthrough
+
+runnable = RunnableParallel(
+    passed=RunnablePassthrough(),
+    modified=lambda x: x["num"] + 1,
+)
+
+runnable.invoke({"num": 1})
+```
+
+
+<CodeOutputBlock lang="python">
+
+```python
+    {'passed': {'num': 1}, 'modified': 2}
+```
+
+</CodeOutputBlock>
+
+В примере выше поле `passed` вызывается со значением `RunnablePassthrough()`, поэтому ему передается `{'num': 1}`. 
+
+В map-структуре также задано поле `modified`.
+Поле содержит лямбда-функцию, которая добавляет 1 к `num`, поэтому поле `modified` принимает значение `2`.
+## Пример извлечения данных
+
+Пример ниже демонстрирует совместную работу `RunnablePassthrough` и `RunnableParallel`.
+
+```python
+from langchain.chat_models.gigachat import GigaChat
+from langchain_community.embeddings.gigachat import GigaChatEmbeddings
+from langchain_community.vectorstores import FAISS
+from langchain_core.output_parsers import StrOutputParser
+from langchain_core.prompts import ChatPromptTemplate
+from langchain_core.runnables import RunnablePassthrough
+
+vectorstore = FAISS.from_texts(
+    ["harrison worked at kensho"],
+    embedding=GigaChatEmbeddings(
+        credentials="<авторизационные_данные>", verify_ssl_certs=False
+    ),
+)
+retriever = vectorstore.as_retriever()
+template = """Answer the question based only on the following context:
+{context}
+
+Question: {question}
+"""
+prompt = ChatPromptTemplate.from_template(template)
+model = GigaChat(credentials="<авторизационные_данные>", verify_ssl_certs=False)
+
+retrieval_chain = (
+    {"context": retriever, "question": RunnablePassthrough()}
+    | prompt
+    | model
+    | StrOutputParser()
+)
+
+retrieval_chain.invoke("where did harrison work?")
+```
+
+
+<CodeOutputBlock lang="python">
+
+```python
+    'Harrison worked at Kensho.'
+```
+
+</CodeOutputBlock>
+
+В примере на вход в промпт нужно передавать данные в формате map-структуры с полями `context` и `question`.
+Ввод пользователя — это просто вопрос.
+Поэтому нужно получить контекст с помощью ретривера и передать ввод пользователя в поле  `question`.
+В данном случае за передачу в модель вопроса пользователя и промпта отвечает экземпляр `RunnablePassthrough`.

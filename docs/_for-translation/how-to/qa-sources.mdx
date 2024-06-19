@@ -1,0 +1,157 @@
+# Получение источников генерации в RAG-приложении
+
+Зачастую в вопросно-ответных приложениях важно показать пользователю источники, использованые для генерации ответа. Проще всего сделать это, возвращая в цепочку документы (экземпляры `Document`), которые были использованные при каждой генерации.
+
+Для примера используем Q&A-приложение, разработанное в разделе [Создание RAG-приложения](/docs/tutorials/rag). Приложение использует для генерации ответов пост в блоге Лилиан Венг [LLM Powered Autonomous Agents](https://lilianweng.github.io/posts/2023-06-23-agent/).
+
+В этом разделе рассмотрены два подхода:
+
+1. Использование встроенной функции [`create_retrieval_chain`](https://api.python.langchain.com/en/latest/chains/langchain.chains.retrieval.create_retrieval_chain.html), которая по умолчанию возвращает источники;
+2. Использование простой реализации на [LCEL](/docs/concepts#langchain-expression-language), которая демонстрирует принцип работы.
+## Установка зависимостей
+
+Для разработки используются модели [генерации](https://developers.sber.ru/docs/ru/gigachat/models#modeli-dlya-generatsii) и [эмбеддингов](https://developers.sber.ru/docs/ru/gigachat/models#model-dlya-vektornogo-predstavleniya-teksta) GigaChat, а также векторное хранилище Chroma.
+Вы можете использовать любое [векторное хранилище](/docs/modules/data_connection/vectorstores/) или [ретривер](/docs/modules/data_connection/retrievers/)
+
+Установите пакеты с помощью команды:
+
+```python
+%pip install --upgrade --quiet  gigachain langchainhub chromadb bs4
+```
+
+## Использование метода create_retrieval_chain
+
+Пример цепочки, которая не возвращает исходные документы. Пример разобран в разделе [Создание RAG-приложения](/docs/tutorials/rag):
+
+```python
+import bs4
+from langchain import hub
+from langchain.chains import create_retrieval_chain
+from langchain.chains.combine_documents import create_stuff_documents_chain
+from langchain_chroma import Chroma
+from langchain_community.chat_models import GigaChat
+from langchain_community.document_loaders import WebBaseLoader
+from langchain_community.embeddings import GigaChatEmbeddings
+from langchain_core.output_parsers import StrOutputParser
+from langchain_core.prompts import ChatPromptTemplate
+from langchain_core.runnables import RunnablePassthrough
+from langchain_text_splitters import RecursiveCharacterTextSplitter
+```
+
+
+```python
+# Загрузка, разделение на части и индексация содержимого блога.
+loader = WebBaseLoader(
+    web_paths=("https://lilianweng.github.io/posts/2023-06-23-agent/",),
+    bs_kwargs=dict(
+        parse_only=bs4.SoupStrainer(
+            class_=("post-content", "post-title", "post-header")
+        )
+    ),
+)
+docs = loader.load()
+
+text_splitter = RecursiveCharacterTextSplitter(chunk_size=1000, chunk_overlap=200)
+splits = text_splitter.split_documents(docs)
+vectorstore = Chroma.from_documents(
+    documents=splits,
+    embedding=GigaChatEmbeddings(
+        credentials="<авторизационные_данные>", verify_ssl_certs=False
+    ),
+)
+
+# Извлечение данных и генерация с помощью релевантных фрагментов блога.
+retriever = vectorstore.as_retriever()
+prompt = hub.pull("rlm/rag-prompt")
+llm = GigaChat(credentials="<авторизационные_данные>", verify_ssl_certs=False)
+
+
+# 2. Добавление ретривера в вопросно-ответную цепочку.
+system_prompt = (
+    "You are an assistant for question-answering tasks. "
+    "Use the following pieces of retrieved context to answer "
+    "the question. If you don't know the answer, say that you "
+    "don't know. Use three sentences maximum and keep the "
+    "answer concise."
+    "\n\n"
+    "{context}"
+)
+
+prompt = ChatPromptTemplate.from_messages(
+    [
+        ("system", system_prompt),
+        ("human", "{input}"),
+    ]
+)
+
+question_answer_chain = create_stuff_documents_chain(llm, prompt)
+rag_chain = create_retrieval_chain(retriever, question_answer_chain)
+```
+
+
+```python
+result = rag_chain.invoke({"input": "What is Task Decomposition?"})
+```
+
+Ответ `result` — это словарь с ключами `"input"`, `"context"` и `"answer"`.
+
+```python
+result
+```
+
+
+<CodeOutputBlock lang="python">
+
+```python
+    'Task decomposition is the process of breaking down a complex task into smaller, simpler steps. This allows an agent to better understand and plan ahead for the task at hand. In the context provided, it is mentioned that the AI assistant can parse user input into several tasks, each with its own unique identifier and dependencies on previous tasks. This helps in breaking down complex tasks into manageable parts, making it easier for the agent to complete the task successfully.'
+```
+
+</CodeOutputBlock>
+
+Здесь поле `"context"` содержит источники, которые модель использовала для создания ответа, сохраненного в поле `"answer"`.
+## Реализация на LCEL
+
+Создадим цепочку, которая работает аналогично созданным с помощью метода `create_retrieval_chain`.
+Для создания цепочки:
+
+1. Начниче со словаря входным запросом и добавьте извлеченные документы в поле `"context"`;
+2. Отправьте запрос и контекст в цепочку RAG и добавьте результат в словарь.
+
+```python
+from langchain_core.output_parsers import StrOutputParser
+from langchain_core.runnables import RunnablePassthrough
+
+
+def format_docs(docs):
+    return "\n\n".join(doc.page_content for doc in docs)
+
+
+rag_chain_from_docs = (
+    RunnablePassthrough.assign(context=(lambda x: format_docs(x["context"])))
+    | prompt
+    | llm
+    | StrOutputParser()
+)
+
+retrieve_docs = (lambda x: x["input"]) | retriever
+
+chain = RunnablePassthrough.assign(context=retrieve_docs).assign(
+    answer=rag_chain_from_docs
+)
+
+chain.invoke({"input": "What is Task Decomposition"})
+```
+
+
+<CodeOutputBlock lang="python">
+
+```python
+    {'context': [Document(page_content='The AI assistant can parse user input to several tasks: [{"task": task, "id", task_id, "dep": dependency_task_ids, "args": {"text": text, "image": URL, "audio": URL, "video": URL}}]. The "dep" field denotes the id of the previous task which generates a new resource that the current task relies on. A special tag "-task_id" refers to the generated text image, audio and video in the dependency task with id as task_id. The task MUST be selected from the following options: {{ Available Task List }}. There is a logical relationship between tasks, please note their order. If the user input can\'t be parsed, you need to reply empty JSON. Here are several cases for your reference: {{ Demonstrations }}. The chat history is recorded as {{ Chat History }}. From this chat history, you can find the path of the user-mentioned resources for your task planning.', metadata={'source': 'https://lilianweng.github.io/posts/2023-06-23-agent/'}),
+  Document(page_content='Fig. 1. Overview of a LLM-powered autonomous agent system.\nComponent One: Planning#\nA complicated task usually involves many steps. An agent needs to know what they are and plan ahead.\nTask Decomposition#\nChain of thought (CoT; Wei et al. 2022) has become a standard prompting technique for enhancing model performance on complex tasks. The model is instructed to “think step by step” to utilize more test-time computation to decompose hard tasks into smaller and simpler steps. CoT transforms big tasks into multiple manageable tasks and shed lights into an interpretation of the model’s thinking process.', metadata={'source': 'https://lilianweng.github.io/posts/2023-06-23-agent/'}),
+  Document(page_content='Here are a sample conversation for task clarification sent to OpenAI ChatCompletion endpoint used by GPT-Engineer. The user inputs are wrapped in {{user input text}}.\n[\n  {\n    "role": "system",\n    "content": "You will read instructions and not carry them out, only seek to clarify them.\\nSpecifically you will first summarise a list of super short bullets of areas that need clarification.\\nThen you will pick one clarifying question, and wait for an answer from the user.\\n"\n  },\n  {\n    "role": "user",\n    "content": "We are writing {{a Super Mario game in python. MVC components split in separate files. Keyboard control.}}\\n"\n  },\n  {\n    "role": "assistant",', metadata={'source': 'https://lilianweng.github.io/posts/2023-06-23-agent/'}),
+  Document(page_content='[6] Google Blog. “Announcing ScaNN: Efficient Vector Similarity Search” July 28, 2020.\n[7] https://chat.openai.com/share/46ff149e-a4c7-4dd7-a800-fc4a642ea389\n[8] Shinn & Labash. “Reflexion: an autonomous agent with dynamic memory and self-reflection” arXiv preprint arXiv:2303.11366 (2023).\n[9] Laskin et al. “In-context Reinforcement Learning with Algorithm Distillation” ICLR 2023.\n[10] Karpas et al. “MRKL Systems A modular, neuro-symbolic architecture that combines large language models, external knowledge sources and discrete reasoning.” arXiv preprint arXiv:2205.00445 (2022).\n[11] Weaviate Blog. Why is Vector Search so fast? Sep 13, 2022.\n[12] Li et al. “API-Bank: A Benchmark for Tool-Augmented LLMs” arXiv preprint arXiv:2304.08244 (2023).\n[13] Shen et al. “HuggingGPT: Solving AI Tasks with ChatGPT and its Friends in HuggingFace” arXiv preprint arXiv:2303.17580 (2023).', metadata={'source': 'https://lilianweng.github.io/posts/2023-06-23-agent/'})],
+ 'question': 'What is Task Decomposition',
+ 'answer': 'Task Decomposition is the process of breaking down a complicated task into smaller and simpler steps, allowing an agent to plan ahead and understand what they need to do. This technique has been shown to enhance model performance on complex tasks by instructing the model to think step by step and utilize more test-time computation.'}
+```
+
+</CodeOutputBlock>

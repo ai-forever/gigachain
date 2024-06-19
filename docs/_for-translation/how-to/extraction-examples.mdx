@@ -1,0 +1,466 @@
+# Извлечение данных с помощью образов
+
+Качество извлечения информации можно повысить если дать модели образцы данных, которые требуется получить.
+
+Извлечение данных - это попытка создать структурированное представление информации, содержащейся в тексте и других неструктурированных или полуструктурированных источниках. Для решения этой здачи часто используется [работа с функциями](/docs/concepts#functiontool-calling) LLM. В этом руководстве показано, как создать few-shot примеры вызова инструментов, чтобы помочь управлять поведением извлечения и подобных приложений.
+
+:::note
+
+В этом разделе показано как использовать примеры с моделями GigaChat, которые поддерживают работу с инструментами / функциями.
+Но вы также можете использовать показанный подход в других методиках: генерации JSON или работе с промптами.
+
+:::
+
+GigaChain реализует атрибут [tool-call](https://api.python.langchain.com/en/latest/messages/langchain_core.messages.ai.AIMessage.html#langchain_core.messages.ai.AIMessage.tool_calls) для сообщений от LLM, включающих вызовы функций. Подробнее — в разделе [Вызов инструментов с помощью модели](/docs/how_to/tool_calling).
+Для создания образцов извлекаемых данных создается история чата, которая содержит последовательность из сообщений:
+
+- [HumanMessage](https://api.python.langchain.com/en/latest/messages/langchain_core.messages.human.HumanMessage.html), с примерами входных данных;
+- [AIMessage](https://api.python.langchain.com/en/latest/messages/langchain_core.messages.ai.AIMessage.html), с примерами вызова инструментов;
+- [ToolMessage](https://api.python.langchain.com/en/latest/messages/langchain_core.messages.tool.ToolMessage.html), с примерами выводов инструментов.
+
+Такая последовательность используется в GigaChain для единообразия при работе с разными LLM.
+
+Сначала создадим шаблон подсказки с объектом `MessagesPlaceholder`, в котором будут передоваться сообщения:
+
+```python
+from typing import Optional
+
+from langchain_core.prompts import ChatPromptTemplate, MessagesPlaceholder
+from langchain_core.pydantic_v1 import BaseModel, Field
+
+# Определяем промпт: добавляем инструкции и дополнительный контекст
+# На этом этапе можно:
+# * Добавить примеры работы функций, для улучшения качества извлечения информации
+# * Предоставить дополнительную информацию о том какие данные и откуда будут извлекаться
+prompt = ChatPromptTemplate.from_messages(
+    [
+        (
+            "system",
+            "Ты эксперт в извлечении информации из текста. "
+            "Извлекай только релевантную информацию из текста. "
+            "Если ты не знаешь значение аттрибута, "
+            "который нужно извлечь, поставь аттрибуту null.",
+        ),
+        MessagesPlaceholder("examples"),  # <---- Примеры работы
+        ("human", "{text}"),
+    ]
+)
+```
+
+Проверка шаблона.
+
+```python
+from langchain_core.messages import (
+    HumanMessage,
+)
+
+prompt.invoke(
+    {"text": "this is some text", "examples": [HumanMessage(content="testing 1 2 3")]}
+)
+```
+
+
+<CodeOutputBlock lang="python">
+
+```python
+    ChatPromptValue(messages=[SystemMessage(content='Ты эксперт в извлечении информации из текста. Извлекай только релевантную информацию из текста. Если ты не знаешь значение аттрибута, который нужно извлечь, поставь аттрибуту null.'), HumanMessage(content='testing 1 2 3'), HumanMessage(content='this is some text')])
+```
+
+</CodeOutputBlock>
+
+## Определение схемы
+
+Используем схему данных о человеке, определенную в разделе [Разработка цепочки для извлечения данных](/docs/tutorials/extraction).
+
+```python
+from typing import List, Optional
+
+from langchain_core.pydantic_v1 import BaseModel, Field
+
+
+class Person(BaseModel):
+    """Информация о человеке."""
+
+    # Док-строка выше, передается в описании функции
+    # и помогает улучшить результаты работы LLM
+
+    # Обратите внимание:
+    # * Все поля — необязательные (`optional`). Это позволяет модели не извлекать неописанные поля.
+    # * У каждого поля есть описание (`description`), которое передается в модель, в описании аргументов функции.
+    # Хорошее пописание помогает повысить качество извлечения.
+    name: Optional[str] = Field(..., description="Имя человека")
+    hair_color: Optional[str] = Field(
+        ..., description="Цвет волос человека, заполни если известен"
+    )
+    height_in_meters: Optional[float] = Field(
+        ..., description="Высота человека в метрах."
+    )
+
+
+class Data(BaseModel):
+    """Информация о людях."""
+
+    # Создание модели, для извлечения информации о нескольких людях
+    people: List[Person]
+```
+
+## Определение образцов
+
+Образцы можно определить в виде списка пар значений ввода-вывода.
+
+Каждая пара содержит пример входного текста (`input`) и пример вывода (`output`), демонстрирующий, что нужно извлечьиз текста.
+
+:::important
+
+Формат примеров долже соответствовать используемой методике извлечения информации: работа с инструментами/функциями, генерация JSON и другими.
+
+Приведенные примеры соответствуют формату, который ожидается при вызове инструментов.
+
+:::
+
+```python
+import itertools
+from typing import List, TypedDict
+
+from langchain_core.messages import (
+    AIMessage,
+    BaseMessage,
+    FunctionMessage,
+    HumanMessage,
+)
+from langchain_core.pydantic_v1 import BaseModel
+
+
+class Example(TypedDict):
+    """Пример работы функций."""
+
+    input: str  # Пример вызова
+    function_calls: List[BaseModel]  # Pydantic модель, с примером извлечения
+    function_outputs: List[str]
+
+
+def tool_example_to_messages(example: Example) -> List[BaseMessage]:
+    """Превращаем примеры вызовов функций в историю сообщений"""
+    messages: List[BaseMessage] = [HumanMessage(content=example["input"])]
+    for function_call, function_output in itertools.zip_longest(
+        example["function_calls"], example.get("function_outputs", [])
+    ):
+        messages.append(
+            AIMessage(
+                content="",
+                additional_kwargs={
+                    "function_call": {
+                        # Сейчас название модели соответствует pydantic-модели
+                        # В текущий момент в API это неочевидно и будет улучшено.
+                        "name": function_call.__class__.__name__,
+                        "arguments": function_call.dict(),
+                    },
+                },
+            )
+        )
+        output = "You have correctly called this tool."
+        if function_output:
+            output = function_output
+        messages.append(
+            FunctionMessage(name=function_call.__class__.__name__, content=output)
+        )
+    return messages
+```
+
+Определение образцов и преобразование их в формат сообщений.
+
+```python
+examples = [
+    (
+        "Океан огромный и синий. Глубина более 20 000 футов. В нем много рыбы.",
+        Data(people=[]),
+    ),
+    (
+        "Фиона отправилась в путешествие из Испании во Францию",
+        Data(people=[Person(name="Фиона", height_in_meters=None, hair_color=None)]),
+    ),
+]
+
+
+messages = []
+
+for text, function_call in examples:
+    messages.extend(
+        tool_example_to_messages({"input": text, "function_calls": [function_call]})
+    )
+```
+
+Вызов промпта.
+
+```python
+example_prompt = prompt.invoke({"text": "this is some text", "examples": messages})
+
+for message in example_prompt.messages:
+    print(f"{message.type}: {message}")
+```
+
+
+<CodeOutputBlock lang="python">
+
+```python
+    ChatPromptValue(messages=[SystemMessage(content='Ты эксперт в извлечении информации из текста. Извлекай только релевантную информацию из текста. Если ты не знаешь значение аттрибута, который нужно извлечь, поставь аттрибуту null.'), HumanMessage(content='Океан огромный и синий. Глубина более 20 000 футов. В нем много рыбы.'), AIMessage(content='', additional_kwargs={'function_call': {'name': 'Data', 'arguments': {'people': []}}}), FunctionMessage(content='You have correctly called this tool.', name='Data'), HumanMessage(content='Фиона отправилась в путешествие из Испании во Францию'), AIMessage(content='', additional_kwargs={'function_call': {'name': 'Data', 'arguments': {'people': [{'name': 'Фиона', 'hair_color': None, 'height_in_meters': None}]}}}), FunctionMessage(content='You have correctly called this tool.', name='Data'), HumanMessage(content='this is some text')])
+```
+
+</CodeOutputBlock>
+
+## Создание экстрактора
+
+Пример экстрактора, созданного с помощью GigaChat-Pro.
+
+```python
+from langchain_community.chat_models.gigachat import GigaChat
+
+llm = GigaChat(
+    verify_ssl_certs=False,
+    timeout=6000,
+    model="GigaChat-Pro",
+    temperature=0.01,
+)
+```
+
+Вызов метода `.with_structured_output` для структурирования вывода модели в соответствии с заданной схемой:
+
+```python
+runnable = prompt | llm.with_structured_output(
+    schema=Data,
+    include_raw=False,
+)
+```
+
+## Без образцов
+
+Пример работы модели без образцов.
+
+```python
+for _ in range(5):
+    text = "Если бы у Земли были бы волосы, они были бы синими"
+    print(runnable.invoke({"text": text, "examples": []}))
+```
+
+
+<CodeOutputBlock lang="python">
+
+```default
+    Giga generation stopped with reason: function_call
+```
+
+</CodeOutputBlock>
+
+
+<CodeOutputBlock lang="python">
+
+```default
+    people=[Person(name='Земля', hair_color='синий', height_in_meters=None)]
+```
+
+</CodeOutputBlock>
+
+
+<CodeOutputBlock lang="python">
+
+```default
+    Giga generation stopped with reason: function_call
+```
+
+</CodeOutputBlock>
+
+
+<CodeOutputBlock lang="python">
+
+```default
+    people=[Person(name='Земля', hair_color='синий', height_in_meters=None)]
+```
+
+</CodeOutputBlock>
+
+
+<CodeOutputBlock lang="python">
+
+```default
+    Giga generation stopped with reason: function_call
+```
+
+</CodeOutputBlock>
+
+
+<CodeOutputBlock lang="python">
+
+```default
+    people=[Person(name='Земля', hair_color='синий', height_in_meters=None)]
+```
+
+</CodeOutputBlock>
+
+
+<CodeOutputBlock lang="python">
+
+```default
+    Giga generation stopped with reason: function_call
+```
+
+</CodeOutputBlock>
+
+
+<CodeOutputBlock lang="python">
+
+```default
+    people=[Person(name='Земля', hair_color='синий', height_in_meters=None)]
+```
+
+</CodeOutputBlock>
+
+
+<CodeOutputBlock lang="python">
+
+```default
+    Giga generation stopped with reason: function_call
+```
+
+</CodeOutputBlock>
+
+
+<CodeOutputBlock lang="python">
+
+```default
+    people=[Person(name='Земля', hair_color='синий', height_in_meters=None)]
+```
+
+</CodeOutputBlock>
+
+## С образцами
+
+Образцы заметно повышают качество извлечения информации.
+
+```python
+for _ in range(5):
+    text = "Если бы у Земли были бы волосы, они были бы синими"
+    print(runnable.invoke({"text": text, "examples": messages}))
+```
+
+
+<CodeOutputBlock lang="python">
+
+```default
+    Giga generation stopped with reason: function_call
+```
+
+</CodeOutputBlock>
+
+
+<CodeOutputBlock lang="python">
+
+```default
+    people=[]
+```
+
+</CodeOutputBlock>
+
+
+<CodeOutputBlock lang="python">
+
+```default
+    Giga generation stopped with reason: function_call
+```
+
+</CodeOutputBlock>
+
+
+<CodeOutputBlock lang="python">
+
+```default
+    people=[]
+```
+
+</CodeOutputBlock>
+
+
+<CodeOutputBlock lang="python">
+
+```default
+    Giga generation stopped with reason: function_call
+```
+
+</CodeOutputBlock>
+
+
+<CodeOutputBlock lang="python">
+
+```default
+    people=[]
+```
+
+</CodeOutputBlock>
+
+
+<CodeOutputBlock lang="python">
+
+```default
+    Giga generation stopped with reason: function_call
+```
+
+</CodeOutputBlock>
+
+
+<CodeOutputBlock lang="python">
+
+```default
+    people=[]
+```
+
+</CodeOutputBlock>
+
+
+<CodeOutputBlock lang="python">
+
+```default
+    Giga generation stopped with reason: function_call
+```
+
+</CodeOutputBlock>
+
+
+<CodeOutputBlock lang="python">
+
+```default
+    people=[]
+```
+
+</CodeOutputBlock>
+
+<!--
+Note that we can see the few-shot examples as tool-calls in the [Langsmith trace](https://smith.langchain.com/public/4c436bc2-a1ce-440b-82f5-093947542e40/r).
+-->
+
+Сохранение работоспособности при подходящем примере:
+
+```python
+runnable.invoke(
+    {
+        "text": "Моё имя Джо, мои волосы синие",
+        "examples": messages,
+    }
+)
+```
+
+
+<CodeOutputBlock lang="python">
+
+```default
+    Giga generation stopped with reason: function_call
+```
+
+</CodeOutputBlock>
+
+
+<CodeOutputBlock lang="python">
+
+```python
+    Data(people=[Person(name='Джо', hair_color='синий', height_in_meters=None)])
+```
+
+</CodeOutputBlock>

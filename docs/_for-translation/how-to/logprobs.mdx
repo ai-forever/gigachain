@@ -1,0 +1,96 @@
+# How to get log probabilities
+
+:::info Prerequisites
+
+This guide assumes familiarity with the following concepts:
+- [Chat models](/docs/concepts/#chat-models)
+
+:::
+
+Certain chat models can be configured to return token-level log probabilities representing the likelihood of a given token. This guide walks through how to get this information in LangChain.
+## OpenAI
+
+Install the LangChain x OpenAI package and set your API key
+
+```python
+%pip install -qU langchain-openai
+```
+
+
+```python
+import getpass
+import os
+
+os.environ["OPENAI_API_KEY"] = getpass.getpass()
+```
+
+For the OpenAI API to return log probabilities we need to configure the `logprobs=True` param. Then, the logprobs are included on each output [`AIMessage`](https://api.python.langchain.com/en/latest/messages/langchain_core.messages.ai.AIMessage.html) as part of the `response_metadata`:
+
+```python
+from langchain_openai import ChatOpenAI
+
+llm = ChatOpenAI(model="gpt-3.5-turbo-0125").bind(logprobs=True)
+
+msg = llm.invoke(("human", "how are you today"))
+
+msg.response_metadata["logprobs"]["content"][:5]
+```
+
+
+<CodeOutputBlock lang="python">
+
+```python
+    [{'token': 'I', 'bytes': [73], 'logprob': -0.26341408, 'top_logprobs': []},
+ {'token': "'m",
+  'bytes': [39, 109],
+  'logprob': -0.48584133,
+  'top_logprobs': []},
+ {'token': ' just',
+  'bytes': [32, 106, 117, 115, 116],
+  'logprob': -0.23484154,
+  'top_logprobs': []},
+ {'token': ' a',
+  'bytes': [32, 97],
+  'logprob': -0.0018291725,
+  'top_logprobs': []},
+ {'token': ' computer',
+  'bytes': [32, 99, 111, 109, 112, 117, 116, 101, 114],
+  'logprob': -0.052299336,
+  'top_logprobs': []}]
+```
+
+</CodeOutputBlock>
+
+And are part of streamed Message chunks as well:
+
+```python
+ct = 0
+full = None
+for chunk in llm.stream(("human", "how are you today")):
+    if ct < 5:
+        full = chunk if full is None else full + chunk
+        if "logprobs" in full.response_metadata:
+            print(full.response_metadata["logprobs"]["content"])
+    else:
+        break
+    ct += 1
+```
+
+
+<CodeOutputBlock lang="python">
+
+```default
+    []
+    [{'token': 'I', 'bytes': [73], 'logprob': -0.26593843, 'top_logprobs': []}]
+    [{'token': 'I', 'bytes': [73], 'logprob': -0.26593843, 'top_logprobs': []}, {'token': "'m", 'bytes': [39, 109], 'logprob': -0.3238896, 'top_logprobs': []}]
+    [{'token': 'I', 'bytes': [73], 'logprob': -0.26593843, 'top_logprobs': []}, {'token': "'m", 'bytes': [39, 109], 'logprob': -0.3238896, 'top_logprobs': []}, {'token': ' just', 'bytes': [32, 106, 117, 115, 116], 'logprob': -0.23778509, 'top_logprobs': []}]
+    [{'token': 'I', 'bytes': [73], 'logprob': -0.26593843, 'top_logprobs': []}, {'token': "'m", 'bytes': [39, 109], 'logprob': -0.3238896, 'top_logprobs': []}, {'token': ' just', 'bytes': [32, 106, 117, 115, 116], 'logprob': -0.23778509, 'top_logprobs': []}, {'token': ' a', 'bytes': [32, 97], 'logprob': -0.0022134194, 'top_logprobs': []}]
+```
+
+</CodeOutputBlock>
+
+## Next steps
+
+You've now learned how to get logprobs from OpenAI models in LangChain.
+
+Next, check out the other how-to guides chat models in this section, like [how to get a model to return structured output](/docs/how_to/structured_output) or [how to track token usage](/docs/how_to/chat_token_usage_tracking).
