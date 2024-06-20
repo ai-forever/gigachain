@@ -1,655 +1,640 @@
-# Conceptual guide
+# Концептуальное руководство
 
 import ThemedImage from '@theme/ThemedImage';
 import useBaseUrl from '@docusaurus/useBaseUrl';
 
-This section contains introductions to key parts of LangChain.
+Раздел содержит описание ключевых составляющих GigaChain.
 
-## Architecture
+## Архитектура
 
-LangChain as a framework consists of a number of packages.
+Фреймворк GigaChain состоит из нескольких пакетов.
 
-### `langchain-core`
-This package contains base abstractions of different components and ways to compose them together.
-The interfaces for core components like LLMs, vectorstores, retrievers and more are defined here.
-No third party integrations are defined here.
-The dependencies are kept purposefully very lightweight.
+### `gigachain-core`
 
-### Partner packages
+Пакет содержит базовые абстракции различных компонентов и способы их объединения.
+Здесь определены интерфейсы для основных компонентов:LLM, векторных хранилищ, ретриверов и других.
+В пакете нет интеграций со сторонними продуктами.
+Зависимости намеренно сведены к минимуму.
 
-While the long tail of integrations are in `langchain-community`, we split popular integrations into their own packages (e.g. `langchain-openai`, `langchain-anthropic`, etc).
-This was done in order to improve support for these important integrations.
+### Пакеты популярных сервисов
 
-### `langchain`
+Тогда как полный список интеграций содержится в `gigachain-community`, интеграции с популярными сервисами выделены в собственные пакеты (например, `gigachain-openai`, `gigachain-anthropic` и т.д.).
 
-The main `langchain` package contains chains, agents, and retrieval strategies that make up an application's cognitive architecture.
-These are NOT third party integrations.
-All chains, agents, and retrieval strategies here are NOT specific to any one integration, but rather generic across all integrations.
+### `gigachain`
 
-### `langchain-community`
+Основной пакет `gigachain` содержит цепочки, агентов и поисковые стратегии, которые составляют когнитивную архитектуру приложения.
+Все компоненты пакета универсальны и не зависят от конкретных интеграций.
 
-This package contains third party integrations that are maintained by the LangChain community.
-Key partner packages are separated out (see below).
-This contains all integrations for various components (LLMs, vectorstores, retrievers).
-All dependencies in this package are optional to keep the package as lightweight as possible.
+### `gigachain-community`
 
-### [`langgraph`](/docs/langgraph)
+Пакет содержит интеграции с со сторонними сервисами, которые поддерживаются сообществом GigaChain и LangChain.
+Популярные сервисы вынесены в отдельные пакеты.
+Пакет содержит интеграции для различных компонентов: LLM, вектореных хранилищ, ретриверов.
+Зависимости пакета необязательны, чтобы сделать его как можно легче.
 
-`langgraph` is an extension of `langchain` aimed at
-building robust and stateful multi-actor applications with LLMs by modeling steps as edges and nodes in a graph.
+:::important
+Установка пакета необходима, если вы хотите работать с GigaChat.
+:::
 
-LangGraph exposes high level interfaces for creating common types of agents, as well as a low-level API for constructing more contr
+### [`gigagraph`](/docs/langgraph)
+
+`gigagraph` - это расширение `gigachain`, которое использует LLM для создания надежных, многоакторных приложений с сохранением состояния. Для этого GigaGraph моделирует шаги работы приложения как ребра и узлы в графе. 
+
+GigaGraph предоставляет высокоуровневые интерфейсы для создания распространенных типов агентов, а также низкоуровневое API для построения более сложных цепочек.
 
 ### [`langserve`](/docs/langserve)
 
-A package to deploy LangChain chains as REST APIs. Makes it easy to get a production ready API up and running.
+Пакет для развертывания цепочек GigaChain в виде REST API. Позволяет легко запустить API, готовый к эксплуатации.
 
 ### [LangSmith](/docs/langsmith)
 
-A developer platform that lets you debug, test, evaluate, and monitor LLM applications.
+Платформа для разработчиков, которая позволяет отлаживать, тестировать, оценивать и мониторить приложения LLM.
 
 <ThemedImage
-  alt="Diagram outlining the hierarchical organization of the LangChain framework, displaying the interconnected parts across multiple layers."
+  alt="Схема, описывающая иерархическую организацию фреймворка GigaChain, отображающая взаимосвязанные части на нескольких уровнях."
   sources={{
     light: useBaseUrl('/svg/langchain_stack.svg'),
     dark: useBaseUrl('/svg/langchain_stack_dark.svg'),
   }}
-  title="LangChain Framework Overview"
+  title="Обзор фреймворка GigaChain"
 />
 
-## LangChain Expression Language (LCEL)
+## Язык выражений LangChain (LCEL)
 
-LangChain Expression Language, or LCEL, is a declarative way to chain LangChain components.
-LCEL was designed from day 1 to **support putting prototypes in production, with no code changes**, from the simplest “prompt + LLM” chain to the most complex chains (we’ve seen folks successfully run LCEL chains with 100s of steps in production). To highlight a few of the reasons you might want to use LCEL:
+Язык выражений LangChain, или LCEL, — это декларативный способ объединения компонентов LangChain.
+В основе LCEL лежит возможность **поддержки внедрения прототипов в эксплуатацию без изменений в коде**.
+Это касается как самых простых цепочек «промпт + LLM», так и самых сложных цепочек (есть примеры успешного запуска цепочек LCEL с сотнями шагов в производственно). Ниже приводится несколько преимуществ LCEL:
 
-**First-class streaming support**
-When you build your chains with LCEL you get the best possible time-to-first-token (time elapsed until the first chunk of output comes out). For some chains this means eg. we stream tokens straight from an LLM to a streaming output parser, and you get back parsed, incremental chunks of output at the same rate as the LLM provider outputs the raw tokens.
+**Первоклассная поддержка потоковой передачи**
 
-**Async support**
-Any chain built with LCEL can be called both with the synchronous API (eg. in your Jupyter notebook while prototyping) as well as with the asynchronous API (eg. in a [LangServe](/docs/langsmith) server). This enables using the same code for prototypes and in production, with great performance, and the ability to handle many concurrent requests in the same server.
+Цепочи с LCEL обеспечивают лучшее время до первого токена (время, проходящее до выхода первого фрагмента вывода).
+Так, для некоторых цепочек это означает, что токены передаются напрямую из LLM в потоковый парсер вывода, и вы получаете обратно проанализированные, инкрементальные фрагменты вывода с той же скоростью, с которой LLM передает необработанные токены.
 
-**Optimized parallel execution**
-Whenever your LCEL chains have steps that can be executed in parallel (eg if you fetch documents from multiple retrievers) we automatically do it, both in the sync and the async interfaces, for the smallest possible latency.
+**Поддержка асинхронности**
 
-**Retries and fallbacks**
-Configure retries and fallbacks for any part of your LCEL chain. This is a great way to make your chains more reliable at scale. We’re currently working on adding streaming support for retries/fallbacks, so you can get the added reliability without any latency cost.
+Любую цепочку, созданную с помощью LCEL, можно вызвать как с синхронным API (например, с помощью Jupyter-блокнота для прототипирования), так и с асинхронным API (например, на сервере [LangServe](/docs/langsmith)). Это позволяет использовать один и тот же код для прототипов и в эксплуатации, с отличной производительностью и возможностью обработки множества одновременных запросов на одном сервере.
 
-**Access intermediate results**
-For more complex chains it’s often very useful to access the results of intermediate steps even before the final output is produced. This can be used to let end-users know something is happening, or even just to debug your chain. You can stream intermediate results, and it’s available on every [LangServe](/docs/langserve) server.
+**Оптимизированное параллельное выполнение**
 
-**Input and output schemas**
-Input and output schemas give every LCEL chain Pydantic and JSONSchema schemas inferred from the structure of your chain. This can be used for validation of inputs and outputs, and is an integral part of LangServe.
+Когда цепочки LCEL содержат шаги, которые можно выполнять параллельно (например, если для извлечения документов из нескольких ретриверов), это делается автоматически, как в синхронных, так и в асинхронных интерфейсах, для минимально возможной задержки.
 
-[**Seamless LangSmith tracing**](/docs/langsmith)
-As your chains get more and more complex, it becomes increasingly important to understand what exactly is happening at every step.
-With LCEL, **all** steps are automatically logged to [LangSmith](/docs/langsmith/) for maximum observability and debuggability.
+**Повторы и альтернативные пути**
 
-[**Seamless LangServe deployment**](/docs/langserve)
-Any chain created with LCEL can be easily deployed using [LangServe](/docs/langserve).
+Настройка повторов и альтернативных путей для любой части цепочки LCEL. Это отличный способ для повышения надежности при масштабировании цепочек.
 
-### Runnable interface
+**Доступ к промежуточным результатам**
 
-To make it as easy as possible to create custom chains, we've implemented a ["Runnable"](https://api.python.langchain.com/en/stable/runnables/langchain_core.runnables.base.Runnable.html#langchain_core.runnables.base.Runnable) protocol. Many LangChain components implement the `Runnable` protocol, including chat models, LLMs, output parsers, retrievers, prompt templates, and more. There are also several useful primitives for working with runnables, which you can read about below.
+Для более сложных цепочек часто бывает полезно иметь доступ к результатам промежуточных шагов до получения окончательного результата. Это облегчает отладку или позволяет пользователям видеть, что происходит. Промежуточные результаты поддерживают потоковую передачи и работают на любом сервере [LangServe](/docs/langserve).
 
-This is a standard interface, which makes it easy to define custom chains as well as invoke them in a standard way.
-The standard interface includes:
+**Схемы входных и выходных данных**
 
-- [`stream`](#stream): stream back chunks of the response
-- [`invoke`](#invoke): call the chain on an input
-- [`batch`](#batch): call the chain on a list of inputs
+Схемы входных и выходных данных предоставляют каждой цепочке LCEL схемы Pydantic и JSONSchema, выведенные из структуры вашей цепочки. Схемы можно использовать для валидации входных и выходных данных. Схемы -- это неотъемлемая часть LangServe.
 
-These also have corresponding async methods that should be used with [asyncio](https://docs.python.org/3/library/asyncio.html) `await` syntax for concurrency:
+[**Бесшовная трассировка с LangSmith**](/docs/langsmith)
 
-- `astream`: stream back chunks of the response async
-- `ainvoke`: call the chain on an input async
-- `abatch`: call the chain on a list of inputs async
-- `astream_log`: stream back intermediate steps as they happen, in addition to the final response
-- `astream_events`: **beta** stream events as they happen in the chain (introduced in `langchain-core` 0.1.14)
+По мере усложнения ваших цепочек становится все более важным понимать, что именно происходит на каждом шаге. С LCEL все шаги автоматически записываются в [LangSmith](/docs/langsmith) для максимальной читаемости и отладки.
 
-The **input type** and **output type** varies by component:
+[**Бесшовное развертывание LangServe**](/docs/langserve)
 
-| Component | Input Type | Output Type |
+Любую цепочку, созданную с помощью LCEL, можно легко развернуть с помощью [LangServe](/docs/langserve).
+
+### Интерфейс Runnable
+
+Чтобы упростить создание пользовательских цепочек, мы реализовали протокол ["Runnable"](https://api.python.langchain.com/en/stable/runnables/langchain_core.runnables.base.Runnable.html#langchain_core.runnables.base.Runnable). Многие компоненты GigaChain реализуют протокол `Runnable`, включая чат-модели, LLM, парсеры вывода, ретриверы, шаблоны промптов и многое другое. Существуют также несколько полезных примитивов для работы с Runnable, которые описаны ниже.
+
+Это стандартный интерфейс, который упрощает определение пользовательских цепочек, а также их вызов стандартным способом.
+Стандартный интерфейс включает:
+
+- [`stream`](#stream): потоковая передача фрагментов ответа
+- [`invoke`](#invoke): вызов цепочки с входными данными
+- [`batch`](#batch): вызов цепочки со списком входных данных
+
+Эти методы также имеют соответствующие асинхронные версии, которые следует использовать с [asyncio](https://docs.python.org/3/library/asyncio.html) синтаксисом `await` для параллельного выполнения:
+
+- `astream`: потоковая передача блоков ответа асинхронно
+- `ainvoke`: вызов цепочки с входными данными асинхронно
+- `abatch`: вызов цепочки со списком входных данных асинхронно
+- `astream_log`: потоковая передача промежуточных шагов по мере их выполнения, в дополнение к окончательному ответу
+- `astream_events`: **beta** потоковая передача событий по мере их выполнения в цепочке (введено в `gigachain-core` версии 0.1.14)
+
+Типы входных и выходных данных варьируются в зависимости от компонента:
+
+| Компонент | Тип входных данных | Тип выходных данных |
 | --- | --- | --- |
-| Prompt | Dictionary | PromptValue |
-| ChatModel | Single string, list of chat messages or a PromptValue | ChatMessage |
-| LLM | Single string, list of chat messages or a PromptValue | String |
-| OutputParser | The output of an LLM or ChatModel | Depends on the parser |
-| Retriever | Single string | List of Documents |
-| Tool | Single string or dictionary, depending on the tool | Depends on the tool |
+| Промпт | Словарь | PromptValue |
+| Чат-модель | Одна строка, список сообщений чата или PromptValue | ChatMessage |
+| LLM | Одна строка, список сообщений чата или PromptValue | Строка |
+| Парсер вывода | Вывод LLM или Чат-модели | Зависит от парсера |
+| Ретривер | Одна строка | Список документов |
+| Инструмент | Одна строка или словарь, в зависимости от инструмента | Зависит от инструмента |
 
+Все Runnable предоставляют схемы данных для анализа входов и выходов:
+- `input_schema`: входная модель Pydantic, автоматически сгенерированная из структуры Runnable
+- `output_schema`: выходная модель Pydantic, автоматически сгенерированная из структуры Runnable
 
-All runnables expose input and output **schemas** to inspect the inputs and outputs:
-- `input_schema`: an input Pydantic model auto-generated from the structure of the Runnable
-- `output_schema`: an output Pydantic model auto-generated from the structure of the Runnable
+## Компоненты
 
-## Components
+GigaChain предоставляет стандартные расширяемые интерфейсы и внешние интеграции для различных компонентов, полезных при работе с LLM.
+Одни компоненты реализованы в GigaChain, для некоторых используются сторонние интеграции, а для какие-то применяют и то, и то.
 
-LangChain provides standard, extendable interfaces and external integrations for various components useful for building with LLMs.
-Some components LangChain implements, some components we rely on third-party integrations for, and others are a mix.
+### Чат-модели
 
-### Chat models
+Языковые модели, которые используют последовательность сообщений в качестве входных данных и возвращают чат-сообщения в качестве выходных данных (в отличие от использования обычного текста).
+Такой подход характерен для более новых моделей. Более старые модели это, как правило, [LLM](#llm).
+Чат-модели поддерживают назначение различных ролей для сообщений, что помогает различать сообщения от ИИ, пользователей и инструкции, такие как системные сообщения.
 
-Language models that use a sequence of messages as inputs and return chat messages as outputs (as opposed to using plain text).
-These are traditionally newer models (older models are generally `LLMs`, see above).
-Chat models support the assignment of distinct roles to conversation messages, helping to distinguish messages from the AI, users, and instructions such as system messages.
+Хотя базовые модели работают по принципу "сообщение на входе, сообщение на выходе", обертки GigaChain также позволяют этим моделям принимать строку в качестве входных данных. Это позволяет использовать чат-модели вместо LLM.
 
-Although the underlying models are messages in, message out, the LangChain wrappers also allow these models to take a string as input. This means you can easily use chat models in place of LLMs.
+Когда строка передается в качестве входных данных, она преобразуется в HumanMessage, который затем передается базовой модели.
 
-When a string is passed in as input, it is converted to a HumanMessage and then passed to the underlying model.
+GigaChain не предоставляет ChatModel, а использует интеграции со сторонними сервисами.
 
-LangChain does not provide any ChatModels, rather we rely on third party integrations.
+При создании экземпляра ChatModel используется стандартный параметр:
 
-We have some standardized parameters when constructing ChatModels:
-- `model`: the name of the model
+- `model`: имя модели
 
-ChatModels also accept other parameters that are specific to that integration.
+Объекты ChatModel также принимают другие параметры, специфичные для выбранной интеграции.
+Так, при работе с GigaChat вы можете передать параметры `credentials` и `scope`, которые содержат авторизационные данные и версию API, к которой нужно обратиться.
 
 :::important
-**Tool Calling** Some chat models have been fine-tuned for tool calling and provide a dedicated API for tool calling.
-Generally, such models are better at tool calling than non-fine-tuned models, and are recommended for use cases that require tool calling.
-Please see the [tool calling section](/docs/concepts/#functiontool-calling) for more information.
+Некоторые чат-модели подготовлены для вызова инструментов и предоставляют для этого специальный API.
+Такие модели рекомендуется использовать если ваши задачи, требуют вызова инструментов.
+Подробности -- в [разделе вызова инструментов](/docs/concepts/#functiontool-calling).
 :::
 
-### LLMs
+### LLM {#llm}
 
-Language models that takes a string as input and returns a string.
-These are traditionally older models (newer models generally are `ChatModels`, see below).
+Языковые модели, которые в качестве входных данных принимают строку и на выходе также возвращают строку.
 
-Although the underlying models are string in, string out, the LangChain wrappers also allow these models to take messages as input.
-This makes them interchangeable with ChatModels.
-When messages are passed in as input, they will be formatted into a string under the hood before being passed to the underlying model.
+Хотя базовые модели работают по принципу "строка на входе, строка на выходе", обертки GigaChain также позволяют этим моделям принимать сообщения в качестве входных данных.
+Это делает их взаимозаменяемыми с ChatModels.
+Когда сообщения передаются в качестве входных данных, они форматируются в строку перед передачей базовой модели.
 
-LangChain does not provide any LLMs, rather we rely on third party integrations.
+Для работы с LLM GigaChain использует интеграции со сторонними сервисами.
 
-### Messages
+### Сообщения
 
-Some language models take a list of messages as input and return a message.
-There are a few different types of messages.
-All messages have a `role`, `content`, and `response_metadata` property.
+Некоторые языковые модели принимают список сообщений в качестве входных данных и на выходе возвращают сообщение.
+Существует несколько различных типов сообщений.
+Все сообщения имеют свойства `role`, `content` и `response_metadata`.
 
-The `role` describes WHO is saying the message.
-LangChain has different message classes for different roles.
+Свойство `role` описывает автора сообщения.
+GigaChain предоставляет разные классы сообщений для различных ролей.
 
-The `content` property describes the content of the message.
-This can be a few different things:
+Свойство `content` описывает содержание сообщения.
+Содержание может быть представленно виде:
 
-- A string (most models deal this type of content)
-- A List of dictionaries (this is used for multi-modal input, where the dictionary contains information about that input type and that input location)
+- строковых данных -- большинство моделей работает именно с такими данными;
+Ло- списка словарей -- это используется для мультимодального ввода, где словарь содержит данные о типе ввода и месте, из которого он был получен.
 
 #### HumanMessage
 
-This represents a message from the user.
+Сообщение от пользователя.
 
 #### AIMessage
 
-This represents a message from the model. In addition to the `content` property, these messages also have:
+Сообщение от модели. Кроме `content`, сообщения модели имеют свойства:
 
-**`response_metadata`**
+- `response_metadata` -- дополнительные метаданные ответа. Эти данные, как правило, зависят от модели, которую вы используете.
+Например, данные могут содержать логарифм вероятности и информацию об использовании токенов.
 
-The `response_metadata` property contains additional metadata about the response. The data here is often specific to each model provider.
-This is where information like log-probs and token usage may be stored.
+- `tool_calls` -- данные  о решении языковой модели вызвать инструмент. Они являются частью вывода `AIMessage` и доступны с помощью свойства `.tool_calls`.
 
-**`tool_calls`**
+  Это свойство возвращает список словарей. Каждый словарь содержит ключи:
 
-These represent a decision from an language model to call a tool. They are included as part of an `AIMessage` output.
-They can be accessed from there with the `.tool_calls` property.
-
-This property returns a list of dictionaries. Each dictionary has the following keys:
-
-- `name`: The name of the tool that should be called.
-- `args`: The arguments to that tool.
-- `id`: The id of that tool call.
+  - `name` -- имя инструмента, который нужно вызвать.
+  - `args` -- аргументы вызываемого инструмента.
+  - `id` -- идентификатор вызова инструмента.
 
 #### SystemMessage
 
-This represents a system message, which tells the model how to behave. Not every model provider supports this.
+Системное сообщение, которое сообщает модели, как себя вести. Некоторые модели могут не поддерживать системное сообщение.
 
 #### FunctionMessage
 
-This represents the result of a function call. In addition to `role` and `content`, this message has a `name` parameter which conveys the name of the function that was called to produce this result.
+Результат вызова функции. Крооме `role` и `content`, FunctionMessage содержит свойство `name`, которое указывает имя функции, вызов которой привел к данному результату.
 
 #### ToolMessage
 
-This represents the result of a tool call. This is distinct from a FunctionMessage in order to match OpenAI's `function` and `tool` message types. In addition to `role` and `content`, this message has a `tool_call_id` parameter which conveys the id of the call to the tool that was called to produce this result.
+Данное сообщение представляет результат вызова инструмента. Оно отличается от FunctionMessage тем, что соответствует типам сообщений OpenAI `function` и `tool`. Кроме `role` и `content`, это сообщение содержит свойство `tool_call_id`, который передает идентификатор вызова инструмента, использованного для получения результата.
 
 
-### Prompt templates
-Prompt templates help to translate user input and parameters into instructions for a language model.
-This can be used to guide a model's response, helping it understand the context and generate relevant and coherent language-based output.
+### Шаблоны промптов
 
-Prompt Templates take as input a dictionary, where each key represents a variable in the prompt template to fill in.
+Шаблоны промптов помогают преобразовывать ввод пользователя и параметры в инструкции для языковой модели.
+Их можно использовать для управления ответом модели, помогая ей понимать контекст задачи и благодаря чему генерировать более релевантный и связный текст.
 
-Prompt Templates output a PromptValue. This PromptValue can be passed to an LLM or a ChatModel, and can also be cast to a string or a list of messages.
-The reason this PromptValue exists is to make it easy to switch between strings and messages.
+Шаблоны принимают на вход словарь, где каждый ключ представляет переменную шаблона, которую нужно заполнить.
 
-There are a few different types of prompt templates
+Шаблоны промптов возвращают значение промпта (PromptValue). Это значение можно передать в LLM или чат-модель, а также можно преобразовать в строку или список сообщений.
+PromptValue упрощает переключение между строковыми данными и сообщениями.
+
+Существует несколько различных типов шаблонов промптов.
 
 #### String PromptTemplates
 
-These prompt templates are used to format a single string, and generally are used for simpler inputs.
-For example, a common way to construct and use a PromptTemplate is as follows:
+Шаблоны промптов, которые используются для форматирования одной строки и, как правило, применяются для более простых входных данных.
+Пример распространенного способа создания и использования `PromptTemplate`:
 
 ```python
 from langchain_core.prompts import PromptTemplate
 
-prompt_template = PromptTemplate.from_template("Tell me a joke about {topic}")
+prompt_template = PromptTemplate.from_template("Расскажи мне шутку про {topic}")
 
-prompt_template.invoke({"topic": "cats"})
+prompt_template.invoke({"topic": "коты"})
 ```
 
 #### ChatPromptTemplates
 
-These prompt templates are used to format a list of messages. These "templates" consist of a list of templates themselves.
-For example, a common way to construct and use a ChatPromptTemplate is as follows:
+Шаблоны промптов, которые используются для форматирования списка сообщений. Эти "шаблоны" сами по себе состоят из списка шаблонов.
+Пример распространенного способа создания и использования `ChatPromptTemplate`:
 
 ```python
 from langchain_core.prompts import ChatPromptTemplate
 
 prompt_template = ChatPromptTemplate.from_messages([
-    ("system", "You are a helpful assistant"),
-    ("user", "Tell me a joke about {topic}")
+    ("system", "Ты полезный ассистент"),
+    ("user", "Расскажи мне шутку про {topic}")
 ])
 
-prompt_template.invoke({"topic": "cats"})
+prompt_template.invoke({"topic": "коты"})
 ```
 
-In the above example, this ChatPromptTemplate will construct two messages when called.
-The first is a system message, that has no variables to format.
-The second is a HumanMessage, and will be formatted by the `topic` variable the user passes in.
+В примере `ChatPromptTemplate` создаст два сообщения при вызове:
+
+- первое — системное сообщение, которое не содержит переменных для форматирования;
+- второе — сообщение от пользователя (HumanMessage), которое может изменяться с помощью переменной `topic`, которую задает пользователь.
 
 #### MessagesPlaceholder
 
-This prompt template is responsible for adding a list of messages in a particular place.
-In the above ChatPromptTemplate, we saw how we could format two messages, each one a string.
-But what if we wanted the user to pass in a list of messages that we would slot into a particular spot?
-This is how you use MessagesPlaceholder.
+Шаблон промптов, который отвечает за добавление списка сообщений в определенное место.
+Так, пример работы с `ChatPromptTemplate` показывает как можно форматировать два сообщения, каждое из которых представляет собой строку.
+В свою очередь `MessagesPlaceholder` используется если нужно, чтобы пользователь передал список сообщений, которые требуется поместить в определенное место.
 
 ```python
 from langchain_core.prompts import ChatPromptTemplate, MessagesPlaceholder
 from langchain_core.messages import HumanMessage
 
 prompt_template = ChatPromptTemplate.from_messages([
-    ("system", "You are a helpful assistant"),
+    ("system", "Ты полезный ассистент"),
     MessagesPlaceholder("msgs")
 ])
 
-prompt_template.invoke({"msgs": [HumanMessage(content="hi!")]})
+prompt_template.invoke({"msgs": [HumanMessage(content="привет!")]})
 ```
 
-This will produce a list of two messages, the first one being a system message, and the second one being the HumanMessage we passed in.
-If we had passed in 5 messages, then it would have produced 6 messages in total (the system message plus the 5 passed in).
-This is useful for letting a list of messages be slotted into a particular spot.
+При выполнении примера создается список из двух сообщений:
 
-An alternative way to accomplish the same thing without using the `MessagesPlaceholder` class explicitly is:
+- первое — системное сообщение;
+- второе — сообщение `HumanMessage`, которое передал пользователь.
+
+Если передать пять сообщений, то в результате бедт список из шести сообщений: системное сообщение и пять переданных.
+Это полезно, когда нужно поместьить список сообщений в определенное место.
+
+Того же результата можнол достигнуть без `MessagesPlaceholder` следующим образом:
 
 ```python
 prompt_template = ChatPromptTemplate.from_messages([
-    ("system", "You are a helpful assistant"),
-    ("placeholder", "{msgs}") # <-- This is the changed part
+    ("system", "Вы полезный ассистент"),
+    ("placeholder", "{msgs}")  # <-- Измененный код
 ])
 ```
 
-### Example selectors
-One common prompting technique for achieving better performance is to include examples as part of the prompt.
-This gives the language model concrete examples of how it should behave.
-Sometimes these examples are hardcoded into the prompt, but for more advanced situations it may be nice to dynamically select them.
-Example Selectors are classes responsible for selecting and then formatting examples into prompts.
+### Селекторы образцов
+
+Один из распространенных приемов для повышения качества работы модели — включение образцов желаемого результата в промпт.
+Так модели будет проще понять как себя вести.
+Образцы можно прописать непосредственно в промпте, но для более сложных ситуаций может быть полезно выбирать их динамически.
+Селекторы образцов — это классы, ответственные за выбор и оформление образцов желаемого результата в промпты.
 
 
 ### Output parsers
 
 :::note
 
-The information here refers to parsers that take a text output from a model try to parse it into a more structured representation.
-More and more models are supporting function (or tool) calling, which handles this automatically.
-It is recommended to use function/tool calling rather than output parsing.
-See documentation for that [here](/docs/concepts/#function-tool-calling).
+Здесь описаны парсераы, которые получают текстовый вывод модели и пробуют преобразовать и представить его в более структурированном виде.
+Все больше моделей поддерживают вызов функций/инструментов, которые делают это автоматически.
+По возможности, вместо парсинга вывода рекомендуется использовать именно [вызов функций/инструментов](/docs/concepts/#function-tool-calling).
 
 :::
 
-Responsible for taking the output of a model and transforming it to a more suitable format for downstream tasks.
-Useful when you are using LLMs to generate structured data, or to normalize output from chat models and LLMs.
+Парсеры отвечают за получение вывода модели и его преобразование в формат, более подходящий для дальнейших задач.
+Они полезны при использовании LLM для генерации структурированных данных или для нормализации вывода чат-моделей и LLM.
 
-LangChain has lots of different types of output parsers. This is a list of output parsers LangChain supports. The table below has various pieces of information:
+GigaChain поддерживает парсеры вывода различных типов. Список поддерживаемых парсеров представлен в таблице, которая содержит поля:
 
-**Name**: The name of the output parser
+- Название -- название парсера вывода;
+- Поддержка потоковой передачу -- поддерживает ли парсер потоковую передачу токенов.
+- Инструкции по формату -- указывает есть ли у парсера инструкции по формату данных. Как правило это дотупно для всех парсеров, кроме случаев, когда требуемая схема не указана в промпте, а задается другими параметрами (например, при вызове функций OpenAI), или когда OutputParser оборачивает другой OutputParser.
+- Вызов LLM -- может ли парсер вывода самостоятельно вызывть LLM. Как правило к вызову LLM обращаются только те парсеры, которые хотят исправить формат выходных данных.
+- Тип выходных данных -- ожидаемый тип входных данных. Большинство парсеров вывода работают как со строками, так и с сообщениями. Тем не менее некоторые (например, функции OpenAI) требуют сообщения с конкретными kwargs.
+- Тип выходных данных -- тип выходных данных объекта, возвращаемого парсером.
+- Описание -- комментарий, описывающий парсер и ситуации, когда он может быть полезен.
 
-**Supports Streaming**: Whether the output parser supports streaming.
+### Парсеры вывода
 
-**Has Format Instructions**: Whether the output parser has format instructions. This is generally available except when (a) the desired schema is not specified in the prompt but rather in other parameters (like OpenAI function calling), or (b) when the OutputParser wraps another OutputParser.
+| Название                                                                                                                                                    | Поддержка потоковой передачу | Инструкции по формату       | Вызов LLM | Тип входных данных               | Тип выходных данных     | Описание                                                                                                                                                                                                                                           |
+|-------------------------------------------------------------------------------------------------------------------------------------------------------------|---------------------------------|----------------------------------|--------------|----------------------------------|-------------------------|-----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------|
+| [JSON](https://api.python.langchain.com/en/latest/output_parsers/langchain_core.output_parsers.json.JsonOutputParser.html#langchain_core.output_parsers.json.JsonOutputParser)                    | ✅                              | ✅                                |              | `str` \| `Message`               | Объект JSON             | Возвращает JSON-объект в соответствии с заданным. Можно указать модель Pydantic, в соответствии с которой парсер вернет. Наиболее надежный парсер для получения структурированных данных, который не использует вызов функций.                        |
+| [XML](https://api.python.langchain.com/en/latest/output_parsers/langchain_core.output_parsers.xml.XMLOutputParser.html#langchain_core.output_parsers.xml.XMLOutputParser)                        | ✅                              | ✅                                |              | `str` \| `Message`               | `dict`                  | Возвращает словарь тегов. Используйте, когда нужен XML-вывод. Используйте с моделями, которые хорошо работают с XML (например, Anthropic).                                                                                                        |
+| [CSV](https://api.python.langchain.com/en/latest/output_parsers/langchain_core.output_parsers.list.CommaSeparatedListOutputParser.html#langchain_core.output_parsers.list.CommaSeparatedListOutputParser)  | ✅                              | ✅                                |              | `str` \| `Message`               | `List[str]`             | Возвращает список значений, разделенных запятыми.                                                                                                                                                                                                 |
+| [OutputFixing](https://api.python.langchain.com/en/latest/output_parsers/langchain.output_parsers.fix.OutputFixingParser.html#langchain.output_parsers.fix.OutputFixingParser)                    |                                 |                                  | ✅            | `str` \| `Message`               |                         | Оборачивает другой парсер вывода. Если этот парсер вывода выдаст ошибку, то данный парсер передаст сообщение об ошибке и неправильный вывод в LLM и попросит его исправить вывод.                                                                   |
+| [RetryWithError](https://api.python.langchain.com/en/latest/output_parsers/langchain.output_parsers.retry.RetryWithErrorOutputParser.html#langchain.output_parsers.retry.RetryWithErrorOutputParser)         |                                 |                                  | ✅            | `str` \| `Message`               |                         | Оборачивает другой парсер вывода. Если этот парсер вывода выдаст ошибку, то данный парсер передаст оригинальные входные данные, неправильный вывод и сообщение об ошибке в LLM и попросит его исправить. В отличие от OutputFixingParser, также передает исходные инструкции. |
+| [Pydantic](https://api.python.langchain.com/en/latest/output_parsers/langchain_core.output_parsers.pydantic.PydanticOutputParser.html#langchain_core.output_parsers.pydantic.PydanticOutputParser)           |                                 | ✅                                |              | `str` \| `Message`               | `pydantic.BaseModel`    | Принимает пользовательскую модель Pydantic и возвращает данные, оформленные соответствующим образом.                                                                                                                                                                      |
+| [YAML](https://api.python.langchain.com/en/latest/output_parsers/langchain.output_parsers.yaml.YamlOutputParser.html#langchain.output_parsers.yaml.YamlOutputParser)                                     |                                 | ✅                                |              | `str` \| `Message`               | `pydantic.BaseModel`    | Принимает пользовательскую модель Pydantic и возвращает данные, оформленные соответствующим образом. Для кодирования использует YAML.                                                                                                                                                                      |
+| [PandasDataFrame](https://api.python.langchain.com/en/latest/output_parsers/langchain.output_parsers.pandas_dataframe.PandasDataFrameOutputParser.html#langchain.output_parsers.pandas_dataframe.PandasDataFrameOutputParser) |                                 | ✅                                |              | `str` \| `Message`               | `dict`                  | Полезен для выполнения операций с DataFrame библиотеки pandas.                                                                                                                                                                                     |
+| [Enum](https://api.python.langchain.com/en/latest/output_parsers/langchain.output_parsers.enum.EnumOutputParser.html#langchain.output_parsers.enum.EnumOutputParser)                                |                                 | ✅                                |              | `str` \| `Message`               | `Enum`                  | Преобразует ответ в одно из заданных значений перечисления (enum).                                                                                                                                                                                        |
+| [Datetime](https://api.python.langchain.com/en/latest/output_parsers/langchain.output_parsers.datetime.DatetimeOutputParser.html#langchain.output_parsers.datetime.DatetimeOutputParser)                    |                                 | ✅                                |              | `str` \| `Message`               | `datetime.datetime`     | Преобразует ответ в строку даты и времени (datetime).                                                                                                                                                                                                         |
+| [Structured](https://api.python.langchain.com/en/latest/output_parsers/langchain.output_parsers.structured.StructuredOutputParser.html#langchain.output_parsers.structured.StructuredOutputParser)          |                                 | ✅                                |              | `str` \| `Message`               | `Dict[str, str]`        | Возвращает структурированную информацию. Менее развитый, чем другие парсеры вывода, так как позволяет полям быть только строками. Это может быть полезно при работе с небольшими LLM.                                           |
 
-**Calls LLM**: Whether this output parser itself calls an LLM. This is usually only done by output parsers that attempt to correct misformatted output.
+### История чата
 
-**Input Type**: Expected input type. Most output parsers work on both strings and messages, but some (like OpenAI Functions) need a message with specific kwargs.
+Большинство LLM-приложений имеют интерфейс для ведения диалога.
+Для них важно иметь возможность ссылаться на информацию, ранее представленную в беседе.
+В самом простом случае диалоговая система должна иметь возможность получать доступ к некоторому набору предыдущих сообщений.
 
-**Output Type**: The output type of the object returned by the parser.
+Концепция `ChatHistory` относится к классу в GigaChain, который можно использовать для обертывания произвольной цепочки.
+Экземпляр `ChatHistory` будет отслеживать входные и выходные данные основной цепочки и добавлять их в виде сообщений в базу данных сообщений.
+Последующие обращения загружают эти сообщения и передают их в цепочку в качестве части входных данных.
 
-**Description**: Our commentary on this output parser and when to use it.
+### Документы
 
-| Name            | Supports Streaming | Has Format Instructions       | Calls LLM | Input Type                       | Output Type          | Description                                                                                                                                                                                                                                              |
-|-----------------|--------------------|-------------------------------|-----------|----------------------------------|----------------------|----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------|
-| [JSON](https://api.python.langchain.com/en/latest/output_parsers/langchain_core.output_parsers.json.JsonOutputParser.html#langchain_core.output_parsers.json.JsonOutputParser)            | ✅                  | ✅                             |           | `str` \| `Message`               | JSON object          | Returns a JSON object as specified. You can specify a Pydantic model and it will return JSON for that model. Probably the most reliable output parser for getting structured data that does NOT use function calling.                                    |
-| [XML](https://api.python.langchain.com/en/latest/output_parsers/langchain_core.output_parsers.xml.XMLOutputParser.html#langchain_core.output_parsers.xml.XMLOutputParser)            | ✅                  | ✅                             |           | `str` \| `Message`                 | `dict`               | Returns a dictionary of tags. Use when XML output is needed. Use with models that are good at writing XML (like Anthropic's).                                                                                                                            |
-| [CSV](https://api.python.langchain.com/en/latest/output_parsers/langchain_core.output_parsers.list.CommaSeparatedListOutputParser.html#langchain_core.output_parsers.list.CommaSeparatedListOutputParser)           | ✅                  | ✅                             |           | `str` \| `Message`                 | `List[str]`          | Returns a list of comma separated values.                                                                                                                                                                                                                |
-| [OutputFixing](https://api.python.langchain.com/en/latest/output_parsers/langchain.output_parsers.fix.OutputFixingParser.html#langchain.output_parsers.fix.OutputFixingParser)    |                    |                               | ✅         | `str` \| `Message`                 |                      | Wraps another output parser. If that output parser errors, then this will pass the error message and the bad output to an LLM and ask it to fix the output.                                                                                              |
-| [RetryWithError](https://api.python.langchain.com/en/latest/output_parsers/langchain.output_parsers.retry.RetryWithErrorOutputParser.html#langchain.output_parsers.retry.RetryWithErrorOutputParser)  |                    |                               | ✅         | `str` \| `Message`                 |                      | Wraps another output parser. If that output parser errors, then this will pass the original inputs, the bad output, and the error message to an LLM and ask it to fix it. Compared to OutputFixingParser, this one also sends the original instructions. |
-| [Pydantic](https://api.python.langchain.com/en/latest/output_parsers/langchain_core.output_parsers.pydantic.PydanticOutputParser.html#langchain_core.output_parsers.pydantic.PydanticOutputParser)        |                    | ✅                             |           | `str` \| `Message`                 | `pydantic.BaseModel` | Takes a user defined Pydantic model and returns data in that format.                                                                                                                                                                                     |
-| [YAML](https://api.python.langchain.com/en/latest/output_parsers/langchain.output_parsers.yaml.YamlOutputParser.html#langchain.output_parsers.yaml.YamlOutputParser)        |                    | ✅                             |           | `str` \| `Message`                 | `pydantic.BaseModel` | Takes a user defined Pydantic model and returns data in that format. Uses YAML to encode it.                                                                                                                                                                                    |
-| [PandasDataFrame](https://api.python.langchain.com/en/latest/output_parsers/langchain.output_parsers.pandas_dataframe.PandasDataFrameOutputParser.html#langchain.output_parsers.pandas_dataframe.PandasDataFrameOutputParser) |                    | ✅                             |           | `str` \| `Message`                 | `dict`               | Useful for doing operations with pandas DataFrames.                                                                                                                                                                                                      |
-| [Enum](https://api.python.langchain.com/en/latest/output_parsers/langchain.output_parsers.enum.EnumOutputParser.html#langchain.output_parsers.enum.EnumOutputParser)            |                    | ✅                             |           | `str` \| `Message`                 | `Enum`               | Parses response into one of the provided enum values.                                                                                                                                                                                                    |
-| [Datetime](https://api.python.langchain.com/en/latest/output_parsers/langchain.output_parsers.datetime.DatetimeOutputParser.html#langchain.output_parsers.datetime.DatetimeOutputParser)        |                    | ✅                             |           | `str` \| `Message`                 | `datetime.datetime`  | Parses response into a datetime string.                                                                                                                                                                                                                  |
-| [Structured](https://api.python.langchain.com/en/latest/output_parsers/langchain.output_parsers.structured.StructuredOutputParser.html#langchain.output_parsers.structured.StructuredOutputParser)      |                    | ✅                             |           | `str` \| `Message`                 | `Dict[str, str]`     | An output parser that returns structured information. It is less powerful than other output parsers since it only allows for fields to be strings. This can be useful when you are working with smaller LLMs.                                            |
+Объект `Document` в GigaChain содержит информацию о некоторых данных. Он имеет два атрибута:
 
-### Chat history
-Most LLM applications have a conversational interface.
-An essential component of a conversation is being able to refer to information introduced earlier in the conversation.
-At bare minimum, a conversational system should be able to access some window of past messages directly.
+- `page_content: str` -- содержимое документа, представленное в виде строки.
+- `metadata: dict` -- связанные с документом произвольные метаданные. Могут содержать идентификатор документа, имя файла и другие данные.
 
-The concept of `ChatHistory` refers to a class in LangChain which can be used to wrap an arbitrary chain.
-This `ChatHistory` will keep track of inputs and outputs of the underlying chain, and append them as messages to a message database
-Future interactions will then load those messages and pass them into the chain as part of the input.
+### Загрузчики документов
 
-### Documents
+Классы, которые загружают объекты `Document`. GigaChain поддерживает интеграции с теми же сервсами, что и LangChain, например, Slack, Notion, Google Drive и другие. Подробнее об интеграциях с источниками данных -- в официальной документации LangChain.
 
-A Document object in LangChain contains information about some data. It has two attributes:
-
-- `page_content: str`: The content of this document. Currently is only a string.
-- `metadata: dict`: Arbitrary metadata associated with this document. Can track the document id, file name, etc.
-
-### Document loaders
-
-These classes load Document objects. LangChain has hundreds of integrations with various data sources to load data from: Slack, Notion, Google Drive, etc.
-
-Each DocumentLoader has its own specific parameters, but they can all be invoked in the same way with the `.load` method.
-An example use case is as follows:
+Каждый `DocumentLoader` имеет свои специфические параметры, но любой из них можно вызвать одинаково с помощью метода `.load`.
+Пример использования:
 
 ```python
 from langchain_community.document_loaders.csv_loader import CSVLoader
 
 loader = CSVLoader(
-    ...  # <-- Integration specific parameters here
+    ...  # <-- Специфические параметры интеграции
 )
 data = loader.load()
 ```
 
-### Text splitters
+### Разделители текста
 
-Once you've loaded documents, you'll often want to transform them to better suit your application. The simplest example is you may want to split a long document into smaller chunks that can fit into your model's context window. LangChain has a number of built-in document transformers that make it easy to split, combine, filter, and otherwise manipulate documents.
+После загрузки документов часто возникает необходимость преобразовать их для более удобной обработки. Например, разбить длинный документ на более мелкие фрагменты, которые могут поместиться в окно контекста вашей модели. GigaChain предоставляет ряд встроенных преобразователей документов, которые позволяют разделять, объединять, фильтровать и выполнять другие манипуляции с документами.
 
-When you want to deal with long pieces of text, it is necessary to split up that text into chunks. As simple as this sounds, there is a lot of potential complexity here. Ideally, you want to keep the semantically related pieces of text together. What "semantically related" means could depend on the type of text. This notebook showcases several ways to do that.
+Общее описание работы разделителей текста:
 
-At a high level, text splitters work as following:
+1. Разделение текста на небольшие, семантически значимые части. Как правило на предложения.
+2. Объединение этих небольших частей в более крупные до достижения определенного размера. Требуемый размер определяется собственной функцией.
+3. По достижении нужного размера, создается отдельный фрагмент текста и затем начинается создание нового фрагмента текста с некоторым перекрытием (чтобы сохранить контекст между разными фрагментами).
 
-1. Split the text up into small, semantically meaningful chunks (often sentences).
-2. Start combining these small chunks into a larger chunk until you reach a certain size (as measured by some function).
-3. Once you reach that size, make that chunk its own piece of text and then start creating a new chunk of text with some overlap (to keep context between chunks).
+Таким образом, при настройке разделителя текста следует учитывать:
 
-That means there are two different axes along which you can customize your text splitter:
+- Как текст делится.
+- Как измеряется размер фрагмента.
 
-1. How the text is split
-2. How the chunk size is measured
+### Модели эмбеддингов
 
-### Embedding models
-The Embeddings class is a class designed for interfacing with text embedding models. There are lots of embedding model providers (OpenAI, Cohere, Hugging Face, etc) - this class is designed to provide a standard interface for all of them.
+Класс `Embeddings` предназначен для взаимодействия с моделями, которые создают векторное представление текста (эмбеддинги). При работе с GigaChat для эмбеддингов используется модель Embeddings. Вы также можете использовать подходящие модели других сревисов. Класс `Embeddings` предоставляет стандартный интерфейс для работы с моделями разных сервисов.
 
-Embeddings create a vector representation of a piece of text. This is useful because it means we can think about text in the vector space, and do things like semantic search where we look for pieces of text that are most similar in the vector space.
+Эмбеддинги позволяют работать с текстом в векторном пространстве и выполнять такие задачи, как семантический поиск, при котором ищутся текстовые фрагменты, наиболее схожие в векторном пространстве.
 
-The base Embeddings class in LangChain provides two methods: one for embedding documents and one for embedding a query. The former takes as input multiple texts, while the latter takes a single text. The reason for having these as two separate methods is that some embedding providers have different embedding methods for documents (to be searched over) vs queries (the search query itself).
+Базовый класс `Embeddings` в GigaChain предоставляет два метода: один для эмбеддинга документов и один для эмбеддинга запроса. Первый принимает на вход несколько текстов, тогда как второй — один текст. Разделение на два метода обусловленно тем, что некоторые модели эмбеддингов имеют разные методы для эмбеддинга документов (для поиска) и запросов (сам поисковый запрос).
 
-### Vector stores
-One of the most common ways to store and search over unstructured data is to embed it and store the resulting embedding vectors,
-and then at query time to embed the unstructured query and retrieve the embedding vectors that are 'most similar' to the embedded query.
-A vector store takes care of storing embedded data and performing vector search for you.
+### Векторные хранилища
 
-Vector stores can be converted to the retriever interface by doing:
+Один из наиболее распространенных способов хранения и поиска по неструктурированным данным — это их векторное преобразование и сохранение полученного эмбеддинга. При выполнении запроса он преобразуется в набор векторов, после чего из ранее сохраненного эмбеддинга извлекаются векторы, которые наиболее схожи с векторами эмбеддинга запроса. Векторное хранилище позволяет хранить эмбеддинги и выполненять векторный поиск.
+
+Векторные хранилища можно преобразовать в интерфейс ретривера следующим образом:
 
 ```python
 vectorstore = MyVectorStore()
 retriever = vectorstore.as_retriever()
 ```
 
-### Retrievers
-A retriever is an interface that returns documents given an unstructured query.
-It is more general than a vector store.
-A retriever does not need to be able to store documents, only to return (or retrieve) them.
-Retrievers can be created from vectorstores, but are also broad enough to include [Wikipedia search](/docs/integrations/retrievers/wikipedia/) and [Amazon Kendra](/docs/integrations/retrievers/amazon_kendra_retriever/).
+### Ретриверы
 
-Retrievers accept a string query as input and return a list of Document's as output.
+Ретривер — это интерфейс, который возвращает документы по неструктурированному запросу.
+В отличии от векторных хранилищ, ретриверы применяются для решения задач более общего характера.
+Ретривер не обязательно должен уметь хранить документы, его задача — возвращать (извлекать) их.
+Ретриверы можно создать из векторных хранилищ, но они также достаточно универсальны, чтобы включать [поиск по Wikipedia](/docs/integrations/retrievers/wikipedia/) и [Amazon Kendra](/docs/integrations/retrievers/amazon_kendra_retriever/).
 
-### Tools
+Ретриверы принимают строковый запрос на вход и возвращают список объектов `Document` на выходе.
 
-Tools are interfaces that an agent, a chain, or a chat model / LLM can use to interact with the world.
+### Инструменты
 
-A tool consists of the following components:
+Инструменты — это интерфейсы, которые агент, цепочка или чат-модель/LLM могут использовать для взаимодействия с внешним миром.
 
-1. The name of the tool
-2. A description of what the tool does
-3. JSON schema of what the inputs to the tool are
-4. The function to call
-5. Whether the result of a tool should be returned directly to the user (only relevant for agents)
+Инструмент состоит из:
 
-The name, description and JSON schema are provided as context
-to the LLM, allowing the LLM to determine how to use the tool
-appropriately.
+- названия;
+- описания того, что делает инструмент;
+- JSON-схемы входных данных инструмента;
+- функции, которую вызывает инструмент;
+- указания на то следует ли возвращать результат работы инструмента непосредственно пользователю (актуально только для агентов).
 
-Given a list of available tools and a prompt, an LLM can request
-that one or more tools be invoked with appropriate arguments.
+Название, описание и JSON-схема предоставляются в качестве контекста для LLM, позволяя модели правильно использовать инструмент.
 
-Generally, when designing tools to be used by a chat model or LLM, it is important to keep in mind the following:
+Получ список доступных инструментов и промпт, LLM может запросить выполнение одного или нескольких инструментов с соответствующими аргументами.
 
-- Chat models that have been fine-tuned for tool calling will be better at tool calling than non-fine-tuned models.
-- Non fine-tuned models may not be able to use tools at all, especially if the tools are complex or require multiple tool calls.
-- Models will perform better if the tools have well-chosen names, descriptions, and JSON schemas.
-- Simpler tools are generally easier for models to use than more complex tools.
+В общем случае, при разработке инструментов для использования в чат-моделях или LLM важно учитывать:
 
-### Toolkits
+- Чат-модели, специально дообученые для вызова инструментов, справляются с этим лучше.
+- Неподготовленные модели модели могут в принципе не уметь работать с инструментами. Особенно если инструменты сложные или требуют многократных вызовов.
+- Модели будут работать лучше, если у инструментов тщательно подобраны названия, описания и JSON-схемы.
+- Моделям легче работать с более простыми инструментами.
 
-Toolkits are collections of tools that are designed to be used together for specific tasks. They have convenient loading methods.
+### Наборы инструментов
 
-All Toolkits expose a `get_tools` method which returns a list of tools.
-You can therefore do:
+Наборы инструментов — это коллекции инструментов, которые используются вместе в конкретных задачах. Наборы предоставляют удобные методы загрузки.
+
+Все наборы инструментов реализуют метод `get_tools`, который возвращает список инструментов:
 
 ```python
-# Initialize a toolkit
-toolkit = ExampleTookit(...)
+# Инициализация набора инструментов
+toolkit = ExampleToolkit(...)
 
-# Get list of tools
+# Получение списка инструментов
 tools = toolkit.get_tools()
 ```
 
-### Agents
+### Агенты
 
-By themselves, language models can't take actions - they just output text.
-A big use case for LangChain is creating **agents**.
-Agents are systems that use an LLM as a reasoning enginer to determine which actions to take and what the inputs to those actions should be.
-The results of those actions can then be fed back into the agent and it determine whether more actions are needed, or whether it is okay to finish.
+Языковые модели не совершают действия сами — они просто генерируют текст.
+Одним из основных случаев использования GigaChain является создание *агентов*.
 
-[LangGraph](https://github.com/langchain-ai/langgraph) is an extension of LangChain specifically aimed at creating highly controllable and customizable agents.
-Please check out that documentation for a more in depth overview of agent concepts.
+Агенты — это системы, которые используют LLM для рассуждений и определения, какие действия выполнить и какие входные данные для этих действий использовать.
+Результаты выполнения можно затем передать обратно агенту, который определит, нужно ли делать что-то еще или можно завершить работу.
 
-There is a legacy agent concept in LangChain that we are moving towards deprecating: `AgentExecutor`.
-AgentExecutor was essentially a runtime for agents.
-It was a great place to get started, however, it was not flexible enough as you started to have more customized agents.
-In order to solve that we built LangGraph to be this flexible, highly-controllable runtime.
+[GigaGraph](https://github.com/langchain-ai/langgraph) — это расширение GigaChain, которое предназначенно для создания управляемых и настраиваемых агентов.
+Подробнее о концепции агентов -- в документации GigaGraph.
 
-If you are still using AgentExecutor, do not fear: we still have a guide on [how to use AgentExecutor](/docs/how_to/agent_executor).
-It is recommended, however, that you start to transition to LangGraph.
-In order to assist in this we have put together a [transition guide on how to do so](/docs/how_to/migrate_agent)
+Для работы с агентами в GigaChain также существует класс `AgentExecutor`, который по сути является средой выполнения для агентов.
+В докуемнтации вы найдете раздел посвященный [работе с `AgentExecutor`](/docs/how_to/agent_executor).
+Тем не менее для создания с агентов рекомендуется использовать GigaGraph.
 
-### Callbacks
+О том как мигрировать с `AgentExecutor` на GigaGraph -- в [соответствующем разделе](/docs/how_to/migrate_agent).
 
-LangChain provides a callbacks system that allows you to hook into the various stages of your LLM application. This is useful for logging, monitoring, streaming, and other tasks.
+### Колбэки
 
-You can subscribe to these events by using the `callbacks` argument available throughout the API. This argument is list of handler objects, which are expected to implement one or more of the methods described below in more detail.
+GigaChain предоставляет систему колбэков, которая позволяет вам подключаться к различным этапам работы вашего LLM-приложения. Это полезно для логирования, мониторинга, потоковой передачи и других задач. На эти события можно подписаться с помощью аргумента `callbacks`, доступного в API.
+Этот аргумент представляет список объектов-обработчиков, которые должны реализовать один или несколько методов, описанных ниже.
 
-#### Callback handlers
+#### Обработчики колбэков
 
-`CallbackHandlers` are objects that implement the [`CallbackHandler`](https://api.python.langchain.com/en/latest/callbacks/langchain_core.callbacks.base.BaseCallbackHandler.html#langchain-core-callbacks-base-basecallbackhandler) interface, which has a method for each event that can be subscribed to.
-The `CallbackManager` will call the appropriate method on each handler when the event is triggered.
+`CallbackHandlers` — это объекты, которые реализуют интерфейс [`CallbackHandler`](https://api.python.langchain.com/en/latest/callbacks/langchain_core.callbacks.base.BaseCallbackHandler.html#gigachain-core-callbacks-base-basecallbackhandler), включающий метод для каждого события, на которое можно подписаться.
+При получении события объект `CallbackManager` вызывает соответствующий метод каждого обработчика.
 
 ```python
 class BaseCallbackHandler:
-    """Base callback handler that can be used to handle callbacks from langchain."""
+    """Базовый обработчик колбэков, который можно использовать для обработки колбэков в gigachain."""
 
     def on_llm_start(
         self, serialized: Dict[str, Any], prompts: List[str], **kwargs: Any
     ) -> Any:
-        """Run when LLM starts running."""
+        """Выполняется при запуске LLM."""
 
     def on_chat_model_start(
         self, serialized: Dict[str, Any], messages: List[List[BaseMessage]], **kwargs: Any
     ) -> Any:
-        """Run when Chat Model starts running."""
+        """Выполняется при запуске чат-модели."""
 
     def on_llm_new_token(self, token: str, **kwargs: Any) -> Any:
-        """Run on new LLM token. Only available when streaming is enabled."""
+        """Выполняется при получении нового токена LLM. Доступно только при включенной потоковой передаче."""
 
     def on_llm_end(self, response: LLMResult, **kwargs: Any) -> Any:
-        """Run when LLM ends running."""
+        """Выполняется при завершении работы LLM."""
 
     def on_llm_error(
         self, error: Union[Exception, KeyboardInterrupt], **kwargs: Any
     ) -> Any:
-        """Run when LLM errors."""
+        """Выполняется при ошибке LLM."""
 
     def on_chain_start(
         self, serialized: Dict[str, Any], inputs: Dict[str, Any], **kwargs: Any
     ) -> Any:
-        """Run when chain starts running."""
+        """Выполняется при запуске цепочки."""
 
     def on_chain_end(self, outputs: Dict[str, Any], **kwargs: Any) -> Any:
-        """Run when chain ends running."""
+        """Выполняется при завершении работы цепочки."""
 
     def on_chain_error(
         self, error: Union[Exception, KeyboardInterrupt], **kwargs: Any
     ) -> Any:
-        """Run when chain errors."""
+        """Выполняется при ошибке цепочки."""
 
     def on_tool_start(
         self, serialized: Dict[str, Any], input_str: str, **kwargs: Any
     ) -> Any:
-        """Run when tool starts running."""
+        """Выполняется при запуске инструмента."""
 
     def on_tool_end(self, output: Any, **kwargs: Any) -> Any:
-        """Run when tool ends running."""
+        """Выполняется при завершении работы инструмента."""
 
     def on_tool_error(
         self, error: Union[Exception, KeyboardInterrupt], **kwargs: Any
     ) -> Any:
-        """Run when tool errors."""
+        """Выполняется при ошибке инструмента."""
 
     def on_text(self, text: str, **kwargs: Any) -> Any:
-        """Run on arbitrary text."""
+        """Выполняется при обработке произвольного текста."""
 
     def on_agent_action(self, action: AgentAction, **kwargs: Any) -> Any:
-        """Run on agent action."""
+        """Выполняется при действии агента."""
 
     def on_agent_finish(self, finish: AgentFinish, **kwargs: Any) -> Any:
-        """Run on agent end."""
+        """Выполняется при завершении работы агента."""
 ```
 
-#### Passing callbacks
+#### Передача колбэков
 
-The `callbacks` property is available on most objects throughout the API (Models, Tools, Agents, etc.) in two different places:
+Свойство `callbacks` доступно на большинстве объектов в API (моделях, инструментах, агентах и т.д.) в двух разных местах:
 
-- **Constructor callbacks**: defined in the constructor, e.g. `ChatAnthropic(callbacks=[handler], tags=['a-tag'])`. In this case, the callbacks will be used for all calls made on that object, and will be scoped to that object only.
-  For example, if you initialize a chat model with constructor callbacks, then use it within a chain, the callbacks will only be invoked for calls to that model.
-- **Request callbacks**: passed into the `invoke` method used for issuing a request. In this case, the callbacks will be used for that specific request only, and all sub-requests that it contains (e.g. a call to a sequence that triggers a call to a model, which uses the same handler passed in the `invoke()` method).
-  In the `invoke()` method, callbacks are passed through the `config` parameter.
+- Колбэки конструктора определяются в конструкторе, например, `ChatAnthropic(callbacks=[handler], tags=['a-tag'])`. В этом случае колбэки используются для всех вызовов, сделанных с этим объектом, и будут применяться только к этому объекту.
+  Например, если вы инициализируете чат-модель с колбэками конструктора, а затем используете ее в цепочке, колбэки будут вызываться только при обращении к этой модели.
+- Колбэки запроса передаются в метод `invoke`, который используется для выполнения запроса. В этом случае колбэки используются только для этого конкретного запроса и всех подзапросов, которые он содержит (например, вызов последовательности, которая вызывает модель, используя тот же обработчик, переданный в методе `invoke()`).
+  В методе `invoke()` колбэки передаются в параметре `config`.
 
-## Techniques
+## Методики работы
 
-### Function/tool calling
+### Вызов функций/инструментов
 
 :::info
-We use the term tool calling interchangeably with function calling. Although
-function calling is sometimes meant to refer to invocations of a single function,
-we treat all models as though they can return multiple tool or function calls in
-each message.
+В контексте GigaChain термины "вызов инструментов" и "вызов функций" взаимозаменяемы. Хотя вызов функций иногда подразумевает выполнение одной функции, при работе с GigaChain подразумевается, что все модели так, как будто они могут возвращать несколько вызовов инструментов или функций в каждом сообщении.
 :::
 
-Tool calling allows a model to respond to a given prompt by generating output that
-matches a user-defined schema. While the name implies that the model is performing
-some action, this is actually not the case! The model is coming up with the
-arguments to a tool, and actually running the tool (or not) is up to the user -
-for example, if you want to [extract output matching some schema](/docs/tutorials/extraction)
-from unstructured text, you could give the model an "extraction" tool that takes
-parameters matching the desired schema, then treat the generated output as your final
-result.
+Вызов инструментов позволяет модели отвечать на заданный запрос, генерируя вывод, который соответствует схеме, которую задал пользователь.
+При этом модель не выполняет какихто действий.
+Она генерирует аргументы для инструмента, а решение выполнять инструмента или нет остается за пользователем.
+Например, если вы хотите [извлечь выходные данные, соответствующий определенной схеме](/docs/tutorials/extraction) из неструктурированного текста, вы можете предоставить модели инструмент для выполнения этой задачи.
+Такой инструмент будет принимать параметры, соответствующие нужной схеме, а результат его работы вы сможете рассматривать как итоговый.
 
-A tool call includes a name, arguments dict, and an optional identifier. The
-arguments dict is structured `{argument_name: argument_value}`.
+Вызов инструмента включает название, словарь аргументов и необязательный идентификатор.
+Словарь аргументов имеет структуру `{argument_name: argument_value}`.
 
-Many LLM providers, including [Anthropic](https://www.anthropic.com/),
-[Cohere](https://cohere.com/), [Google](https://cloud.google.com/vertex-ai),
-[Mistral](https://mistral.ai/), [OpenAI](https://openai.com/), and others,
-support variants of a tool calling feature. These features typically allow requests
-to the LLM to include available tools and their schemas, and for responses to include
-calls to these tools. For instance, given a search engine tool, an LLM might handle a
-query by first issuing a call to the search engine. The system calling the LLM can
-receive the tool call, execute it, and return the output to the LLM to inform its
-response. LangChain includes a suite of [built-in tools](/docs/integrations/tools/)
-and supports several methods for defining your own [custom tools](/docs/how_to/custom_tools).
+Функциональность вызова функций может отличаться в зависимости от используемой модели.
+Как правило она позволяет запросам к LLM включать доступные инструменты и их схемы, а ответы могут включать вызовы этих инструментов.
+Например, если у модели есть доступ к инструменту поисковой системы, LLM может обработать запрос пользователя, сначала обратившись к поисковой системе.
+GigaChain включает набор [встроенных инструментов](/docs/integrations/tools/) и поддерживает несколько методов для определения [пользовательских инструментов](/docs/how_to/custom_tools).
 
-LangChain provides a standardized interface for tool calling that is consistent across different models.
+GigaChain предоставляет стандартизированный интерфейс для вызова инструментов, который не зависит от используемой модели.
 
-The standard interface consists of:
+Стандартный интерфейс включает:
 
-* `ChatModel.bind_tools()`: a method for specifying which tools are available for a model to call.
-* `AIMessage.tool_calls`: an attribute on the `AIMessage` returned from the model for accessing the tool calls requested by the model.
+* `ChatModel.bind_tools()` -- метод, который указывает, какие инструменты доступны модели для вызова.
+* `AIMessage.tool_calls` - атрибут в сообщении `AIMessage`, которое возвращает модель. Атрибут используется для доступа к вызовам инструментов, которые запрашивает модель.
 
-There are two main use cases for function/tool calling:
+Можно выделить два основных сценария использования вызова функций/инструментов:
 
-- [How to return structured data from an LLM](/docs/how_to/structured_output/)
-- [How to use a model to call tools](/docs/how_to/tool_calling/)
+- [Получение структурированных данных из LLM](/docs/how_to/structured_output/)
+- [Использование модели для вызова инструментов](/docs/how_to/tool_calling/)
 
-### Retrieval
+### Извлечение данных
 
-LangChain provides several advanced retrieval types. A full list is below, along with the following information:
+В таблице преставлены способы извлечения данных, которые поддерживает GigaChain
+Таблица содержит столбцы:
 
-**Name**: Name of the retrieval algorithm.
+- Название -- название алгоритма извлечения.
+- Тип индекса -- тип индекса (если есть), на котором он основан.
+- Использует LLM -- использует ли этот метод извлечения LLM.
+- Когда использовать -- комментарии о том, когда можно использовать этот метода извлечения.
+- Описание -- описание того, что делает этот алгоритм извлечения.
 
-**Index Type**: Which index type (if any) this relies on.
-
-**Uses an LLM**: Whether this retrieval method uses an LLM.
-
-**When to Use**: Our commentary on when you should considering using this retrieval method.
-
-**Description**: Description of what this retrieval algorithm is doing.
-
-| Name                      | Index Type                   | Uses an LLM               | When to Use                                                                                                                                   | Description                                                                                                                                                                                                                                                                                      |
-|---------------------------|------------------------------|---------------------------|-----------------------------------------------------------------------------------------------------------------------------------------------|--------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------|
-| [Vectorstore](/docs/how_to/vectorstore_retriever/)               | Vectorstore                  | No                        | If you are just getting started and looking for something quick and easy.                                                                     | This is the simplest method and the one that is easiest to get started with. It involves creating embeddings for each piece of text.                                                                                                                                                             |
-| [ParentDocument](/docs/how_to/parent_document_retriever/)            | Vectorstore + Document Store | No                        | If your pages have lots of smaller pieces of distinct information that are best indexed by themselves, but best retrieved all together.       | This involves indexing multiple chunks for each document. Then you find the chunks that are most similar in embedding space, but you retrieve the whole parent document and return that (rather than individual chunks).                                                                         |
-| [Multi Vector](/docs/how_to/multi_vector/)              | Vectorstore + Document Store | Sometimes during indexing | If you are able to extract information from documents that you think is more relevant to index than the text itself.                          | This involves creating multiple vectors for each document. Each vector could be created in a myriad of ways - examples include summaries of the text and hypothetical questions.                                                                                                                 |
-| [Self Query](/docs/how_to/self_query/)               | Vectorstore                  | Yes                       | If users are asking questions that are better answered by fetching documents based on metadata rather than similarity with the text.          | This uses an LLM to transform user input into two things: (1) a string to look up semantically, (2) a metadata filer to go along with it. This is useful because oftentimes questions are about the METADATA of documents (not the content itself).                                              |
-| [Contextual Compression](/docs/how_to/contextual_compression/)    | Any                          | Sometimes                 | If you are finding that your retrieved documents contain too much irrelevant information and are distracting the LLM.                         | This puts a post-processing step on top of another retriever and extracts only the most relevant information from retrieved documents. This can be done with embeddings or an LLM.                                                                                                               |
-| [Time-Weighted Vectorstore](/docs/how_to/time_weighted_vectorstore/) | Vectorstore                  | No                        | If you have timestamps associated with your documents, and you want to retrieve the most recent ones                                          | This fetches documents based on a combination of semantic similarity (as in normal vector retrieval) and recency (looking at timestamps of indexed documents)                                                                                                                                    |
-| [Multi-Query Retriever](/docs/how_to/MultiQueryRetriever/)     | Any                          | Yes                       | If users are asking questions that are complex and require multiple pieces of distinct information to respond                                 | This uses an LLM to generate multiple queries from the original one. This is useful when the original query needs pieces of information about multiple topics to be properly answered. By generating multiple queries, we can then fetch documents for each of them.                             |
-| [Ensemble](/docs/how_to/ensemble_retriever/)                  | Any                          | No                        | If you have multiple retrieval methods and want to try combining them.                                                                        | This fetches documents from multiple retrievers and then combines them.                                                                                                                                                                                                                          |
+| Название                                                                                                                                          | Тип индекса                   | Использует LLM                | Когда использовать                                                                                                                             | Описание                                                                                                                                                                                                                                                                                         |
+|---------------------------------------------------------------------------------------------------------------------------------------------------|------------------------------|-------------------------------|------------------------------------------------------------------------------------------------------------------------------------------------|---------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------|
+| [Vectorstore](/docs/how_to/vectorstore_retriever/)                                                                                               | Векторное хранилище          | Нет                           | Если вы только начинаете и ищете что-то быстрое и простое.                                                                                     | Самый простой метод и наиболее подходящий для начала работы. Он включает создание эмбеддингов для каждого фрагмента текста.                                                                                                                                                                       |
+| [ParentDocument](/docs/how_to/parent_document_retriever/)                                                                                        | Векторное хранилище + Хранилище документов | Нет                | Если ваши страницы содержат много мелких фрагментов разной информации, которые лучше индексируются по отдельности, но лучше извлекаются вместе. | Метод включает индексирование нескольких фрагментов для каждого документа. После чего вы ищете фрагменты, которые наиболее похожи в пространстве эмбеддинга, но извлекаете и возвращаете весь родительский документ вместо отдельных фрагментов.                                    |
+| [Multi Vector](/docs/how_to/multi_vector/)                                                                                                       | Векторное хранилище + Хранилище документов | Иногда во время индексирования | Если вы можете извлечь из документов информацию, которую считаете более релевантной для индексирования, чем сам текст.                             | Метод включает создание нескольких векторов для каждого документа. Каждый вектор может быть создан множеством способов - примеры включают суммаризацию текста и гипотетические вопросы.                                                                                                           |
+| [Self Query](/docs/how_to/self_query/)                                                                                                           | Векторное хранилище          | Да                            | Если пользователи задают вопросы, на которые лучше отвечать, извлекая документы на основе метаданных, а не на основе схожести с текстом.                 | Метод использует LLM для преобразования ввода пользователя в две вещи: (1) строку для семантического поиска, (2) фильтр по метаданным. Это полезно, так как часто вопросы касаются именно метаданных документов, а не самого их содержания.                                                         |
+| [Contextual Compression](/docs/how_to/contextual_compression/)                                                                                   | Любой                        | Иногда                        | Если вы обнаруживаете, что извлеченные документы содержат слишком много нерелевантной информации и отвлекают LLM.                              | Метод добавляет этап постобработки поверх другого ретривера и извлекает только наиболее релевантную информацию из документов, которые вернул ретривер. Это можно сделать с помощью эмбеддингов или LLM.                                                                                                    |
+| [Time-Weighted Vectorstore](/docs/how_to/time_weighted_vectorstore/)                                                                             | Векторное хранилище          | Нет                           | Если у вас есть временные метки, связанные с вашими документами, и вы хотите извлекать самые последние из них.                                | Метод извлекает документы на основе комбинации семантической схожести (как в обычном векторном извлечении) и актуальности (учитывая временные метки индексированных документов).                                                                                                             |
+| [Multi-Query Retriever](/docs/how_to/MultiQueryRetriever/)                                                                                       | Любой                        | Да                            | Если пользователи задают сложные вопросы, требующие нескольких отдельных фрагментов информации для ответа.                                    | Метод использует LLM для генерации нескольких запросов из исходного. Это полезно, когда исходный запрос требует фрагментов информации по нескольким темам для правильного ответа. Генерируя несколько запросов, можно затем извлечь документы для каждой из тем.                           |
+| [Ensemble](/docs/how_to/ensemble_retriever/)                                                                                                     | Любой                        | Нет                           | Если у вас есть несколько методов извлечения и вы хотите попробовать их комбинацию.                                                           | Метод извлекает документы из нескольких ретриверов и затем комбинирует их.                                                                                                                                                                                                                   |
 
 
-### Text splitting
+### Разделение текста
 
-LangChain offers many different types of `text splitters`.
-These all live in the `langchain-text-splitters` package.
+GigaChain предлагает множество различных типов разделителей текста.
+Все они содержатся в пакете `gigachain-text-splitters`.
 
-Table columns:
+Колонки таблицы:
 
-- **Name**: Name of the text splitter
-- **Classes**: Classes that implement this text splitter
-- **Splits On**: How this text splitter splits text
-- **Adds Metadata**: Whether or not this text splitter adds metadata about where each chunk came from.
-- **Description**: Description of the splitter, including recommendation on when to use it.
+- Название -- название разделителя текста;
+- Классы -- классы, которые реализуют разделитель;
+- Разделяет по -- как разделитель делит текст;
+- Добавляет метаданные -- добавляет ли этот разделитель метаданные о том, откуда взят каждый фрагмент.
+- Описание -- описание разделителя, включая рекомендации по его использованию.
 
 
-| Name     | Classes                                                                                                                                                                                                             | Splits On                                                   | Adds Metadata | Description                                                                                                                                                                                                                                                                  |
-|----------|---------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------|-------------------------------------------------------------|---------------|------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------|
-| Recursive | [RecursiveCharacterTextSplitter](/docs/how_to/recursive_text_splitter/), [RecursiveJsonSplitter](/docs/how_to/recursive_json_splitter/) | A list of user defined characters     |               | Recursively splits text. This splitting is trying to keep related pieces of text next to each other. This is the `recommended way` to start splitting text.                                                                                                                    |
-| HTML      | [HTMLHeaderTextSplitter](/docs/how_to/HTML_header_metadata_splitter/), [HTMLSectionSplitter](/docs/how_to/HTML_section_aware_splitter/)          | HTML specific characters                                                                                                 | ✅             | Splits text based on HTML-specific characters. Notably, this adds in relevant information about where that chunk came from (based on the HTML)                                                                                                                               |
-| Markdown  | [MarkdownHeaderTextSplitter](/docs/how_to/markdown_header_metadata_splitter/),                                                                                                           | Markdown specific characters                                                                                    | ✅             | Splits text based on Markdown-specific characters. Notably, this adds in relevant information about where that chunk came from (based on the Markdown)                                                                                                                       |
-| Code      | [many languages](/docs/how_to/code_splitter/)                                                                                                                                 | Code (Python, JS) specific characters                                                                           |               | Splits text based on characters specific to coding languages. 15 different languages are available to choose from.                                                                                                                                                           |
-| Token    | [many classes](/docs/how_to/split_by_token/)                                                                                                                                  | Tokens                                                                                                          |               | Splits text on tokens. There exist a few different ways to measure tokens.                                                                                                                                                                                                   |
-| Character  | [CharacterTextSplitter](/docs/how_to/character_text_splitter/)                                                                                                                | A user defined character                                                                                        |               | Splits text based on a user defined character. One of the simpler methods.                                                                                                                                                                                                   |
-| Semantic Chunker (Experimental) | [SemanticChunker](/docs/how_to/semantic-chunker/)                                                                                                                             | Sentences                                                                                                       |               | First splits on sentences. Then combines ones next to each other if they are semantically similar enough. Taken from [Greg Kamradt](https://github.com/FullStackRetrieval-com/RetrievalTutorials/blob/main/tutorials/LevelsOfTextSplitting/5_Levels_Of_Text_Splitting.ipynb) |
-| Integration: AI21 Semantic | [AI21SemanticTextSplitter](/docs/integrations/document_transformers/ai21_semantic_text_splitter/)                                                                                                                    |    ✅           | Identifies distinct topics that form coherent pieces of text and splits along those.                                                                                                                                                                                         |
+| Название                       | Классы                                                                                                                                                                                                                      | Разделяет по                                     | Добавляет метаданные | Описание                                                                                                                                                                                                                                                                                                          |
+|--------------------------------|--------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------|-------------------------------------------------|----------------------|-------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------|
+| Рекурсивный                    | [RecursiveCharacterTextSplitter](/docs/how_to/recursive_text_splitter/), [RecursiveJsonSplitter](/docs/how_to/recursive_json_splitter/)                                                                                           | Список символов, заданных пользователем        |                      | Рекурсивно разделяет текст, стараясь сохранить связанные части текста рядом друг с другом. Рекомендуется начинать разделение текста с этого способа.                                                                                                                                                                 |
+| HTML                           | [HTMLHeaderTextSplitter](/docs/how_to/HTML_header_metadata_splitter/), [HTMLSectionSplitter](/docs/how_to/HTML_section_aware_splitter/)                                                                                        | HTML-специфические символы                     | ✅                   | Разделяет текст на основе специфических для HTML символов. В частности, на основе HTML добавляет данные о том, откуда взят каждый фрагмент.                                                                                                                                                   |
+| Markdown                       | [MarkdownHeaderTextSplitter](/docs/how_to/markdown_header_metadata_splitter/)                                                                                                                                                     | Символы, специфические для Markdown             | ✅                   | Разделяет текст на основе символов, специфических для Markdown. В частности, на основе Markdown добавляет данные о том, откуда взят каждый фрагмент.                                                                                                                                           |
+| Код                            | [множество языков](/docs/how_to/code_splitter/)                                                                                                                                                                                  | Символы, специфические для языков программирования (Python, JS) |                      | Разделяет текст на основе символов, специфичных для языков программирования. Доступно 15 различных языков.                                                                                                                                                                                                          |
+| Токены                         | [множество классов](/docs/how_to/split_by_token/)                                                                                                                                                                                | Токены                                           |                      | Разделяет текст на основе токенов. Существует несколько различных способов измерения количества токенов.                                                                                                                                                                                                                       |
+| Символы                        | [CharacterTextSplitter](/docs/how_to/character_text_splitter/)                                                                                                                                                                   | Символ, заданный пользователем                 |                      | Разделяет текст на основе символа, заданного пользователем. Один из простейших методов.                                                                                                                                                                                                                             |
+| Семантический Chunker (экспериментальный) | [SemanticChunker](/docs/how_to/semantic-chunker/)                                                                                                                                                                          | Предложения                                     |                      | Сначала разделяет по предложениям. Затем объединяет соседние предложения, если они достаточно семантически похожи. Взято из [Greg Kamradt](https://github.com/FullStackRetrieval-com/RetrievalTutorials/blob/main/tutorials/LevelsOfTextSplitting/5_Levels_Of_Text_Splitting.ipynb).                                   |
+| Интеграция: AI21 Semantic      | [AI21SemanticTextSplitter](/docs/integrations/document_transformers/ai21_semantic_text_splitter/)                                                                                                                                | Определяет различные темы, формирующие цельные фрагменты текста, и разделяет по ним. | ✅                   |                                                                                                                                                                                                                                                                                                                   |
