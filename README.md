@@ -81,9 +81,9 @@
 
 - Работа с агентами (*Agents*).
 
-  Агент представляет собой LLM, которая принимает решение о дальнейшем действии, отслеживает его результат, и, с учетом результата, принимает следующее решение. Процесс повторяется до завершения. GigaChain предоставляет стандартный интерфейс для работы с агентами, выбор агентов и примеры готовых агентов.
+  Агент представляет собой программу, которая принимает решение о дальнейшем действии, отслеживает его результат, и, с учетом результата, принимает следующее решение. Процесс повторяется до завершения. GigaChain предоставляет стандартный интерфейс для работы с агентами, выбор агентов и примеры готовых агентов.
 
-  Пример — [CAMEL агент для разработки программ](cookbook/camel_role_playing.ipynb)
+  Пример — [Создание ассистента с тремя функциями](docs/docs/cookbook/gigachat_functions_agent.ipynb)
 
 - Создание памяти.
 
@@ -329,6 +329,7 @@ chat = GigaChat(credentials='<авторизационные_данные>', ver
 - Работа с LlamaIndex: [с помощью ретривера и QA цепочки](docs/docs/integrations/retrievers/llama_index_retriever.ipynb) / [с помощью тула и Conversational агента](docs/docs/modules/agents/tools/llama_index_tool.ipynb)
 - [Агент-риелтор на GigaChat functions](cookbook/realestate/realestate.ipynb)
 - [Агент выполняющий код](cookbook/gigachat_code.ipynb)
+- [Получение сгенерированных изображений/видео](cookbook/images_and_videos/gigachat_with_images.ipynb)
 
 ### Развлекательные примеры
 - [Площадка для споров между GigaChat и YandexGPT с судьей GPT-4](docs/docs/use_cases/fun/debates.ipynb)
@@ -337,8 +338,6 @@ chat = GigaChat(credentials='<авторизационные_данные>', ver
 
 ### Примеры работы с другими LLM
 
-- [Агент-менеджер по продажам с автоматическим поиском по каталогу и формированием заказа](docs/docs/modules/agents/how_to/add_memory_openai_functions.ipynb)
-- [Поиск ответов в интернете с автоматическими промежуточными вопросами (self-ask)](docs/docs/modules/agents/agent_types/self_ask_with_search.ipynb)
 - [Пример использования YandexGPT](docs/docs/integrations/chat/yandex.ipynb)
 
 ### Примеры приложений для Streamlit
