@@ -7,16 +7,16 @@ readme = "README.md"
 
 [tool.poetry.dependencies]
 python = ">=3.8.1,<4.0"
-langchain = "^0.1"
+gigachain = "^0.1"
 pymilvus = ">=2.3.0"
-langchain-nvidia-aiplay = "^0.0.2"
+gigachain-nvidia-aiplay = "^0.0.2"
 pypdf = ">=3.1"
-langchain-text-splitters = ">=0.0.1,<0.1"
+gigachain-text-splitters = ">=0.0.1,<0.1"
 
 [tool.poetry.group.dev.dependencies]
-langchain-cli = ">=0.0.21"
+gigachain-cli = ">=0.0.21"
 
-[tool.langserve]
+[tool.gigaserve]
 export_module = "nvidia_rag_canonical"
 export_attr = "chain"
 

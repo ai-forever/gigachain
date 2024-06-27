@@ -9,7 +9,7 @@ readme = "README.md"
 
 [tool.poetry.dependencies]
 python = ">=3.9,<3.13"
-langchain = "^0.1"
+gigachain = "^0.1"
 fastapi = "^0.104.0"
 sse-starlette = "^1.6.5"
 sentence-transformers = "2.2.2"
@@ -25,9 +25,9 @@ extras = [
 
 [tool.poetry.group.dev.dependencies]
 poethepoet = "^0.24.1"
-langchain-cli = ">=0.0.21"
+gigachain-cli = ">=0.0.21"
 
-[tool.langserve]
+[tool.gigaserve]
 export_module = "intel_rag_xeon.chain"
 export_attr = "chain"
 

@@ -7,17 +7,17 @@ readme = "README.md"
 
 [tool.poetry.dependencies]
 python = ">=3.8.1,<4.0"
-langchain = "^0.1"
+gigachain = "^0.1"
 openai = "<2"
 langsmith = ">=0.0.54"
 langchainhub = ">=0.1.13"
 
 [tool.poetry.group.dev.dependencies]
-langchain-cli = ">=0.0.21"
+gigachain-cli = ">=0.0.21"
 fastapi = ">=0.104.0,<1"
 sse-starlette = "^1.6.5"
 
-[tool.langserve]
+[tool.gigaserve]
 export_module = "chat_bot_feedback.chain"
 export_attr = "chain"
 

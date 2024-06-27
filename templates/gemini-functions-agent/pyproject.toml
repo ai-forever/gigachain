@@ -7,14 +7,14 @@ readme = "README.md"
 
 [tool.poetry.dependencies]
 python = ">=3.9,<4.0"
-langchain = "^0.1"
+gigachain = "^0.1"
 tavily-python = "^0.1.9"
-langchain-google-genai = ">=0.0.8,<0.1"
+gigachain-google-genai = ">=0.0.8,<0.1"
 
 [tool.poetry.group.dev.dependencies]
-langchain-cli = ">=0.0.21"
+gigachain-cli = ">=0.0.21"
 
-[tool.langserve]
+[tool.gigaserve]
 export_module = "gemini_functions_agent"
 export_attr = "agent_executor"
 

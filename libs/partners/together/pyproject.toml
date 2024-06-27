@@ -1,7 +1,7 @@
 [tool.poetry]
-name = "langchain-together"
+name = "gigachain-together"
 version = "0.1.3"
-description = "An integration package connecting Together AI and LangChain"
+description = "An integration package connecting Together AI and Gigachain"
 authors = []
 readme = "README.md"
 repository = "https://github.com/langchain-ai/langchain"
@@ -12,8 +12,8 @@ license = "MIT"
 
 [tool.poetry.dependencies]
 python = ">=3.8.1,<4.0"
-langchain-core = ">=0.2.2,<0.3"
-langchain-openai = "^0.1.8"
+gigachain-core = ">=0.2.2,<0.3"
+gigachain-openai = "^0.1.8"
 requests = "^2"
 aiohttp = "^3.9.1"
 
@@ -27,10 +27,10 @@ pytest-mock = "^3.10.0"
 syrupy = "^4.0.2"
 pytest-watcher = "^0.3.4"
 pytest-asyncio = "^0.21.1"
-langchain-openai = { path = "../openai", develop = true }
-langchain-core = { path = "../../core", develop = true }
+gigachain-openai = { path = "../openai", develop = true }
+gigachain-core = { path = "../../core", develop = true }
 docarray = "^0.32.1"
-langchain-standard-tests = { path = "../../standard-tests", develop = true }
+gigachain-standard-tests = { path = "../../standard-tests", develop = true }
 
 [tool.poetry.group.codespell]
 optional = true
@@ -60,14 +60,14 @@ optional = true
 
 [tool.poetry.group.typing.dependencies]
 mypy = "^0.991"
-langchain-core = { path = "../../core", develop = true }
+gigachain-core = { path = "../../core", develop = true }
 types-requests = "^2"
 
 [tool.poetry.group.dev]
 optional = true
 
 [tool.poetry.group.dev.dependencies]
-langchain-core = { path = "../../core", develop = true }
+gigachain-core = { path = "../../core", develop = true }
 
 [tool.ruff.lint]
 select = [

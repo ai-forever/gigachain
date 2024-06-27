@@ -9,20 +9,20 @@ readme = "README.md"
 
 [tool.poetry.dependencies]
 python = ">=3.8.1,<4.0"
-langchain = "^0.1"
+gigachain = "^0.1"
 openai = "<2"
 tiktoken = "^0.5.1"
 rag-lantern = {path = "packages/rag-lantern", develop = true}
 
 [tool.poetry.group.dev.dependencies]
-langchain-cli = ">=0.0.15"
+gigachain-cli = ">=0.0.15"
 [tool.poetry.group.dev.dependencies.python-dotenv]
 extras = [
     "cli",
 ]
 version = "^1.0.0"
 
-[tool.langserve]
+[tool.gigaserve]
 export_module = "rag_lantern.chain"
 export_attr = "chain"
 

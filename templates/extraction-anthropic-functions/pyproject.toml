@@ -9,15 +9,15 @@ readme = "README.md"
 
 [tool.poetry.dependencies]
 python = ">=3.8.1,<4.0"
-langchain = "^0.1"
+gigachain = "^0.1"
 anthropic = ">=0.5.0"
 langchainhub = ">=0.1.13"
-langchain-experimental = ">=0.0.54"
+gigachain-experimental = ">=0.0.54"
 
 [tool.poetry.group.dev.dependencies]
-langchain-cli = ">=0.0.21"
+gigachain-cli = ">=0.0.21"
 
-[tool.langserve]
+[tool.gigaserve]
 export_module = "extraction_anthropic_functions"
 export_attr = "chain"
 
