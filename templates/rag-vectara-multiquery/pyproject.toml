@@ -1,6 +1,6 @@
 [tool.poetry]
 name = "rag-vectara-multiquery"
-version = "0.1.0"
+version = "0.2.0"
 description = "RAG using vectara with multiquery retriever"
 authors = [
     "Ofer Mendelevitch <ofer@vectara.com>",
@@ -9,15 +9,19 @@ readme = "README.md"
 
 [tool.poetry.dependencies]
 python = ">=3.8.1,<4.0"
-gigachain = ">=0.0.325"
+langchain = "^0.1"
 openai = "<2"
 tiktoken = "^0.5.1"
 
 [tool.poetry.group.dev.dependencies]
-gigachain-cli = ">=0.0.21"
+langchain-cli = ">=0.0.21"
+[tool.poetry.group.dev.dependencies.python-dotenv]
+extras = [
+    "cli",
+]
 version = "^1.0.0"
 
-[tool.gigaserve]
+[tool.langserve]
 export_module = "rag_vectara_multiquery"
 export_attr = "chain"
 
