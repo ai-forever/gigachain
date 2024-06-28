@@ -1,34 +1,35 @@
-# Build a Simple LLM Application
+# Разработка простого LLM-приложения
 
-In this quickstart we'll show you how to build a simple LLM application. This application will translate text from English into another language. This is a relatively simple LLM application - it's just a single LLM call plus some prompting. Still, this is a great way to get started with LangChain - a lot of features can be built with just some prompting and an LLM call!
+В этом разделе показан пример разрбаотки LLM-приложения, которое переводит текст с английского языка на другой язык.
+Итоговое приложение включает всего один вызов LLM плюс некоторую работу с промптами.
+Это довольно простое приложение, но оно показывает, что множество функций можно реализовать только с помощью промптов и вызова LLM!
 
-## Concepts
+## Основные понятия
 
-Concepts we will cover are:
+В разеделе расмотрены следующие основные понятия:
 
-- Using [language models](/docs/concepts/#chat-models)
+- использование [языковых моделей](/docs/concepts/#chat-models);
 
-- Using [PromptTemplates](/docs/concepts/#prompt-templates) and [OutputParsers](/docs/concepts/#output-parsers)
+- использование [шаблонов промптов](/docs/concepts/#prompt-templates) и [парсеров вывода](/docs/concepts/#output-parsers);
 
-- [Chaining](/docs/concepts/#langchain-expression-language) a PromptTemplate + LLM + OutputParser using LangChain
+- [объединение в цепочку](/docs/concepts/#langchain-expression-language) шаблона промптов + LLM + парсера вывода с помощью GigaChain
 
-- Debugging and tracing your application using [LangSmith](/docs/concepts/#langsmith)
+- Развертывание вашего приложения с [LangServe](/docs/concepts/#langserve).
+<!--
+- Отладка и трассировка вашего приложения с помощью [LangSmith](/docs/concepts/#langsmith)
+-->
 
-- Deploying your application with [LangServe](/docs/concepts/#langserve)
+## Подготовка к разработке
 
-That's a fair amount to cover! Let's dive in.
+### Jupyter-блокноты
 
-## Setup
+Это руководство, как и большинство других в документации, использует [Jupyter-блокноты](https://jupyter.org/). Они отлично подходят для изучения работы с LLM-системами, так как предоставляют интерактивную среду для работы с руководствами и позволяют работать с непредвиденными ситуациями: недоступностью API, нетипичным выводом и другими.
 
-### Jupyter Notebook
+Подробнее об установке jupyter — в [официальной документации](https://jupyter.org/install).
 
-This guide (and most of the other guides in the documentation) uses [Jupyter notebooks](https://jupyter.org/) and assumes the reader is as well. Jupyter notebooks are perfect for learning how to work with LLM systems because oftentimes things can go wrong (unexpected output, API down, etc) and going through guides in an interactive environment is a great way to better understand them.
+### Установка
 
-This and other tutorials are perhaps most conveniently run in a Jupyter notebook. See [here](https://jupyter.org/install) for instructions on how to install.
-
-### Installation
-
-To install LangChain run:
+Для установки GigaChain выполните команды:
 
 ```{=mdx}
 import Tabs from '@theme/Tabs';
@@ -43,26 +44,26 @@ import CodeBlock from "@theme/CodeBlock";
     <CodeBlock language="bash">conda install langchain -c conda-forge</CodeBlock>
   </TabItem>
 </Tabs>
-
 ```
 
 
-For more details, see our [Installation guide](/docs/how_to/installation).
+Подробнее об установке — в разделе [Установка](https://developers.sber.ru/docs/ru/gigachain/get-started/installation).
 
+<!--
 ### LangSmith
 
-Many of the applications you build with LangChain will contain multiple steps with multiple invocations of LLM calls.
-As these applications get more and more complex, it becomes crucial to be able to inspect what exactly is going on inside your chain or agent.
-The best way to do this is with [LangSmith](https://smith.langchain.com).
+Многие приложения, которые вы создаете с помощью LangChain, будут содержать несколько шагов с многократными вызовами LLM.
+По мере усложнения этих приложений становится важно иметь возможность инспектировать, что именно происходит внутри вашей цепочки или агента.
+Лучший способ сделать это — с помощью [LangSmith](https://smith.langchain.com).
 
-After you sign up at the link above, make sure to set your environment variables to start logging traces:
+После регистрации по ссылке выше, убедитесь, что вы установили переменные среды для начала ведения журнала трассировок:
 
 ```shell
 export LANGCHAIN_TRACING_V2="true"
 export LANGCHAIN_API_KEY="..."
 ```
 
-Or, if in a notebook, you can set them with:
+Или, если вы работаете в ноутбуке, вы можете установить их с помощью:
 
 ```python
 import getpass
@@ -71,14 +72,16 @@ import os
 os.environ["LANGCHAIN_TRACING_V2"] = "true"
 os.environ["LANGCHAIN_API_KEY"] = getpass.getpass()
 ```
-## Detailed walkthrough
+-->
 
-In this guide we will build an application to translate user input from one language to another.
+## Разбор примера
 
+В разделе приводится пример разработки приложения для перевода пользовательского ввода с одного языка на другой.
 
-## Using Language Models
+## Использование языковых моделей
 
-First up, let's learn how to use a language model by itself. LangChain supports many different language models that you can use interchangably - select the one you want to use below!
+В первую очередь нужно подключить языковую модель.
+GigaChain поддерживает различные языковые модели, которые могут заменять друг друга.
 
 ```{=mdx}
 import ChatModelTabs from "@theme/ChatModelTabs";
@@ -95,7 +98,9 @@ from langchain_openai import ChatOpenAI
 model = ChatOpenAI(model="gpt-4")
 ```
 
-Let's first use the model directly. `ChatModel`s are instances of LangChain "Runnables", which means they expose a standard interface for interacting with them. To just simply call the model, we can pass in a list of messages to the `.invoke` method.
+Сначала попробуйте использовать модель напрямую.
+`ChatModel` — это экземпляры Runnable-интерфейса GigaChain, что означает, что для работы они они предоставляют стандартный интерфейс.
+Для простого вызова модели, вы можете передать список сообщений в метод `.invoke`.
 
 ```python
 from langchain_core.messages import HumanMessage, SystemMessage
@@ -108,7 +113,6 @@ messages = [
 model.invoke(messages)
 ```
 
-
 <CodeOutputBlock lang="python">
 
 ```python
@@ -117,12 +121,18 @@ model.invoke(messages)
 
 </CodeOutputBlock>
 
-If we've enable LangSmith, we can see that this run is logged to LangSmith, and can see the [LangSmith trace](https://smith.langchain.com/public/88baa0b2-7c1a-4d09-ba30-a47985dde2ea/r)
-## OutputParsers
+<!--
+Если мы включили LangSmith, мы можем увидеть, что этот запуск зарегистрирован в LangSmith, и просмотреть [трассировку LangSmith](https://smith.langchain.com/public/88baa0b2-7c1a-4d09-ba30-a47985dde2ea/r).
+-->
 
-Notice that the response from the model is an `AIMessage`. This contains a string response along with other metadata about the response. Oftentimes we may just want to work with the string response. We can parse out just this response by using a simple output parser.
+## Парсеры вывода OutputParsers
 
-We first import the simple output parser.
+Ответ от модели — это экземпляр класса `AIMessage`.
+Такое сообщение содержит строковый ответ вместе с дополнительной информацией об ответе.
+Часто для работы нужен только строковый ответ.
+Для его получения вы можете использовать парсер вывода.
+
+Импортируйте простой парсер вывода.
 
 ```python
 from langchain_core.output_parsers import StrOutputParser
@@ -130,17 +140,16 @@ from langchain_core.output_parsers import StrOutputParser
 parser = StrOutputParser()
 ```
 
-One way to use it is to use it by itself. For example, we could save the result of the language model call and then pass it to the parser.
+Парсер можно использовать отдельно от других компонентов приложения.
+Например, вы можете сохранить результат вызова языковой модели и затем передать его в парсер.
 
 ```python
 result = model.invoke(messages)
 ```
 
-
 ```python
 parser.invoke(result)
 ```
-
 
 <CodeOutputBlock lang="python">
 
@@ -150,19 +159,20 @@ parser.invoke(result)
 
 </CodeOutputBlock>
 
-More commonly, we can "chain" the model with this output parser. This means this output parser will get called everytime in this chain. This chain takes on the input type of the language model (string or list of message) and returns the output type of the output parser (string).
+Тем не менее, гораздо чаще парсер вывода объединяется в цепочку с моделью.
+В таком случае он будет вызываться каждый раз при обращении к цепочке.
+Полученная цепочка будет принимать на вход тип данных языковой модели (строку или список сообщений) и возвращать тип данных парсера вывода (строка).
 
-We can easily create the chain using the `|` operator. The `|` operator is used in LangChain to combine two elements together.
+Для создания цепочки, используйте оператор `|`.
+GigaChain использует этот оператор для объединения двух элементов вместе.
 
 ```python
 chain = model | parser
 ```
 
-
 ```python
 chain.invoke(messages)
 ```
-
 
 <CodeOutputBlock lang="python">
 
@@ -172,29 +182,38 @@ chain.invoke(messages)
 
 </CodeOutputBlock>
 
-If we now look at LangSmith, we can see that the chain has two steps: first the language model is called, then the result of that is passed to the output parser. We can see the [LangSmith trace]( https://smith.langchain.com/public/f1bdf656-2739-42f7-ac7f-0f1dd712322f/r)
-## Prompt Templates
+<!--
+Если мы теперь посмотрим на LangSmith, мы увидим, что цепочка состоит из двух шагов: сначала вызывается языковая модель, затем результат передается парсеру вывода. Мы можем увидеть [трассировку LangSmith](https://smith.langchain.com/public/f1bdf656-2739-42f7-ac7f-0f1dd712322f/r).
+-->
 
-Right now we are passing a list of messages directly into the language model. Where does this list of messages come from? Usually it constructed from a combination of user input and application logic. This application logic usually takes the raw user input and transforms it into a list of messages ready to pass to the language model. Common transformations include adding a system message or formatting a template with the user input.
+## Шаблоны промптов
 
-PromptTemplates are a concept in LangChain designed to assist with this transformation. They take in raw user input and return data (a prompt) that is ready to pass into a language model. 
+На данный момент в примере список сообщений передается напрямую в языковую модель.
+Как правило список сообщений формируется из комбинации ввода пользователя и логики приложения.
+Эта логика обычно принимает необработанный ввод и преобразует его в список сообщений, готовых для передачи в языковую модель.
+Типичные преобразования включают добавление системного сообщения или изменение шаблона с учетом ввода пользователя.
 
-Let's create a PromptTemplate here. It will take in two user variables:
+Шаблоны промптов (PromptTemplates) — это конструкции GigaChain, которые принимают необработанный ввод пользователя и возвращают данные (промпт), готовые для передачи в языковую модель.
 
-- `language`: The language to translate text into
-- `text`: The text to translate
+Создайте шаблон промпта, который будет принимать две пользовательские переменные:
+
+- `language` — язык, на который нужно перевести текст;
+- `text` — текст для перевода.
+
+Для этого импортируйте `ChatPromptTemplate`:
 
 ```python
 from langchain_core.prompts import ChatPromptTemplate
 ```
 
-First, let's create a string that we will format to be the system message:
+Создайте строку, которая будет оформлена как системное сообщение:
 
 ```python
 system_template = "Translate the following into {language}:"
 ```
 
-Next, we can create the PromptTemplate. This will be a combination of the `system_template` as well as a simpler template for where the put the text
+Теперь вы можете создать шаблон промпта.
+Он будет состоять из комбинации `system_template` и шаблона для ввода текста.
 
 ```python
 prompt_template = ChatPromptTemplate.from_messages(
@@ -202,14 +221,14 @@ prompt_template = ChatPromptTemplate.from_messages(
 )
 ```
 
-The input to this prompt template is a dictionary. We can play around with this prompt template by itself to see what it does by itself
+Входными данными для этого шаблона является словарь.
+Вы можем поэкспериментировать с этим шаблоном, чтобы увидеть, что он делает сам по себе.
 
 ```python
 result = prompt_template.invoke({"language": "italian", "text": "hi"})
 
 result
 ```
-
 
 <CodeOutputBlock lang="python">
 
@@ -219,12 +238,12 @@ result
 
 </CodeOutputBlock>
 
-We can see that it returns a `ChatPromptValue` that consists of two messages. If we want to access the messages directly we do:
+Шаблон возвращает объект `ChatPromptValue`, который состоит из двух сообщений.
+Вы можете получить доступ к напрямую сообщениямм с помощью метода `.to_messages()`:
 
 ```python
 result.to_messages()
 ```
-
 
 <CodeOutputBlock lang="python">
 
@@ -235,17 +254,15 @@ result.to_messages()
 
 </CodeOutputBlock>
 
-We can now combine this with the model and the output parser from above. This will chain all three components together.
+Теперь объедините все три компонента вместе: шаблон, модель и парсер вывода.
 
 ```python
 chain = prompt_template | model | parser
 ```
 
-
 ```python
 chain.invoke({"language": "italian", "text": "hi"})
 ```
-
 
 <CodeOutputBlock lang="python">
 
@@ -255,26 +272,32 @@ chain.invoke({"language": "italian", "text": "hi"})
 
 </CodeOutputBlock>
 
-If we take a look at the LangSmith trace, we can see all three components show up in the [LangSmith trace](https://smith.langchain.com/public/bc49bec0-6b13-4726-967f-dbd3448b786d/r)
-## Serving with LangServe
+<!--
+Если мы посмотрим на трассировку LangSmith, мы увидим все три компонента в [трассировке LangSmith](https://smith.langchain.com/public/bc49bec0-6b13-4726-967f-dbd3448b786d/r).
+-->
 
-Now that we've built an application, we need to serve it. That's where LangServe comes in.
-LangServe helps developers deploy LangChain chains as a REST API. You do not need to use LangServe to use LangChain, but in this guide we'll show how you can deploy your app with LangServe.
+## Развертывание с LangServe
 
-While the first part of this guide was intended to be run in a Jupyter Notebook or script, we will now move out of that. We will be creating a Python file and then interacting with it from the command line.
+GigaServe помогает развертывать цепочки GigaChain в виде REST API.
+Использовать GigaServe для работы с GigaChain необязательно.
+Тем не менее ниже приводится пример, как вы можете развернуть приложение с помощью GigaServe.
 
-Install with:
+Пример использует Python-файл, работа с которым вполняется с помощью командной строки.
+
+Установка GigaServe:
 ```bash
 pip install "langserve[all]"
 ```
 
-### Server
+### Сервер
 
-To create a server for our application we'll make a `serve.py` file. This will contain our logic for serving our application. It consists of three things:
-1. The definition of our chain that we just built above
-2. Our FastAPI app
-3. A definition of a route from which to serve the chain, which is done with `langserve.add_routes`
+Для создания сервера для приложения, создайте файл `serve.py`.
+Файл будет содеражать логику для развертывания приложения.
+Файл состоит из трех частей:
 
+1. Определение цепочки, которую вы создали выше.
+2. Приложение FastAPI.
+3. Определение пути для доступа к цепочкие с помощью `langserve.add_routes`.
 
 ```python
 #!/usr/bin/env python
@@ -286,31 +309,30 @@ from langchain_core.output_parsers import StrOutputParser
 from langchain_openai import ChatOpenAI
 from langserve import add_routes
 
-# 1. Create prompt template
+# 1. Создание шаблона промпта
 system_template = "Translate the following into {language}:"
 prompt_template = ChatPromptTemplate.from_messages([
     ('system', system_template),
     ('user', '{text}')
 ])
 
-# 2. Create model
+# 2. Создание модели
 model = ChatOpenAI()
 
-# 3. Create parser
+# 3. Создание парсера
 parser = StrOutputParser()
 
-# 4. Create chain
+# 4. Создание цепочки
 chain = prompt_template | model | parser
 
-
-# 4. App definition
+# 4. Определение приложения
 app = FastAPI(
-  title="LangChain Server",
+  title="GigaChain Server",
   version="1.0",
-  description="A simple API server using LangChain's Runnable interfaces",
+  description="Простой сервер API, использующий Runnable-интерфейсы GigaChain.",
 )
 
-# 5. Adding chain route
+# 5. Добавление пути цепочки
 
 add_routes(
     app,
@@ -324,21 +346,22 @@ if __name__ == "__main__":
     uvicorn.run(app, host="localhost", port=8000)
 ```
 
-And that's it! If we execute this file:
+Запустите файл:
 ```bash
 python serve.py
 ```
-we should see our chain being served at [http://localhost:8000](http://localhost:8000).
+Вы должны увидеть, что ваша цепочка доступна по адресу [http://localhost:8000](http://localhost:8000).
 
-### Playground
+### Песочница
 
-Every LangServe service comes with a simple [built-in UI](https://github.com/langchain-ai/langserve/blob/main/README.md#playground) for configuring and invoking the application with streaming output and visibility into intermediate steps.
-Head to [http://localhost:8000/chain/playground/](http://localhost:8000/chain/playground/) to try it out! Pass in the same inputs as before - `{"language": "italian", "text": "hi"}` - and it should respond same as before.
+Приложения GigaServe предоставляют доступ к простому [пользовательскому интерфейсу](https://github.com/langchain-ai/langserve/blob/main/README.md#playground) для настройки и вызова приложения с потоковым выводом и отображением промежуточных шагов.
+Вы можете попробовать его по адресу [http://localhost:8000/chain/playground/](http://localhost:8000/chain/playground/).
+Введите такие же входные данные, как и раньше — `{"language": "italian", "text": "hi"}` — приложение должно ответить так же, как и раньше.
 
-### Client
+### Клиент
 
-Now let's set up a client for programmatically interacting with our service. We can easily do this with the `[langserve.RemoteRunnable](/docs/langserve/#client)`.
-Using this, we can interact with the served chain as if it were running client-side.
+Для настройки клиентской части используйте `[langserve.RemoteRunnable](/docs/langserve/#client)`.
+Так вы сможете взаимодействовать с доступной цепочкой так, как если бы она выполнялась на стороне клиента.
 
 ```python
 from langserve import RemoteRunnable
@@ -346,7 +369,6 @@ from langserve import RemoteRunnable
 remote_chain = RemoteRunnable("http://localhost:8000/chain/")
 remote_chain.invoke({"language": "italian", "text": "hi"})
 ```
-
 
 <CodeOutputBlock lang="python">
 
@@ -356,15 +378,12 @@ remote_chain.invoke({"language": "italian", "text": "hi"})
 
 </CodeOutputBlock>
 
-To learn more about the many other features of LangServe [head here](/docs/langserve).
-## Conclusion
+Подробнее — в [документации GigaServe](/docs/langserve).
 
-That's it! In this tutorial we've walked through creating our first simple LLM application. We've learned how to work with language models, how to parse their outputs, how to create a prompt template, how to get great observability into chains you create with LangSmith, and how to deploy them with LangServe.
+## Смотрите также
 
-This just scratches the surface of what you will want to learn to become a proficient AI Engineer. Luckily - we've got a lot of other resources!
+Чтобы глубже погрузиться в разработку приложений с помощью GigaChain, ознакомьтесь с разделами:
 
-For more in-depth tutorials, check out out [Tutorials](/docs/tutorials) section.
-
-If you have specific questions on how to accomplish particular tasks, see our [How-To Guides](/docs/how_to) section.
-
-For reading up on the core concepts of LangChain, we've got detailed [Conceptual Guides](/docs/concepts)
+- [Обучающие материалы](/docs/tutorials);
+- [Руководства](/docs/how_to);
+- [Основные понятия](/docs/concepts).

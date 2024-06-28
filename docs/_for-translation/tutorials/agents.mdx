@@ -1,33 +1,32 @@
-# Build an Agent
+# Создание агента
 
-By themselves, language models can't take actions - they just output text.
-A big use case for LangChain is creating **agents**.
-Agents are systems that use an LLM as a reasoning enginer to determine which actions to take and what the inputs to those actions should be.
-The results of those actions can then be fed back into the agent and it determine whether more actions are needed, or whether it is okay to finish.
+Сами по себе языковые модели не могут выполнять действия — они просто выводят текст.
+Одним из основных вариантов использования LangChain является создание **агентов**.
+Агенты — это системы, которые используют LLM в качестве механизма рассуждений, чтобы определить, какие действия предпринять и какие входные данные для этих действий должны быть использованы.
+Результаты этих действий затем могут быть переданы обратно агенту, чтобы он определил, нужны ли дополнительные действия или можно завершить выполнение.
 
-In this tutorial we will build an agent that can interact with multiple different tools: one being a local database, the other being a search engine. You will be able to ask this agent questions, watch it call tools, and have conversations with it.
+В этом руководстве мы создадим агента, который может взаимодействовать с несколькими различными инструментами: одним из них будет локальная база данных, другим — поисковая система. Вы сможете задавать этому агенту вопросы, наблюдать, как он вызывает инструменты, и вести с ним беседы.
 
+## Концепции
 
-## Concepts
+Концепции, которые мы рассмотрим:
+- Использование [языковых моделей](/docs/concepts/#chat-models), в частности их способности к вызову инструментов
+- Создание [Ретривера](/docs/concepts/#retrievers) для предоставления агенту конкретной информации
+- Использование поискового [Инструмента](/docs/concepts/#tools) для поиска информации в интернете
+- Использование [Агентов LangGraph](/docs/concepts/#agents), которые используют LLM для обдумывания того, что делать, а затем выполняют это
+- Отладка и трассировка вашего приложения с помощью [LangSmith](/docs/concepts/#langsmith)
 
-Concepts we will cover are:
-- Using [language models](/docs/concepts/#chat-models), in particular their tool calling ability
-- Creating a [Retriever](/docs/concepts/#retrievers) to expose specific information to our agent
-- Using a Search [Tool](/docs/concepts/#tools) to look up things online
-- Using [LangGraph Agents](/docs/concepts/#agents) which use an LLM to think about what to do and then execute upon that
-- Debugging and tracing your application using [LangSmith](/docs/concepts/#langsmith)
+## Подготовка к разработке
 
-## Setup
+### Jupyter-блокноты
 
-### Jupyter Notebook
+Это руководство, как и большинство других в документации, использует [Jupyter-блокноты](https://jupyter.org/). Они отлично подходят для изучения работы с LLM-системами, так как предоставляют интерактивную среду для работы с руководствами и позволяют работать с непредвиденными ситуациями: недоступностью API, нетипичным выводом и другими.
 
-This guide (and most of the other guides in the documentation) uses [Jupyter notebooks](https://jupyter.org/) and assumes the reader is as well. Jupyter notebooks are perfect for learning how to work with LLM systems because oftentimes things can go wrong (unexpected output, API down, etc) and going through guides in an interactive environment is a great way to better understand them.
+Подробнее об установке jupyter -- в [официальной документации](https://jupyter.org/install).
 
-This and other tutorials are perhaps most conveniently run in a Jupyter notebook. See [here](https://jupyter.org/install) for instructions on how to install.
+### Установка
 
-### Installation
-
-To install LangChain run:
+Для установки GigaChain выполните команды:
 
 ```{=mdx}
 import Tabs from '@theme/Tabs';
@@ -42,26 +41,26 @@ import CodeBlock from "@theme/CodeBlock";
     <CodeBlock language="bash">conda install langchain -c conda-forge</CodeBlock>
   </TabItem>
 </Tabs>
-
 ```
 
 
-For more details, see our [Installation guide](/docs/how_to/installation).
+Подробнее об установке -- в разделе [Установка](https://developers.sber.ru/docs/ru/gigachain/get-started/installation).
 
+<!--
 ### LangSmith
 
-Many of the applications you build with LangChain will contain multiple steps with multiple invocations of LLM calls.
-As these applications get more and more complex, it becomes crucial to be able to inspect what exactly is going on inside your chain or agent.
-The best way to do this is with [LangSmith](https://smith.langchain.com).
+Многие приложения, которые вы создаете с помощью LangChain, будут содержать несколько шагов с многократными вызовами LLM.
+По мере усложнения этих приложений становится важно иметь возможность инспектировать, что именно происходит внутри вашей цепочки или агента.
+Лучший способ сделать это — с помощью [LangSmith](https://smith.langchain.com).
 
-After you sign up at the link above, make sure to set your environment variables to start logging traces:
+После регистрации по ссылке выше, убедитесь, что вы установили переменные среды для начала ведения журнала трассировок:
 
 ```shell
 export LANGCHAIN_TRACING_V2="true"
 export LANGCHAIN_API_KEY="..."
 ```
 
-Or, if in a notebook, you can set them with:
+Или, если вы работаете в ноутбуке, вы можете установить их с помощью:
 
 ```python
 import getpass
@@ -70,16 +69,18 @@ import os
 os.environ["LANGCHAIN_TRACING_V2"] = "true"
 os.environ["LANGCHAIN_API_KEY"] = getpass.getpass()
 ```
-## Define tools
+-->
 
-We first need to create the tools we want to use. We will use two tools: [Tavily](/docs/integrations/tools/tavily_search) (to search online) and then a retriever over a local index we will create
+## Определение инструментов
+
+Сначала нам нужно создать инструменты, которые мы будем использовать. Мы будем использовать два инструмента: [Tavily](/docs/integrations/tools/tavily_search) (для поиска в интернете) и ретривер по локальному индексу, который мы создадим.
 
 ### [Tavily](/docs/integrations/tools/tavily_search)
 
-We have a built-in tool in LangChain to easily use Tavily search engine as tool.
-Note that this requires an API key - they have a free tier, but if you don't have one or don't want to create one, you can always ignore this step.
+В LangChain есть встроенный инструмент для простого использования поисковой системы Tavily в качестве инструмента.
+Обратите внимание, что для этого требуется API-ключ — у них есть бесплатный уровень, но если у вас его нет или вы не хотите его создавать, вы всегда можете пропустить этот шаг.
 
-Once you create your API key, you will need to export that as:
+После создания API-ключа вам нужно будет экспортировать его следующим образом:
 
 ```bash
 export TAVILY_API_KEY="..."
@@ -89,16 +90,13 @@ export TAVILY_API_KEY="..."
 from langchain_community.tools.tavily_search import TavilySearchResults
 ```
 
-
 ```python
 search = TavilySearchResults(max_results=2)
 ```
 
-
 ```python
 search.invoke("what is the weather in SF")
 ```
-
 
 <CodeOutputBlock lang="python">
 
@@ -111,9 +109,9 @@ search.invoke("what is the weather in SF")
 
 </CodeOutputBlock>
 
-### Retriever
+### Ретривер
 
-We will also create a retriever over some data of our own. For a deeper explanation of each step here, see [this tutorial](/docs/tutorials/rag).
+Мы также создадим ретривер для некоторых наших данных. Для более подробного объяснения каждого шага см. [это руководство](/docs/tutorials/rag).
 
 ```python
 from langchain_community.document_loaders import WebBaseLoader
@@ -130,11 +128,9 @@ vector = FAISS.from_documents(documents, OpenAIEmbeddings())
 retriever = vector.as_retriever()
 ```
 
-
 ```python
 retriever.invoke("how to upload a dataset")[0]
 ```
-
 
 <CodeOutputBlock lang="python">
 
@@ -144,12 +140,11 @@ retriever.invoke("how to upload a dataset")[0]
 
 </CodeOutputBlock>
 
-Now that we have populated our index that we will do doing retrieval over, we can easily turn it into a tool (the format needed for an agent to properly use it)
+Теперь, когда мы заполнили наш индекс, по которому будем выполнять поиск, мы можем легко превратить его в инструмент (формат, необходимый для корректного использования агентом)
 
 ```python
 from langchain.tools.retriever import create_retriever_tool
 ```
-
 
 ```python
 retriever_tool = create_retriever_tool(
@@ -159,17 +154,17 @@ retriever_tool = create_retriever_tool(
 )
 ```
 
-### Tools
+### Инструменты
 
-Now that we have created both, we can create a list of tools that we will use downstream.
+Теперь, когда мы создали оба инструмента, мы можем создать список инструментов, которые будем использовать далее.
 
 ```python
 tools = [search, retriever_tool]
 ```
 
-## Using Language Models
+## Использование языковых моделей
 
-Next, let's learn how to use a language model by to call tools. LangChain supports many different language models that you can use interchangably - select the one you want to use below!
+Теперь давайте узнаем, как использовать языковую модель для вызова инструментов. LangChain поддерживает множество различных языковых моделей, которые можно использовать взаимозаменяемо — выберите ту, которую хотите использовать ниже!
 
 ```{=mdx}
 import ChatModelTabs from "@theme/ChatModelTabs";
@@ -186,7 +181,7 @@ from langchain_openai import ChatOpenAI
 model = ChatOpenAI(model="gpt-4")
 ```
 
-You can call the language model by passing in a list of messages. By default, the response is a `content` string.
+Вы можете вызвать языковую модель, передав список сообщений. По умолчанию ответом будет строка `content`.
 
 ```python
 from langchain_core.messages import HumanMessage
@@ -194,7 +189,6 @@ from langchain_core.messages import HumanMessage
 response = model.invoke([HumanMessage(content="hi!")])
 response.content
 ```
-
 
 <CodeOutputBlock lang="python">
 
@@ -204,13 +198,13 @@ response.content
 
 </CodeOutputBlock>
 
-We can now see what it is like to enable this model to do tool calling. In order to enable that we use `.bind_tools` to give the language model knowledge of these tools
+Теперь мы можем увидеть, как включить возможность вызова инструментов для этой модели. Чтобы включить это, мы используем `.bind_tools`, чтобы дать языковой модели знание этих инструментов.
 
 ```python
 model_with_tools = model.bind_tools(tools)
 ```
 
-We can now call the model. Let's first call it with a normal message, and see how it responds. We can look at both the `content` field as well as the `tool_calls` field.
+Теперь мы можем вызвать модель. Сначала вызовем её с обычным сообщением и посмотрим, как она ответит. Мы можем посмотреть как на поле `content`, так и на поле `tool_calls`.
 
 ```python
 response = model_with_tools.invoke([HumanMessage(content="Hi!")])
@@ -218,7 +212,6 @@ response = model_with_tools.invoke([HumanMessage(content="Hi!")])
 print(f"ContentString: {response.content}")
 print(f"ToolCalls: {response.tool_calls}")
 ```
-
 
 <CodeOutputBlock lang="python">
 
@@ -229,7 +222,7 @@ print(f"ToolCalls: {response.tool_calls}")
 
 </CodeOutputBlock>
 
-Now, let's try calling it with some input that would expect a tool to be called.
+Теперь давайте попробуем вызвать её с некоторым вводом, который предполагает вызов инструмента.
 
 ```python
 response = model_with_tools.invoke([HumanMessage(content="What's the weather in SF?")])
@@ -237,7 +230,6 @@ response = model_with_tools.invoke([HumanMessage(content="What's the weather in 
 print(f"ContentString: {response.content}")
 print(f"ToolCalls: {response.tool_calls}")
 ```
-
 
 <CodeOutputBlock lang="python">
 
@@ -248,16 +240,17 @@ print(f"ToolCalls: {response.tool_calls}")
 
 </CodeOutputBlock>
 
-We can see that there's now no content, but there is a tool call! It wants us to call the Tavily Search tool.
+Мы видим, что теперь нет контента, но есть вызов инструмента! Она хочет, чтобы мы вызвали инструмент Tavily Search.
 
-This isn't calling that tool yet - it's just telling us to. In order to actually calll it, we'll want to create our agent.
-## Create the agent
+Это еще не вызов этого инструмента — она просто говорит нам об этом. Чтобы действительно вызвать его, нам нужно создать нашего агента.
 
-Now that we have defined the tools and the LLM, we can create the agent. We will be using [LangGraph](/docs/concepts/#langgraph) to construct the agent. 
-Currently we are using a high level interface to construct the agent, but the nice thing about LangGraph is that this high-level interface is backed by a low-level, highly controllable API in case you want to modify the agent logic.
-Now, we can initalize the agent with the LLM and the tools.
+## Создание агента
 
-Note that we are passing in the `model`, not `model_with_tools`. That is because `create_tool_calling_executor` will call `.bind_tools` for us under the hood.
+Теперь, когда мы определили инструменты и LLM, мы можем создать агента. Мы будем использовать [LangGraph](/docs/concepts/#langgraph) для создания агента.
+В настоящее время мы используем высокоуровневый интерфейс для создания агента, но хорошей стороной LangGraph является то, что этот высокоуровневый интерфейс поддерживается низкоуровневым, высококонтролируемым API, если вы хотите изменить логику агента.
+Теперь мы можем инициализировать агента с помощью LLM и инструментов.
+
+Обратите внимание, что мы передаем `model`, а не `model_with_tools`. Это потому, что `create_tool_calling_executor` вызовет `.bind_tools` за нас под капотом.
 
 ```python
 from langgraph.prebuilt import chat_agent_executor
@@ -265,18 +258,17 @@ from langgraph.prebuilt import chat_agent_executor
 agent_executor = chat_agent_executor.create_tool_calling_executor(model, tools)
 ```
 
-## Run the agent
+## Запуск агента
 
-We can now run the agent on a few queries! Note that for now, these are all **stateless** queries (it won't remember previous interactions). Note that the agent will return the **final** state at the end of the interaction (which includes any inputs, we will see later on how to get only the outputs).
+Теперь мы можем запустить агента на нескольких запросах! Обратите внимание, что пока все эти запросы **бездефолтные** (он не будет запоминать предыдущие взаимодействия). Обратите внимание, что агент вернет **окончательное** состояние в конце взаимодействия (включающее все входные данные, позже мы увидим, как получить только выходные данные).
 
-First up, let's how it responds when there's no need to call a tool:
+Сначала посмотрим, как он отвечает, когда нет необходимости вызывать инструмент:
 
 ```python
 response = agent_executor.invoke({"messages": [HumanMessage(content="hi!")]})
 
 response["messages"]
 ```
-
 
 <CodeOutputBlock lang="python">
 
@@ -287,9 +279,9 @@ response["messages"]
 
 </CodeOutputBlock>
 
-In order to see exactly what is happening under the hood (and to make sure it's not calling a tool) we can take a look at the [LangSmith trace](https://smith.langchain.com/public/28311faa-e135-4d6a-ab6b-caecf6482aaa/r)
+Чтобы точно понять, что происходит под капотом (и убедиться, что инструмент не вызывается), мы можем взглянуть на [трассировку LangSmith](https://smith.langchain.com/public/28311faa-e135-4d6a-ab6b-caecf6482aaa/r).
 
-Let's now try it out on an example where it should be invoking the retriever
+Теперь попробуем пример, где он должен вызвать ретривер.
 
 ```python
 response = agent_executor.invoke(
@@ -297,7 +289,6 @@ response = agent_executor.invoke(
 )
 response["messages"]
 ```
-
 
 <CodeOutputBlock lang="python">
 
@@ -310,11 +301,11 @@ response["messages"]
 
 </CodeOutputBlock>
 
-Let's take a look at the [LangSmith trace](https://smith.langchain.com/public/853f62d0-3421-4dba-b30a-7277ce2bdcdf/r) to see what is going on under the hood.
+Посмотрим на [трассировку LangSmith](https://smith.langchain.com/public/853f62d0-3421-4dba-b30a-7277ce2bdcdf/r), чтобы увидеть, что происходит под капотом.
 
-Note that the state we get back at the end also contains the tool call and the tool response message.
+Обратите внимание, что состояние, которое мы получаем в конце, также содержит вызов инструмента и сообщение о результате вызова инструмента.
 
-Now let's try one where it needs to call the search tool:
+Теперь попробуем пример, где необходимо вызвать инструмент поиска:
 
 ```python
 response = agent_executor.invoke(
@@ -323,22 +314,24 @@ response = agent_executor.invoke(
 response["messages"]
 ```
 
-
 <CodeOutputBlock lang="python">
 
 ```python
     [HumanMessage(content='whats the weather in sf?', id='e6b716e6-da57-41de-a227-fee281fda588'),
- AIMessage(content='', additional_kwargs={'tool_calls': [{'id': 'call_TGDKm0saxuGKJD5OYOXWRvLe', 'function': {'arguments': '{\n  "query": "current weather in San Francisco"\n}', 'name': 'tavily_search_results_json'}, 'type': 'function'}]}, response_metadata={'token_usage': {'completion_tokens': 23, 'prompt_tokens': 134, 'total_tokens': 157}, 'model_name': 'gpt-4', 'system_fingerprint': None, 'finish_reason': 'tool_calls', 'logprobs': None}, id='run-fd7d5854-2eab-4fca-ad9e-b3de8d587614-0', tool_calls=[{'name': 'tavily_search_results_json', 'args': {'query': 'current weather in San Francisco'}, 'id': 'call_TGDKm0saxuGKJD5OYOXWRvLe'}]),
+ AIMessage(content='', additional_kwargs={'tool_calls': [{'id
+
+': 'call_TGDKm0saxuGKJD5OYOXWRvLe', 'function': {'arguments': '{\n  "query": "current weather in San Francisco"\n}', 'name': 'tavily_search_results_json'}, 'type': 'function'}]}, response_metadata={'token_usage': {'completion_tokens': 23, 'prompt_tokens': 134, 'total_tokens': 157}, 'model_name': 'gpt-4', 'system_fingerprint': None, 'finish_reason': 'tool_calls', 'logprobs': None}, id='run-fd7d5854-2eab-4fca-ad9e-b3de8d587614-0', tool_calls=[{'name': 'tavily_search_results_json', 'args': {'query': 'current weather in San Francisco'}, 'id': 'call_TGDKm0saxuGKJD5OYOXWRvLe'}]),
  ToolMessage(content='[{"url": "https://www.weatherapi.com/", "content": "{\'location\': {\'name\': \'San Francisco\', \'region\': \'California\', \'country\': \'United States of America\', \'lat\': 37.78, \'lon\': -122.42, \'tz_id\': \'America/Los_Angeles\', \'localtime_epoch\': 1714426800, \'localtime\': \'2024-04-29 14:40\'}, \'current\': {\'last_updated_epoch\': 1714426200, \'last_updated\': \'2024-04-29 14:30\', \'temp_c\': 17.8, \'temp_f\': 64.0, \'is_day\': 1, \'condition\': {\'text\': \'Sunny\', \'icon\': \'//cdn.weatherapi.com/weather/64x64/day/113.png\', \'code\': 1000}, \'wind_mph\': 23.0, \'wind_kph\': 37.1, \'wind_degree\': 290, \'wind_dir\': \'WNW\', \'pressure_mb\': 1019.0, \'pressure_in\': 30.09, \'precip_mm\': 0.0, \'precip_in\': 0.0, \'humidity\': 50, \'cloud\': 0, \'feelslike_c\': 17.8, \'feelslike_f\': 64.0, \'vis_km\': 16.0, \'vis_miles\': 9.0, \'uv\': 5.0, \'gust_mph\': 27.5, \'gust_kph\': 44.3}}"}, {"url": "https://www.wunderground.com/hourly/us/ca/san-francisco/94125/date/2024-4-29", "content": "Current Weather for Popular Cities . San Francisco, CA warning 59 \\u00b0 F Mostly Cloudy; Manhattan, NY 56 \\u00b0 F Fair; Schiller Park, IL (60176) warning 58 \\u00b0 F Mostly Cloudy; Boston, MA 52 \\u00b0 F Sunny ..."}]', name='tavily_search_results_json', id='aa0d8c3d-23b5-425a-ad05-3c174fc04892', tool_call_id='call_TGDKm0saxuGKJD5OYOXWRvLe'),
  AIMessage(content='The current weather in San Francisco, California is sunny with a temperature of 64.0°F (17.8°C). The wind is coming from the WNW at a speed of 23.0 mph. The humidity level is at 50%. There is no precipitation and the cloud cover is 0%. The visibility is 16.0 km. The UV index is 5.0. Please note that this information is as of 14:30 on April 29, 2024, according to [Weather API](https://www.weatherapi.com/).', response_metadata={'token_usage': {'completion_tokens': 117, 'prompt_tokens': 620, 'total_tokens': 737}, 'model_name': 'gpt-4', 'system_fingerprint': None, 'finish_reason': 'stop', 'logprobs': None}, id='run-2359b41b-cab6-40c3-b6d9-7bdf7195a601-0')]
 ```
 
 </CodeOutputBlock>
 
-We can check out the [LangSmith trace](https://smith.langchain.com/public/f520839d-cd4d-4495-8764-e32b548e235d/r) to make sure it's calling the search tool effectively.
-## Streaming Messages
+Мы можем проверить [трассировку LangSmith](https://smith.langchain.com/public/f520839d-cd4d-4495-8764-e32b548e235d/r), чтобы убедиться, что инструмент поиска вызывается эффективно.
 
-We've seen how the agent can be called with `.invoke` to get back a final response. If the agent is executing multiple steps, that may take a while. In order to show intermediate progress, we can stream back messages as they occur.
+## Потоковая передача сообщений
+
+Мы видели, как можно вызвать агента с помощью `.invoke`, чтобы получить окончательный ответ. Если агент выполняет несколько шагов, это может занять некоторое время. Чтобы показать промежуточный прогресс, мы можем передавать сообщения по мере их возникновения.
 
 ```python
 for chunk in agent_executor.stream(
@@ -362,13 +355,13 @@ for chunk in agent_executor.stream(
 
 </CodeOutputBlock>
 
-## Streaming tokens
+## Потоковая передача токенов
 
-In addition to streaming back messages, it is also useful to be streaming back tokens.
-We can do this with the `.astream_events` method.
+Кроме потоковой передачи сообщений, также полезно передавать токены.
+Мы можем сделать это с помощью метода `.astream_events`.
 
 :::{.callout-important}
-This `.astream_events` method only works with Python 3.11 or higher.
+Этот метод `.astream_events` работает только с Python 3.11 или выше.
 :::
 
 ```python
@@ -379,14 +372,14 @@ async for event in agent_executor.astream_events(
     if kind == "on_chain_start":
         if (
             event["name"] == "Agent"
-        ):  # Was assigned when creating the agent with `.with_config({"run_name": "Agent"})`
+        ):  # Было назначено при создании агента с `.with_config({"run_name": "Agent"})`
             print(
                 f"Starting agent: {event['name']} with input: {event['data'].get('input')}"
             )
     elif kind == "on_chain_end":
         if (
             event["name"] == "Agent"
-        ):  # Was assigned when creating the agent with `.with_config({"run_name": "Agent"})`
+        ):  # Было назначено при создании агента с `.with_config({"run_name": "Agent"})`
             print()
             print("--")
             print(
@@ -395,9 +388,9 @@ async for event in agent_executor.astream_events(
     if kind == "on_chat_model_stream":
         content = event["data"]["chunk"].content
         if content:
-            # Empty content in the context of OpenAI means
-            # that the model is asking for a tool to be invoked.
-            # So we only print non-empty content
+            # Пустой контент в контексте OpenAI означает,
+            # что модель просит вызвать инструмент.
+            # Поэтому мы выводим только непустой контент
             print(content, end="|")
     elif kind == "on_tool_start":
         print("--")
@@ -424,16 +417,15 @@ async for event in agent_executor.astream_events(
 
 </CodeOutputBlock>
 
-## Adding in memory
+## Добавление памяти
 
-As mentioned earlier, this agent is stateless. This means it does not remember previous interactions. To give it memory we need to pass in a checkpointer. When passing in a checkpointer, we also have to pass in a `thread_id` when invoking the agent (so it knows which thread/conversation to resume from).
+Как упоминалось ранее, этот агент является бездесловесным. Это означает, что он не запоминает предыдущие взаимодействия. Чтобы добавить ему память, нам нужно передать ему чекпойнтер. При передаче чекпойнтера, нам также нужно передать `thread_id` при вызове агента (чтобы он знал, с какой ветки/разговора продолжить).
 
 ```python
 from langgraph.checkpoint.sqlite import SqliteSaver
 
 memory = SqliteSaver.from_conn_string(":memory:")
 ```
-
 
 ```python
 agent_executor = chat_agent_executor.create_tool_calling_executor(
@@ -442,7 +434,6 @@ agent_executor = chat_agent_executor.create_tool_calling_executor(
 
 config = {"configurable": {"thread_id": "abc123"}}
 ```
-
 
 ```python
 for chunk in agent_executor.stream(
@@ -481,12 +472,13 @@ for chunk in agent_executor.stream(
 
 </CodeOutputBlock>
 
-Example [LangSmith trace](https://smith.langchain.com/public/fa73960b-0f7d-4910-b73d-757a12f33b2b/r)
-## Conclusion
+Пример [трассировки LangSmith](https://smith.langchain.com/public/fa73960b-0f7d-4910-b73d-757a12f33b2b/r)
 
-That's a wrap! In this quick start we covered how to create a simple agent. 
-We've then shown how to stream back a response - not only the intermediate steps, but also tokens!
-We've also added in memory so you can have a conversation with them.
-Agents are a complex topic, and there's lot to learn! 
+## Заключение
 
-For more information on Agents, please check out the [LangGraph](/docs/concepts/#langgraph) documentation. This has it's own set of concepts, tutorials, and how-to guides.
+Вот и всё! В этом быстром старте мы рассмотрели, как создать простого агента. 
+Мы также показали, как передавать ответ в потоковом режиме — не только промежуточные шаги, но и токены!
+Мы также добавили память, чтобы вы могли вести с агентом беседу.
+Агенты — это сложная тема, и здесь есть много чего изучить! 
+
+Для получения дополнительной информации об агентах, пожалуйста, ознакомьтесь с документацией [LangGraph](/docs/concepts/#langgraph). В ней представлены собственные концепции, руководства и инструкции.

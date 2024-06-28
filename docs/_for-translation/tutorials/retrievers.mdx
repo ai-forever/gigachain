@@ -1,24 +1,28 @@
-# Vector stores and retrievers
+# Векторные хранилища и ретриверы
 
-This tutorial will familiarize you with LangChain's vector store and retriever abstractions. These abstractions are designed to support retrieval of data--  from (vector) databases and other sources--  for integration with LLM workflows. They are important for applications that fetch data to be reasoned over as part of model inference, as in the case of retrieval-augmented generation, or RAG (see our RAG tutorial [here](/docs/tutorials/rag)).
+В этом разделе вы узнаете ознакомитесь с абстракциями векторных хранилищ и ретриверов в GigaChain.
+Эти абстракции предназначены для поддержки извлечения данных из векторных баз данных и других источников.
+Ретриверы и векторные хранилища важны для приложений, которые извлекают данные для рассуждений в рамках инференса модели, например, в случае генерации с дополнением извлечения данных или RAG (подробнее — в [разделе про RAG](/docs/tutorials/rag)).
 
-## Concepts
+## Основные понятия
 
-This guide focuses on retrieval of text data. We will cover the following concepts:
+В этом разделе основное внимание уделяется извлечению текстовых данных. Здесь рассмотрены такие понятия, как:
 
-- Documents;
-- Vector stores;
-- Retrievers.
+- Документы;
+- Векторные хранилища;
+- Ретриверы.
 
-## Setup
+## Подготовка к разработке
 
-### Jupyter Notebook
+### Jupyter-блокноты
 
-This and other tutorials are perhaps most conveniently run in a Jupyter notebook. See [here](https://jupyter.org/install) for instructions on how to install.
+Это руководство, как и большинство других в документации, использует [Jupyter-блокноты](https://jupyter.org/). Они отлично подходят для изучения работы с LLM-системами, так как предоставляют интерактивную среду для работы с руководствами и позволяют работать с непредвиденными ситуациями: недоступностью API, нетипичным выводом и другими.
 
-### Installation
+Подробнее об установке jupyter — в [официальной документации](https://jupyter.org/install).
 
-This tutorial requires the `langchain`, `gigachain-chroma`, and `langchain-openai` packages:
+### Установка
+
+Для установки GigaChain выполните команды:
 
 ```{=mdx}
 import Tabs from '@theme/Tabs';
@@ -27,31 +31,32 @@ import CodeBlock from "@theme/CodeBlock";
 
 <Tabs>
   <TabItem value="pip" label="Pip" default>
-    <CodeBlock language="bash">pip install langchain gigachain-chroma langchain-openai</CodeBlock>
+    <CodeBlock language="bash">pip install langchain</CodeBlock>
   </TabItem>
   <TabItem value="conda" label="Conda">
-    <CodeBlock language="bash">conda install langchain gigachain-chroma langchain-openai -c conda-forge</CodeBlock>
+    <CodeBlock language="bash">conda install langchain -c conda-forge</CodeBlock>
   </TabItem>
 </Tabs>
-
 ```
 
-For more details, see our [Installation guide](/docs/how_to/installation).
 
+Подробнее об установке — в разделе [Установка](https://developers.sber.ru/docs/ru/gigachain/get-started/installation).
+
+<!--
 ### LangSmith
 
-Many of the applications you build with LangChain will contain multiple steps with multiple invocations of LLM calls.
-As these applications get more and more complex, it becomes crucial to be able to inspect what exactly is going on inside your chain or agent.
-The best way to do this is with [LangSmith](https://smith.langchain.com).
+Многие приложения, которые вы создаете с помощью GigaChain, будут содержать несколько шагов с многократными вызовами LLM.
+По мере усложнения этих приложений становится важно иметь возможность инспектировать, что именно происходит внутри вашей цепочки или агента.
+Лучший способ сделать это — с помощью [LangSmith](https://smith.langchain.com).
 
-After you sign up at the link above, make sure to set your environment variables to start logging traces:
+После регистрации по ссылке выше, убедитесь, что вы установили переменные среды для начала ведения журнала трассировок:
 
 ```shell
 export LANGCHAIN_TRACING_V2="true"
 export LANGCHAIN_API_KEY="..."
 ```
 
-Or, if in a notebook, you can set them with:
+Или, если вы работаете в ноутбуке, вы можете установить их с помощью:
 
 ```python
 import getpass
@@ -60,57 +65,69 @@ import os
 os.environ["LANGCHAIN_TRACING_V2"] = "true"
 os.environ["LANGCHAIN_API_KEY"] = getpass.getpass()
 ```
+-->
 
 
-## Documents
+## Документы
 
-LangChain implements a [Document](https://api.python.langchain.com/en/latest/documents/langchain_core.documents.base.Document.html) abstraction, which is intended to represent a unit of text and associated metadata. It has two attributes:
+GigaChain реализует класс [Document](https://api.python.langchain.com/en/latest/documents/langchain_core.documents.base.Document.html), которая представляет единицу текста и связанных с ним метаданных.
+У этого класса есть два атрибута:
 
-- `page_content`: a string representing the content;
-- `metadata`: a dict containing arbitrary metadata.
+- `page_content` — строка, представляющая содержимое;
+- `metadata` — словарь, содержащий произвольные метаданные.
 
-The `metadata` attribute can capture information about the source of the document, its relationship to other documents, and other information. Note that an individual `Document` object often represents a chunk of a larger document.
+Атрибут `metadata` может содержать данные об источнике документа, его связи с другими документами и другую информацию.
+Отдельный объект `Document` часто представляет фрагмент более крупного документа.
 
-Let's generate some sample documents:
+Создайте несколько примеров документов:
 
 ```python
 from langchain_core.documents import Document
 
 documents = [
     Document(
-        page_content="Dogs are great companions, known for their loyalty and friendliness.",
+        page_content="Собаки — отличные компаньоны, известные своей преданностью и дружелюбием.",
         metadata={"source": "mammal-pets-doc"},
     ),
     Document(
-        page_content="Cats are independent pets that often enjoy their own space.",
+        page_content="Кошки — независимые питомцы, которые часто любят свое пространство.",
         metadata={"source": "mammal-pets-doc"},
     ),
     Document(
-        page_content="Goldfish are popular pets for beginners, requiring relatively simple care.",
+        page_content="Золотые рыбки — популярные питомцы для начинающих, требующие относительно простого ухода.",
         metadata={"source": "fish-pets-doc"},
     ),
     Document(
-        page_content="Parrots are intelligent birds capable of mimicking human speech.",
+        page_content="Попугаи — умные птицы, способные имитировать человеческую речь.",
         metadata={"source": "bird-pets-doc"},
     ),
     Document(
-        page_content="Rabbits are social animals that need plenty of space to hop around.",
-        metadata={"source": "mammal-pets-doc"},
+        page_content="Кролики — социальные животные, которым нужно много пространства для прыжков.",
+        metadata={"с": "mammal-pets-doc"},
     ),
 ]
 ```
 
-Here we've generated five documents, containing metadata indicating three distinct "sources".
+Пример выше содержит пять документов, которорые содержат метаданные, указывающие на три различных источника (`source`).
 
-## Vector stores
+## Векторные хранилища
 
-Vector search is a common way to store and search over unstructured data (such as unstructured text). The idea is to store numeric vectors that are associated with the text. Given a query, we can [embed](/docs/concepts#embedding-models) it as a vector of the same dimension and use vector similarity metrics to identify related data in the store.
+Векторный поиск — это распространенный способ хранения и поиска по неструктурированным данным (например, неструктурированному тексту).
+Основной принцип заключается в хранении числовых векторов, которые ассоциированы с текстом.
+При запросе к хранилищу, выможете [представить текст запроса в виде вектора](/docs/concepts#embedding-models) той же размерности и использовать метрики векторной схожести для поиска подходящих данных в хранилище.
 
-LangChain [VectorStore](https://api.python.langchain.com/en/latest/vectorstores/langchain_core.vectorstores.VectorStore.html) objects contain methods for adding text and `Document` objects to the store, and querying them using various similarity metrics. They are often initialized with [embedding](/docs/how_to/embed_text) models, which determine how text data is translated to numeric vectors.
+Объекты [`VectorStore`](https://api.python.langchain.com/en/latest/vectorstores/langchain_core.vectorstores.VectorStore.html) предоставляют методы для добавления текста и объектов `Document` в хранилище, а такк же методы для поиска документов в хранилище с использованием различных метрик схожести.
+Как правило хранилищаяя инициализируются с использованием моделей, которые поддерживают [векторное пердставление текста](/docs/how_to/embed_text).
+Такие модели определяют, как текстовые данные переводятся в числовые векторы.
 
-LangChain includes a suite of [integrations](/docs/integrations/vectorstores) with different vector store technologies. Some vector stores are hosted by a provider (e.g., various cloud providers) and require specific credentials to use; some (such as [Postgres](/docs/integrations/vectorstores/pgvector)) run in separate infrastructure that can be run locally or via a third-party; others can run in-memory for lightweight workloads. Here we will demonstrate usage of LangChain VectorStores using [Chroma](/docs/integrations/vectorstores/chroma), which includes an in-memory implementation.
+GigaChain поддерживает набор [интеграций](/docs/integrations/vectorstores) с различными векторными хранилищамм.
+Некоторые из них предоставлются на стороне других компаний (например, у различных облачных провайдеров) и требуют соответствующих учетных данных для использования.
+Некоторые (такие как [Postgres](/docs/integrations/vectorstores/pgvector)) работают в отдельной инфраструктуре, которую можно запускать локально или через сторонние сервисы.
+Какие-то могут работать в памяти и используются для легких нагрузок.
+В этом разделе показана работа объектов `VectorStore` с использованием [Chroma](/docs/integrations/vectorstores/chroma): векторным хранилищем, которое поддерживает работу в памяти.
 
-To instantiate a vector store, we often need to provide an [embedding](/docs/how_to/embed_text) model to specify how text should be converted into a numeric vector. Here we will use [OpenAI embeddings](/docs/integrations/text_embedding/openai/).
+Как правило лля создания векторного хранилища нужно предоставить модель, которая будет отвечать за [векторное предсттавление текста](/docs/how_to/embed_text).
+В примере ниже показана работа модели [OpenAI](/docs/integrations/text_embedding/openai/).
 
 ```python
 from langchain_chroma import Chroma
@@ -122,25 +139,27 @@ vectorstore = Chroma.from_documents(
 )
 ```
 
-Calling `.from_documents` here will add the documents to the vector store. [VectorStore](https://api.python.langchain.com/en/latest/vectorstores/langchain_core.vectorstores.VectorStore.html) implements methods for adding documents that can also be called after the object is instantiated. Most implementations will allow you to connect to an existing vector store--  e.g., by providing a client, index name, or other information. See the documentation for a specific [integration](/docs/integrations/vectorstores) for more detail.
+Вызов метода `.from_documents` добавляет документы в векторное хранилище.
+Объект [`VectorStore`](https://api.python.langchain.com/en/latest/vectorstores/langchain_core.vectorstores.VectorStore.html) предоставляет методы для добавления документов, которые также можно вызвать после создания объекта.
+Большинство реализаций позволят вам подключиться к существующему векторному хранилищу, например, предоставив клиент, название индекса или другую информацию.
+Подрбонее -- в документации по [интеграции с выбранным векторным хранилищем](/docs/integrations/vectorstores).
 
-Once we've instantiated a `VectorStore` that contains documents, we can query it. [VectorStore](https://api.python.langchain.com/en/latest/vectorstores/langchain_core.vectorstores.VectorStore.html) includes methods for querying:
-- Synchronously and asynchronously;
-- By string query and by vector;
-- With and without returning similarity scores;
-- By similarity and [maximum marginal relevance](https://api.python.langchain.com/en/latest/vectorstores/langchain_core.vectorstores.VectorStore.html#langchain_core.vectorstores.VectorStore.max_marginal_relevance_search) (to balance similarity with query to diversity in retrieved results).
+После создания `VectorStore`, содержащего документы, мы можем выполнять его запросы. Объект [VectorStore](https://api.python.langchain.com/en/latest/vectorstores/langchain_core.vectorstores.VectorStore.html) включает методы для выполнения запросов:
+- Синхронно и асинхронно;
+- По строковому запросу и по вектору;
+- С возвращением и без возвращения оценок схожести;
+- По схожести и [максимальной маржинальной релевантности](https://api.python.langchain.com/en/latest/vectorstores/langchain_core.vectorstores.VectorStore.html#langchain_core.vectorstores.VectorStore.max_marginal_relevance_search) (чтобы сбалансировать схожесть с разнообразием в извлеченных результатах).
 
-The methods will generally include a list of [Document](https://api.python.langchain.com/en/latest/documents/langchain_core.documents.base.Document.html#langchain_core.documents.base.Document) objects in their outputs.
+Методы обычно включают список объектов [Document](https://api.python.langchain.com/en/latest/documents/langchain_core.documents.base.Document.html#langchain_core.documents.base.Document) в своих выводах.
 
-### Examples
+### Примеры
 
-Return documents based on similarity to a string query:
+Возврат документов на основе схожести с текстовым запросом:
 
 ```python
 vectorstore.similarity_search("cat")
 ```
 
-
 <CodeOutputBlock lang="python">
 
 ```python
@@ -152,13 +171,12 @@ vectorstore.similarity_search("cat")
 
 </CodeOutputBlock>
 
-Async query:
+Асинхронный запрос:
 
 ```python
 await vectorstore.asimilarity_search("cat")
 ```
 
-
 <CodeOutputBlock lang="python">
 
 ```python
@@ -170,16 +188,14 @@ await vectorstore.asimilarity_search("cat")
 
 </CodeOutputBlock>
 
-Return scores:
+Возврат оценок схожести:
 
 ```python
-# Note that providers implement different scores; Chroma here
-# returns a distance metric that should vary inversely with
-# similarity.
+# Обратите внимание, что оценка зависит от выбранного векторного хранилища.
+# Здесь Chroma возвращает метрику расстояния, которая должна варьироваться обратно пропорционально схожести.
 
 vectorstore.similarity_search_with_score("cat")
 ```
-
 
 <CodeOutputBlock lang="python">
 
@@ -196,14 +212,13 @@ vectorstore.similarity_search_with_score("cat")
 
 </CodeOutputBlock>
 
-Return documents based on similarity to a embedded query:
+Возврат документов на основе схожести с запросом, представленным в виде вектора:
 
 ```python
 embedding = OpenAIEmbeddings().embed_query("cat")
 
 vectorstore.similarity_search_by_vector(embedding)
 ```
-
 
 <CodeOutputBlock lang="python">
 
@@ -216,19 +231,21 @@ vectorstore.similarity_search_by_vector(embedding)
 
 </CodeOutputBlock>
 
-Learn more:
+Больше информации о векторных хранилищах:
 
-- [API reference](https://api.python.langchain.com/en/latest/vectorstores/langchain_core.vectorstores.VectorStore.html)
-- [How-to guide](/docs/how_to/vectorstores)
-- [Integration-specific docs](/docs/integrations/vectorstores)
+- [Справка API](https://api.python.langchain.com/en/latest/vectorstores/langchain_core.vectorstores.VectorStore.html)
+- [Работа с векторными хранилищами](/docs/how_to/vectorstores)
+- [Документация для интекграции с выбранным хранилищем](/docs/integrations/vectorstores)
 
-## Retrievers
+## Ретриверы
 
-LangChain `VectorStore` objects do not subclass [Runnable](https://api.python.langchain.com/en/latest/core_api_reference.html#module-langchain_core.runnables), and so cannot immediately be integrated into LangChain Expression Language [chains](/docs/concepts/#langchain-expression-language-lcel).
+Объекты `VectorStore` не являются подклассами [Runnable](https://api.python.langchain.com/en/latest/core_api_reference.html#module-langchain_core.runnables) и поэтому не могут быть напрямую интегрированы в [цепочки LangChain Expression Language](/docs/concepts/#langchain-expression-language-lcel).
 
-LangChain [Retrievers](https://api.python.langchain.com/en/latest/core_api_reference.html#module-langchain_core.retrievers) are Runnables, so they implement a standard set of methods (e.g., synchronous and asynchronous `invoke` and `batch` operations) and are designed to be incorporated in LCEL chains.
+В то же врея ретриверы GigaChain ([`Retrievers`](https://api.python.langchain.com/en/latest/core_api_reference.html#module-langchain_core.retrievers)) являются runnable-интерфейсами, поэтому они реализуют стандартный набор методов (например, синхронные и асинхронные операции `invoke` и `batch`) и предназначены для включения в цепочки LCEL.
 
-We can create a simple version of this ourselves, without subclassing `Retriever`. If we choose what method we wish to use to retrieve documents, we can create a runnable easily. Below we will build one around the `similarity_search` method:
+Вы можете самостоятельно создать ретривер, не прибегая к классу `Retriever`.
+Для этого нужно выбрать метод, который будеть использоваться для извлечения документов, и создать runnable.
+Пример ниже показывает как создать ретривер, который использует метод `similarity_search`, на основе Runnable:
 
 ```python
 from typing import List
@@ -236,11 +253,10 @@ from typing import List
 from langchain_core.documents import Document
 from langchain_core.runnables import RunnableLambda
 
-retriever = RunnableLambda(vectorstore.similarity_search).bind(k=1)  # select top result
+retriever = RunnableLambda(vectorstore.similarity_search).bind(k=1)  # выбрать лучший результат
 
 retriever.batch(["cat", "shark"])
 ```
-
 
 <CodeOutputBlock lang="python">
 
@@ -251,7 +267,9 @@ retriever.batch(["cat", "shark"])
 
 </CodeOutputBlock>
 
-Vectorstores implement an `as_retriever` method that will generate a Retriever, specifically a [VectorStoreRetriever](https://api.python.langchain.com/en/latest/vectorstores/langchain_core.vectorstores.VectorStoreRetriever.html). These retrievers include specific `search_type` and `search_kwargs` attributes that identify what methods of the underlying vector store to call, and how to parameterize them. For instance, we can replicate the above with the following:
+Векторные хранилища предоставляют метод `as_retriever`, который создаст экземпляр класса Retriever, а именно [VectorStoreRetriever](https://api.python.langchain.com/en/latest/vectorstores/langchain_core.vectorstores.VectorStoreRetriever.html).
+Эти ретриверы включают заданные атрибуты `search_type` и `search_kwargs`, которые определяют, какие методы базового векторного хранилища вызывать и как задавать их параметры.
+Так, вы можете повторить функциональность пршлого примера с помощью следующего кода:
 
 ```python
 retriever = vectorstore.as_retriever(
@@ -262,7 +280,6 @@ retriever = vectorstore.as_retriever(
 retriever.batch(["cat", "shark"])
 ```
 
-
 <CodeOutputBlock lang="python">
 
 ```python
@@ -272,9 +289,11 @@ retriever.batch(["cat", "shark"])
 
 </CodeOutputBlock>
 
-`VectorStoreRetriever` supports search types of `"similarity"` (default), `"mmr"` (maximum marginal relevance, described above), and `"similarity_score_threshold"`. We can use the latter to threshold documents output by the retriever by similarity score.
+`VectorStoreRetriever` поддерживает типы поиска `"similarity"` (по умолчанию), `"mmr"` (maximum marginal relevance, описано выше) и `"similarity_score_threshold"`.
+Последний тип можно использовать для отсечки документов, выводимых ретривером, на основе оценки схожести.
 
-Retrievers can easily be incorporated into more complex applications, such as retrieval-augmented generation (RAG) applications that combine a given question with retrieved context into a prompt for a LLM. Below we show a minimal example.
+Ретриверы можно легко включить в более сложные RAG-приложения, которые объединяют заданный вопрос с извлеченным контекстом в промпт для LLM.
+Ниже показан базовый пример.
 
 ```{=mdx}
 import ChatModelTabs from "@theme/ChatModelTabs";
@@ -290,7 +309,6 @@ from langchain_openai import ChatOpenAI
 
 llm = ChatOpenAI(model="gpt-3.5-turbo", temperature=0)
 ```
-
 
 ```python
 from langchain_core.prompts import ChatPromptTemplate
@@ -310,13 +328,11 @@ prompt = ChatPromptTemplate.from_messages([("human", message)])
 rag_chain = {"context": retriever, "question": RunnablePassthrough()} | prompt | llm
 ```
 
-
 ```python
 response = rag_chain.invoke("tell me about cats")
 
 print(response.content)
 ```
-
 
 <CodeOutputBlock lang="python">
 
@@ -326,16 +342,16 @@ print(response.content)
 
 </CodeOutputBlock>
 
-## Learn more:
+## Смотрите также
 
-Retrieval strategies can be rich and complex. For example:
+Стратегии извлечения данных могут быть разнообразными и сложными. Например:
 
-- We can [infer hard rules and filters](/docs/how_to/self_query/) from a query (e.g., "using documents published after 2020");
-- We can [return documents that are linked](/docs/how_to/parent_document_retriever/) to the retrieved context in some way (e.g., via some document taxonomy);
-- We can generate [multiple embeddings](/docs/how_to/multi_vector) for each unit of context;
-- We can [ensemble results](/docs/how_to/ensemble_retriever) from multiple retrievers;
-- We can assign weights to documents, e.g., to weigh [recent documents](/docs/how_to/time_weighted_vectorstore/) higher.
+- [Выведение жестких правила и фильтры](/docs/how_to/self_query/) из запроса. Например, "использовать документы, опубликованные после 2020 года";
+- [Возвращение документов, каким-то образом связанных с извлеченным контекстом](/docs/how_to/parent_document_retriever/). Например, через таксономию документов;
+- [Созддание нескольких векторных представлений](/docs/how_to/multi_vector) для каждой единицы контекста;
+- [Объединнение результаты](/docs/how_to/ensemble_retriever) от нескольких ретриверов;
+- [Управление весами документов](/docs/how_to/time_weighted_vectorstore/). Нпример, придание большего веса недавним документам.
 
-The [retrievers](/docs/how_to#retrievers) section of the how-to guides covers these and other built-in retrieval strategies.
+Раздел [Работа с ретриверами](/docs/how_to#retrievers) в руководствах по использованию охватывает эти и другие стратегии извлечения данных.
 
-It is also straightforward to extend the [BaseRetriever](https://api.python.langchain.com/en/latest/retrievers/langchain_core.retrievers.BaseRetriever.html) class in order to implement custom retrievers. See our how-to guide [here](/docs/how_to/custom_retriever).
+Вы также можете расширить класс [BaseRetriever](https://api.python.langchain.com/en/latest/retrievers/langchain_core.retrievers.BaseRetriever.html) для реализации [собственных ретриверов](/docs/how_to/custom_retriever).

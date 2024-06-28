@@ -1,41 +1,42 @@
-# Build a Chatbot
-## Overview
+# Разработка чат-бота
 
-We'll go over an example of how to design and implement an LLM-powered chatbot. 
-This chatbot will be able to have a conversation and remember previous interactions.
+Раздел содержит пример разработки чат-бота на основе LLM.
+Этот чат-бот сможет вести беседу и запоминать предыдущие действия пользователя.
 
+В примере рассмотрен чат-бот, который для ведения беседы использует только языковую модель.
+Также существуют сопособы создания чат-ботов, которые могут вас заинтересовать:
 
-Note that this chatbot that we build will only use the language model to have a conversation.
-There are several other related concepts that you may be looking for:
+- [Conversational RAG](/docs/tutorials/qa_chat_history) — позволяет чат-боту использовать внешние источники данных.
+- [Агенты](/docs/tutorials/agents) — чат-боты, которые может выполнять действия.
 
-- [Conversational RAG](/docs/tutorials/qa_chat_history): Enable a chatbot experience over an external source of data
-- [Agents](/docs/tutorials/agents): Build a chatbot that can take actions
+В этом разделе вы найдете базовую информацию о разработке чат-ботов, которая будет полезна при работе с приведенными выше разделами.
+Но если нужно вы можете сразу начать с более сложных чат-ботов.
 
-This tutorial will cover the basics which will be helpful for those two more advanced topics, but feel free to skip directly to there should you choose.
+## Основные понятия
 
+Основные компоненты, с которыми вы будете работать:
 
-## Concepts
+- [`Чат-модели`](/docs/concepts/#chat-models). Чат-боты работают с сообщениями, а не необработанным текстом. Поэтому для разработки лучше подходят для чат-модели, а не текстовые LLM.
+- [`Шаблоны промптов`](/docs/concepts/#prompt-templates), которые упрощают процесс создания промптов, объединяющих стандартные сообщения, ввод пользователя, историю чатов и, при необходимости, дополнительный извлеченный контекст.
+- [`История чата`](/docs/concepts/#chat-history), которая позволяет чат-боту "запоминать" прошлые взаимодействия и учитывать их при ответе на последующие вопросы.
 
-Here are a few of the high-level components we'll be working with:
+<!--
+- Отладка и трассировка вашего приложения с помощью [LangSmith](/docs/concepts/#langsmith)
+-->
 
-- [`Chat Models`](/docs/concepts/#chat-models). The chatbot interface is based around messages rather than raw text, and therefore is best suited to Chat Models rather than text LLMs.
-- [`Prompt Templates`](/docs/concepts/#prompt-templates), which simplify the process of assembling prompts that combine default messages, user input, chat history, and (optionally) additional retrieved context.
-- [`Chat History`](/docs/concepts/#chat-history), which allows a chatbot to "remember" past interactions and take them into account when responding to followup questions. 
-- Debugging and tracing your application using [LangSmith](/docs/concepts/#langsmith)
+На наглядном примере вы узнаете, как объединить вышеупомянутые компоненты для создания мощного развитого чат-бота.
 
-We'll cover how to fit the above components together to create a powerful conversational chatbot.
+## Подготовка к разработке
 
-## Setup
+### Jupyter-блокноты
 
-### Jupyter Notebook
+Это руководство, как и большинство других в документации, использует [Jupyter-блокноты](https://jupyter.org/). Они отлично подходят для изучения работы с LLM-системами, так как предоставляют интерактивную среду для работы с руководствами и позволяют работать с непредвиденными ситуациями: недоступностью API, нетипичным выводом и другими.
 
-This guide (and most of the other guides in the documentation) uses [Jupyter notebooks](https://jupyter.org/) and assumes the reader is as well. Jupyter notebooks are perfect for learning how to work with LLM systems because oftentimes things can go wrong (unexpected output, API down, etc) and going through guides in an interactive environment is a great way to better understand them.
+Подробнее об установке jupyter — в [официальной документации](https://jupyter.org/install).
 
-This and other tutorials are perhaps most conveniently run in a Jupyter notebook. See [here](https://jupyter.org/install) for instructions on how to install.
+### Установка
 
-### Installation
-
-To install LangChain run:
+Для установки GigaChain выполните команды:
 
 ```{=mdx}
 import Tabs from '@theme/Tabs';
@@ -50,26 +51,26 @@ import CodeBlock from "@theme/CodeBlock";
     <CodeBlock language="bash">conda install langchain -c conda-forge</CodeBlock>
   </TabItem>
 </Tabs>
-
 ```
 
 
-For more details, see our [Installation guide](/docs/how_to/installation).
+Подробнее об установке — в разделе [Установка](https://developers.sber.ru/docs/ru/gigachain/get-started/installation).
 
+<!--
 ### LangSmith
 
-Many of the applications you build with LangChain will contain multiple steps with multiple invocations of LLM calls.
-As these applications get more and more complex, it becomes crucial to be able to inspect what exactly is going on inside your chain or agent.
-The best way to do this is with [LangSmith](https://smith.langchain.com).
+Многие приложения, которые вы создаете с помощью LangChain, будут содержать несколько шагов с многократными вызовами LLM.
+По мере усложнения этих приложений становится важно иметь возможность инспектировать, что именно происходит внутри вашей цепочки или агента.
+Лучший способ сделать это — с помощью [LangSmith](https://smith.langchain.com).
 
-After you sign up at the link above, make sure to set your environment variables to start logging traces:
+После регистрации по ссылке выше, убедитесь, что вы установили переменные среды для начала ведения журнала трассировок:
 
 ```shell
 export LANGCHAIN_TRACING_V2="true"
 export LANGCHAIN_API_KEY="..."
 ```
 
-Or, if in a notebook, you can set them with:
+Или, если вы работаете в ноутбуке, вы можете установить их с помощью:
 
 ```python
 import getpass
@@ -78,10 +79,12 @@ import os
 os.environ["LANGCHAIN_TRACING_V2"] = "true"
 os.environ["LANGCHAIN_API_KEY"] = getpass.getpass()
 ```
+-->
 
-## Quickstart
+## Быстрый старт
 
-First up, let's learn how to use a language model by itself. LangChain supports many different language models that you can use interchangably - select the one you want to use below!
+Сначала ознакомьтесь как использовать языковую модель отдельно.
+GigaChain поддерживает различные языковые модели, которые могут заменять друг друга.
 
 ```{=mdx}
 import ChatModelTabs from "@theme/ChatModelTabs";
@@ -98,14 +101,15 @@ from langchain_openai import ChatOpenAI
 model = ChatOpenAI(model="gpt-3.5-turbo")
 ```
 
-Let's first use the model directly. `ChatModel`s are instances of LangChain "Runnables", which means they expose a standard interface for interacting with them. To just simply call the model, we can pass in a list of messages to the `.invoke` method.
+Сначала попробуйте использовать модель напрямую.
+`ChatModel` — это экземпляры Runnable-интерфейса GigaChain, что означает, что для работы они они предоставляют стандартный интерфейс.
+Для простого вызова модели, вы можете передать список сообщений в метод `.invoke`.
 
 ```python
 from langchain_core.messages import HumanMessage
 
 model.invoke([HumanMessage(content="Hi! I'm Bob")])
 ```
-
 
 <CodeOutputBlock lang="python">
 
@@ -115,12 +119,12 @@ model.invoke([HumanMessage(content="Hi! I'm Bob")])
 
 </CodeOutputBlock>
 
-The model on its own does not have any concept of state. For example, if you ask a followup question:
+Сама по себе модель не имеет понятия состояния.
+Это можно увидеть, если задать модели дополнительный вопрос:
 
 ```python
 model.invoke([HumanMessage(content="What's my name?")])
 ```
-
 
 <CodeOutputBlock lang="python">
 
@@ -130,12 +134,13 @@ model.invoke([HumanMessage(content="What's my name?")])
 
 </CodeOutputBlock>
 
-Let's take a look at the example [LangSmith trace](https://smith.langchain.com/public/5c21cb92-2814-4119-bae9-d02b8db577ac/r)
+<!--
+Давайте взглянем на пример [трассировки LangSmith](https://smith.langchain.com/public/5c21cb92-2814-4119-bae9-d02b8db577ac/r)
 
-We can see that it doesn't take the previous conversation turn into context, and cannot answer the question.
-This makes for a terrible chatbot experience!
+Мы видим, что модель не учитывает предыдущий ход разговора и не может ответить на вопрос. Это делает чат-бот крайне неудобным!
+-->
 
-To get around this, we need to pass the entire conversation history into the model. Let's see what happens when we do that:
+Чтобы обойти это ограничение, передайте всю историю разговора в модель:
 
 ```python
 from langchain_core.messages import AIMessage
@@ -149,7 +154,6 @@ model.invoke(
 )
 ```
 
-
 <CodeOutputBlock lang="python">
 
 ```python
@@ -158,24 +162,28 @@ model.invoke(
 
 </CodeOutputBlock>
 
-And now we can see that we get a good response!
+Качество ответа модели заметно возрасло.
 
-This is the basic idea underpinning a chatbot's ability to interact conversationally.
-So how do we best implement this?
-## Message History
+Работа с историей сообщений — это техника, которая лежит в основе способности чат-бота вести разговор.
+Ниже вы узнаете как лучше ее реализовать.
 
-We can use a Message History class to wrap our model and make it stateful.
-This will keep track of inputs and outputs of the model, and store them in some datastore.
-Future interactions will then load those messages and pass them into the chain as part of the input.
-Let's see how to use this!
+## История сообщений
 
-First, let's make sure to install `langchain-community`, as we will be using an integration in there to store message history.
+Чтобы модель сохраняла состояние, вы можете обернуть ее в класс Message History.
+Класс будет отслеживать входные и выходные данные модели и сохранять их в хранилище данных.
+При повторных обращениях сообщения модели будут загружаться из хранилища и передаваться в цепочку в качестве части входных данных.
+
+Пример ниже использует хранилище истории сообщений, доступное в пакете `gigachain-community`.
+Убедитесь, что установили его:
 
 ```python
 # ! pip install langchain_community
 ```
 
-After that, we can import the relevant classes and set up our chain which wraps the model and adds in this message history. A key part here is the function we pass into as the `get_session_history`. This function is expected to take in a `session_id` and return a Message History object. This `session_id` is used to distinguish between separate conversations, and should be passed in as part of the config when calling the new chain (we'll show how to do that.
+После этого вы можем импортировать соответствующие классы и настроить цепочку, которая обернет модель и добавит историю сообщений.
+Самой важной частью здесь является функция, которую мы передаем в качестве `get_session_history`.
+Эта функция должна принимать `session_id` и возвращать объект Message History.
+Параметр `session_id` используется для различения отдельных разговоров и передается как часть конфигурационной переменной при вызове новой цепочки.
 
 ```python
 from langchain_community.chat_message_histories import ChatMessageHistory
@@ -184,22 +192,21 @@ from langchain_core.runnables.history import RunnableWithMessageHistory
 
 store = {}
 
-
 def get_session_history(session_id: str) -> BaseChatMessageHistory:
     if session_id not in store:
         store[session_id] = ChatMessageHistory()
     return store[session_id]
 
-
 with_message_history = RunnableWithMessageHistory(model, get_session_history)
 ```
 
-We now need to create a `config` that we pass into the runnable every time. This config contains information that is not part of the input directly, but is still useful. In this case, we want to include a `session_id`. This should look like:
+Создайте конфигруационную переменную `config`, которая будет содержать дополнительные данные, полезные для вызова цепочки.
+В приведенном примере вам нужно передавать в этой переменной `session_id`.
+Переменную нужно передавать при каждом вызове runnable.
 
 ```python
 config = {"configurable": {"session_id": "abc2"}}
 ```
-
 
 ```python
 response = with_message_history.invoke(
@@ -210,7 +217,6 @@ response = with_message_history.invoke(
 response.content
 ```
 
-
 <CodeOutputBlock lang="python">
 
 ```python
@@ -218,7 +224,6 @@ response.content
 ```
 
 </CodeOutputBlock>
-
 
 ```python
 response = with_message_history.invoke(
@@ -229,7 +234,6 @@ response = with_message_history.invoke(
 response.content
 ```
 
-
 <CodeOutputBlock lang="python">
 
 ```python
@@ -238,7 +242,8 @@ response.content
 
 </CodeOutputBlock>
 
-Great! Our chatbot now remembers things about us. If we change the config to reference a different `session_id`, we can see that it starts the conversation fresh.
+Теперь ваш чат-бот запоминает информацию.
+Если вы измените переменную config, чтобы сослаться на другой `session_id`, то увидите, что разговор начнется заново.
 
 ```python
 config = {"configurable": {"session_id": "abc3"}}
@@ -251,7 +256,6 @@ response = with_message_history.invoke(
 response.content
 ```
 
-
 <CodeOutputBlock lang="python">
 
 ```python
@@ -260,7 +264,7 @@ response.content
 
 </CodeOutputBlock>
 
-However, we can always go back to the original conversation (since we are persisting it in a database)
+При этом вы всегда можете вернуться к первоначальному разговору (так как он сохраняется его в базе данных).
 
 ```python
 config = {"configurable": {"session_id": "abc2"}}
@@ -273,7 +277,6 @@ response = with_message_history.invoke(
 response.content
 ```
 
-
 <CodeOutputBlock lang="python">
 
 ```python
@@ -282,14 +285,20 @@ response.content
 
 </CodeOutputBlock>
 
-This is how we can support a chatbot having conversations with many users!
+Таким образом, ваш чат-бот сможет вести беседы с множеством пользователей.
 
-Right now, all we've done is add a simple persistence layer around the model. We can start to make the more complicated and personalized by adding in a prompt template.
-## Prompt templates
+Ниже вы узнаете как развить и персонализировать данные, которые сохраняет чат-бот, с помощью шаблона промпта.
 
-Prompt Templates help to turn raw user information into a format that the LLM can work with. In this case, the raw user input is just a message, which we are passing to the LLM. Let's now make that a bit more complicated. First, let's add in a system message with some custom instructions (but still taking messages as input). Next, we'll add in more input besides just the messages.
+## Шаблоны промптов
 
-First, let's add in a system message. To do this, we will create a ChatPromptTemplate. We will utilize `MessagesPlaceholder` to pass all the messages in.
+Шаблоны промптов помогают преобразовать необработанную информацию от пользователя в формат, с которым может работать LLM.
+В данном случае необработанный ввод представляет собой сообщение, которое передается в LLM.
+Это сообщение можно усложнить.
+Сначала добавьте в него системное сообщение с набором собвственных инструкций (но все еще принимая сообщения в качестве ввода).
+Затем дополните сообщения вспомогательными входными данными.
+
+Для добавления системного сообщения создайте экземпляр `ChatPromptTemplate`.
+Чтобы передать все сообщения используйте `MessagesPlaceholder`.
 
 ```python
 from langchain_core.prompts import ChatPromptTemplate, MessagesPlaceholder
@@ -307,14 +316,13 @@ prompt = ChatPromptTemplate.from_messages(
 chain = prompt | model
 ```
 
-Note that this slightly changes the input type - rather than pass in a list of messages, we are now passing in a dictionary with a `messages` key where that contains a list of messages.
+В результате тип входных данных изменится — вместо передачи списка сообщений вы теперь передаете словарь с ключом `messages`, который содержит список сообщений.
 
 ```python
-response = chain.invoke({"messages": [HumanMessage(content="hi! I'm bob")]})
+response = chain.invoke({"messages": [HumanMessage(content="hi! I'm Bob")]})
 
 response.content
 ```
-
 
 <CodeOutputBlock lang="python">
 
@@ -324,17 +332,15 @@ response.content
 
 </CodeOutputBlock>
 
-We can now wrap this in the same Messages History object as before
+Теперь вы можете обернуть полученный код в объект истории сообщений `with_message_history`, созданный ранее.
 
 ```python
 with_message_history = RunnableWithMessageHistory(chain, get_session_history)
 ```
 
-
 ```python
 config = {"configurable": {"session_id": "abc5"}}
 ```
-
 
 ```python
 response = with_message_history.invoke(
@@ -345,7 +351,6 @@ response = with_message_history.invoke(
 response.content
 ```
 
-
 <CodeOutputBlock lang="python">
 
 ```python
@@ -353,7 +358,6 @@ response.content
 ```
 
 </CodeOutputBlock>
-
 
 ```python
 response = with_message_history.invoke(
@@ -364,7 +368,6 @@ response = with_message_history.invoke(
 response.content
 ```
 
-
 <CodeOutputBlock lang="python">
 
 ```python
@@ -373,7 +376,8 @@ response.content
 
 </CodeOutputBlock>
 
-Awesome! Let's now make our prompt a little bit more complicated. Let's assume that the prompt template now looks something like this:
+Усложните полученный промпт.
+Предположим, что шаблон промпта теперь выглядит примерно так:
 
 ```python
 prompt = ChatPromptTemplate.from_messages(
@@ -389,16 +393,16 @@ prompt = ChatPromptTemplate.from_messages(
 chain = prompt | model
 ```
 
-Note that we have added a new `language` input to the prompt. We can now invoke the chain and pass in a language of our choice.
+В примере выше в промпт добавлена новая переменная `language`.
+Теперь вы можем вызвать цепочку и передать язык на свой выбор выбор.
 
 ```python
 response = chain.invoke(
-    {"messages": [HumanMessage(content="hi! I'm bob")], "language": "Spanish"}
+    {"messages": [HumanMessage(content="hi! I'm Bob")], "language": "Spanish"}
 )
 
 response.content
 ```
-
 
 <CodeOutputBlock lang="python">
 
@@ -408,7 +412,8 @@ response.content
 
 </CodeOutputBlock>
 
-Let's now wrap this more complicated chain in a Message History class. This time, because there are multiple keys in the input, we need to specify the correct key to use to save the chat history.
+Оберние полученную цепочку в класс `with_message_history`.
+Теперь, поскольку входные данные содержать несколько ключей, вам нужно указать правильный ключ для сохранения истории чата.
 
 ```python
 with_message_history = RunnableWithMessageHistory(
@@ -418,21 +423,18 @@ with_message_history = RunnableWithMessageHistory(
 )
 ```
 
-
 ```python
 config = {"configurable": {"session_id": "abc11"}}
 ```
 
-
 ```python
 response = with_message_history.invoke(
-    {"messages": [HumanMessage(content="hi! I'm todd")], "language": "Spanish"},
+    {"messages": [HumanMessage(content="hi! I'm Todd")], "language": "Spanish"},
     config=config,
 )
 
 response.content
 ```
-
 
 <CodeOutputBlock lang="python">
 
@@ -442,16 +444,14 @@ response.content
 
 </CodeOutputBlock>
 
-
 ```python
 response = with_message_history.invoke(
-    {"messages": [HumanMessage(content="whats my name?")], "language": "Spanish"},
+    {"messages": [HumanMessage(content="What's my name?")], "language": "Spanish"},
     config=config,
 )
 
 response.content
 ```
-
 
 <CodeOutputBlock lang="python">
 
@@ -461,22 +461,32 @@ response.content
 
 </CodeOutputBlock>
 
-To help you understand what's happening internally, check out [this LangSmith trace](https://smith.langchain.com/public/f48fabb6-6502-43ec-8242-afc352b769ed/r)
-## Managing Conversation History
+<!--
+Чтобы лучше понять, что происходит внутри, ознакомьтесь с [этой трассировкой LangSmith](https://smith.langchain.com/public/f48fabb6-6502-43ec-8242-afc352b769ed/r).
+-->
 
-One important concept to understand when building chatbots is how to manage conversation history. If left unmanaged, the list of messages will grow unbounded and potentially overflow the context window of the LLM. Therefore, it is important to add a step that limits the size of the messages you are passing in.
+## Управление историей разговоров
 
-**Importantly, you will want to do this BEFORE the prompt template but AFTER you load previous messages from Message History.**
+При разработке чат-бота рано или поздно вам понадобится управлять историей разговоров.
+Это связанно с тем, что в определенный момент количество и содержимое сообщений превзойдут размер контекстного окна LLM.
+Поэтому вам нужно добавить этап, на котором будет ограничиваться размер передваваемых сообщений.
 
-We can do this by adding a simple step in front of the prompt that modifies the `messages` key appropriately, and then wrap that new chain in the Message History class. First, let's define a function that will modify the messages passed in. Let's make it so that it selects the `k` most recent messages. We can then create a new chain by adding that at the start.
+:::caution
+
+При этом, этот этап должен срабатывать до шаблона промпта, но после загрузки пердыдущих сообщений из Message History.
+
+:::
+
+Для этого перед промптом вы можете добавить простой шаг, который изменяет ключ `messages` соотетствующим образом, а затем обернуть полученную цепочку в класс Message History.
+Сначала определите функцию, которая будет изменять передаваемые сообщения.
+Пусть она выбирает `k` самых последних сообщений.
+Затем вы можете создать новую цепочку, добавив их в начало.
 
 ```python
 from langchain_core.runnables import RunnablePassthrough
 
-
 def filter_messages(messages, k=10):
     return messages[-k:]
-
 
 chain = (
     RunnablePassthrough.assign(messages=lambda x: filter_messages(x["messages"]))
@@ -485,7 +495,7 @@ chain = (
 )
 ```
 
-Let's now try it out! If we create a list of messages more than 10 messages long, we can see what it no longer remembers information in the early messages.
+Теперь если вы создадите список сообщений длиной более 10 сообщений, вы увидите, что модель больше не запоминает информацию из первых сообщений.
 
 ```python
 messages = [
@@ -502,7 +512,6 @@ messages = [
 ]
 ```
 
-
 ```python
 response = chain.invoke(
     {
@@ -513,7 +522,6 @@ response = chain.invoke(
 response.content
 ```
 
-
 <CodeOutputBlock lang="python">
 
 ```python
@@ -522,7 +530,7 @@ response.content
 
 </CodeOutputBlock>
 
-But if we ask about information that is within the last ten messages, it still remembers it
+Но если вы спросите информацию, которая находится в последних десяти сообщениях, модель покажет, что все еще ее помнит.
 
 ```python
 response = chain.invoke(
@@ -534,7 +542,6 @@ response = chain.invoke(
 response.content
 ```
 
-
 <CodeOutputBlock lang="python">
 
 ```python
@@ -543,7 +550,7 @@ response.content
 
 </CodeOutputBlock>
 
-Let's now wrap this in the Message History
+Теперь оберните полученный код в Message History.
 
 ```python
 with_message_history = RunnableWithMessageHistory(
@@ -554,7 +561,6 @@ with_message_history = RunnableWithMessageHistory(
 
 config = {"configurable": {"session_id": "abc20"}}
 ```
-
 
 ```python
 response = with_message_history.invoke(
@@ -568,7 +574,6 @@ response = with_message_history.invoke(
 response.content
 ```
 
-
 <CodeOutputBlock lang="python">
 
 ```python
@@ -577,7 +582,8 @@ response.content
 
 </CodeOutputBlock>
 
-There's now two new messages in the chat history. This means that even more information that used to be accessible in our conversation history is no longer available!
+Теперь история чата содержит два новых сообщения.
+Это значит, что еще больше информации, которая ранее хранилась истории разговоров, теперь недоступна.
 
 ```python
 response = with_message_history.invoke(
@@ -591,7 +597,6 @@ response = with_message_history.invoke(
 response.content
 ```
 
-
 <CodeOutputBlock lang="python">
 
 ```python
@@ -600,27 +605,30 @@ response.content
 
 </CodeOutputBlock>
 
-If you take a look at LangSmith, you can see exactly what is happening under the hood in the [LangSmith trace](https://smith.langchain.com/public/fa6b00da-bcd8-4c1c-a799-6b32a3d62964/r)
-## Streaming
+<!--
+Если вы посмотрите на LangSmith, вы сможете увидеть, что происходит под капотом, в [трассировке LangSmith](https://smith.langchain.com/public/fa6b00da-bcd8-4c1c-a799-6b32a3d62964/r).
+-->
 
-Now we've got a function chatbot. However, one *really* important UX consideration for chatbot application is streaming. LLMs can sometimes take a while to respond, and so in order to improve the user experience one thing that most application do is stream back each token as it is generated. This allows the user to see progress.
+## Потоковая передача
 
-It's actually super easy to do this!
+Потоковая передача — одна из важных составляющих пользовательского опыта для чат-ботов.
+Большие языковые модели могут долго отвечать, поэтому для повышения отзывчивости большинство приложений обрабатывает и отображает каждый токен по мере его генерации.
+Это позволяет пользователю видеть прогресс.
 
-All chains expose a `.stream` method, and ones that use message history are no different. We can simply use that method to get back a streaming response.
+Для работы с потоковой передачей все цепочки предоставляют метод `.stream`, и те, что используют историю сообщений, не исключение.
+Используйте этот метод, чтобы получить потоковый ответ.
 
 ```python
 config = {"configurable": {"session_id": "abc15"}}
 for r in with_message_history.stream(
     {
-        "messages": [HumanMessage(content="hi! I'm todd. tell me a joke")],
+        "messages": [HumanMessage(content="hi! I'm Todd. Tell me a joke")],
         "language": "English",
     },
     config=config,
 ):
     print(r.content, end="|")
 ```
-
 
 <CodeOutputBlock lang="python">
 
@@ -634,14 +642,9 @@ for r in with_message_history.stream(
 
 </CodeOutputBlock>
 
-## Next Steps
+## Смотрите также
 
-Now that you understand the basics of how to create a chatbot in LangChain, some more advanced tutorials you may be interested in are:
-
-- [Conversational RAG](/docs/tutorials/qa_chat_history): Enable a chatbot experience over an external source of data
-- [Agents](/docs/tutorials/agents): Build a chatbot that can take actions
-
-If you want to dive deeper on specifics, some things worth checking out are:
-
-- [Streaming](/docs/how_to/streaming): streaming is *crucial* for chat applications
-- [How to add message history](/docs/how_to/message_history): for a deeper dive into all things related to message history
+- [Conversational RAG](/docs/tutorials/qa_chat_history) — позволяет чат-боту использовать внешние источники данных.
+- [Агенты](/docs/tutorials/agents) — чат-боты, которые может выполнять действия.
+- [Работа с потоковой передача](/docs/how_to/streaming) — потоковая передача очень важна для чат-приложений.
+- [Работа с историей сообщений](/docs/how_to/message_history) — раздел с подробной информацией о работе с историей сообщений.
