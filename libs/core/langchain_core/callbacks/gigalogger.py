@@ -1,0 +1,58 @@
+import os
+import uuid
+from typing import TYPE_CHECKING, Optional
+
+if TYPE_CHECKING:
+    from langfuse.callback import CallbackHandler as LangFuseCallback
+
+GIGALOGGER_HOST = "https://gigalogger.demo.sberdevices.ru"
+
+# Глобальные переменные, чтобы не инициализировать logger несколько раз за старт проекта
+INITIALIZED = False
+HANDLER = None
+
+
+class GigaLoggerInitializeException(Exception):
+    def __init__(self, message: str) -> None:
+        self.message = message
+
+
+def create_gigalogger_handler() -> Optional["LangFuseCallback"]:
+    # Этот метод пытается подключиться только один раз при старте проекта к гигалоггеру
+    # Если у него это не выходит, он не повторяет попытки при инициализации других
+    # частей цепочки
+    global HANDLER, INITIALIZED
+    if INITIALIZED:
+        return HANDLER
+    from langfuse.callback import CallbackHandler as LangFuseCallback
+
+    try:
+        pk = os.environ["GIGALOGGER_PUBLIC_KEY"]
+        sk = os.environ["GIGALOGGER_SECRET_KEY"]
+    except KeyError:
+        INITIALIZED = True
+        raise GigaLoggerInitializeException(
+            "Set 'GIGALOGGER_PUBLIC_KEY' and 'GIGALOGGER_SECRET_KEY' "
+            "environment variables."
+        )
+    HANDLER = LangFuseCallback(
+        public_key=pk,
+        secret_key=sk,
+        host=os.environ.get("GIGALOGGER_HOST") or GIGALOGGER_HOST,
+        session_id=os.environ.get("GIGALOGGER_SESSION_ID") or str(uuid.uuid4()),
+    )
+    try:
+        HANDLER.auth_check()
+    except Exception as e:
+        HANDLER = None
+        raise GigaLoggerInitializeException(
+            "Failed to authenticate in GigaLogger. Check your public and secret key. "
+            f"Additional message: '{repr(e)}'"
+        )
+    finally:
+        INITIALIZED = True
+    return HANDLER
+
+
+def _gigalogger_is_enabled() -> bool:
+    return os.environ.get("GIGALOGGER_ENABLED", "").lower() == "true"

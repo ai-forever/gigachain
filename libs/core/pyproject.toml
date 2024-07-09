@@ -19,6 +19,7 @@ tenacity = "^8.1.0,!=8.4.0"
 jsonpatch = "^1.33"
 PyYAML = ">=5.3"
 packaging = ">=23.2,<25"
+langfuse = "^2.38.1"
 
 [tool.poetry.group.lint]
 optional = true
