@@ -1,9 +1,6 @@
 import os
 import uuid
-from typing import TYPE_CHECKING, Optional
-
-if TYPE_CHECKING:
-    from langfuse.callback import CallbackHandler as LangFuseCallback
+from typing import Any
 
 GIGALOGGER_HOST = "https://gigalogger.demo.sberdevices.ru"
 
@@ -17,7 +14,7 @@ class GigaLoggerInitializeException(Exception):
         self.message = message
 
 
-def create_gigalogger_handler() -> Optional["LangFuseCallback"]:
+def create_gigalogger_handler() -> Any:
     # Этот метод пытается подключиться только один раз при старте проекта к гигалоггеру
     # Если у него это не выходит, он не повторяет попытки при инициализации других
     # частей цепочки

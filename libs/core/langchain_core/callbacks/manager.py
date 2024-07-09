@@ -2111,10 +2111,9 @@ def _configure(
     tracer_project = _get_tracer_project()
     debug = _get_debug()
     if verbose or debug or tracing_v2_enabled_ or giga_logger_enabled:
-        from langfuse.callback import CallbackHandler as LangFuseCallback
-
         from langchain_core.tracers.langchain import LangChainTracer
         from langchain_core.tracers.stdout import ConsoleCallbackHandler
+        from langfuse.callback import CallbackHandler as LangFuseCallback
 
         if verbose and not any(
             isinstance(handler, StdOutCallbackHandler)
