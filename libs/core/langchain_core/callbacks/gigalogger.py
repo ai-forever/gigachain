@@ -21,7 +21,14 @@ def create_gigalogger_handler() -> Any:
     global HANDLER, INITIALIZED
     if INITIALIZED:
         return HANDLER
-    from langfuse.callback import CallbackHandler as LangFuseCallback
+    try:
+        from langfuse.callback import CallbackHandler as LangFuseCallback
+    except ImportError:
+        raise ImportError(
+            "Could not import langfuse python package. "
+            "For correct work of gigalogger langfuse is required. "
+            "Please install it with `pip install langfuse`."
+        )
 
     try:
         pk = os.environ["GIGALOGGER_PUBLIC_KEY"]

@@ -19,7 +19,6 @@ tenacity = "^8.1.0,!=8.4.0"
 jsonpatch = "^1.33"
 PyYAML = ">=5.3"
 packaging = ">=23.2,<25"
-langfuse = "^2.38.1"
 
 [tool.poetry.group.lint]
 optional = true
@@ -68,10 +67,6 @@ numpy = [
   { version = "^1.26.0", python = ">=3.12" },
 ]
 
-
-[tool.poetry.group.test_integration]
-optional = true
-dependencies = {}
 
 [tool.poetry.extras]
 

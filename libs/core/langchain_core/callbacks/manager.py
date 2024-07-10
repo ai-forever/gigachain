@@ -2113,7 +2113,6 @@ def _configure(
     if verbose or debug or tracing_v2_enabled_ or giga_logger_enabled:
         from langchain_core.tracers.langchain import LangChainTracer
         from langchain_core.tracers.stdout import ConsoleCallbackHandler
-        from langfuse.callback import CallbackHandler as LangFuseCallback
 
         if verbose and not any(
             isinstance(handler, StdOutCallbackHandler)
@@ -2148,27 +2147,36 @@ def _configure(
                         " unset the LANGCHAIN_TRACING_V2 environment variables.",
                         f"{repr(e)}",
                     )
-        if giga_logger_enabled and not any(
-            isinstance(handler, LangFuseCallback)
-            for handler in callback_manager.handlers
-        ):
+        if giga_logger_enabled:
             try:
-                logger_handler = create_gigalogger_handler()
-                if logger_handler is not None:
-                    callback_manager.add_handler(logger_handler, True)
-            except GigaLoggerInitializeException as e:
-                logger.warning(e.message)
-                logger.warning(
-                    "To disable this warning, "
-                    "unset the GIGALOGGER_ENABLED environment variable."
+                from langfuse.callback import CallbackHandler as LangFuseCallback
+            except ImportError:
+                raise ImportError(
+                    "Could not import langfuse python package. "
+                    "For correct work of gigalogger langfuse is required. "
+                    "Please install it with `pip install langfuse`."
                 )
-            except Exception as e:
-                logger.warning(
-                    "Unable to load GigaLogger. "
-                    "To disable this warning, "
-                    "unset the GIGALOGGER_ENABLED environment variable. "
-                    f"{str(e)}"
-                )
+            if not any(
+                isinstance(handler, LangFuseCallback)
+                for handler in callback_manager.handlers
+            ):
+                try:
+                    logger_handler = create_gigalogger_handler()
+                    if logger_handler is not None:
+                        callback_manager.add_handler(logger_handler, True)
+                except GigaLoggerInitializeException as e:
+                    logger.warning(e.message)
+                    logger.warning(
+                        "To disable this warning, "
+                        "unset the GIGALOGGER_ENABLED environment variable."
+                    )
+                except Exception as e:
+                    logger.warning(
+                        "Unable to load GigaLogger. "
+                        "To disable this warning, "
+                        "unset the GIGALOGGER_ENABLED environment variable. "
+                        f"{str(e)}"
+                    )
         if run_tree is not None:
             for handler in callback_manager.handlers:
                 if isinstance(handler, LangChainTracer):
