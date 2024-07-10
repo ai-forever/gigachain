@@ -27,5 +27,4 @@ jobs:
         GITVERSE_TOKEN: ${{ secrets.GITVERSE_PERSONAL_TOKEN }}
       run: |
         git remote add gitverse https://GigaChain_Token:${GITVERSE_TOKEN}@gitverse.ru/sc/pkkashkarov/test.git
-        git fetch --unshallow origin
         git push -u gitverse master
