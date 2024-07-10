@@ -68,6 +68,10 @@ numpy = [
 ]
 
 
+[tool.poetry.group.test_integration]
+optional = true
+dependencies = {}
+
 [tool.poetry.extras]
 
 [tool.ruff.lint]
