@@ -136,13 +136,19 @@ def convert_pydantic_to_gigachat_function(
                 return_schema["properties"]["result"]["type"] = "object"
             return_parameters = return_schema["properties"]["result"]
 
-    return {
+    # Remove empty return paramters
+    if return_parameters and "properties" not in return_parameters:
+        return_parameters = None
+
+    res = {
         "name": name or title,
         "description": description or schema["description"],
         "parameters": schema,
-        "return_parameters": return_parameters,
         "few_shot_examples": few_shot_examples,
     }
+    if return_parameters is not None:
+        res["return_parameters"] = return_parameters
+    return res
 
 
 @deprecated(
