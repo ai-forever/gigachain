@@ -21,6 +21,7 @@ jobs:
       run: |
         git config --global user.name "github-actions[bot]"
         git config --global user.email "github-actions[bot]@users.noreply.github.com"
+        git config --global http.postBuffer 157286400
 
     - name: Push to Gitverse
       env:
