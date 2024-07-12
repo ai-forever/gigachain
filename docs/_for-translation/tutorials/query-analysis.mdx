@@ -1,18 +1,29 @@
-# Build a Query Analysis System
+# Создание системы анализа запросов
 
-This page will show how to use query analysis in a basic end-to-end example. This will cover creating a simple search engine, showing a failure mode that occurs when passing a raw user question to that search, and then an example of how query analysis can help address that issue. There are MANY different query analysis techniques and this end-to-end example will not show all of them.
+Раздел содержит готовый пример, который показывает, как использовать анализ запросов.
+Пример демонстрирует:
 
-For the purpose of this example, we will do retrieval over the LangChain YouTube videos.
-## Setup
-#### Install dependencies
+- создание простого поискового движка;
+- режим ошибки, который возникает при передаче необработанного вопроса пользователя в поиск;
+- как анализ запросов может помочь исправить возникшую ошибку. 
+
+:::note
+
+Существует множество разных методик анализа запросов, которые не показаны в примере.
+
+:::
+
+Анализ запросов продемонстрирован на примере поиска по видео на YouTube-канале LangChain.
+
+## Подготовка к работе
+
+Установите зависимости и переменные окружения.
 
 ```python
 # %pip install -qU langchain langchain-community langchain-openai youtube-transcript-api pytube gigachain-chroma
 ```
 
-#### Set environment variables
-
-We'll use OpenAI in this example:
+При работе с этим руководством используется модель OpenAI.
 
 ```python
 import getpass
@@ -20,14 +31,14 @@ import os
 
 os.environ["OPENAI_API_KEY"] = getpass.getpass()
 
-# Optional, uncomment to trace runs with LangSmith. Sign up here: https://smith.langchain.com.
+# Раскомментируйте строки ниже, чтобы использовать LangSmith. Не обязательно.
 # os.environ["LANGCHAIN_TRACING_V2"] = "true"
 # os.environ["LANGCHAIN_API_KEY"] = getpass.getpass()
 ```
 
-### Load documents
+### Загрузка документов
 
-We can use the `YouTubeLoader` to load transcripts of a few LangChain videos:
+Используйте `YouTubeLoader` для загрузки транскрипций нескольких видео LangChain:
 
 ```python
 from langchain_community.document_loaders import YoutubeLoader
@@ -56,7 +67,7 @@ for url in urls:
 ```python
 import datetime
 
-# Add some additional metadata: what year the video was published
+# Добавление дополнительной метаданных: год публикации видео
 for doc in docs:
     doc.metadata["publish_year"] = int(
         datetime.datetime.strptime(
@@ -65,7 +76,7 @@ for doc in docs:
     )
 ```
 
-Here are the titles of the videos we've loaded:
+Заголовки загруженных видео хранятся в списке `docs`:
 
 ```python
 [doc.metadata["title"] for doc in docs]
@@ -92,7 +103,8 @@ Here are the titles of the videos we've loaded:
 
 </CodeOutputBlock>
 
-Here's the metadata associated with each video. We can see that each document also has a title, view count, publication date, and length:
+Вы также можете получить доступ к метаданным, связанным с каждым видео.
+Каждый документ также имеет заголовок, количество просмотров, дату публикации и продолжительность:
 
 ```python
 docs[0].metadata
@@ -115,7 +127,7 @@ docs[0].metadata
 
 </CodeOutputBlock>
 
-And here's a sample from a document's contents:
+Пример содержимого одного из документов:
 
 ```python
 docs[0].page_content[:500]
@@ -130,9 +142,11 @@ docs[0].page_content[:500]
 
 </CodeOutputBlock>
 
-### Indexing documents
+### Индексирование документов
 
-Whenever we perform retrieval we need to create an index of documents that we can query. We'll use a vector store to index our documents, and we'll chunk them first to make our retrievals more concise and precise:
+Каждый раз при извлечении данных нужно создавать индекс документов, к которым можно выполнять запросы.
+Для индексирования документов используйте векторное хранилище.
+Перед помещением документов в хранилище их на части, чтобы ваши запросы были более точными и краткими.
 
 ```python
 from langchain_chroma import Chroma
@@ -148,9 +162,9 @@ vectorstore = Chroma.from_documents(
 )
 ```
 
-## Retrieval without query analysis
+## Извлечение без анализа запросов
 
-We can perform similarity search on a user question directly to find chunks relevant to the question:
+Вы можете выполнять поиск по сходству с запросом пользователя, для обнаружения подходящих фрагментов.
 
 ```python
 search_results = vectorstore.similarity_search("how do I build a RAG agent")
@@ -168,8 +182,8 @@ print(search_results[0].page_content[:500])
 
 </CodeOutputBlock>
 
-This works pretty well! Our first result is quite relevant to the question.
-What if we wanted to search for results from a specific time period?
+Вы можете видеть удовлетворительный результат, соответствующий запросу пользователя.
+Но что, если вам нужно искать результаты за определенный период времени?
 
 ```python
 search_results = vectorstore.similarity_search("videos on RAG published in 2023")
@@ -189,15 +203,23 @@ print(search_results[0].page_content[:500])
 
 </CodeOutputBlock>
 
-Our first result is from 2024 (despite us asking for videos from 2023), and not very relevant to the input. Since we're just searching against document contents, there's no way for the results to be filtered on any document attributes.
+Первый результат относится к 2024 году (хотя в запросе задан 2023 год) и не очень релевантен запросу.
+Поскольку в данном случае выполняется простой поиск по содержимому документов, у вас нет возможности фильтровать результаты по каким-либо атрибутам документа.
 
-This is just one failure mode that can arise. Let's now take a look at how a basic form of query analysis can fix it!
-## Query analysis
+Это лишь одна проблем, которые могут возникнуть. 
+Рассмотрим, как анализ запросов может ее исправить.
 
-We can use query analysis to improve the results of retrieval. This will involve defining a **query schema** that contains some date filters and use a function-calling model to convert a user question into a structured queries. 
+## Анализ запросов
 
-### Query schema
-In this case we'll have explicit min and max attributes for publication date so that it can be filtered on.
+Используйте анализ запросов для улучшения результатов поиска.
+Для этого нужно:
+
+- определить схему запроса, которая будет содержать фильтр по датам;
+- использовать модель, которая способна вызывать функци, для преобразования вопроса пользователя в структурированный запрос.
+
+### Схема запроса
+
+В представленном примере для даты публикации используются явные аттрибуты, которые позволяют задать диапазон для фильтрации.
 
 ```python
 from typing import Optional
@@ -215,9 +237,10 @@ class Search(BaseModel):
     publish_year: Optional[int] = Field(None, description="Year video was published")
 ```
 
-### Query generation
+### Генерация запросов
 
-To convert user questions to structured queries we'll make use of OpenAI's tool-calling API. Specifically we'll use the new [ChatModel.with_structured_output()](/docs/how_to/structured_output) constructor to handle passing the schema to the model and parsing the output.
+Для преобразования пользовательских вопросов в структурированные запросы в примере используется API вызова инструментов OpenAI.
+Например, используется новый конструктор [ChatModel.with_structured_output()](/docs/how_to/structured_output) для передачи схемы модели и анализа вывода.
 
 ```python
 from langchain_core.prompts import ChatPromptTemplate
@@ -250,7 +273,7 @@ query_analyzer = {"question": RunnablePassthrough()} | prompt | structured_llm
 
 </CodeOutputBlock>
 
-Let's see what queries our analyzer generates for the questions we searched earlier:
+Посмотрите, какие запросы анализатор генерирует для ранее заданных поисковых вопросов:
 
 ```python
 query_analyzer.invoke("how do I build a RAG agent")
@@ -279,11 +302,18 @@ query_analyzer.invoke("videos on RAG published in 2023")
 
 </CodeOutputBlock>
 
-## Retrieval with query analysis
+## Извлечение с анализом запросов
 
-Our query analysis looks pretty good; now let's try using our generated queries to actually perform retrieval. 
+Используйте сгенерированные запросы для извлечения данных.
 
-**Note:** in our example, we specified `tool_choice="Search"`. This will force the LLM to call one - and only one - tool, meaning that we will always have one optimized query to look up. Note that this is not always the case - see other guides for how to deal with situations when no - or multiple - optmized queries are returned.
+:::note
+
+В примере указан инструмент `tool_choice="Search"`.
+Это вынудит LLM вызвать только один инструмент, что приведет к тому, что у вас всегда будет один оптимизированный запрос для поиска.
+
+Это не всегда так. В других руководствах вы найдете информацию о том, как поступать в ситуациях, когда не возвращается ни одного или возвращается несколько оптимизированных запросов.
+
+:::
 
 ```python
 from typing import List
@@ -308,7 +338,7 @@ def retrieval(search: Search) -> List[Document]:
 retrieval_chain = query_analyzer | retrieval
 ```
 
-We can now run this chain on the problematic input from before, and see that it yields only results from that year!
+Запустите полученную цепочку с входными данными, которые привели к проблеме, из примера выше и убедитесь, что она возвращает только результаты за указанный год:
 
 ```python
 results = retrieval_chain.invoke("RAG tutorial published in 2023")

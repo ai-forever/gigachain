@@ -1,33 +1,50 @@
-# Build a Question/Answering system over SQL data
+# Создание вопросно-ответного приложения на основе данных SQL
 
-Enabling a LLM system to query structured data can be qualitatively different from unstructured text data. Whereas in the latter it is common to generate text that can be searched against a vector database, the approach for structured data is often for the LLM to write and execute queries in a DSL, such as SQL. In this guide we'll go over the basic ways to create a Q&A system over tabular data in databases. We will cover implementations using both chains and agents. These systems will allow us to ask a question about the data in a database and get back a natural language answer. The main difference between the two is that our agent can query the database in a loop as many times as it needs to answer the question.
+Работа LLM со структурированными данными и неструктурированным текстом может качественно отличаться.
+Если при работе с неструктурированным текстом обычно генерируется текст, который можно найти с помощью поиска по векторному хранилищу, то для взаимодействия со структурированными данными LLM зачастую нужно писать запросы на подходящем DSL (domain specific language), например, SQL. 
 
-## ⚠️ Security note ⚠️
+Раздел содержит пример разработки вопросно-ответных приложений, которые используют табличные данные в базе данных.
+Здесь представлены два варианта реализации: с использованием цепочек и агентов.
+Оба варианта позволяют задавать вопрос о данных, которые хранятся в базе, и возвращает ответ на естественном языке.
+При этом основное отличие решения, которое использует агента, в том, что агент может выполнять запросы к базе данных в цикле столько раз, сколько нужно для ответа на вопрос.
 
-Building Q&A systems of SQL databases requires executing model-generated SQL queries. There are inherent risks in doing this. Make sure that your database connection permissions are always scoped as narrowly as possible for your chain/agent's needs. This will mitigate though not eliminate the risks of building a model-driven system. For more on general security best practices, [see here](/docs/security).
+:::danger
 
+Вопросно-ответные приложения на базе данных SQL требуют выполнения SQL запросов, которые сгенерировала модель.
+Это связано с определенными рисками.
+Убедитесь, что вашим цепочкам/агентам предоставлены только необходимые разрешения.
+Это снизит, но не устранит полностью, риски создания системы, управляемой моделью.
+Подробнее — в разделе [Безопасность](/docs/security).
 
-## Architecture
+:::
 
-At a high-level, the steps of these systems are:
+## Архитектура
 
-1. **Convert question to DSL query**: Model converts user input to a SQL query.
-2. **Execute SQL query**: Execute the query.
-3. **Answer the question**: Model responds to user input using the query results.
+В общем случае работу таких приложений можно представить этапами:
 
-Note that querying data in CSVs can follow a similar approach. See our [how-to guide](/docs/how_to/sql_csv) on question-answering over CSV data for more detail.
+1. Преобразование вопроса в запрос DSL. Модель преобразует ввод пользователя в SQL запрос.
+2. Выполнение SQL запроса.
+3. Ответ на вопрос. Модель отвечает на ввод пользователя, используя результаты запроса.
+
+:::note
+
+Запрос данных из CSV-файлов может следовать аналогичным этапам.
+
+Подробнее в разделе [How to do question answering over CSVs](/docs/how_to/sql_csv).
+
+:::
 
 <Image img={require('../../static/img/sql_usecase.png')} alt="sql_usecase.png" />
 
-## Setup
+## Подготовка к работе
 
-First, get required packages and set environment variables:
+Установите необходимые пакеты и задайте переменные окружения:
 
 ```python
-%pip install --upgrade --quiet  langchain langchain-community langchain-openai
+%pip install --upgrade --quiet langchain langchain-community langchain-openai
 ```
 
-We will use an OpenAI model in this guide.
+При работе с этим руководством используется модель OpenAI.
 
 ```python
 import getpass
@@ -35,19 +52,21 @@ import os
 
 os.environ["OPENAI_API_KEY"] = getpass.getpass()
 
-# Uncomment the below to use LangSmith. Not required.
+# Раскомментируйте строки ниже, чтобы использовать LangSmith. Не обязательно.
 # os.environ["LANGCHAIN_API_KEY"] = getpass.getpass()
 # os.environ["LANGCHAIN_TRACING_V2"] = "true"
 ```
 
-The below example will use a SQLite connection with Chinook database. Follow [these installation steps](https://database.guide/2-sample-databases-sqlite/) to create `Chinook.db` in the same directory as this notebook:
+Ниже в примере используется SQLite-соединение с базой данных Chinook.
 
-* Save [this file](https://raw.githubusercontent.com/lerocha/chinook-database/master/ChinookDatabase/DataSources/Chinook_Sqlite.sql) as `Chinook.sql`
-* Run `sqlite3 Chinook.db`
-* Run `.read Chinook.sql`
-* Test `SELECT * FROM Artist LIMIT 10;`
+Для работы с блокнотом следуйте [инструкции по установке](https://database.guide/2-sample-databases-sqlite/), чтобы создать `Chinook.db` в той же папке, что и этот блокнот:
 
-Now, `Chinhook.db` is in our directory and we can interface with it using the SQLAlchemy-driven `SQLDatabase` class:
+1. Сохраните файл [`Chinook_Sqlite.sql`](https://raw.githubusercontent.com/lerocha/chinook-database/master/ChinookDatabase/DataSources/Chinook_Sqlite.sql) как `Chinook.sql`
+2. Запустите `sqlite3 Chinook.db`
+3. Выполните `.read Chinook.sql`
+4. Проверьте `SELECT * FROM Artist LIMIT 10;`
+
+После создания базы данных `Chinhook.db` в той же папке, что и блокнот, вы можете обращаться к ней с помощью класс `SQLDatabase`, который работает на основе SQLAlchemy:
 
 ```python
 from langchain_community.utilities import SQLDatabase
@@ -77,20 +96,28 @@ db.run("SELECT * FROM Artist LIMIT 10;")
 
 </CodeOutputBlock>
 
-Great! We've got a SQL database that we can query. Now let's try hooking it up to an LLM.
+После создания базы данных попробуйте подключить ее к LLM.
 
-## Chains {#chains}
+## Цепочки {#chains}
 
-Chains (i.e., compositions of LangChain [Runnables](/docs/concepts#langchain-expression-language)) support applications whose steps are predictable. We can create a simple chain that takes a question and does the following:
-- convert the question into a SQL query;
-- execute the query;
-- use the result to answer the original question.
+Цепочки (соединения [Runnable-объектов](/docs/concepts#langchain-expression-language) GigaChain) поддерживают приложения с предсказуемыми этапами работы.
 
-There are scenarios not supported by this arrangement. For example, this system will execute a SQL query for any user input-- even "hello". Importantly, as we'll see below, some questions require more than one query to answer. We will address these scenarios in the Agents section.
+Вы можете создать простую цепочку, которая принимает вопрос и выполняет действия:
 
-### Convert question to SQL query
+- преобразует вопрос в SQL-запрос;
+- выполняет запрос;
+- использует результат для ответа на исходный вопрос.
 
-The first step in a SQL chain or agent is to take the user input and convert it to a SQL query. LangChain comes with a built-in chain for this: [create_sql_query_chain](https://api.python.langchain.com/en/latest/chains/langchain.chains.sql_database.query.create_sql_query_chain.html).
+Но существуют сценарии, которые не получится реализовать с помощью этой схемы.
+Например, такое приложение выполнит SQL-запрос для любого ввода пользователя, даже для простого приветствия "привет".
+При этом, некоторые вопросы требуют более одного запроса для получения ответа.
+Обработка таких ситуаций рассмотрена в подразделе об [Агенты](#agents).
+
+### Преобразование вопроса в SQL-запрос
+
+Первый шаг в SQL-цепочке или агенте — это преобразовать ввод пользователя в SQL-запрос.
+Для этого в GigaChain есть встроенная цепочка: [create_sql_query_chain](https://api.python.langchain.com/en/latest/chains/langchain.chains.sql_database.query.create_sql_query_chain.html).
+
 ```{=mdx}
 import ChatModelTabs from "@theme/ChatModelTabs";
 
@@ -106,7 +133,6 @@ from langchain_openai import ChatOpenAI
 llm = ChatOpenAI(model="gpt-3.5-turbo", temperature=0)
 ```
 
-
 ```python
 from langchain.chains import create_sql_query_chain
 
@@ -114,7 +140,6 @@ chain = create_sql_query_chain(llm, db)
 response = chain.invoke({"question": "How many employees are there"})
 response
 ```
-
 
 <CodeOutputBlock lang="python">
 
@@ -124,12 +149,11 @@ response
 
 </CodeOutputBlock>
 
-We can execute the query to make sure it's valid:
+Выполните запрос, чтобы убедиться, что он работает:
 
 ```python
 db.run(response)
 ```
-
 
 <CodeOutputBlock lang="python">
 
@@ -139,18 +163,25 @@ db.run(response)
 
 </CodeOutputBlock>
 
-We can look at the [LangSmith trace](https://smith.langchain.com/public/c8fa52ea-be46-4829-bde2-52894970b830/r) to get a better understanding of what this chain is doing. We can also inspect the chain directly for its prompts. Looking at the prompt (below), we can see that it is:
-
-* Dialect-specific. In this case it references SQLite explicitly.
-* Has definitions for all the available tables.
-* Has three examples rows for each table.
-
-This technique is inspired by papers like [this](https://arxiv.org/pdf/2204.00498.pdf), which suggest showing examples rows and being explicit about tables improves performance. We can also inspect the full prompt like so:
+Вы можете исследовать полный промпт следующим образом:
 
 ```python
 chain.get_prompts()[0].pretty_print()
 ```
 
+<!--
+Мы можем посмотреть на [трассировку LangSmith](https://smith.langchain.com/public/c8fa52ea-be46-4829-bde2-52894970b830/r), чтобы лучше понять, что делает эта цепочка. Мы также можем непосредственно исследовать цепочку для её промптов. Посмотрев на промпт (ниже), мы можем увидеть, что он:
+
+* Специфичен для диалекта. В этом случае он явно ссылается на SQLite.
+* Имеет определения для всех доступных таблиц.
+* Имеет три примера строк для каждой таблицы.
+
+Эта техника вдохновлена статьями, такими как [эта](https://arxiv.org/pdf/2204.00498.pdf), которые предполагают, что показ примеров строк и явное указание таблиц улучшает производительность. Мы также можем исследовать полный промпт следующим образом:
+
+```python
+chain.get_prompts()[0].pretty_print()
+```
+-->
 
 <CodeOutputBlock lang="python">
 
@@ -176,11 +207,15 @@ chain.get_prompts()[0].pretty_print()
 
 </CodeOutputBlock>
 
-### Execute SQL query
+### Выполнение SQL-запроса
 
-Now that we've generated a SQL query, we'll want to execute it. **This is the most dangerous part of creating a SQL chain.** Consider carefully if it is OK to run automated queries over your data. Minimize the database connection permissions as much as possible. Consider adding a human approval step to you chains before query execution (see below).
+Выполнение запроса — самая опасная часть создания SQL-цепочки.
+Взвесьте все за и против перед выполнением автоматических запросов к своим данным.
+Уменьшите количество прав при доступе к базе данных до минимума.
+Подумайте стоит ли добавить в свои цепочки этап, на котором человек самостоятельно принимает решение выполнять запрос или нет.
+Как это сделать, смотрите ниже.
 
-We can use the `QuerySQLDatabaseTool` to easily add query execution to our chain:
+Для добавления запросов в цепочку используйте `QuerySQLDatabaseTool`:
 
 ```python
 from langchain_community.tools.sql_database.tool import QuerySQLDataBaseTool
@@ -200,9 +235,11 @@ chain.invoke({"question": "How many employees are there"})
 
 </CodeOutputBlock>
 
-### Answer the question
+### Ответ на вопрос
 
-Now that we've got a way to automatically generate and execute queries, we just need to combine the original question and SQL query result to generate a final answer. We can do this by passing question and result to the LLM once more:
+Чтобы создать итоговый ответ достаточно объединить исходный вопрос и результат SQL-запроса.
+
+Для этого передайте вопрос и результат в LLM:
 
 ```python
 from operator import itemgetter
@@ -241,37 +278,42 @@ chain.invoke({"question": "How many employees are there"})
 
 </CodeOutputBlock>
 
-Let's review what is happening in the above LCEL. Suppose this chain is invoked.
-- After the first `RunnablePassthrough.assign`, we have a runnable with two elements:  
-  `{"question": question, "query": write_query.invoke(question)}`  
-  Where `write_query` will generate a SQL query in service of answering the question.
-- After the second `RunnablePassthrough.assign`, we have add a third element `"result"` that contains `execute_query.invoke(query)`, where `query` was computed in the previous step.
-- These three inputs are formatted into the prompt and passed into the LLM.
-- The `StrOutputParser()` plucks out the string content of the output message.
+Рассмотрим, что происходит в примере выше.
+Предположим, что выполняется вызов представленной цепочки.
 
-Note that we are composing LLMs, tools, prompts, and other chains together, but because each implements the Runnable interface, their inputs and outputs can be tied together in a reasonable way.
-### Next steps
+- После срабатывания первого `RunnablePassthrough.assign`, вы получаете Runnable-объект с двумя элементами: `{"question": question, "query": write_query.invoke(question)}`  
+  Где `write_query` сгенерирует SQL-запрос для ответа на вопрос.
+- После срабатывания второго `RunnablePassthrough.assign` добавляетчся третий элемент `"result"`, который содержит `execute_query.invoke(query)`, где `query` был вычислен на предыдущем шаге.
+- Эти три входных значения преобразуются в промпт и передаются в LLM.
+- `StrOutputParser()` извлекает строковое содержимое из выходного сообщения.
 
-For more complex query-generation, we may want to create few-shot prompts or add query-checking steps. For advanced techniques like this and more check out:
+В примере LLM, инструменты, промпты и другие цепочки объединяются вместе, но поскольку каждый из этих элементов реализует интерфейс `Runnable`, их входные и выходные данные могут быть связаны между собой.
 
-* [Prompting strategies](/docs/how_to/sql_prompting): Advanced prompt engineering techniques.
-* [Query checking](/docs/how_to/sql_query_checking): Add query validation and error handling.
-* [Large databses](/docs/how_to/sql_large_db): Techniques for working with large databases.
-## Agents {#agents}
+### Смотрите также
 
-LangChain has a SQL Agent which provides a more flexible way of interacting with SQL Databases than a chain. The main advantages of using the SQL Agent are:
+Для более сложной генерации запросов вы можете создать промпты с несколькими примерами или добавить шаги проверки запросов.
+Подробнее об этих методиках в разделах:
 
-- It can answer questions based on the databases' schema as well as on the databases' content (like describing a specific table).
-- It can recover from errors by running a generated query, catching the traceback and regenerating it correctly.
-- It can query the database as many times as needed to answer the user question.
-- It will save tokens by only retrieving the schema from relevant tables.
+- [Стратегии формирования промптов](/docs/how_to/sql_prompting).
+- [Проверка запросов](/docs/how_to/sql_query_checking).
+- [Большие базы данных](/docs/how_to/sql_large_db).
 
-To initialize the agent we'll use the `SQLDatabaseToolkit` to create a bunch of tools:
+## Агенты {#agents}
 
-* Create and execute queries
-* Check query syntax
-* Retrieve table descriptions
-* ... and more
+В GigaChain есть встроенный SQL-агент, который предоставляет более гибкий способ работы с базами данных SQL, чем цепочка.
+Основные преимущества использования SQL-агента:
+
+- способность отвечать на вопросы, как на основе схемы, так и на основе содержимого базы данных. Например, описывая конкретную таблицу.
+- возможность восстановиться после ошибок. Агент выполняет запрос, обрабатывает трассировку ошибки и заново генерирует исправленный запрос.
+- способность выполнять запросы к базе данных столько раз, сколько необходимо для ответа на вопрос пользователя.
+- экономия токенов, обусловленная запросом только схем из соответствующих таблиц.
+
+Для инициализации агента используйте `SQLDatabaseToolkit`.
+С помощью этого класса можно:
+
+* создавать и выполнять запросы;
+* проверять синтаксис запросов;
+* получать описания таблиц и выполнять другие действия.
 
 ```python
 from langchain_community.agent_toolkits import SQLDatabaseToolkit
@@ -295,9 +337,9 @@ tools
 
 </CodeOutputBlock>
 
-### System Prompt
+### Системный промпт
 
-We will also want to create a system prompt for our agent. This will consist of instructions for how to behave.
+Вам также нужно создать системный промпт, который включает инструкций о том, как агент должен себя вести.
 
 ```python
 from langchain_core.messages import SystemMessage
@@ -320,14 +362,15 @@ Then you should query the schema of the most relevant tables."""
 system_message = SystemMessage(content=SQL_PREFIX)
 ```
 
-### Initializing agent
-First, get required package **LangGraph**
+### Инициализация агента
+
+Сначала установите необходимый пакет GigaGraph.
 
 ```python
 %pip install --upgrade --quiet langgraph
 ```
 
-We will use a prebuilt [LangGraph](/docs/concepts/#langgraph) agent to build our agent
+В примерах ниже для разработки агента используется предварительно подготовленный агент [GigaGraph](/docs/concepts/#langgraph):
 
 ```python
 from langchain_core.messages import HumanMessage
@@ -338,7 +381,7 @@ agent_executor = chat_agent_executor.create_tool_calling_executor(
 )
 ```
 
-Consider how the agent responds to the below question:
+Посмотрите, как агент отвечает на следующий вопрос:
 
 ```python
 for s in agent_executor.stream(
@@ -370,14 +413,14 @@ for s in agent_executor.stream(
 
 </CodeOutputBlock>
 
-Note that the agent executes multiple queries until it has the information it needs:
-1. List available tables;
-2. Retrieves the schema for three tables;
-3. Queries multiple of the tables via a join operation.
+Агент выполняет несколько запросов, пока не получит нужную информацию:
+1. Перечисляет доступные таблицы.
+2. Извлекает схему для трех таблиц.
+3. Выполняет запросы к нескольким таблицам с использованием операции объединения.
 
-The agent is then able to use the result of the final query to generate an answer to the original question.
+После этого агент может использовать результат последнего запроса для формирования ответа на исходный вопрос.
 
-The agent can similarly handle qualitative questions:
+Похожим образом агент может обрабатывать качественные вопросы:
 
 ```python
 for s in agent_executor.stream(
@@ -409,13 +452,16 @@ for s in agent_executor.stream(
 
 </CodeOutputBlock>
 
-### Dealing with high-cardinality columns
+### Работа со столбцами с высокой кардинальностью
 
-In order to filter columns that contain proper nouns such as addresses, song names or artists, we first need to double-check the spelling in order to filter the data correctly. 
+Для фильтрации столбцов, которые содержат имена собственные, такие как адреса, названия песен или имена артистов, сначала нужно дважды проверить орфографию, чтобы корректно отфильтровать данные.
 
-We can achieve this by creating a vector store with all the distinct proper nouns that exist in the database. We can then have the agent query that vector store each time the user includes a proper noun in their question, to find the correct spelling for that word. In this way, the agent can make sure it understands which entity the user is referring to before building the target query.
+Вы можете добиться этого, создав векторное хранилище со всеми уникальными именами собственными, которые существуют в базе данных.
+После этого агент сможет выполнять запросы к созданному хранилищу каждый раз, когда пользователь включает имя собственное в свой вопрос, чтобы найти правильное написание этого слова.
+Таким образом, агент сможет убедиться, что он понимает, о каком объекте говорит пользователь, прежде чем создавать целевой запрос.
 
-First we need the unique values for each entity we want, for which we define a function that parses the result into a list of elements:
+Сначала вам нужно получить уникальные значения для каждого необходимого объекта.
+Для этого определите функцию, которая будет разбирать результат в список элементов:
 
 ```python
 import ast
@@ -447,7 +493,7 @@ albums[:5]
 
 </CodeOutputBlock>
 
-Using this function, we can create a **retriever tool** that the agent can execute at its discretion.
+Используя эту функцию, вы можете создать *инструмент ретривера*, который агент сможет выполнять по своему усмотрению.
 
 ```python
 from langchain.agents.agent_toolkits import create_retriever_tool
@@ -488,9 +534,9 @@ print(retriever_tool.invoke("Alice Chains"))
 
 </CodeOutputBlock>
 
-This way, if the agent determines it needs to write a filter based on an artist along the lines of "Alice Chains", it can first use the retriever tool to observe relevant values of a column.
+Таким образом, если агент решит, что ему нужно создать фильтр на основе имени исполнителя, например "Alice Chains", он сначала сможет использовать инструмент ретривера для получения соответствующих значений столбца.
 
-Putting this together:
+Итоговое решение будет выглядеть так:
 
 ```python
 system = """You are an agent designed to interact with a SQL database.
@@ -541,4 +587,4 @@ for s in agent.stream(
 
 </CodeOutputBlock>
 
-As we can see, the agent used the `search_proper_nouns` tool in order to check how to correctly query the database for this specific artist.
+В примере выше агент использовал инструмент `search_proper_nouns` для того, чтобы проверить, как правильно выполнить запрос к базе данных для этого конкретного исполнителя.

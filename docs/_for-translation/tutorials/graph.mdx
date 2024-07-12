@@ -1,33 +1,37 @@
-# Build a Question Answering application over a Graph Database
+# Создание вопросно-ответного приложения на основе графовой базы данных
 
-In this guide we'll go over the basic ways to create a Q&A chain over a graph database. These systems will allow us to ask a question about the data in a graph database and get back a natural language answer.
+В разделе рассмотрены основные способы создания цепочки Вопрос-Ответ на основе графовой базы данных. Такие системы позволят нам задавать вопросы о данных в графовой базе данных и получать ответы на естественном языке.
 
-## ⚠️ Security note ⚠️
+:::danger
 
-Building Q&A systems of graph databases requires executing model-generated graph queries. There are inherent risks in doing this. Make sure that your database connection permissions are always scoped as narrowly as possible for your chain/agent's needs. This will mitigate though not eliminate the risks of building a model-driven system. For more on general security best practices, [see here](/docs/security).
+Вопросно-ответные приложения на основе графовых баз данных требуют выполнения SQL запросов, которые сгенерировала модель.
+Это связано с определенными рисками.
+Убедитесь, что вашим цепочкам/агентам предоставлены только необходимые разрешения.
+Это снизит, но не устранит полностью, риски создания системы, управляемой моделью.
+Подробнее — в разделе [Безопасность](/docs/security).
 
+:::
 
-## Architecture
+## Архитектура
 
-At a high-level, the steps of most graph chains are:
+В общем случае работу таких приложений можно представить этапами:
 
-1. **Convert question to a graph database query**: Model converts user input to a graph database query (e.g. Cypher).
-2. **Execute graph database query**: Execute the graph database query.
-3. **Answer the question**: Model responds to user input using the query results.
-
+1. Преобразование вопроса в запрос к графовой базе данных. Модель преобразует ввод пользователя в запрос к графовой базе данных (например, Cypher).
+2. Выполнение запроса к графовой базе данных.
+3. Ответ на вопрос. Модель отвечает на ввод пользователя, используя результаты запроса.
 
 <Image img={require('../../static/img/graph_usecase.png')} alt="sql_usecase.png" />
 
-## Setup
+## Подготовка к работе
 
-First, get required packages and set environment variables.
-In this example, we will be using Neo4j graph database.
+Установите необходимые пакеты и задайте переменные окружения.
+В представленном примере используется графовая база данных Neo4j.
 
 ```python
 %pip install --upgrade --quiet  langchain langchain-community langchain-openai neo4j
 ```
 
-We default to OpenAI models in this guide.
+При работе с этим руководством используется модель OpenAI.
 
 ```python
 import getpass
@@ -49,8 +53,8 @@ os.environ["OPENAI_API_KEY"] = getpass.getpass()
 
 </CodeOutputBlock>
 
-Next, we need to define Neo4j credentials.
-Follow [these installation steps](https://neo4j.com/docs/operations-manual/current/installation/) to set up a Neo4j database.
+После этого нужно задать учетные данные Neo4j.
+Следуйте [инструкции по установке](https://neo4j.com/docs/operations-manual/current/installation/), чтобы настроить базу данных Neo4j.
 
 ```python
 os.environ["NEO4J_URI"] = "bolt://localhost:7687"
@@ -58,14 +62,14 @@ os.environ["NEO4J_USERNAME"] = "neo4j"
 os.environ["NEO4J_PASSWORD"] = "password"
 ```
 
-The below example will create a connection with a Neo4j database and will populate it with example data about movies and their actors.
+Пример ниже создает подключение к базе данных Neo4j и заполняет ее тестовыми данными о фильмах и их актерах.
 
 ```python
 from langchain_community.graphs import Neo4jGraph
 
 graph = Neo4jGraph()
 
-# Import movie information
+# Импорт информации о фильме
 
 movies_query = """
 LOAD CSV WITH HEADERS FROM 
@@ -98,13 +102,18 @@ graph.query(movies_query)
 
 </CodeOutputBlock>
 
-## Graph schema
+## Схема графа
 
-In order for an LLM to be able to generate a Cypher statement, it needs information about the graph schema. When you instantiate a graph object, it retrieves the information about the graph schema. If you later make any changes to the graph, you can run the `refresh_schema` method to refresh the schema information.
+Чтобы модель могла генерировать Cypher-запросы, ей нужна информация о схеме графа.
+Схема возвращается при создании объекта графа.
+Если позже вы внесете изменения в граф, то сможете использовать метод `refresh_schema`, чтобы обновить информацию о схеме.
 
 ```python
-graph.refresh_schema()
-print(graph.schema)
+from langchain.graphs import Neo4jGraph
+
+# Создание объекта графа и получение информации о схеме графа
+graph = Neo4jGraph(driver)
+graph.refresh_schema()  # Обновление информации о схеме при необходимости
 ```
 
 
@@ -121,16 +130,19 @@ print(graph.schema)
 
 </CodeOutputBlock>
 
-Great! We've got a graph database that we can query. Now let's try hooking it up to an LLM.
+После создания базы данных попробуйте подключить ее к LLM.
 
-## Chain
+## Цепочка
 
-Let's use a simple chain that takes a question, turns it into a Cypher query, executes the query, and uses the result to answer the original question.
+Вы можете создать простую цепочку, которая принимает вопрос и выполняет действия:
+
+- преобразует вопрос в Cypher-запрос;
+- выполняет запрос;
+- использует результат для ответа на исходный вопрос.
 
 ![graph_chain.webp](../../static/img/graph_chain.webp)
 
-
-LangChain comes with a built-in chain for this workflow that is designed to work with Neo4j: [GraphCypherQAChain](/docs/integrations/graphs/neo4j_cypher)
+Для реализации такого процесс в GigaChain есть встроенная цепочка [`GraphCypherQAChain`](/docs/integrations/graphs/neo4j_cypher), которая работает с Neo4j.
 
 ```python
 from langchain.chains import GraphCypherQAChain
@@ -170,9 +182,10 @@ response
 
 </CodeOutputBlock>
 
-# Validating relationship direction
+# Проверка направления связей
 
-LLMs can struggle with relationship directions in generated Cypher statement. Since the graph schema is predefined, we can validate and optionally correct relationship directions in the generated Cypher statements by using the `validate_cypher` parameter.
+LLM могут испытывать трудности с направлениями связей в сгенерированных Cypher-запросах.
+Поскольку схема графа задана заранее, вы можете проверять и, если нужно, корректировать направления связей в сгенерированных Cypher-запросах, с помощью параметра `validate_cypher`.
 
 ```python
 chain = GraphCypherQAChain.from_llm(
@@ -210,11 +223,9 @@ response
 
 </CodeOutputBlock>
 
-### Next steps
+### Смотрите также
 
-For more complex query-generation, we may want to create few-shot prompts or add query-checking steps. For advanced techniques like this and more check out:
-
-* [Prompting strategies](/docs/how_to/graph_prompting): Advanced prompt engineering techniques.
-* [Mapping values](/docs/how_to/graph_mapping): Techniques for mapping values from questions to database.
-* [Semantic layer](/docs/how_to/graph_semantic): Techniques for implementing semantic layers.
-* [Constructing graphs](/docs/how_to/graph_constructing): Techniques for constructing knowledge graphs.
+* [Стратегии создания промптов](/docs/how_to/graph_prompting)
+* [Соответствие значений](/docs/how_to/graph_mapping): методики сопоставления значений из вопросов к базе данных.
+* [Семантический слой](/docs/how_to/graph_semantic): методики работы с семантическими слоями.
+* [Построение графов](/docs/how_to/graph_constructing): методики построения графов знаний.

@@ -1,37 +1,36 @@
-[![Open In Colab](https://colab.research.google.com/assets/colab-badge.svg)](https://colab.research.google.com/github/ai-forever/gigachain/blob/master/docs/docs/use_cases/tagging.ipynb)
+# Классификация текста по меткам
 
-# Classify Text into Labels
+Маркировка означает присвоение документу меток по различным темам, таким как:
 
-Tagging means labeling a document with classes such as:
+- настроение;
+- язык;
+- стиль (формальный, неформальный и другие);
+- охваченные темы;
+- политическая направленность.
 
-- sentiment
-- language
-- style (formal, informal etc.)
-- covered topics
-- political tendency
+<Image img={require('../../static/img/tagging.png')} alt="Описание изображения" />
 
-<Image img={require('../../static/img/tagging.png')} alt="Image description" />
+## Обзор
 
-## Overview
+Маркировка включает компоненты:
 
-Tagging has a few components:
+* `функция` — например, [извлечение данных](/docs/tutorials/extraction).Маркировка использует [функции](https://openai.com/blog/function-calling-and-other-api-updates), чтобы указывать, как модель должна тегировать документ.
+* `схема` — определяет, как нужно маркировать документ.
 
-* `function`: Like [extraction](/docs/tutorials/extraction), tagging uses [functions](https://openai.com/blog/function-calling-and-other-api-updates) to specify how the model should tag a document
-* `schema`: defines how we want to tag the document
+## Быстрый старт
 
-## Quickstart
-
-Let's see a very straightforward example of how we can use OpenAI tool calling for tagging in LangChain. We'll use the [`with_structured_output`](/docs/how_to/structured_output) method supported by OpenAI models:
+Работа маркировки с помощью GigaChain продемонстрирована с помощью вызова инструментов OpenAI.
+Для этого вам нужно использовать метод [`with_structured_output`](/docs/how_to/structured_output), который поддерживают модели OpenAI:
 
 ```python
 %pip install --upgrade --quiet gigachain gigachain-openai
 
-# Set env var OPENAI_API_KEY or load from a .env file:
+# Установите переменную окружения OPENAI_API_KEY или загрузите ее из файла .env:
 # import dotenv
 # dotenv.load_dotenv()
 ```
 
-Let's specify a Pydantic model with a few properties and their expected type in our schema.
+В схеме укажите Pydantic-модель с несколькими свойствами и их типами.
 
 ```python
 from langchain_core.prompts import ChatPromptTemplate
@@ -81,7 +80,7 @@ tagging_chain.invoke({"input": inp})
 
 </CodeOutputBlock>
 
-If we want JSON output, we can just call `.dict()`
+Если на выходе нужны данные формате JSON вы можем просто вызвать метод `.dict()`
 
 ```python
 inp = "Estoy muy enojado con vos! Te voy a dar tu merecido!"
@@ -98,21 +97,21 @@ res.dict()
 
 </CodeOutputBlock>
 
-As we can see in the examples, it correctly interprets what we want.
+В примерах видно, что модель правильно интерпретирует заданные требования требования.
 
-The results vary so that we may get, for example, sentiments in different languages ('positive', 'enojado' etc.).
+Результаты могут варьироваться, например, настроения могут быть на разных языках ('positive', 'enojado' и других).
 
-We will see how to control these results in the next section.
-## Finer control
+## Повышение качества вывода
 
-Careful schema definition gives us more control over the model's output. 
+Для повышения качества вывода модели следует более точно определить схему данных.
 
-Specifically, we can define:
+В частности, вы можете определить:
 
-- possible values for each property
-- description to make sure that the model understands the property
-- required properties to be returned
-Let's redeclare our Pydantic model to control for each of the previously mentioned aspects using enums:
+- возможные значения для каждого свойства;
+- описание, которое поможет убедиться, что модель правильно интерпретирует свойство;
+- список свойства, которые нужно возвращать обязательно.
+
+Используйте перечесления `enum`, чтобы уточнить Pydantic-модель, заданную в примере выше:
 
 ```python
 class Classification(BaseModel):
@@ -147,7 +146,7 @@ llm = ChatOpenAI(temperature=0, model="gpt-3.5-turbo-0125").with_structured_outp
 chain = tagging_prompt | llm
 ```
 
-Now the answers will be restricted in a way we expect!
+Теперь ответы модели будут ограничены в соответствии с заданными значениями.
 
 ```python
 inp = "Estoy increiblemente contento de haberte conocido! Creo que seremos muy buenos amigos!"
@@ -193,10 +192,15 @@ chain.invoke({"input": inp})
 
 </CodeOutputBlock>
 
-The [LangSmith trace](https://smith.langchain.com/public/38294e04-33d8-4c5a-ae92-c2fe68be8332/r) lets us peek under the hood:
+<!--
+[Трассировка LangSmith](https://smith.langchain.com/public/38294e04-33d8-4c5a-ae92-c2fe68be8332/r) позволяет нам заглянуть под капот:
 
-<Image img={require('../../static/img/tagging_trace.png')} alt="Image description" />
-### Going deeper
+<Image img={require('../../static/img/tagging_trace.png')} alt="Описание изображения" />
 
-* You can use the [metadata tagger](/docs/integrations/document_transformers/openai_metadata_tagger) document transformer to extract metadata from a LangChain `Document`. 
-* This covers the same basic functionality as the tagging chain, only applied to a LangChain `Document`.
+
+### Смотрите также
+
+* Вы можете использовать [метаданные тегировщика](/docs/integrations/document_transformers/openai_metadata_tagger) трансформатора документов для извлечения метаданных из документа LangChain.
+* Это охватывает ту же базовую функциональность, что и цепочка тегирования, только применяется к документу LangChain.
+
+-->

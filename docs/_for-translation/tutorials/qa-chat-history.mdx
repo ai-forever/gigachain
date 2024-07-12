@@ -1,28 +1,32 @@
-# Conversational RAG
+# Создание разговорного приложения с RAG
 
-In many Q&A applications we want to allow the user to have a back-and-forth conversation, meaning the application needs some sort of "memory" of past questions and answers, and some logic for incorporating those into its current thinking.
+Во многих вопросно-ответных приложениях пользователям нужна возможность вести разговор с сохранением контекста.
+Для этого в приложении должна быть реализация памяти о прошлых вопросах и ответах, а также некоторая логика для использования их в текущих рассуждениях.
 
-In this guide we focus on **adding logic for incorporating historical messages.** Further details on chat history management is [covered here](/docs/how_to/message_history).
+Информация в разделе посвящена добавлению логики для использования сообщений, полученных в течение разговора.
+Подробнее об управлении историей чата — в разделе [Работа с историей сообщений](/docs/how_to/message_history).
 
-We will cover two approaches:
+В разделе рассмотрены два подхода:
 
-1. Chains, in which we always execute a retrieval step;
-2. Agents, in which we give an LLM discretion over whether and how to execute a retrieval step (or multiple steps).
+1. Цепочки, в которых приложение всегда выполняет этап извлечения данных;
+2. Агенты, в которых LLM самостоятельно принимает решение о выполнении этапа извлечения (или нескольких шагов) и способе его выполнения.
 
-For the external knowledge source, we will use the same [LLM Powered Autonomous Agents](https://lilianweng.github.io/posts/2023-06-23-agent/) blog post by Lilian Weng from the [RAG tutorial](/docs/tutorials/rag).
-## Setup
+В качестве внешнего источника знаний использован тот же блог-пост [LLM Powered Autonomous Agents](https://lilianweng.github.io/posts/2023-06-23-agent/) Лилиан Венг из раздела [Создание RAG-приложения](/docs/tutorials/rag).
 
-### Dependencies
+## Подготовка к работе
 
-We'll use OpenAI embeddings and a Chroma vector store in this walkthrough, but everything shown here works with any [Embeddings](/docs/concepts#embedding-models), and [VectorStore](/docs/concepts#vectorstores) or [Retriever](/docs/concepts#retrievers). 
+### Установка зависимостей
 
-We'll use the following packages:
+В этом руководстве используются эмбеддинги OpenAI и векторное хранилище Chroma, но все, что показано здесь, работает с любыми [моделями эмбеддингов](/docs/concepts#embedding-models), [векторными хранилищами](/docs/concepts#vectorstores) или [ретриверами](/docs/concepts#retrievers).
+
+Вам понадобятся следующие пакеты:
 
 ```python
-%pip install --upgrade --quiet  langchain langchain-community langchainhub gigachain-chroma bs4
+%pip install --upgrade --quiet langchain langchain-community langchainhub gigachain-chroma bs4
 ```
 
-We need to set environment variable `OPENAI_API_KEY`, which can be done directly or loaded from a `.env` file like so:
+Установите переменную окружения `OPENAI_API_KEY`.
+Ее можно установить напрямую или загрузить из файла `.env`:
 
 ```python
 import getpass
@@ -35,20 +39,22 @@ os.environ["OPENAI_API_KEY"] = getpass.getpass()
 # dotenv.load_dotenv()
 ```
 
+<!--
 ### LangSmith
 
-Many of the applications you build with LangChain will contain multiple steps with multiple invocations of LLM calls. As these applications get more and more complex, it becomes crucial to be able to inspect what exactly is going on inside your chain or agent. The best way to do this is with [LangSmith](https://smith.langchain.com).
+Многие приложения, которые вы создаете с LangChain, будут содержать несколько шагов с многократными вызовами LLM. По мере того как эти приложения становятся все более сложными, становится важно иметь возможность проверять, что именно происходит внутри вашей цепочки или агента. Лучший способ сделать это с помощью [LangSmith](https://smith.langchain.com).
 
-Note that LangSmith is not needed, but it is helpful. If you do want to use LangSmith, after you sign up at the link above, make sure to set your environment variables to start logging traces:
+Обратите внимание, что LangSmith не обязателен, но полезен. Если вы хотите использовать LangSmith, после регистрации по указанной выше ссылке, убедитесь, что установили переменные окружения для начала логирования трассировок:
 
 ```python
 os.environ["LANGCHAIN_TRACING_V2"] = "true"
 os.environ["LANGCHAIN_API_KEY"] = getpass.getpass()
 ```
+-->
 
-## Chains {#chains}
+## Цепочки {#chains}
 
-Let's first revisit the Q&A app we built over the [LLM Powered Autonomous Agents](https://lilianweng.github.io/posts/2023-06-23-agent/) blog post by Lilian Weng in the [RAG tutorial](/docs/tutorials/rag).
+В первую очередь рассмотрим приложение, разработанное в разделе [Создание RAG-приложения](/docs/tutorials/rag).
 ```{=mdx}
 import ChatModelTabs from "@theme/ChatModelTabs";
 
@@ -81,7 +87,7 @@ from langchain_text_splitters import RecursiveCharacterTextSplitter
 
 
 ```python
-# 1. Load, chunk and index the contents of the blog to create a retriever.
+# 1. Загрузите, разделите на части и проиндексируйте содержимого блога, чтобы создать ретривер.
 loader = WebBaseLoader(
     web_paths=("https://lilianweng.github.io/posts/2023-06-23-agent/",),
     bs_kwargs=dict(
@@ -98,7 +104,7 @@ vectorstore = Chroma.from_documents(documents=splits, embedding=OpenAIEmbeddings
 retriever = vectorstore.as_retriever()
 
 
-# 2. Incorporate the retriever into a question-answering chain.
+# 2. Включите ретривер в вопросно-ответную цепочку.
 system_prompt = (
     "You are an assistant for question-answering tasks. "
     "Use the following pieces of retrieved context to answer "
@@ -135,17 +141,20 @@ response["answer"]
 
 </CodeOutputBlock>
 
-Note that we have used the built-in chain constructors `create_stuff_documents_chain` and `create_retrieval_chain`, so that the basic ingredients to our solution are:
+Обратите внимание, что в примере использованы встроенные конструкторы цепочек `create_stuff_documents_chain` и `create_retrieval_chain`.
+Таким образом основными составляющими итогового решения являются:
 
-1. retriever;
-2. prompt;
+1. Ретривер.
+2. Промпт.
 3. LLM.
 
-This will simplify the process of incorporating chat history.
+Это упростит процесс включения истории разговора.
 
-### Adding chat history
+### Добавление истории разговора
 
-The chain we have built uses the input query directly to retrieve relevant context. But in a conversational setting, the user query might require conversational context to be understood. For example, consider this exchange:
+Разработанная цепочка использует сам входной запрос для извлечения релевантного контекста.
+Но в разговорной обстановке запрос пользователя может требовать дополнительного контекста беседы для понимания.
+Например, представьте такой диалог:
 
 > Human: "What is Task Decomposition?"
 >
@@ -153,24 +162,33 @@ The chain we have built uses the input query directly to retrieve relevant conte
 >
 > Human: "What are common ways of doing it?"
 
-In order to answer the second question, our system needs to understand that "it" refers to "Task Decomposition."
+Для ответа на второй вопрос, система должна понимать, что "it" относится к "Task Decomposition".
 
-We'll need to update two things about our existing app:
+Чтобы добиться этого в текущем приложении нужно изменить две вещи:
 
-1. **Prompt**: Update our prompt to support historical messages as an input.
-2. **Contextualizing questions**: Add a sub-chain that takes the latest user question and reformulates it in the context of the chat history. This can be thought of simply as building a new "history aware" retriever. Whereas before we had:
-   - `query` -> `retriever`  
-     Now we will have:
-   - `(query, conversation history)` -> `LLM` -> `rephrased query` -> `retriever`
-#### Contextualizing the question
+1. Доработать промпт, чтобы он мог использовать сообщения, полученные в течение разговора, в качестве входных данных.
+2. Добавить подцепочку, которая берет последний вопрос пользователя и перефразирует его с учетом истории разговора. Создание такой цепочки можно рассматривать как разработку нового ретривера, который учитывает историю сообщений. То есть, если в первой итерации приложение работало так:
+   - `запрос` -> `ретривер`
+     
+     То после доработки оно будет работать так:
+   
+   - `(запрос, история разговора)` -> `LLM` -> `переформулированный запрос` -> `ретривер`
 
-First we'll need to define a sub-chain that takes historical messages and the latest user question, and reformulates the question if it makes reference to any information in the historical information.
+#### Контекстуализация вопроса
 
-We'll use a prompt that includes a `MessagesPlaceholder` variable under the name "chat_history". This allows us to pass in a list of Messages to the prompt using the "chat_history" input key, and these messages will be inserted after the system message and before the human message containing the latest question.
+Сначала вам нужно определить подцепочку, которая:
 
-Note that we leverage a helper function [create_history_aware_retriever](https://api.python.langchain.com/en/latest/chains/langchain.chains.history_aware_retriever.create_history_aware_retriever.html) for this step, which manages the case where `chat_history` is empty, and otherwise applies `prompt | llm | StrOutputParser() | retriever` in sequence.
+1. Берет сообщения, полученные в течение разговора, и последний вопрос пользователя.
+2. Перефразирует вопрос, если он ссылается на какую-либо информацию в истории разговора.
 
-`create_history_aware_retriever` constructs a chain that accepts keys `input` and `chat_history` as input, and has the same output schema as a retriever.
+Для этого используйте промпт, который включает переменную `MessagesPlaceholder` под именем `chat_history`.
+Таким образом вы сможете передавать список сообщений в промпт, используя ключ `chat_history`.
+Эти сообщения будут вставлены после системного сообщения и перед сообщением пользователя, содержащим последний вопрос.
+
+Для решения этой задачи используйте вспомогательную функцию [create_history_aware_retriever](https://api.python.langchain.com/en/latest/chains/langchain.chains.history_aware_retriever.create_history_aware_retriever.html)
+Она обрабатывает случаи, когда поле `chat_history` не содержит данных, и в противном случае применяет цепочку `prompt | llm | StrOutputParser() | retriever`.
+
+Функция `create_history_aware_retriever` создает цепочку, которая принимает ключи `input` и `chat_history` в качестве входных данных и имеет такую же схему вывода, как и ретривер.
 
 ```python
 from langchain.chains import create_history_aware_retriever
@@ -196,13 +214,18 @@ history_aware_retriever = create_history_aware_retriever(
 )
 ```
 
-This chain prepends a rephrasing of the input query to our retriever, so that the retrieval incorporates the context of the conversation.
+Эта цепочка добавляет перефразированный входной запрос к ретриверу, чтобы при извлечении данных приложение учитывало контекст беседы.
 
-Now we can build our full QA chain. This is as simple as updating the retriever to be our new `history_aware_retriever`.
+Теперь вы можете собрать итоговую вопросно-ответную цепочку.
+Для этого достаточно заменить ретривер на новый `history_aware_retriever`.
 
-Again, we will use [create_stuff_documents_chain](https://api.python.langchain.com/en/latest/chains/langchain.chains.combine_documents.stuff.create_stuff_documents_chain.html) to generate a `question_answer_chain`, with input keys `context`, `chat_history`, and `input`-- it accepts the retrieved context alongside the conversation history and query to generate an answer.
+Использовать функцию [create_stuff_documents_chain](https://api.python.langchain.com/en/latest/chains/langchain.chains.combine_documents.stuff.create_stuff_documents_chain.html), чтобы создать цепочку`question_answer_chain` с входными ключами `context`, `chat_history` и `input`.
+Эта цепочка принимает извлеченный контекст вместе с историей разговора и запросом для генерации ответа.
 
-We build our final `rag_chain` with [create_retrieval_chain](https://api.python.langchain.com/en/latest/chains/langchain.chains.retrieval.create_retrieval_chain.html). This chain applies the `history_aware_retriever` and `question_answer_chain` in sequence, retaining intermediate outputs such as the retrieved context for convenience. It has input keys `input` and `chat_history`, and includes `input`, `chat_history`, `context`, and `answer` in its output.
+Создайте итоговую цепочку `rag_chain` с помощью функции [create_retrieval_chain](https://api.python.langchain.com/en/latest/chains/langchain.chains.retrieval.create_retrieval_chain.html).
+Эта цепочка последовательно применяет `history_aware_retriever` и `question_answer_chain`.
+При этом цепочка сохраняет промежуточные выходные данные, такие как извлеченный контекст.
+Она имеет входные ключи `input` и `chat_history`, и включает `input`, `chat_history`, `context` и `answer` в своем выводе.
 
 ```python
 from langchain.chains import create_retrieval_chain
@@ -222,7 +245,10 @@ question_answer_chain = create_stuff_documents_chain(llm, qa_prompt)
 rag_chain = create_retrieval_chain(history_aware_retriever, question_answer_chain)
 ```
 
-Let's try this. Below we ask a question and a follow-up question that requires contextualization to return a sensible response. Because our chain includes a `"chat_history"` input, the caller needs to manage the chat history. We can achieve this by appending input and output messages to a list:
+Теперь попробуйте обратиться к приложению.
+Задайте вопрос, ответ на который требует дополнительного контекста.
+Поскольку цепочка включает входной параметр `"chat_history"`, историей разговора нужно управлять на стороне компонента, который вызывает цепочку.
+Для этого вы можете добавлять входные и выходные сообщения в список:
 
 ```python
 from langchain_core.messages import AIMessage, HumanMessage
@@ -253,25 +279,33 @@ print(ai_msg_2["answer"])
 
 </CodeOutputBlock>
 
+<!--
 :::{.callout-tip}
 
-Check out the [LangSmith trace](https://smith.langchain.com/public/243301e4-4cc5-4e52-a6e7-8cfe9208398d/r) 
+Посмотрите [трассировку LangSmith](https://smith.langchain.com/public/243301e4-4cc5-4e52-a6e7-8cfe9208398d/r) 
 
 :::
-#### Stateful management of chat history
+-->
 
-Here we've gone over how to add application logic for incorporating historical outputs, but we're still manually updating the chat history and inserting it into each input. In a real Q&A application we'll want some way of persisting chat history and some way of automatically inserting and updating it.
+#### Управление историей разговора с сохранением состояния
 
-For this we can use:
+Вы уже знаете как добавить логику приложения для использования истории разговора, но пока ее нужно обновлять вручную и передавать при каждом вызове.
+В реальном вопросно-ответном приложении вам понадобится как-то автоматизировать хранение, обновление и передачу истории разговора.
 
-- [BaseChatMessageHistory](https://api.python.langchain.com/en/latest/langchain_api_reference.html#module-langchain.memory): Store chat history.
-- [RunnableWithMessageHistory](/docs/how_to/message_history): Wrapper for an LCEL chain and a `BaseChatMessageHistory` that handles injecting chat history into inputs and updating it after each invocation.
+Для этого можно использовать:
 
-For a detailed walkthrough of how to use these classes together to create a stateful conversational chain, head to the [How to add message history (memory)](/docs/how_to/message_history) LCEL page.
+- [BaseChatMessageHistory](https://api.python.langchain.com/en/latest/langchain_api_reference.html#module-langchain.memory). Класс, который хранит историю разговора.
+- [RunnableWithMessageHistory](/docs/how_to/message_history). Класс-обертка для цепочки LCEL и `BaseChatMessageHistory`, которая обрабатывает передачу истории разговора на вход и обновляет ее после каждого вызова.
 
-Below, we implement a simple example of the second option, in which chat histories are stored in a simple dict. LangChain manages memory integrations with [Redis](/docs/integrations/memory/redis_chat_message_history/) and other technologies to provide for more robust persistence.
+О том как использовать эти классы для создания цепочки диалога с сохранением состояния — в разделе [Работа с историей сообщений](/docs/how_to/message_history).
 
-Instances of `RunnableWithMessageHistory` manage the chat history for you. They accept a config with a key (`"session_id"` by default) that specifies what conversation history to fetch and prepend to the input, and append the output to the same conversation history. Below is an example:
+Ниже приведен пример решения, при котором история разговора хранится в простом словаре.
+Для более надежного решения GigaChain предоставляет интеграции памяти с [Redis](/docs/integrations/memory/redis_chat_message_history/) и другими.
+
+Экземпляры самостоятельно `RunnableWithMessageHistory` управляют историей разговора.
+Они принимают конфигурацию с ключом (по умолчанию `"session_id"`), который указывает, что из истории разговора извлечь и добавить к входным данным, а что добавить к выходным данным той же истории разговоров.
+
+Пример:
 
 ```python
 from langchain_community.chat_message_histories import ChatMessageHistory
@@ -280,12 +314,10 @@ from langchain_core.runnables.history import RunnableWithMessageHistory
 
 store = {}
 
-
 def get_session_history(session_id: str) -> BaseChatMessageHistory:
     if session_id not in store:
         store[session_id] = ChatMessageHistory()
     return store[session_id]
-
 
 conversational_rag_chain = RunnableWithMessageHistory(
     rag_chain,
@@ -302,7 +334,7 @@ conversational_rag_chain.invoke(
     {"input": "What is Task Decomposition?"},
     config={
         "configurable": {"session_id": "abc123"}
-    },  # constructs a key "abc123" in `store`.
+    },  # создает ключ "abc123" в `store`.
 )["answer"]
 ```
 
@@ -332,7 +364,7 @@ conversational_rag_chain.invoke(
 
 </CodeOutputBlock>
 
-The conversation history can be inspected in the `store` dict:
+Историю разговора можно просмотреть в словаре `store`:
 
 ```python
 for message in store["abc123"].messages:
@@ -360,10 +392,10 @@ for message in store["abc123"].messages:
 
 </CodeOutputBlock>
 
-### Tying it together
+### Итоговое решение
 <Image img={require('../../static/img/conversational_retrieval_chain.png')} />
 
-For convenience, we tie together all of the necessary steps in a single code cell:
+Для удобства все шаги представлены в одной ячейке кода:
 
 ```python
 import bs4
@@ -381,7 +413,7 @@ from langchain_text_splitters import RecursiveCharacterTextSplitter
 llm = ChatOpenAI(model="gpt-3.5-turbo", temperature=0)
 
 
-### Construct retriever ###
+### Создание ретривера ###
 loader = WebBaseLoader(
     web_paths=("https://lilianweng.github.io/posts/2023-06-23-agent/",),
     bs_kwargs=dict(
@@ -398,7 +430,7 @@ vectorstore = Chroma.from_documents(documents=splits, embedding=OpenAIEmbeddings
 retriever = vectorstore.as_retriever()
 
 
-### Contextualize question ###
+### Контекстуализация вопроса ###
 contextualize_q_system_prompt = (
     "Given a chat history and the latest user question "
     "which might reference context in the chat history, "
@@ -418,7 +450,7 @@ history_aware_retriever = create_history_aware_retriever(
 )
 
 
-### Answer question ###
+### Ответ на вопрос ###
 system_prompt = (
     "You are an assistant for question-answering tasks. "
     "Use the following pieces of retrieved context to answer "
@@ -440,7 +472,7 @@ question_answer_chain = create_stuff_documents_chain(llm, qa_prompt)
 rag_chain = create_retrieval_chain(history_aware_retriever, question_answer_chain)
 
 
-### Statefully manage chat history ###
+### Управление историей разговора с сохранением состояния ###
 store = {}
 
 
@@ -465,7 +497,7 @@ conversational_rag_chain.invoke(
     {"input": "What is Task Decomposition?"},
     config={
         "configurable": {"session_id": "abc123"}
-    },  # constructs a key "abc123" in `store`.
+    },  # создает ключ "abc123" в `store`.
 )["answer"]
 ```
 
@@ -495,16 +527,19 @@ conversational_rag_chain.invoke(
 
 </CodeOutputBlock>
 
-## Agents {#agents}
+## Агенты {#agents}
 
-Agents leverage the reasoning capabilities of LLMs to make decisions during execution. Using agents allow you to offload some discretion over the retrieval process. Although their behavior is less predictable than chains, they offer some advantages in this context:
+Агенты используют способность LLM к рассуждению для принятия решений в процессе выполнения.
+Использование агентов позволяет делегировать часть процесса извлечения данных.
+Хотя поведение агентов менее предсказуемо, чем у цепочек, они предлагают ряд преимуществ:
 
-- Agents generate the input to the retriever directly, without necessarily needing us to explicitly build in contextualization, as we did above;
-- Agents can execute multiple retrieval steps in service of a query, or refrain from executing a retrieval step altogether (e.g., in response to a generic greeting from a user).
+- агенты самостоятельно генерируют ввод для ретривера. То есть вам не нужно явно добавлять контекстуализацию, как показано в примере выше;
+- Агенты могут выполнять несколько шагов извлечения данных для создания запроса или игнорировать этап извлечения, например, в ответ на общее приветствие пользователя.
 
-### Retrieval tool
+### Инструмент для извлечения
 
-Agents can access "tools" and manage their execution. In this case, we will convert our retriever into a LangChain tool to be wielded by the agent:
+Агенты могут использовать *инструменты* и управлять их выполнением.
+В примере ниже показано как преобразовать ретривер в инструмент GigaChain, который будет использовать агент:
 
 ```python
 from langchain.tools.retriever import create_retriever_tool
@@ -512,12 +547,12 @@ from langchain.tools.retriever import create_retriever_tool
 tool = create_retriever_tool(
     retriever,
     "blog_post_retriever",
-    "Searches and returns excerpts from the Autonomous Agents blog post.",
+    "Ищет и возвращает выдержки из блог-поста об автономных агентах.",
 )
 tools = [tool]
 ```
 
-Tools are LangChain [Runnables](/docs/concepts#langchain-expression-language), and implement the usual interface:
+Инструменты являются экземплярами [Runnable](/docs/concepts#langchain-expression-language) и реализуют стандартный интерфейс:
 
 ```python
 tool.invoke("task decomposition")
@@ -532,10 +567,12 @@ tool.invoke("task decomposition")
 
 </CodeOutputBlock>
 
-### Agent constructor
+### Конструктор агента
 
-Now that we have defined the tools and the LLM, we can create the agent. We will be using [LangGraph](/docs/concepts/#langgraph) to construct the agent. 
-Currently we are using a high level interface to construct the agent, but the nice thing about LangGraph is that this high-level interface is backed by a low-level, highly controllable API in case you want to modify the agent logic.
+После определения инструментов и LLM вы можете создать агента.
+Для этого используйте [GigaGraph](/docs/concepts/#langgraph).
+В представленных примерах используется высокоуровневый интерфейс для создания агента.
+При этом преимущество GigaGraph в том, что высокоуровневый интерфейс поддерживается низкоуровневым API, который позволяет точно контролировать логику агента если нужно.
 
 ```python
 from langgraph.prebuilt import chat_agent_executor
@@ -543,7 +580,13 @@ from langgraph.prebuilt import chat_agent_executor
 agent_executor = chat_agent_executor.create_tool_calling_executor(llm, tools)
 ```
 
-We can now try it out. Note that so far it is not stateful (we still need to add in memory)
+Попробуйте обратиться к агенту.
+
+:::note
+
+На данный момент агент не умеет работать с состояниями, вам все еще нужно добавить память.
+
+:::
 
 ```python
 query = "What is Task Decomposition?"
@@ -569,7 +612,8 @@ for s in agent_executor.stream(
 
 </CodeOutputBlock>
 
-LangGraph comes with built in persistence, so we don't need to use ChatMessageHistory! Rather, we can pass in a checkpointer to our LangGraph agent directly
+В GigaGraph есть встроенная поддержка сохранения состояния, поэтому вам не нужно использовать ChatMessageHistory. 
+Вместо этого вы можете передать контроллер состояния напрямую своему агенту GigaGraph.
 
 ```python
 from langgraph.checkpoint.sqlite import SqliteSaver
@@ -581,9 +625,10 @@ agent_executor = chat_agent_executor.create_tool_calling_executor(
 )
 ```
 
-This is all we need to construct a conversational RAG agent.
+Этого достаточно для создания разговорного агента с RAG.
 
-Let's observe its behavior. Note that if we input a query that does not require a retrieval step, the agent does not execute one:
+Посмотрите как будет работать агент.
+Заметьте, что если вы введете запрос, который не требует этапа извлечения данных, агент его не выполнит:
 
 ```python
 config = {"configurable": {"thread_id": "abc123"}}
@@ -605,7 +650,7 @@ for s in agent_executor.stream(
 
 </CodeOutputBlock>
 
-Further, if we input a query that does require a retrieval step, the agent generates the input to the tool:
+Если вы введете запрос, который требует этапа извлечения данных, агент сгенерирует входные данные для вызова инструмента:
 
 ```python
 query = "What is Task Decomposition?"
@@ -631,9 +676,9 @@ for s in agent_executor.stream(
 
 </CodeOutputBlock>
 
-Above, instead of inserting our query verbatim into the tool, the agent stripped unnecessary words like "what" and "is".
+Выше агент, вместо того чтобы вставлять запрос дословно в инструмент, удалил ненужные слова, такие как "what" и "is".
 
-This same principle allows the agent to use the context of the conversation when necessary:
+Этот же принцип позволяет агенту использовать контекст разговора, если нужно:
 
 ```python
 query = "What according to the blog post are common ways of doing it? redo the search"
@@ -659,10 +704,10 @@ for s in agent_executor.stream(
 
 </CodeOutputBlock>
 
-Note that the agent was able to infer that "it" in our query refers to "task decomposition", and generated a reasonable search query as a result-- in this case, "common ways of task decomposition".
-### Tying it together
+Заметьте, что агент смог понять, что "it" в запросе относится к "task decomposition", и сгенерировал обоснованный поисковый запрос — в данном случае, "common ways of task decomposition".
+### Итоговое решение
 
-For convenience, we tie together all of the necessary steps in a single code cell:
+Для удобства все шаги представлены в одной ячейке кода:
 
 ```python
 import bs4
@@ -682,7 +727,7 @@ memory = SqliteSaver.from_conn_string(":memory:")
 llm = ChatOpenAI(model="gpt-3.5-turbo", temperature=0)
 
 
-### Construct retriever ###
+### Создание ретривера ###
 loader = WebBaseLoader(
     web_paths=("https://lilianweng.github.io/posts/2023-06-23-agent/",),
     bs_kwargs=dict(
@@ -699,7 +744,7 @@ vectorstore = Chroma.from_documents(documents=splits, embedding=OpenAIEmbeddings
 retriever = vectorstore.as_retriever()
 
 
-### Build retriever tool ###
+### Создание инструмента ретривера ###
 tool = create_retriever_tool(
     retriever,
     "blog_post_retriever",
@@ -713,15 +758,10 @@ agent_executor = chat_agent_executor.create_tool_calling_executor(
 )
 ```
 
-## Next steps
+## Смотрите также
 
-We've covered the steps to build a basic conversational Q&A application:
+- Изучите различные типы ретриверов и методики извлечения в разделе [ретриверы](/docs/how_to/#retrievers).
 
-- We used chains to build a predictable application that generates search queries for each user input;
-- We used agents to build an application that "decides" when and how to generate search queries.
+- Ознакомьтесь с подробным руководствам по работе с разговорной памятью в GigaChain в разделе [Работа с историей сообщений](/docs/how_to/message_history).
 
-To explore different types of retrievers and retrieval strategies, visit the [retrievers](/docs/how_to/#retrievers) section of the how-to guides.
-
-For a detailed walkthrough of LangChain's conversation memory abstractions, visit the [How to add message history (memory)](/docs/how_to/message_history) LCEL page.
-
-To learn more about agents, head to the [Agents Modules](/docs/tutorials/agents).
+- Ознакомьте подробнее с [агентами](/docs/tutorials/agents).

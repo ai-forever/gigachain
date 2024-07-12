@@ -1,59 +1,50 @@
-# Summarize Text
+# Суммаризация текста
 
-Suppose you have a set of documents (PDFs, Notion pages, customer questions, etc.) and you want to summarize the content. 
+Большие языковые модели отлично подходят для генерации краткого содержания различных документов: PDF-файлов, страниц Notion, HTML-документов и других.
 
-LLMs are a great tool for this given their proficiency in understanding and synthesizing text.
+В контексте [генерации с RAG](/docs/tutorials/rag) суммаризация текста текста помогает выделить информацию из большого количества извлеченных документов, чтобы предоставить контекст для LLM.
 
-In the context of [retrieval-augmented generation](/docs/tutorials/rag), summarizing text can help distill the information in a large number of retrieved documents to provide context for a LLM.
+В этом разделе вы узнаете как использовать LLM для суммаризации содержимого нескольких документов.
 
-In this walkthrough we'll go over how to summarize content from multiple documents using LLMs.
-<Image img={require('../../static/img/summarization_use_case_1.png')} alt="Image description" />
-## Concepts
+<Image img={require('../../static/img/summarization_use_case_1.png')} alt="Описание изображения" />
 
-Concepts we will cover are:
 
-- Using [language models](/docs/concepts/#chat-models).
 
-- Using [document loaders](/docs/concepts/#document-loaders), specifically the [WebBaseLoader](https://api.python.langchain.com/en/latest/document_loaders/langchain_community.document_loaders.web_base.WebBaseLoader.html) to load content from an HTML webpage.
+В разделе вы найдете информацию об:
 
-- Three ways to summarize or otherwise combine documents.
-  1. [Stuff](/docs/tutorials/summarization#stuff), which simply concatenates documents into a prompt;
-  2. [Map-reduce](/docs/tutorials/summarization#map-reduce), which splits documents into batches, summarizes those, and then summarizes the summaries;
-  3. [Refine](/docs/tutorials/summarization#refine), which updates a rolling summary be iterating over the documents in a sequence.
+- использовании [языковых моделей](/docs/concepts/#chat-models).
 
-That's a fair amount to cover! Let's dive in.
+- использовании [загрузчиков документов](/docs/concepts/#document-loaders). В частности [WebBaseLoader](https://api.python.langchain.com/en/latest/document_loaders/langchain_community.document_loaders.web_base.WebBaseLoader.html) для загрузки содержимого HTML-страницы.
 
-## Setup
+- трех способах суммаризации или комбинирования документов:
 
-### Jupyter Notebook
+  - [Stuff](/docs/tutorials/summarization#stuff) — простое объединение документов в один промпт;
+  - [Map-reduce](/docs/tutorials/summarization#map-reduce) — разделение документов на группы, суммаризация документов и генерация краткого содержания результатов суммаризации;
+  - [Refine](/docs/tutorials/summarization#refine) — обновляет текущего результата суммаризации, по мере последовательной обработки документов.
 
-This guide (and most of the other guides in the documentation) uses [Jupyter notebooks](https://jupyter.org/) and assumes the reader is as well. Jupyter notebooks are perfect for learning how to work with LLM systems because oftentimes things can go wrong (unexpected output, API down, etc) and going through guides in an interactive environment is a great way to better understand them.
 
-This and other tutorials are perhaps most conveniently run in a Jupyter notebook. See [here](https://jupyter.org/install) for instructions on how to install.
+## Подготовка
 
-### Installation
+### Jupyter
 
-To install LangChain run:
+Как и многие другие руководства в документации GigaChain это руководство основано на [блокноте Jupyter](https://jupyter.org/).
+Блокноты предоставляют интерактивность, которая значительно упрощает изучение работы с LLM.
 
-```{=mdx}
-import Tabs from '@theme/Tabs';
-import TabItem from '@theme/TabItem';
-import CodeBlock from "@theme/CodeBlock";
+Об установке Jupyter читайте в [официальной документации](https://jupyter.org/install).
 
-<Tabs>
-  <TabItem value="pip" label="Pip" default>
-    <CodeBlock language="bash">pip install langchain</CodeBlock>
-  </TabItem>
-  <TabItem value="conda" label="Conda">
-    <CodeBlock language="bash">conda install langchain -c conda-forge</CodeBlock>
-  </TabItem>
-</Tabs>
+### Установка Зависимостей
 
+В примере используются модели GigaChat (чат-модель и эмбеддинги), а также векторное хранилище Chroma, но в своем приложении вы можете использовать любой из доступных компонентов.
+
+Для работы с примером нужно установить пакеты:
+
+```python
+%pip install --upgrade --quiet  gigachain langchainhub chromadb bs4
 ```
 
+Подробнее об установке — в разделе [Установка GigaChain](/docs/how_to/installation)
 
-For more details, see our [Installation guide](/docs/how_to/installation).
-
+<!--
 ### LangSmith
 
 Many of the applications you build with LangChain will contain multiple steps with multiple invocations of LLM calls.
@@ -76,41 +67,47 @@ import os
 os.environ["LANGCHAIN_TRACING_V2"] = "true"
 os.environ["LANGCHAIN_API_KEY"] = getpass.getpass()
 ```
-## Overview
+-->
 
-A central question for building a summarizer is how to pass your documents into the LLM's context window. Three common approaches for this are:
+## Обзор
 
-1. `Stuff`: Simply "stuff" all your documents into a single prompt. This is the simplest approach (see [here](/docs/tutorials/rag#built-in-chains) for more on the `create_stuff_documents_chain` constructor, which is used for this method).
+Главным вопросом вопрос при создании суммаризатора заключается в том, как передать документы в контекстное окно LLM.
+Для решения этой задачи существует три распространенных подхода:
 
-2. `Map-reduce`: Summarize each document on its own in a "map" step and then "reduce" the summaries into a final summary (see [here](https://api.python.langchain.com/en/latest/chains/langchain.chains.combine_documents.map_reduce.MapReduceDocumentsChain.html) for more on the `MapReduceDocumentsChain`, which is used for this method).
+- `Stuff`. Просто поместите все свои документы в один промпт. Это самый простой подход. Для реализации этого способа используется конструктор `create_stuff_documents_chain`. Подробнее — в разделе [Встроенные цепочки](/docs/tutorials/rag#built-in-chains).
 
-3. `Refine`: Update a rolling summary be iterating over the documents in a sequence.
-<Image img={require('../../static/img/summarization_use_case_2.png')} alt="Image description" />
-## Quickstart
+- `Map-reduce`. Сначала суммируйте каждый документ по отдельности на этапе *map*, а затем создайте краткое содержание итогом суммаризации на этапе о *reduce*. Для реализации этого способа используется класс  [`MapReduceDocumentsChain`](https://api.python.langchain.com/en/latest/chains/langchain.chains.combine_documents.map_reduce.MapReduceDocumentsChain.html).
 
-To give you a sneak preview, either pipeline can be wrapped in a single object: `load_summarize_chain`. 
+- `Refine`. Обновляйте текущий результат суммаризации, последовательно обрабатывая документы.
+<Image img={require('../../static/img/summarization_use_case_2.png')} alt="Описание изображения" />
 
-Suppose we want to summarize a blog post. We can create this in a few lines of code.
+## Быстрый старт
 
-First set environment variables and install packages:
+Любую из этих цепочек можно обернуть в один объект: `load_summarize_chain`.
+Это позволит получить общее представление об итоговом решении.
+
+Предположим, вы хотите получить краткое содержание записи в блоге.
+Это можно сделать в несколько строк кода.
+
+Установите переменные окружения и пакеты:
 
 ```python
-%pip install --upgrade --quiet  langchain-openai tiktoken chromadb langchain
+%pip install --upgrade --quiet langchain-openai tiktoken chromadb langchain
 
-# Set env var OPENAI_API_KEY or load from a .env file
+# Установите переменную окружения OPENAI_API_KEY или загрузите из файла .env
 # import dotenv
 
 # dotenv.load_dotenv()
 ```
 
-We can use `chain_type="stuff"`, especially if using larger context window models such as:
+Вы можете использовать `chain_type="stuff"`, особенно при работе с моделями с большим контекстным окном:
 
-* 128k token OpenAI `gpt-4-turbo-2024-04-09` 
-* 200k token Anthropic `claude-3-sonnet-20240229`
+* 128k токенов OpenAI `gpt-4-turbo-2024-04-09` 
+* 200k токенов Anthropic `claude-3-sonnet-20240229`
 
-We can also supply `chain_type="map_reduce"` or `chain_type="refine"`.
+Вы также можете использовать `chain_type="map_reduce"` или `chain_type="refine"`.
 
-First we load in our documents. We will use [WebBaseLoader](https://api.python.langchain.com/en/latest/document_loaders/langchain_community.document_loaders.web_base.WebBaseLoader.html) to load a blog post:
+Загрузите запись из блога с помощью загрузчика [WebBaseLoader](https://api.python.langchain.com/en/latest/document_loaders/langchain_community.document_loaders.web_base.WebBaseLoader.html):
 
 ```python
 import os
@@ -144,28 +141,28 @@ print(result["output_text"])
 
 </CodeOutputBlock>
 
-## Option 1. Stuff {#stuff}
+## Первый способ — Stuff {#stuff}
 
-When we use `load_summarize_chain` with `chain_type="stuff"`, we will use the [StuffDocumentsChain](https://api.python.langchain.com/en/latest/chains/langchain.chains.combine_documents.stuff.StuffDocumentsChain.html#langchain.chains.combine_documents.stuff.StuffDocumentsChain).
+При работе `load_summarize_chain` с типом `chain_type="stuff"`  используется класс [StuffDocumentsChain](https://api.python.langchain.com/en/latest/chains/langchain.chains.combine_documents.stuff.StuffDocumentsChain.html#langchain.chains.combine_documents.stuff.StuffDocumentsChain).
 
-The chain will take a list of documents, insert them all into a prompt, and pass that prompt to an LLM:
+Цепочка возьмет список документов, вставит их все в один промпт и передаст этот промпт LLM:
 
 ```python
 from langchain.chains.combine_documents.stuff import StuffDocumentsChain
 from langchain.chains.llm import LLMChain
 from langchain_core.prompts import PromptTemplate
 
-# Define prompt
+# Определите промпт
 prompt_template = """Write a concise summary of the following:
 "{text}"
 CONCISE SUMMARY:"""
 prompt = PromptTemplate.from_template(prompt_template)
 
-# Define LLM chain
+# Определите LLM-цепочку
 llm = ChatOpenAI(temperature=0, model_name="gpt-3.5-turbo-16k")
 llm_chain = LLMChain(llm=llm, prompt=prompt)
 
-# Define StuffDocumentsChain
+# Определите цепочку StuffDocumentsChain
 stuff_chain = StuffDocumentsChain(llm_chain=llm_chain, document_variable_name="text")
 
 docs = loader.load()
@@ -181,17 +178,21 @@ print(stuff_chain.invoke(docs)["output_text"])
 
 </CodeOutputBlock>
 
-Great! We can see that we reproduce the earlier result using the `load_summarize_chain`.
+В примере выше получается такой же результат как и при использовании `load_summarize_chain`.
 
-### Go deeper
+:::tip
 
-* You can easily customize the prompt. 
-* You can easily try different LLMs, (e.g., [Claude](/docs/integrations/chat/anthropic)) via the `llm` parameter.
-## Option 2. Map-Reduce {#map-reduce}
+* Вы можете легко изменять промпт.
+* С помощью параметра `llm` вы можете легко попробовать разные LLM, например, [Claude](/docs/integrations/chat/anthropic).
 
-Let's unpack the map reduce approach. For this, we'll first map each document to an individual summary using an `LLMChain`. Then we'll use a `ReduceDocumentsChain` to combine those summaries into a single global summary.
- 
-First, we specify the LLMChain to use for mapping each document to an individual summary:
+:::
+
+## Второй способ — Map-Reduce {#map-reduce}
+
+В этом способе вам сначала нужно с помощью `LLMChain` сопоставить каждый документ с результатами его суммаризации.
+После чего использовать `ReduceDocumentsChain`, чтобы объединить все результаты в одно общее резюме.
+
+Задайте цепочку LLMChain, которая будет сопоставлять каждый документ со своей суммаризацией:
 
 ```python
 from langchain.chains import MapReduceDocumentsChain, ReduceDocumentsChain
@@ -208,11 +209,13 @@ map_prompt = PromptTemplate.from_template(map_template)
 map_chain = LLMChain(llm=llm, prompt=map_prompt)
 ```
 
-We can also use the Prompt Hub to store and fetch prompts.
+<!--
+Мы также можем использовать Prompt Hub для хранения и получения промптов.
 
-This will work with your [LangSmith API key](https://docs.smith.langchain.com/).
 
-For example, see the map prompt [here](https://smith.langchain.com/hub/rlm/map-prompt).
+Это будет работать с вашим [ключом API LangSmith](https://docs.smith.langchain.com/).
+
+Например, см. пример промпта map [здесь](https://smith.langchain.com/hub/rlm/map-prompt).
 
 ```python
 from langchain import hub
@@ -220,10 +223,14 @@ from langchain import hub
 map_prompt = hub.pull("rlm/map-prompt")
 map_chain = LLMChain(llm=llm, prompt=map_prompt)
 ```
+-->
 
-The `ReduceDocumentsChain` handles taking the document mapping results and reducing them into a single output. It wraps a generic `CombineDocumentsChain` (like `StuffDocumentsChain`) but adds the ability to collapse documents before passing it to the `CombineDocumentsChain` if their cumulative size exceeds `token_max`. In this example, we can actually re-use our chain for combining our docs to also collapse our docs.
+Цепочка `ReduceDocumentsChain` обрабатывает результаты сопоставления документов и их краткого содержания до одного вывода.
+Она оборачивает стандартну цепочку `CombineDocumentsChain` (например, `StuffDocumentsChain`) и добавляет возможность свернуть документы перед передачей их в `CombineDocumentsChain`, если их суммарный размер превышает `token_max`.
+В этом примере вы сможете переиспользовать цепочку объединения документов `ReduceDocumentsChain`, чтобы также сворачивать их.
 
-So if the cumulative number of tokens in our mapped documents exceeds 4000 tokens, then we'll recursively pass in the documents in batches of < 4000 tokens to our `StuffDocumentsChain` to create batched summaries. And once those batched summaries are cumulatively less than 4000 tokens, we'll pass them all one last time to the `StuffDocumentsChain` to create the final summary.
+Таким образом, если суммарное количество токенов в сопоставленных документах превышает 4000 токенов, вы будете рекурсивно передавать документы группами не более 4000 токенов в цепочку `StuffDocumentsChain` для создания для создания суммарзации каждой из групп.
+И как только результаты суммаризации каждой из групп в сумме будут меньше 4000 токенов, вы передадите их все в последний раз в `StuffDocumentsChain` для создания итогового краткого содержания.
 
 ```python
 # Reduce
@@ -234,9 +241,9 @@ Helpful Answer:"""
 reduce_prompt = PromptTemplate.from_template(reduce_template)
 ```
 
-
+<!--
 ```python
-# Note we can also get this from the prompt hub, as noted above
+# Обратите внимание, что мы также можем получить это из Prompt Hub, как указано выше
 reduce_prompt = hub.pull("rlm/map-prompt")
 ```
 
@@ -244,7 +251,7 @@ reduce_prompt = hub.pull("rlm/map-prompt")
 ```python
 reduce_prompt
 ```
-
+-->
 
 <CodeOutputBlock lang="python">
 
@@ -256,21 +263,23 @@ reduce_prompt
 
 
 ```python
-# Run chain
+# Запуск цепочку
 reduce_chain = LLMChain(llm=llm, prompt=reduce_prompt)
 
-# Takes a list of documents, combines them into a single string, and passes this to an LLMChain
+# Получение на вход списка документов
+# объединение их в одну строку
+# передача строки в цепочку LLMChain
 combine_documents_chain = StuffDocumentsChain(
     llm_chain=reduce_chain, document_variable_name="docs"
 )
 
-# Combines and iteratively reduces the mapped documents
+# Объединение и итеративное уменьшение сопоставленных документов
 reduce_documents_chain = ReduceDocumentsChain(
-    # This is final chain that is called.
+    # Итоговая цепочка, которая .
     combine_documents_chain=combine_documents_chain,
-    # If documents exceed context for `StuffDocumentsChain`
+    # Вызывается если документы превышают контекст `StuffDocumentsChain`
     collapse_documents_chain=combine_documents_chain,
-    # The maximum number of tokens to group documents into.
+    # Колчичество токенов, которое ограничивает размер группы документов.
     token_max=4000,
 )
 ```
@@ -321,28 +330,32 @@ print(result["output_text"])
 
 </CodeOutputBlock>
 
-If we follow the [Langsmith Trace](https://smith.langchain.com/public/3a1a6d51-68e5-4805-8d90-78920ce60a51/r), we can see the the individual LLM summarizations, including the [final call](https://smith.langchain.com/public/69482813-f0b7-46b0-a99f-86d56fc9644a/r) that summarizes the summaries.
+<!--
+Если мы следуем по [Langsmith Trace](https://smith.langchain.com/public/3a1a6d51-68e5-4805-8d90-78920ce60a51/r), мы можем увидеть индивидуальные суммирования LLM, включая [финальный вызов](https://smith.langchain.com/public/69482813-f0b7-46b0-a99f-86d56fc9644a/r), который суммирует все резюме.
 
-### Go deeper
- 
-**Customization** 
+### Углубимся
 
-* As shown above, you can customize the LLMs and prompts for map and reduce stages.
+**Кастомизация**
 
-**Real-world use-case**
+* Как показано выше, вы можете настраивать LLM и промпты для этапов map и reduce.
 
-* See [this blog post](https://blog.langchain.dev/llms-to-improve-documentation/) case-study on analyzing user interactions (questions about LangChain documentation)!  
-* The blog post and associated [repo](https://github.com/mendableai/QA_clustering) also introduce clustering as a means of summarization.
-* This opens up another path beyond the `stuff` or `map-reduce` approaches that is worth considering.
+**Практическое применение**
 
-<Image img={require('../../static/img/summarization_use_case_3.png')} alt="Image description" />
-## Option 3. Refine {#refine}
- 
-[RefineDocumentsChain](https://api.python.langchain.com/en/latest/chains/langchain.chains.combine_documents.refine.RefineDocumentsChain.html) is similar to map-reduce:
+* См. [этот блог-пост](https://blog.langchain.dev/llms-to-improve-documentation/) с кейс-стади по анализу взаимодействий пользователей (вопросы о документации LangChain)!  
+* Блог-пост и связанный [репозиторий](https://github.com/mendableai/QA_clustering) также вводят кластеризацию как способ суммирования.
+* Это открывает еще один путь, помимо подходов `stuff` или `map-reduce`, который стоит рассмотреть.
+-->
 
-> The refine documents chain constructs a response by looping over the input documents and iteratively updating its answer. For each document, it passes all non-document inputs, the current document, and the latest intermediate answer to an LLM chain to get a new answer.
+<Image img={require('../../static/img/summarization_use_case_3.png')} alt="Описание изображения" />
 
-This can be easily run with the `chain_type="refine"` specified.
+## Третий способ — Refine {#refine}
+
+Цепочка [RefineDocumentsChain](https://api.python.langchain.com/en/latest/chains/langchain.chains.combine_documents.refine.RefineDocumentsChain.html) похожа на способ map-reduce:
+
+Цепочка `refine documents` создает ответ, перебирая входные документы и итеративно обновляя созданный ответ.
+Для каждого документа она передает входные данные, текущий документ и последнее промежуточный ответ в цепочку LLM для получения нового ответа.
+
+Для этого укажите тип `chain_type="refine"`.
 
 ```python
 chain = load_summarize_chain(llm, chain_type="refine")
@@ -466,8 +479,9 @@ print("\n\n".join(result["intermediate_steps"][:3]))
 
 </CodeOutputBlock>
 
-## Splitting and summarizing in a single chain
-For convenience, we can wrap both the text splitting of our long document and summarizing in a single `AnalyzeDocumentsChain`.
+## Разделение и суммаризация в одной цепочке
+
+Для удобства вы можете обернуть разделение текста длинного документа и его уммаризацию в одной цепочке `AnalyzeDocumentsChain`.
 
 ```python
 from langchain.chains import AnalyzeDocumentChain
@@ -478,12 +492,9 @@ summarize_document_chain = AnalyzeDocumentChain(
 summarize_document_chain.invoke(docs[0].page_content)
 ```
 
-## Next steps
+## Смотрите также
 
-We encourage you to check out the [how-to guides](/docs/how_to) for more detail on: 
-
-- Built-in [document loaders](/docs/how_to/#document-loaders) and [text-splitters](/docs/how_to/#text-splitters)
-- Integrating various combine-document chains into a [RAG application](/docs/tutorials/rag/)
-- Incorporating retrieval into a [chatbot](/docs/how_to/chatbots_retrieval/)
-
-and other concepts.
+- [Работа с загрузчиками документов](/docs/how_to/#document-loaders)
+- [Работа с разделителями текста](/docs/how_to/#text-splitters)
+- [Создание RAG-приложения](/docs/tutorials/rag/)
+- [Поиск в чат-боте](/docs/how_to/chatbots_retrieval/)
