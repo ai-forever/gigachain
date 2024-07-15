@@ -54,7 +54,8 @@ def create_gigalogger_handler() -> Any:
         except Exception as e:
             HANDLER = None
             raise GigaLoggerInitializeException(
-                "Failed to authenticate in GigaLogger. Check your public and secret key. "
+                "Failed to authenticate in GigaLogger. "
+                "Check your public and secret key. "
                 f"Additional message: '{repr(e)}'"
             )
         finally:
