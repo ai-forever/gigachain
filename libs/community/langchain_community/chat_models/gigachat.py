@@ -333,7 +333,7 @@ class GigaChat(_BaseGigaChat, BaseChatModel):
 
         # Iterative remove title keys from the payload.
         # It is not needed for the GigaChat API.
-        def _remove_title_keys(payload_dict: dict[str, Any]) -> dict[str, Any]:
+        def _remove_title_keys(payload_dict: Union[Dict, List]) -> None:
             if isinstance(payload_dict, dict):
                 payload_dict.pop("title", None)
 
@@ -343,9 +343,7 @@ class GigaChat(_BaseGigaChat, BaseChatModel):
                 for item in payload_dict:
                     _remove_title_keys(item)
 
-            return payload_dict
-
-        payload_dict = _remove_title_keys(payload_dict)
+        _remove_title_keys(payload_dict)
         payload = Chat.parse_obj(payload_dict)
 
         if self.verbose:
