@@ -157,7 +157,12 @@ def _convert_message_to_dict(message: BaseMessage) -> gm.Messages:
         kwargs["role"] = MessagesRole.USER
         kwargs["content"] = message.content
     elif isinstance(message, AIMessage):
-        function_call = message.additional_kwargs.get("function_call", None)
+        if function_call := getattr(message, "tool_calls", None):
+            for function in function_call:
+                if "args" in function:
+                    function["arguments"] = function.pop("args")
+        else:
+            function_call = message.additional_kwargs.get("function_call", None)
         if isinstance(function_call, list):
             if len(function_call) > 0:
                 function_call = function_call[0]
