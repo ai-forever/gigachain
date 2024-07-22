@@ -247,9 +247,9 @@ class ChildTool(BaseTool):
     few_shot_examples: FewShotExamples = None
     """Few-shot examples to help the model understand how to use the tool."""
 
-    handle_tool_error: Optional[Union[bool, str, Callable[[ToolException], str]]] = (
-        False
-    )
+    handle_tool_error: Optional[
+        Union[bool, str, Callable[[ToolException], str]]
+    ] = False
     """Handle the content of the ToolException thrown."""
 
     handle_validation_error: Optional[
