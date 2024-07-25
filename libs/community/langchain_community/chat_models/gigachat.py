@@ -291,13 +291,15 @@ class _AllReturnType(TypedDict):
 
 
 def trim_content_to_stop_sequence(
-    content: str, stop_sequence: Optional[Union[list, str]]
+    content: str, stop_sequence: Optional[List[str]]
 ) -> Union[str, bool]:
     """
     Обрезаем строку к стоп слову.
     Если стоп слово нашлось в строке возвращаем обрезанную строку.
     Если нет, то возвращаем False
     """
+    if stop_sequence is None:
+        return False
     for stop_w in stop_sequence:
         try:
             index = content.index(stop_w)
