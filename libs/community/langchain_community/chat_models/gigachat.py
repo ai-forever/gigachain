@@ -290,6 +290,23 @@ class _AllReturnType(TypedDict):
     parsing_error: Optional[BaseException]
 
 
+def trim_content_to_stop_sequence(
+    content: str, stop_sequence: Optional[Union[list, str]]
+) -> Union[str, bool]:
+    """
+    Обрезаем строку к стоп слову.
+    Если стоп слово нашлось в строке возвращаем обрезанную строку.
+    Если нет, то возвращаем False
+    """
+    for stop_w in stop_sequence:
+        try:
+            index = content.index(stop_w)
+            return content[:index]
+        except ValueError:
+            pass
+    return False
+
+
 class GigaChat(_BaseGigaChat, BaseChatModel):
     """`GigaChat` large language models API.
 
@@ -390,6 +407,13 @@ class GigaChat(_BaseGigaChat, BaseChatModel):
 
         payload = self._build_payload(messages, **kwargs)
         response = self._client.chat(payload)
+        for choice in response.choices:
+            trimmed_content = trim_content_to_stop_sequence(
+                choice.message.content, stop
+            )
+            if trimmed_content:
+                choice.message.content = trimmed_content
+                break
 
         return self._create_chat_result(response)
 
@@ -410,6 +434,13 @@ class GigaChat(_BaseGigaChat, BaseChatModel):
 
         payload = self._build_payload(messages, **kwargs)
         response = await self._client.achat(payload)
+        for choice in response.choices:
+            trimmed_content = trim_content_to_stop_sequence(
+                choice.message.content, stop
+            )
+            if trimmed_content:
+                choice.message.content = trimmed_content
+                break
 
         return self._create_chat_result(response)
 
@@ -421,6 +452,7 @@ class GigaChat(_BaseGigaChat, BaseChatModel):
         **kwargs: Any,
     ) -> Iterator[ChatGenerationChunk]:
         payload = self._build_payload(messages, **kwargs)
+        message_content = ""
 
         for chunk_d in self._client.stream(payload):
             chunk = {}
@@ -433,6 +465,9 @@ class GigaChat(_BaseGigaChat, BaseChatModel):
 
             choice = chunk["choices"][0]
             content = choice.get("delta", {}).get("content", {})
+            message_content += content
+            if trim_content_to_stop_sequence(message_content, stop):
+                return
             chunk_m = _convert_delta_to_message_chunk(choice["delta"], AIMessageChunk)
 
             finish_reason = choice.get("finish_reason")
@@ -454,6 +489,7 @@ class GigaChat(_BaseGigaChat, BaseChatModel):
         **kwargs: Any,
     ) -> AsyncIterator[ChatGenerationChunk]:
         payload = self._build_payload(messages, **kwargs)
+        message_content = ""
 
         async for chunk_d in self._client.astream(payload):
             chunk = {}
@@ -466,6 +502,9 @@ class GigaChat(_BaseGigaChat, BaseChatModel):
 
             choice = chunk["choices"][0]
             content = choice.get("delta", {}).get("content", {})
+            message_content += content
+            if trim_content_to_stop_sequence(message_content, stop):
+                return
             chunk_m = _convert_delta_to_message_chunk(choice["delta"], AIMessageChunk)
 
             finish_reason = choice.get("finish_reason")
