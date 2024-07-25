@@ -413,7 +413,7 @@ class GigaChat(_BaseGigaChat, BaseChatModel):
             trimmed_content = trim_content_to_stop_sequence(
                 choice.message.content, stop
             )
-            if trimmed_content:
+            if isinstance(trimmed_content, str):
                 choice.message.content = trimmed_content
                 break
 
@@ -440,7 +440,7 @@ class GigaChat(_BaseGigaChat, BaseChatModel):
             trimmed_content = trim_content_to_stop_sequence(
                 choice.message.content, stop
             )
-            if trimmed_content:
+            if isinstance(trimmed_content, str):
                 choice.message.content = trimmed_content
                 break
 
