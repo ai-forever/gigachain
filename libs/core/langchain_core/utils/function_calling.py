@@ -108,6 +108,22 @@ def convert_pydantic_to_openai_function(
     }
 
 
+def _convert_return_schema(
+    return_model: Type[BaseModel],
+) -> Dict[str, Any]:
+    return_schema = dereference_refs(return_model.schema())
+    return_schema.pop("definitions", None)
+    return_schema.pop("title", None)
+
+    for key in return_schema["properties"]:
+        if "type" not in return_schema["properties"][key]:
+            return_schema["properties"][key]["type"] = "object"
+        if "description" not in return_schema["properties"][key]:
+            return_schema["properties"][key]["description"] = ""
+
+    return return_schema
+
+
 def convert_pydantic_to_gigachat_function(
     model: Type[BaseModel],
     *,
@@ -127,16 +143,10 @@ def convert_pydantic_to_gigachat_function(
             if "description" not in schema["properties"][key]:
                 schema["properties"][key]["description"] = ""
 
-    return_schema = None
     if return_model:
-        return_schema = dereference_refs(return_model.schema())
-        return_schema.pop("definitions", None)
-        return_schema.pop("title", None)
-        for key in return_schema["properties"]:
-            if "type" not in return_schema["properties"][key]:
-                return_schema["properties"][key]["type"] = "object"
-            if "description" not in return_schema["properties"][key]:
-                return_schema["properties"][key]["description"] = ""
+        return_schema = _convert_return_schema(return_model)
+    else:
+        return_schema = None
 
     return GigaFunctionDescription(
         name=name or title,
@@ -314,10 +324,11 @@ def convert_python_function_to_openai_function(
 
 @deprecated(
     "0.1.16",
+    alternative="langchain_core.utils.function_calling.convert_to_gigachat_function()",
     removal="0.3.0",
 )
 def format_tool_to_gigachat_function(tool: BaseTool) -> GigaFunctionDescription:
-    """Format tool into the OpenAI function API."""
+    """Format tool into the GigaChat function API."""
     if tool.args_schema:
         return convert_pydantic_to_gigachat_function(
             tool.args_schema,
@@ -327,6 +338,11 @@ def format_tool_to_gigachat_function(tool: BaseTool) -> GigaFunctionDescription:
             few_shot_examples=tool.few_shot_examples,
         )
     else:
+        if tool.return_schema:
+            return_schema = _convert_return_schema(tool.return_schema)
+        else:
+            return_schema = None
+
         return {
             "name": tool.name,
             "description": tool.description,
@@ -343,7 +359,7 @@ def format_tool_to_gigachat_function(tool: BaseTool) -> GigaFunctionDescription:
                 "type": "object",
             },
             "few_shot_examples": tool.few_shot_examples,
-            "return_parameters": None,
+            "return_parameters": return_schema,
         }
 
 
