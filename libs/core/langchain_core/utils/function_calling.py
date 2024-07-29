@@ -347,15 +347,7 @@ def format_tool_to_gigachat_function(tool: BaseTool) -> GigaFunctionDescription:
             "name": tool.name,
             "description": tool.description,
             "parameters": {
-                # This is a hack to get around the fact that some tools
-                # do not expose an args_schema, and expect an argument
-                # which is a string.
-                # And Open AI does not support an array type for the
-                # parameters.
-                "properties": {
-                    "__arg1": {"title": "__arg1", "type": "string"},
-                },
-                "required": ["__arg1"],
+                "properties": {},
                 "type": "object",
             },
             "few_shot_examples": tool.few_shot_examples,
