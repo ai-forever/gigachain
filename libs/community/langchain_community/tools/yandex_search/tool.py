@@ -43,12 +43,6 @@ class YandexSearchResults(BaseTool):
     args_schema: Type[BaseModel] = YandexSearchInput
     max_results: int = 10
     return_schema: Type[BaseModel] = YandexSearchOutput
-    few_shot_examples: List[Dict] = [
-        {
-            "request": "Кто такой Гагарин?",
-            "params": {"query": "Гагарин"},
-        }
-    ]
 
     def _run(
         self,
