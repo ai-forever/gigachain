@@ -56,10 +56,14 @@ def print_sys_info(*, additional_import_packages: Sequence[str] = tuple()) -> No
     langchain_import_packages = [
         name for _, name, _ in pkgutil.iter_modules() if name.startswith("langchain")
     ]
+    langgraph_import_packages = [
+        name for _, name, _ in pkgutil.iter_modules() if name.startswith("langgraph")
+    ]
 
     all_import_packages = sorted(
         set(
             langchain_import_packages
+            + langgraph_import_packages
             + other_langchain_import_packages
             + list(additional_import_packages)
         )
