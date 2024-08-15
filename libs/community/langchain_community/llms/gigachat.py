@@ -55,6 +55,8 @@ class _BaseGigaChat(Serializable):
     """ Timeout for request """
     verify_ssl_certs: Optional[bool] = None
     """ Check certificates for all requests """
+    flags: Optional[list] = None
+    """Flags to use."""
 
     ca_bundle_file: Optional[str] = None
     cert_file: Optional[str] = None
@@ -74,6 +76,8 @@ class _BaseGigaChat(Serializable):
     """ Maximum number of tokens to generate """
     use_api_for_tokens: bool = False
     """ Use GigaChat API for tokens count """
+    flags: Optional[list] = None
+    """ Verbose logging """
     verbose: bool = False
     """ Verbose logging """
     top_p: Optional[float] = None
@@ -122,6 +126,7 @@ class _BaseGigaChat(Serializable):
             key_file=self.key_file,
             key_file_password=self.key_file_password,
             verbose=self.verbose,
+            flags=self.flags,
         )
 
     @pre_init
@@ -243,6 +248,8 @@ class GigaChat(_BaseGigaChat, BaseLLM):
             payload["repetition_penalty"] = self.repetition_penalty
         if self.update_interval is not None:
             payload["update_interval"] = self.update_interval
+        if self.flags is not None:
+            payload["flags"] = self.flags
 
         if self.verbose:
             logger.warning("Giga request: %s", json.dumps(payload, ensure_ascii=False))
