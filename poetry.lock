@@ -1059,7 +1059,7 @@ aiohttp = "^3.8.3"
 async-timeout = {version = "^4.0.0", markers = "python_version < \"3.11\""}
 gigachain-core = "^0.2.27"
 gigachain-text-splitters = "^0.2.0"
-gigachat = "^0.1.33"
+gigachat = "^0.1.34"
 langsmith = "^0.1.17"
 numpy = [
     {version = ">=1,<2", markers = "python_version < \"3.12\""},
@@ -1077,7 +1077,7 @@ url = "libs/langchain"
 
 [[package]]
 name = "gigachain-community"
-version = "0.2.11"
+version = "0.2.11post1"
 description = "Community contributed GigaChain integrations."
 optional = false
 python-versions = ">=3.8.1,<4.0"
@@ -1089,7 +1089,7 @@ aiohttp = "^3.8.3"
 dataclasses-json = ">= 0.5.7, < 0.7"
 gigachain = "^0.2.12"
 gigachain-core = "^0.2.27"
-gigachat = "^0.1.33"
+gigachat = "^0.1.34"
 langsmith = "^0.1.0"
 numpy = [
     {version = ">=1,<2", markers = "python_version < \"3.12\""},
@@ -1106,7 +1106,7 @@ url = "libs/community"
 
 [[package]]
 name = "gigachain-core"
-version = "0.2.29"
+version = "0.2.29post1"
 description = "Building applications with LLMs through composability"
 optional = false
 python-versions = ">=3.8.1,<4.0"
@@ -1183,13 +1183,13 @@ url = "libs/text-splitters"
 
 [[package]]
 name = "gigachat"
-version = "0.1.33"
+version = "0.1.34"
 description = "GigaChat. Python-library for GigaChain and LangChain"
 optional = false
 python-versions = "<4.0,>=3.8"
 files = [
-    {file = "gigachat-0.1.33-py3-none-any.whl", hash = "sha256:cc2a00c8216e539c89eb37b77420a0d99234b68675c2d87799e37ad4a695e5da"},
-    {file = "gigachat-0.1.33.tar.gz", hash = "sha256:edbb6adffd9186ade131772260a08436c7e0cc95dafac4f66700932a78540dbc"},
+    {file = "gigachat-0.1.34-py3-none-any.whl", hash = "sha256:4f799261bfa20f534081711856fa8a3d00b1118ce6a0887e16aef2ac56897741"},
+    {file = "gigachat-0.1.34.tar.gz", hash = "sha256:dc8185f2aa83289df15814f650e4bc8544532413cbe0cc426a34d9e3a11a25ba"},
 ]
 
 [package.dependencies]

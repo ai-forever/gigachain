@@ -55,8 +55,6 @@ class _BaseGigaChat(Serializable):
     """ Timeout for request """
     verify_ssl_certs: Optional[bool] = None
     """ Check certificates for all requests """
-    flags: Optional[list] = None
-    """Flags to use."""
 
     ca_bundle_file: Optional[str] = None
     cert_file: Optional[str] = None
@@ -76,8 +74,8 @@ class _BaseGigaChat(Serializable):
     """ Maximum number of tokens to generate """
     use_api_for_tokens: bool = False
     """ Use GigaChat API for tokens count """
-    flags: Optional[list] = None
-    """ Verbose logging """
+    flags: Optional[list[str]] = None
+    """ Feature flags """
     verbose: bool = False
     """ Verbose logging """
     top_p: Optional[float] = None
