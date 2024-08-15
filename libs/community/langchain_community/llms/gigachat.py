@@ -74,7 +74,7 @@ class _BaseGigaChat(Serializable):
     """ Maximum number of tokens to generate """
     use_api_for_tokens: bool = False
     """ Use GigaChat API for tokens count """
-    flags: Optional[list[str]] = None
+    flags: Optional[List[str]] = None
     """ Feature flags """
     verbose: bool = False
     """ Verbose logging """
