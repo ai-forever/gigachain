@@ -1418,7 +1418,7 @@ aiohttp = "^3.8.3"
 async-timeout = {version = "^4.0.0", markers = "python_version < \"3.11\""}
 gigachain-core = "^0.2.27"
 gigachain-text-splitters = "^0.2.0"
-gigachat = "^0.1.34"
+gigachat = "^0.1.35"
 langsmith = "^0.1.17"
 numpy = [
     {version = ">=1,<2", markers = "python_version < \"3.12\""},
@@ -1496,13 +1496,13 @@ url = "../text-splitters"
 
 [[package]]
 name = "gigachat"
-version = "0.1.34.post1"
+version = "0.1.35"
 description = "GigaChat. Python-library for GigaChain and LangChain"
 optional = false
 python-versions = "<4.0,>=3.8"
 files = [
-    {file = "gigachat-0.1.34.post1-py3-none-any.whl", hash = "sha256:6a9978c63f8cfbe52b8ed5a7199a7694e64c24d5dfb062f91a7d0bda2885bafa"},
-    {file = "gigachat-0.1.34.post1.tar.gz", hash = "sha256:b6552177b7f812a835e6d5867551418721bdb3f7159d38a44332ba554a56614e"},
+    {file = "gigachat-0.1.35-py3-none-any.whl", hash = "sha256:4e142b1f10807a3655d7c54740103571aca073f2fc91aad2eefbff378121f5a1"},
+    {file = "gigachat-0.1.35.tar.gz", hash = "sha256:508de76d99659c96bb5345d33242095c7b358c453eaa645c5379b06691cfb454"},
 ]
 
 [package.dependencies]
@@ -5862,4 +5862,4 @@ test = ["big-O", "importlib-resources", "jaraco.functools", "jaraco.itertools", 
 [metadata]
 lock-version = "2.0"
 python-versions = ">=3.8.1,<4.0"
-content-hash = "2ad104fed84351814b05d066c2252435bd51eff023c2fcc821c9b29828a47f87"
+content-hash = "4e2aec34eefe7701edd6d6b7943c23ec01565cf211a916f56e05f6ab1945a044"
