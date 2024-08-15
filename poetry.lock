@@ -1183,13 +1183,13 @@ url = "libs/text-splitters"
 
 [[package]]
 name = "gigachat"
-version = "0.1.34"
+version = "0.1.34.post1"
 description = "GigaChat. Python-library for GigaChain and LangChain"
 optional = false
 python-versions = "<4.0,>=3.8"
 files = [
-    {file = "gigachat-0.1.34-py3-none-any.whl", hash = "sha256:4f799261bfa20f534081711856fa8a3d00b1118ce6a0887e16aef2ac56897741"},
-    {file = "gigachat-0.1.34.tar.gz", hash = "sha256:dc8185f2aa83289df15814f650e4bc8544532413cbe0cc426a34d9e3a11a25ba"},
+    {file = "gigachat-0.1.34.post1-py3-none-any.whl", hash = "sha256:6a9978c63f8cfbe52b8ed5a7199a7694e64c24d5dfb062f91a7d0bda2885bafa"},
+    {file = "gigachat-0.1.34.post1.tar.gz", hash = "sha256:b6552177b7f812a835e6d5867551418721bdb3f7159d38a44332ba554a56614e"},
 ]
 
 [package.dependencies]
