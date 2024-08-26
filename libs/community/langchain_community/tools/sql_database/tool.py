@@ -88,9 +88,7 @@ class ListSQLDatabaseTool(BaseSQLDatabaseTool, BaseTool):
     """Tool for getting tables names."""
 
     name: str = "sql_db_list_tables"
-    description: str = (
-        "Входные данные — пустая строка, выходные данные — список таблиц в базе данных, разделённый запятыми."  # noqa
-    )
+    description: str = "Входные данные — пустая строка, выходные данные — список таблиц в базе данных, разделённый запятыми."  # noqa
     args_schema: Type[BaseModel] = _ListSQLDataBaseToolInput
 
     def _run(
