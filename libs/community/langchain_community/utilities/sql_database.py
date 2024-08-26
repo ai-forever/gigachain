@@ -350,7 +350,7 @@ class SQLDatabase:
                 table_info += f"\n{self._get_sample_rows(table)}\n"
             if has_extra_info:
                 table_info += "*/"
-            tables.append(table_info.replace("\t", "").replace("\n", ""))
+            tables.append(table_info)
         tables.sort()
         return tables
 
