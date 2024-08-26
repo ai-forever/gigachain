@@ -2,7 +2,7 @@
 """Tools for interacting with a SQL database."""
 
 import json
-from typing import Any, Dict, Optional, Sequence, Type, Union
+from typing import Any, Dict, Optional, Sequence, Type, Union, List
 
 from sqlalchemy.engine import Result
 
@@ -77,7 +77,7 @@ class InfoSQLDatabaseTool(BaseSQLDatabaseTool, BaseTool):
         """Get the schema for tables in a comma-separated list."""
         tables = self.db.get_table_info_list(json.loads(table_names))
         tables = [table.replace("\t", "").replace("\n", "") for table in tables]
-        return "\n".join(table)
+        return "\n".join(tables)
 
 
 class _ListSQLDataBaseToolInput(BaseModel):
@@ -88,7 +88,9 @@ class ListSQLDatabaseTool(BaseSQLDatabaseTool, BaseTool):
     """Tool for getting tables names."""
 
     name: str = "sql_db_list_tables"
-    description: str = "Входные данные — пустая строка, выходные данные — список таблиц в базе данных, разделённый запятыми."  # noqa
+    description: str = (
+        "Входные данные — пустая строка, выходные данные — список таблиц в базе данных, разделённый запятыми."  # noqa
+    )
     args_schema: Type[BaseModel] = _ListSQLDataBaseToolInput
 
     def _run(
@@ -97,7 +99,7 @@ class ListSQLDatabaseTool(BaseSQLDatabaseTool, BaseTool):
         run_manager: Optional[CallbackManagerForToolRun] = None,
     ) -> str:
         """Get a comma-separated list of table names."""
-        return self.db.get_usable_table_names()
+        return str(self.db.get_usable_table_names())
 
 
 class _QuerySQLCheckerToolInput(BaseModel):
