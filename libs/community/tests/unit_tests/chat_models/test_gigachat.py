@@ -325,7 +325,7 @@ async def test_gigachat_bind_with_description() -> None:
 
 @tool
 def _test_tool(
-    arg: str, config: RunnableConfig, inected: Annotated[str, InjectedToolArg]
+    arg: str, config: RunnableConfig, injected: Annotated[str, InjectedToolArg]
 ) -> None:
     """Some description"""
     return
