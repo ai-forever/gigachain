@@ -378,7 +378,7 @@ def format_tool_to_gigachat_function(tool: BaseTool) -> GigaFunctionDescription:
     tool_schema = tool.args_schema
     if tool.tool_call_schema:
         tool_schema = tool.tool_call_schema
-    if tool.args_schema:
+    if tool_schema:
         return convert_pydantic_to_gigachat_function(
             tool_schema,
             name=tool.name,
