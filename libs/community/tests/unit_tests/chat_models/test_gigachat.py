@@ -1,5 +1,6 @@
 # flake8: noqa: I001
-from typing import Annotated, Any, AsyncGenerator, Iterable, List
+from typing import Any, AsyncGenerator, Iterable, List
+from typing_extensions import Annotated
 
 import pytest
 from gigachat.models import (
