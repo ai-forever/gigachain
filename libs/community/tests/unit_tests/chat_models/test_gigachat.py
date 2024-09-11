@@ -33,6 +33,9 @@ from ..callbacks.fake_callback_handler import (
     FakeAsyncCallbackHandler,
     FakeCallbackHandler,
 )
+from langchain_core.runnables import RunnableConfig
+
+from langchain.tools import tool
 
 
 def test__convert_dict_to_message_system() -> None:
@@ -317,3 +320,17 @@ async def test_gigachat_bind_with_description() -> None:
     llm = GigaChat()
     llm.bind_functions(functions=[Person], function_call="Person")
     llm.bind_tools(tools=[Person], tool_choice="Person")
+
+
+@tool
+def _test_tool(
+    arg: str,
+    config: RunnableConfig,
+) -> None:
+    """Some description"""
+    return
+
+
+async def test_gigachat_bind_with_injected_vars() -> None:
+    llm = GigaChat().bind_tools(tools=[_test_tool])
+    assert llm.kwargs["functions"][0]["parameters"]["required"] == ["arg"]  # type: ignore[attr-defined]
