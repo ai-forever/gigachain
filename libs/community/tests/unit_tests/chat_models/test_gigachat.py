@@ -1,5 +1,5 @@
 # flake8: noqa: I001
-from typing import Any, AsyncGenerator, Iterable, List
+from typing import Annotated, Any, AsyncGenerator, Iterable, List
 
 import pytest
 from gigachat.models import (
@@ -20,12 +20,15 @@ from langchain.schema.messages import (
     HumanMessage,
     SystemMessage,
 )
+from langchain.tools import tool
 from langchain_community.chat_models.gigachat import (
     GigaChat,
     _convert_dict_to_message,
     _convert_message_to_dict,
 )
 from langchain_core.pydantic_v1 import BaseModel, Field
+from langchain_core.runnables import RunnableConfig
+from langchain_core.tools.base import InjectedToolArg
 from pytest_mock import MockerFixture
 from tests.unit_tests.stubs import AnyStr
 
@@ -33,9 +36,6 @@ from ..callbacks.fake_callback_handler import (
     FakeAsyncCallbackHandler,
     FakeCallbackHandler,
 )
-from langchain_core.runnables import RunnableConfig
-
-from langchain.tools import tool
 
 
 def test__convert_dict_to_message_system() -> None:
@@ -324,8 +324,7 @@ async def test_gigachat_bind_with_description() -> None:
 
 @tool
 def _test_tool(
-    arg: str,
-    config: RunnableConfig,
+    arg: str, config: RunnableConfig, inected: Annotated[str, InjectedToolArg]
 ) -> None:
     """Some description"""
     return
