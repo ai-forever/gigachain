@@ -4,7 +4,7 @@ build-backend = "poetry.core.masonry.api"
 
 [tool.poetry]
 name = "gigachain-community"
-version = "0.2.16post2"
+version = "0.2.16post3"
 description = "Community contributed LangChain integrations."
 authors = []
 license = "MIT"

@@ -131,6 +131,9 @@ if TYPE_CHECKING:
     from langchain_community.retrievers.wikipedia import (
         WikipediaRetriever,
     )
+    from langchain_community.retrievers.yandex_search import (
+        YandexSearchAPIRetriever,
+    )
     from langchain_community.retrievers.you import (
         YouRetriever,
     )
@@ -182,6 +185,7 @@ _module_lookup = {
     "SVMRetriever": "langchain_community.retrievers.svm",
     "TFIDFRetriever": "langchain_community.retrievers.tfidf",
     "TavilySearchAPIRetriever": "langchain_community.retrievers.tavily_search_api",
+    "YandexSearchAPIRetriever": "langchain_community.retrievers.yandex_search",
     "VespaRetriever": "langchain_community.retrievers.vespa_retriever",
     "WeaviateHybridSearchRetriever": "langchain_community.retrievers.weaviate_hybrid_search",  # noqa: E501
     "WebResearchRetriever": "langchain_community.retrievers.web_research",
@@ -238,6 +242,7 @@ __all__ = [
     "RemoteLangChainRetriever",
     "SVMRetriever",
     "TavilySearchAPIRetriever",
+    "YandexSearchAPIRetriever",
     "TFIDFRetriever",
     "VespaRetriever",
     "WeaviateHybridSearchRetriever",
