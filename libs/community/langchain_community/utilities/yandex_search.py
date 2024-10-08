@@ -65,7 +65,7 @@ class YandexSearchAPIWrapper(BaseModel):
     class Config:
         """Configuration for this pydantic object."""
 
-        extra = 'forbid'
+        extra = "forbid"
 
     @root_validator(pre=True)
     def validate_environment(cls, values: Dict) -> Dict:
