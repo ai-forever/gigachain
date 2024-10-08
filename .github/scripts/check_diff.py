@@ -134,7 +134,7 @@ def _get_configs_for_single_dir(job: str, dir_: str) -> List[Dict[str, str]]:
 def _get_pydantic_test_configs(
     dir_: str, *, python_version: str = "3.11"
 ) -> List[Dict[str, str]]:
-    with open("./libs/core/poetry.lock", "rb") as f:
+    with open("./libs/langchain/poetry.lock", "rb") as f:
         core_poetry_lock_data = tomllib.load(f)
     for package in core_poetry_lock_data["package"]:
         if package["name"] == "pydantic":
