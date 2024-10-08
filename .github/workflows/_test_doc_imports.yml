@@ -27,7 +27,7 @@ jobs:
 
       - name: Install dependencies
         shell: bash
-        run: poetry install --with test
+        run: poetry install --with test --sync
 
       - name: Install langchain editable
         run: |
