@@ -3,7 +3,7 @@ from __future__ import annotations
 import re
 from typing import Any, Dict, List, Literal
 
-from langchain_core.pydantic_v1 import BaseModel, Extra, SecretStr, root_validator
+from langchain_core.pydantic_v1 import BaseModel, SecretStr, root_validator
 from langchain_core.utils import get_from_dict_or_env
 
 
