@@ -21,6 +21,10 @@ import importlib
 from typing import TYPE_CHECKING, Any
 
 if TYPE_CHECKING:
+    from langchain_gigachat.chat_models.gigachat import (
+        GigaChat,
+    )
+
     from langchain_community.chat_models.anthropic import (
         ChatAnthropic,
     )
@@ -66,9 +70,6 @@ if TYPE_CHECKING:
     )
     from langchain_community.chat_models.friendli import (
         ChatFriendli,
-    )
-    from langchain_community.chat_models.gigachat import (
-        GigaChat,
     )
     from langchain_community.chat_models.google_palm import (
         ChatGooglePalm,
@@ -147,6 +148,10 @@ if TYPE_CHECKING:
     from langchain_community.chat_models.promptlayer_openai import (
         PromptLayerChatOpenAI,
     )
+    from langchain_community.chat_models.sambanova import (
+        ChatSambaNovaCloud,
+        ChatSambaStudio,
+    )
     from langchain_community.chat_models.snowflake import (
         ChatSnowflakeCortex,
     )
@@ -211,6 +216,8 @@ __all__ = [
     "ChatOpenAI",
     "ChatPerplexity",
     "ChatPremAI",
+    "ChatSambaNovaCloud",
+    "ChatSambaStudio",
     "ChatSparkLLM",
     "ChatSnowflakeCortex",
     "ChatTongyi",
@@ -269,6 +276,8 @@ _module_lookup = {
     "ChatOllama": "langchain_community.chat_models.ollama",
     "ChatOpenAI": "langchain_community.chat_models.openai",
     "ChatPerplexity": "langchain_community.chat_models.perplexity",
+    "ChatSambaNovaCloud": "langchain_community.chat_models.sambanova",
+    "ChatSambaStudio": "langchain_community.chat_models.sambanova",
     "ChatSnowflakeCortex": "langchain_community.chat_models.snowflake",
     "ChatSparkLLM": "langchain_community.chat_models.sparkllm",
     "ChatTongyi": "langchain_community.chat_models.tongyi",
@@ -279,7 +288,7 @@ _module_lookup = {
     "ErnieBotChat": "langchain_community.chat_models.ernie",
     "FakeListChatModel": "langchain_community.chat_models.fake",
     "GPTRouter": "langchain_community.chat_models.gpt_router",
-    "GigaChat": "langchain_community.chat_models.gigachat",
+    "GigaChat": "langchain_gigachat.chat_models.gigachat",
     "HumanInputChatModel": "langchain_community.chat_models.human",
     "JinaChat": "langchain_community.chat_models.jinachat",
     "LlamaEdgeChatService": "langchain_community.chat_models.llama_edge",

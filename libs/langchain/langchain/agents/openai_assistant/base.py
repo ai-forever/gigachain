@@ -20,14 +20,15 @@ from typing import (
 from langchain_core.agents import AgentAction, AgentFinish
 from langchain_core.callbacks import CallbackManager
 from langchain_core.load import dumpd
-from langchain_core.pydantic_v1 import BaseModel, Field, root_validator
 from langchain_core.runnables import RunnableConfig, RunnableSerializable, ensure_config
 from langchain_core.tools import BaseTool
 from langchain_core.utils.function_calling import convert_to_openai_tool
+from pydantic import BaseModel, Field, model_validator
+from typing_extensions import Self
 
 if TYPE_CHECKING:
     import openai
-    from openai.types.beta.threads import ThreadMessage
+    from openai.types.beta.threads import ThreadMessage  # type: ignore
     from openai.types.beta.threads.required_action_function_tool_call import (
         RequiredActionFunctionToolCall,
     )
@@ -232,14 +233,14 @@ class OpenAIAssistantRunnable(RunnableSerializable[Dict, OutputType]):
     as_agent: bool = False
     """Use as a LangChain agent, compatible with the AgentExecutor."""
 
-    @root_validator(pre=False, skip_on_failure=True)
-    def validate_async_client(cls, values: dict) -> dict:
-        if values["async_client"] is None:
+    @model_validator(mode="after")
+    def validate_async_client(self) -> Self:
+        if self.async_client is None:
             import openai
 
-            api_key = values["client"].api_key
-            values["async_client"] = openai.AsyncOpenAI(api_key=api_key)
-        return values
+            api_key = self.client.api_key
+            self.async_client = openai.AsyncOpenAI(api_key=api_key)
+        return self
 
     @classmethod
     def create_assistant(
@@ -276,7 +277,7 @@ class OpenAIAssistantRunnable(RunnableSerializable[Dict, OutputType]):
         return cls(assistant_id=assistant.id, client=client, **kwargs)
 
     def invoke(
-        self, input: dict, config: Optional[RunnableConfig] = None
+        self, input: dict, config: Optional[RunnableConfig] = None, **kwargs: Any
     ) -> OutputType:
         """Invoke assistant.
 
@@ -309,7 +310,7 @@ class OpenAIAssistantRunnable(RunnableSerializable[Dict, OutputType]):
             inheritable_metadata=config.get("metadata"),
         )
         run_manager = callback_manager.on_chain_start(
-            dumpd(self), input, name=config.get("run_name")
+            dumpd(self), input, name=config.get("run_name") or self.get_name()
         )
         try:
             # Being run within AgentExecutor and there are tool outputs to submit.
@@ -428,7 +429,7 @@ class OpenAIAssistantRunnable(RunnableSerializable[Dict, OutputType]):
             inheritable_metadata=config.get("metadata"),
         )
         run_manager = callback_manager.on_chain_start(
-            dumpd(self), input, name=config.get("run_name")
+            dumpd(self), input, name=config.get("run_name") or self.get_name()
         )
         try:
             # Being run within AgentExecutor and there are tool outputs to submit.
@@ -553,7 +554,8 @@ class OpenAIAssistantRunnable(RunnableSerializable[Dict, OutputType]):
                     isinstance(content, openai.types.beta.threads.TextContentBlock)
                     if version_gte_1_14
                     else isinstance(
-                        content, openai.types.beta.threads.MessageContentText
+                        content,
+                        openai.types.beta.threads.MessageContentText,  # type: ignore
                     )
                 )
                 for content in answer
@@ -683,7 +685,8 @@ class OpenAIAssistantRunnable(RunnableSerializable[Dict, OutputType]):
                     isinstance(content, openai.types.beta.threads.TextContentBlock)
                     if version_gte_1_14
                     else isinstance(
-                        content, openai.types.beta.threads.MessageContentText
+                        content,
+                        openai.types.beta.threads.MessageContentText,  # type: ignore
                     )
                 )
                 for content in answer

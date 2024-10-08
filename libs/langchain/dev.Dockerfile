@@ -44,14 +44,8 @@ COPY libs/langchain/pyproject.toml libs/langchain/poetry.toml libs/langchain/poe
 # Copy the langchain library for installation
 COPY libs/langchain/ libs/langchain/
 
-# Copy the core library for installation
-COPY libs/core ../core
-
 # Copy the community library for installation
 COPY libs/community/ ../community/
-
-# Copy the text-splitters library for installation
-COPY libs/text-splitters/ ../text-splitters/
 
 # Copy the partners library for installation
 COPY libs/partners ../partners/

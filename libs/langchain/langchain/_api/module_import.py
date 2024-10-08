@@ -9,6 +9,7 @@ ALLOWED_TOP_LEVEL_PKGS = {
     "langchain_community",
     "langchain_core",
     "langchain",
+    "langchain_gigachat",
 }
 
 
@@ -129,7 +130,7 @@ def create_importer(
                                 f">> from {new_module} import {name}\n"
                                 "You can use the langchain cli to **automatically** "
                                 "upgrade many imports. Please see documentation here "
-                                "<https://python.langchain.com/v0.2/docs/versions/v0_2/>"
+                                "<https://python.langchain.com/docs/versions/v0_2/>"
                             ),
                         )
                 return result
@@ -161,7 +162,7 @@ def create_importer(
                                 f">> from {fallback_module} import {name}\n"
                                 "You can use the langchain cli to **automatically** "
                                 "upgrade many imports. Please see documentation here "
-                                "<https://python.langchain.com/v0.2/docs/versions/v0_2/>"
+                                "<https://python.langchain.com/docs/versions/v0_2/>"
                             ),
                         )
                 return result

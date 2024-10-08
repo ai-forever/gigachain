@@ -27,11 +27,11 @@ jobs:
 
       - name: Install dependencies
         shell: bash
-        run: poetry install --with test
+        run: poetry install --with test --sync
 
       - name: Install langchain editable
         run: |
-          poetry run pip install -e libs/core libs/langchain libs/community libs/experimental
+          poetry run pip install langchain-experimental -e libs/langchain libs/community
 
       - name: Check doc imports
         shell: bash
