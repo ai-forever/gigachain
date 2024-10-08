@@ -758,6 +758,80 @@ files = [
 ]
 
 [[package]]
+name = "gigachain"
+version = "0.3.2"
+description = "Building applications with LLMs through composability"
+optional = false
+python-versions = ">=3.9,<4.0"
+files = []
+develop = true
+
+[package.dependencies]
+aiohttp = "^3.8.3"
+async-timeout = {version = "^4.0.0", markers = "python_version < \"3.11\""}
+gigachat = "^0.1.35"
+langchain-core = "^0.3.8"
+langchain_gigachat = "^0.2.2b1"
+langchain-text-splitters = "^0.3.0"
+langsmith = "^0.1.17"
+numpy = [
+    {version = ">=1,<2", markers = "python_version < \"3.12\""},
+    {version = ">=1.26.0,<2.0.0", markers = "python_version >= \"3.12\""},
+]
+pydantic = "^2.7.4"
+PyYAML = ">=5.3"
+requests = "^2"
+SQLAlchemy = ">=1.4,<3"
+tenacity = "^8.1.0,!=8.4.0"
+
+[package.source]
+type = "directory"
+url = "libs/langchain"
+
+[[package]]
+name = "gigachain-community"
+version = "0.3.1"
+description = "Community contributed LangChain integrations."
+optional = false
+python-versions = ">=3.9,<4.0"
+files = []
+develop = true
+
+[package.dependencies]
+aiohttp = "^3.8.3"
+dataclasses-json = ">= 0.5.7, < 0.7"
+langchain-core = "^0.3.6"
+langsmith = "^0.1.125"
+numpy = [
+    {version = ">=1,<2", markers = "python_version < \"3.12\""},
+    {version = ">=1.26.0,<2.0.0", markers = "python_version >= \"3.12\""},
+]
+pydantic-settings = "^2.4.0"
+PyYAML = ">=5.3"
+requests = "^2"
+SQLAlchemy = ">=1.4,<3"
+tenacity = "^8.1.0,!=8.4.0"
+
+[package.source]
+type = "directory"
+url = "libs/community"
+
+[[package]]
+name = "gigachat"
+version = "0.1.35"
+description = "GigaChat. Python-library for GigaChain and LangChain"
+optional = false
+python-versions = "<4.0,>=3.8"
+files = [
+    {file = "gigachat-0.1.35-py3-none-any.whl", hash = "sha256:4e142b1f10807a3655d7c54740103571aca073f2fc91aad2eefbff378121f5a1"},
+    {file = "gigachat-0.1.35.tar.gz", hash = "sha256:508de76d99659c96bb5345d33242095c7b358c453eaa645c5379b06691cfb454"},
+]
+
+[package.dependencies]
+httpx = "<1"
+pydantic = ">=1"
+
+[[package]]
 name = "greenlet"
 version = "3.1.1"
 description = "Lightweight in-process concurrent programming"
@@ -1193,121 +1267,72 @@ docs = ["myst-parser", "pydata-sphinx-theme", "sphinx-autodoc-typehints", "sphin
 test = ["ipykernel", "pre-commit", "pytest (<8)", "pytest-cov", "pytest-timeout"]
 
 [[package]]
-name = "langchain"
-version = "0.3.1"
-description = "Building applications with LLMs through composability"
-optional = false
-python-versions = ">=3.9,<4.0"
-files = []
-develop = true
-
-[package.dependencies]
-aiohttp = "^3.8.3"
-async-timeout = {version = "^4.0.0", markers = "python_version < \"3.11\""}
-langchain-core = "^0.3.6"
-langchain-text-splitters = "^0.3.0"
-langsmith = "^0.1.17"
-numpy = [
-    {version = ">=1,<2", markers = "python_version < \"3.12\""},
-    {version = ">=1.26.0,<2.0.0", markers = "python_version >= \"3.12\""},
-]
-pydantic = "^2.7.4"
-PyYAML = ">=5.3"
-requests = "^2"
-SQLAlchemy = ">=1.4,<3"
-tenacity = "^8.1.0,!=8.4.0"
-
-[package.source]
-type = "directory"
-url = "libs/langchain"
-
-[[package]]
-name = "langchain-community"
-version = "0.3.1"
-description = "Community contributed LangChain integrations."
-optional = false
-python-versions = ">=3.9,<4.0"
-files = []
-develop = true
-
-[package.dependencies]
-aiohttp = "^3.8.3"
-dataclasses-json = ">= 0.5.7, < 0.7"
-langchain = "^0.3.1"
-langchain-core = "^0.3.6"
-langsmith = "^0.1.125"
-numpy = [
-    {version = ">=1,<2", markers = "python_version < \"3.12\""},
-    {version = ">=1.26.0,<2.0.0", markers = "python_version >= \"3.12\""},
-]
-pydantic-settings = "^2.4.0"
-PyYAML = ">=5.3"
-requests = "^2"
-SQLAlchemy = ">=1.4,<3"
-tenacity = "^8.1.0,!=8.4.0"
-
-[package.source]
-type = "directory"
-url = "libs/community"
-
-[[package]]
 name = "langchain-core"
-version = "0.3.6"
+version = "0.3.9"
 description = "Building applications with LLMs through composability"
 optional = false
-python-versions = ">=3.9,<4.0"
-files = []
-develop = true
+python-versions = "<4.0,>=3.9"
+files = [
+    {file = "langchain_core-0.3.9-py3-none-any.whl", hash = "sha256:26efa048666c7de56d0ab311de2c0778b04cbb2ffe95bff76139118f13815d01"},
+    {file = "langchain_core-0.3.9.tar.gz", hash = "sha256:7a6ac988d24d0ddce5874b28f538cd95f69f502b7f50581de22aca0dc58199a8"},
+]
 
 [package.dependencies]
-jsonpatch = "^1.33"
-langsmith = "^0.1.125"
+jsonpatch = ">=1.33,<2.0"
+langsmith = ">=0.1.125,<0.2.0"
 packaging = ">=23.2,<25"
 pydantic = [
     {version = ">=2.5.2,<3.0.0", markers = "python_full_version < \"3.12.4\""},
     {version = ">=2.7.4,<3.0.0", markers = "python_full_version >= \"3.12.4\""},
 ]
 PyYAML = ">=5.3"
-tenacity = "^8.1.0,!=8.4.0"
+tenacity = ">=8.1.0,<8.4.0 || >8.4.0,<9.0.0"
 typing-extensions = ">=4.7"
 
-[package.source]
-type = "directory"
-url = "libs/core"
+[[package]]
+name = "langchain-gigachat"
+version = "0.2.2b2"
+description = "An integration package connecting GigaChat and LangChain"
+optional = false
+python-versions = "<4.0,>=3.9"
+files = [
+    {file = "langchain_gigachat-0.2.2b2-py3-none-any.whl", hash = "sha256:342b6a816e0666f7cc91207dcd23d918e2c36e48e1812245fdcebd04ce218d2d"},
+    {file = "langchain_gigachat-0.2.2b2.tar.gz", hash = "sha256:f4692b50290f0c6961534da1de596e1f9bcb636ac08cdaea0bdc731fc8878ac0"},
+]
+
+[package.dependencies]
+gigachat = ">=0.1.35,<0.2.0"
+langchain-core = ">=0.3.8,<0.4.0"
 
 [[package]]
 name = "langchain-openai"
-version = "0.2.1"
+version = "0.2.2"
 description = "An integration package connecting OpenAI and LangChain"
 optional = false
-python-versions = ">=3.9,<4.0"
-files = []
-develop = true
+python-versions = "<4.0,>=3.9"
+files = [
+    {file = "langchain_openai-0.2.2-py3-none-any.whl", hash = "sha256:3a203228cb38e4711ebd8c0a3bd51854e447f1d017e8475b6467b07ce7dd3e88"},
+    {file = "langchain_openai-0.2.2.tar.gz", hash = "sha256:9ae8e2ec7d1ca84fd3bfa82186724528d68e1510a1dc9cdf617a7c669b7a7768"},
+]
 
 [package.dependencies]
-langchain-core = "^0.3"
-openai = "^1.40.0"
+langchain-core = ">=0.3.9,<0.4.0"
+openai = ">=1.40.0,<2.0.0"
 tiktoken = ">=0.7,<1"
-
-[package.source]
-type = "directory"
-url = "libs/partners/openai"
 
 [[package]]
 name = "langchain-text-splitters"
 version = "0.3.0"
 description = "LangChain text splitting utilities"
 optional = false
-python-versions = ">=3.9,<4.0"
-files = []
-develop = true
+python-versions = "<4.0,>=3.9"
+files = [
+    {file = "langchain_text_splitters-0.3.0-py3-none-any.whl", hash = "sha256:e84243e45eaff16e5b776cd9c81b6d07c55c010ebcb1965deb3d1792b7358e83"},
+    {file = "langchain_text_splitters-0.3.0.tar.gz", hash = "sha256:f9fe0b4d244db1d6de211e7343d4abc4aa90295aa22e1f0c89e51f33c55cd7ce"},
+]
 
 [package.dependencies]
-langchain-core = "^0.3.0"
-
-[package.source]
-type = "directory"
-url = "libs/text-splitters"
+langchain-core = ">=0.3.0,<0.4.0"
 
 [[package]]
 name = "langsmith"
@@ -3252,4 +3277,4 @@ type = ["pytest-mypy"]
 [metadata]
 lock-version = "2.0"
 python-versions = ">=3.9,<4.0"
-content-hash = "4017dc40f5e58304aff484656ff103fc1fa0072af0c915f2aa2e598be3c7e983"
+content-hash = "ad7b7f56ef989f43ef1e5dca047c8a0e95c906c6244db989b1a773d277d26040"
