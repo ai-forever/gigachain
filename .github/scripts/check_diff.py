@@ -150,7 +150,7 @@ def _get_pydantic_test_configs(
             break
 
     core_min_pydantic_version = get_min_version_from_toml(
-        "./libs/core/pyproject.toml", "release", python_version, include=["pydantic"]
+        "./libs/langchain/pyproject.toml", "release", python_version, include=["pydantic"]
     )["pydantic"]
     core_min_pydantic_minor = (
         core_min_pydantic_version.split(".")[1]
