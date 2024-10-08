@@ -3,8 +3,8 @@ numexpr>=2.8.6,<3
 rapidfuzz>=3.1.1,<4
 aiosqlite>=0.19.0,<0.20
 greenlet==3.1.1
-langchain_anthropic==0.1.23
-langchain_openai==0.1.23
-langchain_fireworks==0.1.7
-langchain_mistralai==0.1.13
-langchain_groq==0.1.9
+langchain_anthropic==0.2.3
+langchain_openai==0.2.2
+langchain_fireworks==0.2.1
+langchain_mistralai==0.2.0
+langchain_groq==0.2.0
