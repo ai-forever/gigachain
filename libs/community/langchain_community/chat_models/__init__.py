@@ -21,6 +21,10 @@ import importlib
 from typing import TYPE_CHECKING, Any
 
 if TYPE_CHECKING:
+    from langchain_gigachat.chat_models.gigachat import (
+        GigaChat,
+    )
+
     from langchain_community.chat_models.anthropic import (
         ChatAnthropic,
     )
@@ -66,9 +70,6 @@ if TYPE_CHECKING:
     )
     from langchain_community.chat_models.friendli import (
         ChatFriendli,
-    )
-    from langchain_community.chat_models.gigachat import (
-        GigaChat,
     )
     from langchain_community.chat_models.google_palm import (
         ChatGooglePalm,
@@ -279,7 +280,7 @@ _module_lookup = {
     "ErnieBotChat": "langchain_community.chat_models.ernie",
     "FakeListChatModel": "langchain_community.chat_models.fake",
     "GPTRouter": "langchain_community.chat_models.gpt_router",
-    "GigaChat": "langchain_community.chat_models.gigachat",
+    "GigaChat": "langchain_gigachat.chat_models.gigachat",
     "HumanInputChatModel": "langchain_community.chat_models.human",
     "JinaChat": "langchain_community.chat_models.jinachat",
     "LlamaEdgeChatService": "langchain_community.chat_models.llama_edge",

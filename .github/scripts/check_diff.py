@@ -9,8 +9,6 @@ from pathlib import Path
 
 
 LANGCHAIN_DIRS = [
-    "libs/core",
-    "libs/text-splitters",
     "libs/langchain",
     "libs/community",
     "libs/experimental",
@@ -99,12 +97,7 @@ def add_dependents(dirs_to_eval: Set[str], dependents: dict) -> List[str]:
 
 
 def _get_configs_for_single_dir(job: str, dir_: str) -> List[Dict[str, str]]:
-    if dir_ == "libs/core":
-        return [
-            {"working-directory": dir_, "python-version": f"3.{v}"}
-            for v in range(8, 13)
-        ]
-    min_python = "3.8"
+    min_python = "3.9"
     max_python = "3.12"
 
     # custom logic for specific directories
@@ -188,30 +181,11 @@ if __name__ == "__main__":
                     found = True
                 if found:
                     dirs_to_run["extended-test"].add(dir_)
-        elif file.startswith("libs/standard-tests"):
-            # TODO: update to include all packages that rely on standard-tests (all partner packages)
-            # note: won't run on external repo partners
-            dirs_to_run["lint"].add("libs/standard-tests")
-            dirs_to_run["test"].add("libs/partners/mistralai")
-            dirs_to_run["test"].add("libs/partners/openai")
-            dirs_to_run["test"].add("libs/partners/anthropic")
-            dirs_to_run["test"].add("libs/partners/fireworks")
-            dirs_to_run["test"].add("libs/partners/groq")
-
         elif file.startswith("libs/cli"):
             # todo: add cli makefile
             pass
         elif file.startswith("libs/streamlit_agent"):
             pass
-        elif file.startswith("libs/partners"):
-            partner_dir = file.split("/")[2]
-            if os.path.isdir(f"libs/partners/{partner_dir}") and [
-                filename
-                for filename in os.listdir(f"libs/partners/{partner_dir}")
-                if not filename.startswith(".")
-            ] != ["README.md"]:
-                dirs_to_run["test"].add(f"libs/partners/{partner_dir}")
-            # Skip if the directory was deleted or is just a tombstone readme
         elif file.startswith("libs/"):
             raise ValueError(
                 f"Unknown lib: {file}. check_diff.py likely needs "
