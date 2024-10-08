@@ -145,7 +145,7 @@ class BaseConversationalRetrievalChain(Chain):
         get_chat_history = self.get_chat_history or _get_chat_history
         chat_history_str = get_chat_history(inputs["chat_history"])
 
-        if chat_history_str and not self.disable_question_generator:
+        if chat_history_str:
             callbacks = _run_manager.get_child()
             new_question = self.question_generator.run(
                 question=question, chat_history=chat_history_str, callbacks=callbacks
