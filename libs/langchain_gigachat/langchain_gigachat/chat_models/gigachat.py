@@ -626,7 +626,8 @@ class GigaChat(_BaseGigaChat, BaseChatModel):
         ] = None,
         **kwargs: Any,
     ) -> Runnable[LanguageModelInput, BaseMessage]:
-        """Bind tool-like objects to this chat model. Assumes model is compatible with GigaChat tool-calling API."""
+        """Bind tool-like objects to this chat model.
+        Assumes model is compatible with GigaChat tool-calling API."""
         formatted_tools = [convert_to_gigachat_function(tool) for tool in tools]
         if tool_choice is not None and tool_choice:
             if isinstance(tool_choice, str):
