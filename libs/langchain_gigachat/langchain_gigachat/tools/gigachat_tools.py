@@ -171,8 +171,17 @@ def flatten_all_of(schema: Any) -> Any:
         return schema
 
 
-def _convert_return_schema(return_model: Type[BaseModel]) -> Dict[str, Any]:
-    return_schema = dereference_refs(return_model.schema())
+def _convert_return_schema(
+    return_model: Type[BaseModel] | dict[str, Any] | None,
+) -> Dict[str, Any]:
+    if not return_model:
+        return {}
+
+    if isinstance(return_model, dict):
+        return_schema = return_model
+    else:
+        return_schema = dereference_refs(return_model.schema())
+
     return_schema.pop("definitions", None)
     return_schema.pop("title", None)
 
@@ -191,7 +200,7 @@ def _convert_return_schema(return_model: Type[BaseModel]) -> Dict[str, Any]:
 def format_tool_to_gigachat_function(tool: BaseTool) -> GigaFunctionDescription:
     """Format tool into the GigaChat function API."""
     if not tool.description or tool.description == "":
-        raise Exception(
+        raise RuntimeError(
             "Incorrect function or tool description. Description is required."
         )
     tool_schema = tool.args_schema
@@ -199,7 +208,8 @@ def format_tool_to_gigachat_function(tool: BaseTool) -> GigaFunctionDescription:
         tool_schema = tool.tool_call_schema
 
     if hasattr(tool, "return_schema") and tool.return_schema:
-        return_schema = _convert_return_schema(tool.return_schema)
+        # return_schema = _convert_return_schema(tool.return_schema)
+        return_schema = tool.return_schema
     else:
         return_schema = None
 
