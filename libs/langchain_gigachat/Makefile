@@ -37,12 +37,6 @@ format format_diff:
 	[ "$(PYTHON_FILES)" = "" ] || poetry run ruff format $(PYTHON_FILES)
 	[ "$(PYTHON_FILES)" = "" ] || poetry run ruff check --select I --fix $(PYTHON_FILES)
 
-spell_check:
-	poetry run codespell --toml pyproject.toml
-
-spell_fix:
-	poetry run codespell --toml pyproject.toml -w
-
 check_imports: $(shell find langchain_gigachat -name '*.py')
 	poetry run python ./scripts/check_imports.py $^
 

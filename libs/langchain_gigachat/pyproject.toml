@@ -49,9 +49,6 @@ filterwarnings = [
 [tool.poetry.group.test]
 optional = true
 
-[tool.poetry.group.codespell]
-optional = true
-
 [tool.poetry.group.lint]
 optional = true
 
@@ -74,9 +71,6 @@ python = "<3.12"
 [[tool.poetry.group.test.dependencies.numpy]]
 version = "^1.26.0"
 python = ">=3.12"
-
-[tool.poetry.group.codespell.dependencies]
-codespell = "^2.2.0"
 
 [tool.poetry.group.lint.dependencies]
 ruff = "^0.5"
