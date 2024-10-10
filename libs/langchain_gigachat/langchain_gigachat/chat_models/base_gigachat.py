@@ -2,14 +2,7 @@ from __future__ import annotations
 
 import logging
 from functools import cached_property
-from typing import (
-    TYPE_CHECKING,
-    Any,
-    Dict,
-    List,
-    Literal,
-    Optional,
-)
+from typing import TYPE_CHECKING, Any, Dict, List, Literal, Optional
 
 from langchain_core.load.serializable import Serializable
 from langchain_core.utils import pre_init
