@@ -1,5 +1,0 @@
-input_variables: []
-output_parser: null
-template: 'Скажи привет мир.'
-template_format: f-string
-_type: prompt
