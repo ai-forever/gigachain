@@ -1,5 +1,5 @@
 # This will be all new GigaChain solution!
-<!--
+
 [![CI](https://github.com//ai-forever/gigachain/actions/workflows/check_diffs.yml/badge.svg)](https://github.com//ai-forever/gigachain/actions/workflows/check_diffs.yml)
 [![Downloads](https://static.pepy.tech/badge/gigachain/month)](https://pepy.tech/project/gigachain)
 [![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](https://opensource.org/licenses/MIT)
@@ -26,8 +26,19 @@
 ![Product Name Screen Shot](/docs/static/img/logo-with-backgroung.png)
 
 ## 🤔 О GigaChain
-
 GigaChain – это фреймворк для разработки приложений с использованием больших языковых моделей (LLM).
+
+GigaChain = LangChain + GigaChat.
+
+## 🚨🚨🚨 ВАЖНЫЕ ИЗМЕНЕНИЯ 
+Начиная с версии 0.3 нужно использовать базовые пакеты LangChain и пакет `langchain_gigachat`.
+```
+pip install langchain langchain_gigachat
+```
+
+Если ранее вы использовали пакеты `gigachain_*`, то для обновления их нужно удалить.
+
+<!--
 GigaChain является ответвлением open source проекта [LangChain](https://github.com/langchain-ai/langchain).
 
 Отличительная особенность GigaChain — ориентация на создание русскоязычных решений и умение работать с такими нейросетями, как [GigaChat](https://giga.chat/). При этом фреймворк полностью совместим со всеми популярными моделями и компонентами LangChain.
