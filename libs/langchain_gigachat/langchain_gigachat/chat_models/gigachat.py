@@ -73,10 +73,10 @@ if TYPE_CHECKING:
 logger = logging.getLogger(__name__)
 
 IMAGE_SEARCH_REGEX = re.compile(
-    '<img\ssrc="(?P<UUID>.+?)"\sfuse=".+?"/>(?P<postfix>.+)?'
+    r'<img\ssrc="(?P<UUID>.+?)"\sfuse=".+?"/>(?P<postfix>.+)?'
 )
 VIDEO_SEARCH_REGEX = re.compile(
-    '<video\scover="(?P<cover_UUID>.+?)"\ssrc="(?P<UUID>.+?)"\sfuse="true"/>(?P<postfix>.+)?'
+    r'<video\scover="(?P<cover_UUID>.+?)"\ssrc="(?P<UUID>.+?)"\sfuse="true"/>(?P<postfix>.+)?'
 )
 
 

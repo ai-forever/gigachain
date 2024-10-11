@@ -29,7 +29,7 @@ from langchain_core.utils.function_calling import (
     _get_python_function_name,
 )
 from langchain_core.utils.json_schema import dereference_refs
-from pydantic import BaseModel, ValidationError, root_validator
+from pydantic import BaseModel, ValidationError, model_validator
 
 
 class GigaFunctionDescription(FunctionDescription):
@@ -527,7 +527,7 @@ class PydanticOutputFunctionsParser(OutputFunctionsParser):
     determine which schema to use.
     """
 
-    @root_validator(pre=True)
+    @model_validator(mode="before")
     def validate_schema(cls, values: Dict) -> Dict:
         schema = values["pydantic_schema"]
         if "args_only" not in values:

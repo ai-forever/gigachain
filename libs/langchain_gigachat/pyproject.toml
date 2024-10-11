@@ -56,6 +56,7 @@ optional = true
 optional = true
 
 [tool.poetry.group.test.dependencies]
+langchain = "^0.3.3"
 pytest = "^7.3.0"
 freezegun = "^1.2.2"
 pytest-mock = "^3.10.0"
