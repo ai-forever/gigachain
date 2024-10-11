@@ -58,7 +58,7 @@ GigaChain значительно упрощает решение задач, т�
 Установите GigaChain:
 
 ```sh
-pip install gigachain-community
+pip install langchain-community langchain_gigachat
 ```
 
 Запустите простой пример:
@@ -174,7 +174,7 @@ python -m venv .venv
 # Активирует созданное окружение
 source .venv/bin/activate
 # Устанавливает gigachain
-pip install gigachain-community
+pip install langchain-community langchain_gigachat
 ```
 
 ### Работа с большими текстами
