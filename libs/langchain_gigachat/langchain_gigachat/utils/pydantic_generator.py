@@ -1,12 +1,12 @@
+from typing import Union
+
 from pydantic.json_schema import GenerateJsonSchema, JsonSchemaValue, core_schema
 
 
 class GigaChatJsonSchema(GenerateJsonSchema):
     def field_is_required(
         self,
-        field: core_schema.ModelField
-        | core_schema.DataclassField
-        | core_schema.TypedDictField,
+        field: Union[core_schema.ModelField, core_schema.DataclassField, core_schema.TypedDictField],
         total: bool,
     ) -> bool:
         """

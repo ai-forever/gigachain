@@ -102,7 +102,7 @@ def _model_to_schema(model: Type[BaseModel]) -> dict:
 
 
 def _convert_return_schema(
-    return_model: Type[BaseModel] | dict[str, Any] | None,
+    return_model: Optional[Union[Type[BaseModel], dict[str, Any]]],
 ) -> Dict[str, Any]:
     if not return_model:
         return {}
