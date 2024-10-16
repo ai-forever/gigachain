@@ -52,6 +52,12 @@ from langchain_core.messages import (
     ToolCallChunk,
     ToolMessage,
 )
+from langchain_core.output_parsers import (
+    JsonOutputKeyToolsParser,
+    JsonOutputParser,
+    PydanticOutputParser,
+    PydanticToolsParser,
+)
 from langchain_core.output_parsers.base import OutputParserLike
 from langchain_core.outputs import ChatGeneration, ChatGenerationChunk, ChatResult
 from langchain_core.runnables import Runnable, RunnableMap, RunnablePassthrough
@@ -60,9 +66,7 @@ from langchain_core.utils.pydantic import is_basemodel_subclass
 from pydantic import BaseModel
 
 from langchain_gigachat.chat_models.base_gigachat import _BaseGigaChat
-from langchain_gigachat.tools.gigachat_tools import (
-    JsonOutputKeyToolsParser,
-    PydanticToolsParser,
+from langchain_gigachat.utils.function_calling import (
     convert_to_gigachat_function,
     convert_to_gigachat_tool,
 )
@@ -76,7 +80,7 @@ IMAGE_SEARCH_REGEX = re.compile(
     r'<img\ssrc="(?P<UUID>.+?)"\sfuse=".+?"/>(?P<postfix>.+)?'
 )
 VIDEO_SEARCH_REGEX = re.compile(
-    r'<video\scover="(?P<cover_UUID>.+?)"\ssrc="(?P<UUID>.+?)"\sfuse="true"/>(?P<postfix>.+)?'
+    r'<video\scover="(?P<cover_UUID>.+?)"\ssrc="(?P<UUID>.+?)"\sfuse="true"/>(?P<postfix>.+)?'  # noqa
 )
 
 
@@ -588,22 +592,30 @@ class GigaChat(_BaseGigaChat, BaseChatModel):
         if kwargs:
             raise ValueError(f"Received unsupported arguments {kwargs}")
         is_pydantic_schema = _is_pydantic_class(schema)
-        if schema is None:
-            raise ValueError(
-                "schema must be specified when method is 'function_calling'. "
-                "Received None."
-            )
-        key_name = convert_to_gigachat_tool(schema)["function"]["name"]
-        if is_pydantic_schema:
-            output_parser: OutputParserLike = PydanticToolsParser(
-                tools=[schema],  # type: ignore
-                first_tool_only=True,
-            )
+        if method == "function_calling":
+            if schema is None:
+                raise ValueError(
+                    "schema must be specified when method is 'function_calling'. "
+                    "Received None."
+                )
+            key_name = convert_to_gigachat_tool(schema)["function"]["name"]
+            if is_pydantic_schema:
+                output_parser: OutputParserLike = PydanticToolsParser(
+                    tools=[schema],  # type: ignore
+                    first_tool_only=True,
+                )
+            else:
+                output_parser = JsonOutputKeyToolsParser(
+                    key_name=key_name, first_tool_only=True
+                )
+            llm = self.bind_tools([schema], tool_choice=key_name)
         else:
-            output_parser = JsonOutputKeyToolsParser(
-                key_name=key_name, first_tool_only=True
+            llm = self
+            output_parser = (
+                PydanticOutputParser(pydantic_object=schema)  # type: ignore[arg-type]
+                if is_pydantic_schema
+                else JsonOutputParser()
             )
-        llm = self.bind_tools([schema], tool_choice=key_name)
 
         if include_raw:
             parser_assign = RunnablePassthrough.assign(
