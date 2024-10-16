@@ -6,7 +6,11 @@ from pydantic.json_schema import GenerateJsonSchema, JsonSchemaValue, core_schem
 class GigaChatJsonSchema(GenerateJsonSchema):
     def field_is_required(
         self,
-        field: Union[core_schema.ModelField, core_schema.DataclassField, core_schema.TypedDictField],
+        field: Union[
+            core_schema.ModelField,
+            core_schema.DataclassField,
+            core_schema.TypedDictField,
+        ],
         total: bool,
     ) -> bool:
         """
