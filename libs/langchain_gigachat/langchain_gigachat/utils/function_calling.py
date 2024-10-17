@@ -1,6 +1,4 @@
-import copy
 import functools
-import json
 from typing import (
     Any,
     Callable,
@@ -14,22 +12,21 @@ from typing import (
     get_type_hints,
 )
 
-from langchain_core.exceptions import OutputParserException
-from langchain_core.output_parsers import (
-    BaseCumulativeTransformOutputParser,
-    BaseGenerationOutputParser,
-    BaseOutputParser,
-)
-from langchain_core.outputs import ChatGeneration, Generation
+from langchain_core.output_parsers import BaseGenerationOutputParser, BaseOutputParser
 from langchain_core.prompts import BasePromptTemplate
 from langchain_core.runnables import Runnable
-from langchain_core.tools import BaseTool
+from langchain_core.tools import BaseTool, Tool
 from langchain_core.utils.function_calling import (
     FunctionDescription,
-    _get_python_function_name,
+    is_basemodel_subclass,
 )
 from langchain_core.utils.json_schema import dereference_refs
-from pydantic import BaseModel, ValidationError, model_validator
+from pydantic import BaseModel
+
+from langchain_gigachat.output_parsers.gigachat_functions import (
+    PydanticAttrOutputFunctionsParser,
+    PydanticOutputFunctionsParser,
+)
 
 
 class GigaFunctionDescription(FunctionDescription):
@@ -41,138 +38,71 @@ class GigaFunctionDescription(FunctionDescription):
     """The examples of the function."""
 
 
-class JsonOutputToolsParser(BaseCumulativeTransformOutputParser[Any]):
-    """Parse tools from GigaChat response."""
+SCHEMA_DO_NOT_SUPPORT_MESSAGE = """Incorrect function schema!
+{schema}
+GigaChat currently do not support these typings: 
+Union[X, Y, ...]"""
 
-    strict: bool = False
-    """Whether to allow non-JSON-compliant strings.
 
-    See: https://docs.python.org/3/library/json.html#encoders-and-decoders
+class IncorrectSchemaException(Exception):
+    pass
 
-    Useful when the parsed output may include unicode characters or new lines.
+
+def gigachat_fix_schema(schema: Any) -> Any:
     """
-    return_id: bool = False
-    """Whether to return the tool call id."""
-    first_tool_only: bool = False
-    """Whether to return only the first tool call.
-
-    If False, the result will be a list of tool calls, or an empty list 
-    if no tool calls are found.
-
-    If true, and multiple tool calls are found, only the first one will be returned,
-    and the other tool calls will be ignored. 
-    If no tool calls are found, None will be returned. 
+    GigaChat do not support allOf/anyOf in JSON schema.
+    We need to fix this in case of allOf with one object or
+    in case with optional parameter.
+    In other cases throw exception that we do not support this types of schemas
     """
-
-    def parse_result(self, result: List[Generation], *, partial: bool = False) -> Any:
-        generation = result[0]
-        if not isinstance(generation, ChatGeneration):
-            raise OutputParserException(
-                "This output parser can only be used with a chat generation."
-            )
-        message = generation.message
-        try:
-            tool_call = copy.deepcopy(message.additional_kwargs["function_call"])
-        except KeyError:
-            return []
-
-        final_tools = [{"type": tool_call["name"], "args": tool_call["arguments"]}]
-        if self.first_tool_only:
-            return final_tools[0] if final_tools else None
-        return final_tools
-
-    def parse(self, text: str) -> Any:
-        raise NotImplementedError()
-
-
-class JsonOutputKeyToolsParser(JsonOutputToolsParser):
-    """Parse tools from GigaChat response."""
-
-    key_name: str
-    """The type of tools to return."""
-
-    def parse_result(self, result: List[Generation], *, partial: bool = False) -> Any:
-        parsed_result = super().parse_result(result, partial=partial)
-
-        if self.first_tool_only:
-            single_result = (
-                parsed_result
-                if parsed_result and parsed_result["type"] == self.key_name
-                else None
-            )
-            if self.return_id:
-                return single_result
-            elif single_result:
-                return single_result["args"]
-            else:
-                return None
-        parsed_result = [res for res in parsed_result if res["type"] == self.key_name]
-        if not self.return_id:
-            parsed_result = [res["args"] for res in parsed_result]
-        return parsed_result
-
-
-class PydanticToolsParser(JsonOutputToolsParser):
-    """Parse tools from GigaChat response."""
-
-    tools: List[Type[BaseModel]]
-
-    # TODO: Support more granular streaming of objects. Currently only streams once all
-    # Pydantic object fields are present.
-    def parse_result(self, result: List[Generation], *, partial: bool = False) -> Any:
-        json_results = super().parse_result(result, partial=partial)
-        if not json_results:
-            return None if self.first_tool_only else []
-
-        json_results = [json_results] if self.first_tool_only else json_results
-        name_dict = {tool.__name__: tool for tool in self.tools}
-        pydantic_objects = []
-        for res in json_results:
-            try:
-                if not isinstance(res["args"], dict):
-                    raise ValueError(
-                        f"Tool arguments must be specified as a dict, received: "
-                        f"{res['args']}"
-                    )
-                pydantic_objects.append(name_dict[res["type"]](**res["args"]))
-            except (ValidationError, ValueError) as e:
-                if partial:
-                    continue
-                else:
-                    raise e
-        if self.first_tool_only:
-            return pydantic_objects[0] if pydantic_objects else None
-        else:
-            return pydantic_objects
-
-
-def flatten_all_of(schema: Any) -> Any:
-    """GigaChat не поддерживает allOf/anyOf, поэтому правим вложенную структуру"""
     if isinstance(schema, dict):
         obj_out: Any = {}
         for k, v in schema.items():
             if k == "title":
                 continue
             if k == "allOf":
-                obj = flatten_all_of(v[0])
+                if len(v) > 1:
+                    raise IncorrectSchemaException()
+                obj = gigachat_fix_schema(v[0])
                 outer_description = schema.get("description")
                 obj_out = {**obj_out, **obj}
                 if outer_description:
                     # Внешнее описания приоритетнее внутреннего для ref
                     obj_out["description"] = outer_description
+            if k == "anyOf":
+                if len(v) > 1:
+                    raise IncorrectSchemaException()
             elif isinstance(v, (list, dict)):
-                obj_out[k] = flatten_all_of(v)
+                obj_out[k] = gigachat_fix_schema(v)
             else:
                 obj_out[k] = v
         return obj_out
     elif isinstance(schema, list):
-        return [flatten_all_of(el) for el in schema]
+        return [gigachat_fix_schema(el) for el in schema]
     else:
         return schema
 
 
+def _get_python_function_name(function: Callable) -> str:
+    """Get the name of a Python function."""
+    return function.__name__
+
+
+def _model_to_schema(model: Type[BaseModel]) -> dict:
+    if hasattr(model, "model_json_schema"):
+        # Pydantic 2
+        from langchain_gigachat.utils.pydantic_generator import GigaChatJsonSchema
+
+        return model.model_json_schema(schema_generator=GigaChatJsonSchema)
+    elif hasattr(model, "schema"):
+        return model.schema()  # Pydantic 1
+    else:
+        msg = "Model must be a Pydantic model."
+        raise TypeError(msg)
+
+
 def _convert_return_schema(
-    return_model: Type[BaseModel] | dict[str, Any] | None,
+    return_model: Optional[Union[Type[BaseModel], dict[str, Any]]],
 ) -> Dict[str, Any]:
     if not return_model:
         return {}
@@ -180,10 +110,14 @@ def _convert_return_schema(
     if isinstance(return_model, dict):
         return_schema = return_model
     else:
-        return_schema = dereference_refs(return_model.schema())
+        return_schema = dereference_refs(_model_to_schema(return_model))
 
-    return_schema.pop("definitions", None)
-    return_schema.pop("title", None)
+    if "definitions" in return_schema:  # pydantic 1
+        return_schema.pop("definitions", None)
+    if "$defs" in return_schema:  # pydantic 2
+        return_schema.pop("$defs", None)
+    if "title" in return_schema:
+        return_schema.pop("title", None)
 
     for key in return_schema["properties"]:
         if "type" not in return_schema["properties"][key]:
@@ -192,9 +126,6 @@ def _convert_return_schema(
             return_schema["properties"][key]["description"] = ""
 
     return return_schema
-
-
-"""TODO: Support GigaBaseTool with return schema and few shot! """
 
 
 def format_tool_to_gigachat_function(tool: BaseTool) -> GigaFunctionDescription:
@@ -218,7 +149,9 @@ def format_tool_to_gigachat_function(tool: BaseTool) -> GigaFunctionDescription:
     else:
         few_shot_examples = None
 
-    if tool_schema:
+    is_simple_tool = isinstance(tool, Tool) and not tool.args_schema
+
+    if tool_schema and not is_simple_tool:
         return convert_pydantic_to_gigachat_function(
             tool_schema,
             name=tool.name,
@@ -250,8 +183,11 @@ def convert_pydantic_to_gigachat_function(
     few_shot_examples: Optional[List[dict]] = None,
 ) -> GigaFunctionDescription:
     """Converts a Pydantic model to a function description for the GigaChat API."""
-    schema = dereference_refs(model.schema())
-    schema.pop("definitions", None)
+    schema = dereference_refs(_model_to_schema(model))
+    if "definitions" in schema:  # pydantic 1
+        schema.pop("definitions", None)
+    if "$defs" in schema:  # pydantic 2
+        schema.pop("$defs", None)
     title = schema.pop("title", None)
     if "properties" in schema:
         for key in schema["properties"]:
@@ -289,9 +225,7 @@ def _get_type_hints(func: Callable) -> Optional[Dict[str, Type]]:
         return None
 
 
-def create_return_schema_from_function(
-    model_name: str, func: Callable
-) -> Optional[Type[BaseModel]]:
+def create_return_schema_from_function(func: Callable) -> Optional[Type[BaseModel]]:
     return_type = get_type_hints(func).get("return", Any)
     if (
         return_type is not str
@@ -300,7 +234,7 @@ def create_return_schema_from_function(
         and return_type is not None
     ):
         try:
-            if isinstance(return_type, type) and issubclass(return_type, BaseModel):
+            if isinstance(return_type, type) and is_basemodel_subclass(return_type):
                 return return_type
         except TypeError:  # It's normal for testing
             return None
@@ -334,7 +268,7 @@ def convert_python_function_to_gigachat_function(
         error_on_invalid_docstring=False,
         include_injected=False,
     )
-    _return_schema = create_return_schema_from_function(func_name, function)
+    _return_schema = create_return_schema_from_function(function)
     return convert_pydantic_to_gigachat_function(
         model, name=func_name, return_model=_return_schema, description=model.__doc__
     )
@@ -358,7 +292,7 @@ def convert_to_gigachat_function(
 
     if isinstance(function, dict):
         return function
-    elif isinstance(function, type) and issubclass(function, BaseModel):
+    elif isinstance(function, type) and is_basemodel_subclass(function):
         function = cast(Dict, convert_pydantic_to_gigachat_function(function))
     elif isinstance(function, BaseTool):
         function = cast(Dict, format_tool_to_gigachat_function(function))
@@ -369,7 +303,12 @@ def convert_to_gigachat_function(
             f"Unsupported function type {type(function)}. Functions must be passed in"
             f" as Dict, pydantic.BaseModel, or Callable."
         )
-    return flatten_all_of(function)
+    try:
+        return gigachat_fix_schema(function)
+    except IncorrectSchemaException:
+        raise IncorrectSchemaException(
+            SCHEMA_DO_NOT_SUPPORT_MESSAGE.format(schema=function)
+        )
 
 
 def convert_to_gigachat_tool(
@@ -490,74 +429,3 @@ def _create_gigachat_functions_structured_output_runnable(
     return create_gigachat_fn_runnable(
         [function], llm, prompt=prompt, output_parser=output_parser, **llm_kwargs
     )
-
-
-class OutputFunctionsParser(BaseGenerationOutputParser[Any]):
-    """Parse an output that is one of sets of values."""
-
-    args_only: bool = True
-    """Whether to only return the arguments to the function call."""
-
-    def parse_result(self, result: List[Generation], *, partial: bool = False) -> Any:
-        generation = result[0]
-        if not isinstance(generation, ChatGeneration):
-            raise OutputParserException(
-                "This output parser can only be used with a chat generation."
-            )
-        message = generation.message
-        try:
-            func_call = copy.deepcopy(message.additional_kwargs["function_call"])
-        except KeyError as exc:
-            raise OutputParserException(
-                f"Could not parse function call: {exc}"
-            ) from exc
-
-        if self.args_only:
-            return func_call["arguments"]
-        return func_call
-
-
-class PydanticOutputFunctionsParser(OutputFunctionsParser):
-    """Parse an output as a pydantic object."""
-
-    pydantic_schema: Union[Type[BaseModel], Dict[str, Type[BaseModel]]]
-    """The pydantic schema to parse the output with.
-
-    If multiple schemas are provided, then the function name will be used to
-    determine which schema to use.
-    """
-
-    @model_validator(mode="before")
-    def validate_schema(cls, values: Dict) -> Dict:
-        schema = values["pydantic_schema"]
-        if "args_only" not in values:
-            values["args_only"] = isinstance(schema, type) and issubclass(
-                schema, BaseModel
-            )
-        elif values["args_only"] and isinstance(schema, Dict):
-            raise ValueError(
-                "If multiple pydantic schemas are provided then args_only should be"
-                " False."
-            )
-        return values
-
-    def parse_result(self, result: List[Generation], *, partial: bool = False) -> Any:
-        _result = super().parse_result(result)
-        if self.args_only:
-            pydantic_args = self.pydantic_schema(**_result)  # type: ignore
-        else:
-            fn_name = _result.name
-            _args = json.dumps(_result.arguments)
-            pydantic_args = self.pydantic_schema[fn_name].parse_raw(_args)  # type: ignore  # noqa: E501
-        return pydantic_args
-
-
-class PydanticAttrOutputFunctionsParser(PydanticOutputFunctionsParser):
-    """Parse an output as an attribute of a pydantic object."""
-
-    attr_name: str
-    """The name of the attribute to return."""
-
-    def parse_result(self, result: List[Generation], *, partial: bool = False) -> Any:
-        result = super().parse_result(result)
-        return getattr(result, self.attr_name)
