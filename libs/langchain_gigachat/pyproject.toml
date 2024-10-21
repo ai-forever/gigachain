@@ -4,7 +4,7 @@ build-backend = "poetry.core.masonry.api"
 
 [tool.poetry]
 name = "langchain-gigachat"
-version = "0.3.0b1"
+version = "0.3.0b2"
 description = "An integration package connecting GigaChat and LangChain"
 authors = []
 readme = "README.md"
