@@ -9,13 +9,7 @@ else:
 from packaging.version import parse as parse_version
 import re
 
-MIN_VERSION_LIBS = [
-    "langchain-core",
-    "langchain-community",
-    "langchain",
-    "langchain-text-splitters",
-    "SQLAlchemy",
-]
+MIN_VERSION_LIBS = ["langchain-core"]
 
 SKIP_IF_PULL_REQUEST = ["langchain-core"]
 

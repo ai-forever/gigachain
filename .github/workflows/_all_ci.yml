@@ -1,0 +1,54 @@
+---
+name: langchain CI
+
+on:
+  workflow_call:
+    inputs:
+      working-directory:
+        required: true
+        type: string
+        description: "From which folder this pipeline executes"
+  workflow_dispatch:
+    inputs:
+      working-directory:
+        required: true
+        type: choice
+        default: 'libs/vertexai'
+        options:
+        - libs/langchain_gigachat
+
+
+# If another push to the same PR or branch happens while this workflow is still running,
+# cancel the earlier run in favor of the next run.
+#
+# There's no point in testing an outdated version of the code. GitHub only allows
+# a limited number of job runners to be active at the same time, so it's better to cancel
+# pointless jobs early so that more useful jobs can run sooner.
+concurrency:
+  group: ${{ github.workflow }}-${{ github.ref }}-${{ inputs.working-directory }}
+  cancel-in-progress: true
+
+env:
+  POETRY_VERSION: "1.7.1"
+
+jobs:
+  lint:
+    name: "-"
+    uses: ./.github/workflows/_lint.yml
+    with:
+      working-directory: ${{ inputs.working-directory }}
+    secrets: inherit
+
+  test:
+    name: "-"
+    uses: ./.github/workflows/_test.yml
+    with:
+      working-directory: ${{ inputs.working-directory }}
+    secrets: inherit
+
+  # compile-integration-tests:
+  #   name: "-"
+  #   uses: ./.github/workflows/_compile_integration_test.yml
+  #   with:
+  #     working-directory: ${{ inputs.working-directory }}
+  #   secrets: inherit
