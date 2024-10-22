@@ -65,7 +65,7 @@ pip install langchain langchain_gigachat
 
 ```py
 from langchain_core.messages import HumanMessage, SystemMessage
-from langchain_community.chat_models.gigachat import GigaChat
+from langchain_gigachat.chat_models.gigachat import GigaChat
 
 # Авторизация в GigaChat
 llm = GigaChat(
