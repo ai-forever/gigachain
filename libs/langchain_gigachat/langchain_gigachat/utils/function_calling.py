@@ -1,20 +1,21 @@
+import collections.abc
 import functools
+import inspect
+import types
+import typing
 from typing import (
+    Annotated,
     Any,
     Callable,
     Dict,
     List,
     Optional,
-    Sequence,
     Type,
     Union,
     cast,
     get_type_hints,
 )
 
-from langchain_core.output_parsers import BaseGenerationOutputParser, BaseOutputParser
-from langchain_core.prompts import BasePromptTemplate
-from langchain_core.runnables import Runnable
 from langchain_core.tools import BaseTool, Tool
 from langchain_core.utils.function_calling import (
     FunctionDescription,
@@ -22,11 +23,7 @@ from langchain_core.utils.function_calling import (
 )
 from langchain_core.utils.json_schema import dereference_refs
 from pydantic import BaseModel
-
-from langchain_gigachat.output_parsers.gigachat_functions import (
-    PydanticAttrOutputFunctionsParser,
-    PydanticOutputFunctionsParser,
-)
+from typing_extensions import get_args, get_origin, is_typeddict
 
 
 class GigaFunctionDescription(FunctionDescription):
@@ -48,7 +45,7 @@ class IncorrectSchemaException(Exception):
     pass
 
 
-def gigachat_fix_schema(schema: Any) -> Any:
+def gigachat_fix_schema(schema: Any, prev_key: str = "") -> Any:
     """
     GigaChat do not support allOf/anyOf in JSON schema.
     We need to fix this in case of allOf with one object or
@@ -59,11 +56,14 @@ def gigachat_fix_schema(schema: Any) -> Any:
         obj_out: Any = {}
         for k, v in schema.items():
             if k == "title":
-                continue
+                if isinstance(v, dict) and prev_key == "properties" and "title" in v:
+                    obj_out[k] = gigachat_fix_schema(v, k)
+                else:
+                    continue
             if k == "allOf":
                 if len(v) > 1:
                     raise IncorrectSchemaException()
-                obj = gigachat_fix_schema(v[0])
+                obj = gigachat_fix_schema(v[0], k)
                 outer_description = schema.get("description")
                 obj_out = {**obj_out, **obj}
                 if outer_description:
@@ -73,7 +73,7 @@ def gigachat_fix_schema(schema: Any) -> Any:
                 if len(v) > 1:
                     raise IncorrectSchemaException()
             elif isinstance(v, (list, dict)):
-                obj_out[k] = gigachat_fix_schema(v)
+                obj_out[k] = gigachat_fix_schema(v, k)
             else:
                 obj_out[k] = v
         return obj_out
@@ -81,6 +81,164 @@ def gigachat_fix_schema(schema: Any) -> Any:
         return [gigachat_fix_schema(el) for el in schema]
     else:
         return schema
+
+
+def _convert_typed_dict_to_gigachat_function(
+    typed_dict: type,
+) -> GigaFunctionDescription:
+    visited: dict = {}
+    from pydantic.v1 import BaseModel
+
+    model = cast(
+        type[BaseModel],
+        _convert_any_typed_dicts_to_pydantic(typed_dict, visited=visited),
+    )
+    return convert_pydantic_to_gigachat_function(model)  # type: ignore
+
+
+_MAX_TYPED_DICT_RECURSION = 25
+
+
+def _is_optional(field: type) -> bool:
+    return typing.get_origin(field) is Union and type(None) in typing.get_args(field)
+
+
+def _convert_any_typed_dicts_to_pydantic(
+    type_: type, *, visited: dict, depth: int = 0
+) -> type:
+    from pydantic.v1 import Field as Field_v1
+    from pydantic.v1 import create_model as create_model_v1
+
+    if type_ in visited:
+        return visited[type_]
+    elif depth >= _MAX_TYPED_DICT_RECURSION:
+        return type_
+    elif is_typeddict(type_):
+        typed_dict = type_
+        docstring = inspect.getdoc(typed_dict)
+        annotations_ = typed_dict.__annotations__
+        description, arg_descriptions = _parse_google_docstring(
+            docstring, list(annotations_)
+        )
+        fields: dict = {}
+        for arg, arg_type in annotations_.items():
+            if get_origin(arg_type) is Annotated:
+                annotated_args = get_args(arg_type)
+                new_arg_type = _convert_any_typed_dicts_to_pydantic(
+                    annotated_args[0], depth=depth + 1, visited=visited
+                )
+                field_kwargs = dict(zip(("default", "description"), annotated_args[1:]))
+                if (field_desc := field_kwargs.get("description")) and not isinstance(
+                    field_desc, str
+                ):
+                    msg = (
+                        f"Invalid annotation for field {arg}. Third argument to "
+                        f"Annotated must be a string description, received value of "
+                        f"type {type(field_desc)}."
+                    )
+                    raise ValueError(msg)
+                elif arg_desc := arg_descriptions.get(arg):
+                    field_kwargs["description"] = arg_desc
+                else:
+                    pass
+                fields[arg] = (new_arg_type, Field_v1(**field_kwargs))
+            else:
+                new_arg_type = _convert_any_typed_dicts_to_pydantic(
+                    arg_type, depth=depth + 1, visited=visited
+                )
+                if _is_optional(new_arg_type):
+                    field_kwargs = {"default": None}
+                else:
+                    field_kwargs = {"default": ...}
+                if arg_desc := arg_descriptions.get(arg):
+                    field_kwargs["description"] = arg_desc
+                fields[arg] = (new_arg_type, Field_v1(**field_kwargs))
+        model = create_model_v1(typed_dict.__name__, **fields)
+        model.__doc__ = description
+        visited[typed_dict] = model
+        return model
+    elif (origin := get_origin(type_)) and (type_args := get_args(type_)):
+        subscriptable_origin = _py_38_safe_origin(origin)
+        type_args = tuple(
+            _convert_any_typed_dicts_to_pydantic(arg, depth=depth + 1, visited=visited)
+            for arg in type_args  # type: ignore[index]
+        )
+        return subscriptable_origin[type_args]  # type: ignore[index]
+    else:
+        return type_
+
+
+def _py_38_safe_origin(origin: type) -> type:
+    origin_union_type_map: dict[type, Any] = (
+        {types.UnionType: Union} if hasattr(types, "UnionType") else {}
+    )
+
+    origin_map: dict[type, Any] = {
+        dict: dict,
+        list: list,
+        tuple: tuple,
+        set: set,
+        collections.abc.Iterable: typing.Iterable,
+        collections.abc.Mapping: typing.Mapping,
+        collections.abc.Sequence: typing.Sequence,
+        collections.abc.MutableMapping: typing.MutableMapping,
+        **origin_union_type_map,
+    }
+    return cast(type, origin_map.get(origin, origin))
+
+
+def _parse_google_docstring(
+    docstring: Optional[str],
+    args: list[str],
+    *,
+    error_on_invalid_docstring: bool = False,
+) -> tuple[str, dict]:
+    """Parse the function and argument descriptions from the docstring of a function.
+
+    Assumes the function docstring follows Google Python style guide.
+    """
+    if docstring:
+        docstring_blocks = docstring.split("\n\n")
+        if error_on_invalid_docstring:
+            filtered_annotations = {
+                arg for arg in args if arg not in ("run_manager", "callbacks", "return")
+            }
+            if filtered_annotations and (
+                len(docstring_blocks) < 2 or not docstring_blocks[1].startswith("Args:")
+            ):
+                msg = "Found invalid Google-Style docstring."
+                raise ValueError(msg)
+        descriptors = []
+        args_block = None
+        past_descriptors = False
+        for block in docstring_blocks:
+            if block.startswith("Args:"):
+                args_block = block
+                break
+            elif block.startswith(("Returns:", "Example:")):
+                # Don't break in case Args come after
+                past_descriptors = True
+            elif not past_descriptors:
+                descriptors.append(block)
+            else:
+                continue
+        description = " ".join(descriptors)
+    else:
+        if error_on_invalid_docstring:
+            msg = "Found invalid Google-Style docstring."
+            raise ValueError(msg)
+        description = ""
+        args_block = None
+    arg_descriptions = {}
+    if args_block:
+        arg = None
+        for line in args_block.split("\n")[1:]:
+            if ":" in line:
+                arg, desc = line.split(":", maxsplit=1)
+                arg_descriptions[arg.strip()] = desc.strip()
+            elif arg:
+                arg_descriptions[arg.strip()] += " " + line.strip()
+    return description, arg_descriptions
 
 
 def _get_python_function_name(function: Callable) -> str:
@@ -275,14 +433,15 @@ def convert_python_function_to_gigachat_function(
 
 
 def convert_to_gigachat_function(
-    function: Union[Dict[str, Any], Type[BaseModel], Callable, BaseTool],
+    function: Union[Dict[str, Any], Type[BaseModel], Callable, BaseTool, type],
 ) -> Dict[str, Any]:
     """Convert a raw function/class to an GigaChat function.
 
     Args:
-        function: Either a dictionary, a pydantic.BaseModel class, or a Python function.
-            If a dictionary is passed in, it is assumed to already be a valid GigaChat
-            function.
+        function:
+            A dictionary, Pydantic BaseModel class, TypedDict class, a LangChain
+            Tool object, or a Python function. If a dictionary is passed in, it is
+            assumed to already be a valid GigaChat function.
 
     Returns:
         A dict version of the passed in function which is compatible with the
@@ -296,6 +455,10 @@ def convert_to_gigachat_function(
         function = cast(Dict, convert_pydantic_to_gigachat_function(function))
     elif isinstance(function, BaseTool):
         function = cast(Dict, format_tool_to_gigachat_function(function))
+    elif is_typeddict(function):
+        function = cast(
+            dict, _convert_typed_dict_to_gigachat_function(cast(type, function))
+        )
     elif callable(function):
         function = cast(Dict, convert_python_function_to_gigachat_function(function))
     else:
@@ -331,101 +494,3 @@ def convert_to_gigachat_tool(
         return tool
     function = convert_to_gigachat_function(tool)
     return {"type": "function", "function": function}
-
-
-def create_gigachat_fn_runnable(
-    functions: Sequence[Type[BaseModel]],
-    llm: Runnable,
-    prompt: Optional[BasePromptTemplate] = None,
-    *,
-    enforce_single_function_usage: bool = True,
-    output_parser: Optional[Union[BaseOutputParser, BaseGenerationOutputParser]] = None,
-    **llm_kwargs: Any,
-) -> Runnable:
-    """Create a runnable sequence that uses GigaChat functions."""
-    if not functions:
-        raise ValueError("Need to pass in at least one function. Received zero.")
-    g_functions = [convert_to_gigachat_function(f) for f in functions]
-    llm_kwargs_: Dict[str, Any] = {"functions": g_functions, **llm_kwargs}
-    if len(g_functions) == 1 and enforce_single_function_usage:
-        llm_kwargs_["function_call"] = {"name": g_functions[0]["name"]}
-    output_parser = output_parser or get_gigachat_output_parser(functions)
-    if prompt:
-        return prompt | llm.bind(**llm_kwargs_) | output_parser
-    else:
-        return llm.bind(**llm_kwargs_) | output_parser
-
-
-def create_structured_output_runnable(
-    output_schema: Union[Type[BaseModel]],
-    llm: Runnable,
-    prompt: Optional[BasePromptTemplate] = None,
-    *,
-    output_parser: Optional[Union[BaseOutputParser, BaseGenerationOutputParser]] = None,
-    enforce_function_usage: bool = True,
-    **kwargs: Any,
-) -> Runnable:
-    """Create a runnable for extracting structured outputs."""
-    # for backwards compatibility
-    force_function_usage = kwargs.get(
-        "enforce_single_function_usage", enforce_function_usage
-    )
-
-    return _create_gigachat_functions_structured_output_runnable(
-        output_schema,
-        llm,
-        prompt=prompt,
-        output_parser=output_parser,
-        enforce_single_function_usage=force_function_usage,
-        **kwargs,  # llm-specific kwargs
-    )
-
-
-def get_gigachat_output_parser(
-    functions: Sequence[Type[BaseModel]],
-) -> Union[BaseOutputParser, BaseGenerationOutputParser]:
-    """Get the appropriate function output parser given the user functions.
-
-    Args:
-        functions: Sequence where element is a dictionary, a pydantic.BaseModel class,
-            or a Python function. If a dictionary is passed in, it is assumed to
-            already be a valid GigaChat function.
-
-    Returns:
-        A PydanticOutputFunctionsParser if functions are Pydantic classes, otherwise
-            a JsonOutputFunctionsParser. If there's only one function and it is
-            not a Pydantic class, then the output parser will automatically extract
-            only the function arguments and not the function name.
-    """
-    if len(functions) > 1:
-        pydantic_schema: Union[Dict, Type[BaseModel]] = {
-            convert_to_gigachat_function(fn)["name"]: fn for fn in functions
-        }
-    else:
-        pydantic_schema = functions[0]
-    output_parser: Union[BaseOutputParser, BaseGenerationOutputParser] = (
-        PydanticOutputFunctionsParser(pydantic_schema=pydantic_schema)
-    )
-    return output_parser
-
-
-def _create_gigachat_functions_structured_output_runnable(
-    output_schema: Union[Type[BaseModel]],
-    llm: Runnable,
-    prompt: Optional[BasePromptTemplate] = None,
-    *,
-    output_parser: Optional[Union[BaseOutputParser, BaseGenerationOutputParser]] = None,
-    **llm_kwargs: Any,
-) -> Runnable:
-    class _OutputFormatter(BaseModel):
-        """Output formatter. Всегда используй чтобы выдать ответ"""  # noqa: E501
-
-        output: output_schema  # type: ignore
-
-    function = _OutputFormatter
-    output_parser = output_parser or PydanticAttrOutputFunctionsParser(
-        pydantic_schema=_OutputFormatter, attr_name="output"
-    )
-    return create_gigachat_fn_runnable(
-        [function], llm, prompt=prompt, output_parser=output_parser, **llm_kwargs
-    )
