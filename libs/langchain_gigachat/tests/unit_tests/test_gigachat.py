@@ -21,6 +21,7 @@ from langchain.schema.messages import (
     SystemMessage,
 )
 from langchain.tools import tool
+from langchain_gigachat.tools.giga_tool import giga_tool
 from langchain_core.runnables import RunnableConfig
 from langchain_core.tools.base import InjectedToolArg
 from pydantic import BaseModel, Field
@@ -301,3 +302,37 @@ def _test_tool(
 def test_gigachat_bind_with_injected_vars() -> None:
     llm = GigaChat().bind_tools(tools=[_test_tool])
     assert llm.kwargs["functions"][0]["parameters"]["required"] == ["arg"]  # type: ignore[attr-defined]
+
+
+class SendSmsResult(BaseModel):
+    status: str = Field(description="status")
+    message: str = Field(description="message")
+
+
+few_shot_examples = [
+    {
+        "request": "Sms 'hello' to 123",
+        "params": {"recipient": "123", "message": "hello"},
+    }
+]
+
+
+@giga_tool(few_shot_examples=few_shot_examples)
+def _test_send_sms(
+    arg: str, config: RunnableConfig, injected: Annotated[str, InjectedToolArg]
+) -> SendSmsResult:
+    """Sends SMS message"""
+    return SendSmsResult(status="success", message="SMS sent")
+
+
+def test_gigachat_bind_gigatool() -> None:
+    llm = GigaChat().bind_tools(tools=[_test_send_sms])
+    assert llm.kwargs["functions"][0]["few_shot_examples"] == few_shot_examples  # type: ignore[attr-defined]
+    assert llm.kwargs["functions"][0]["return_parameters"] == {  # type: ignore[attr-defined]
+        "properties": {
+            "status": {"description": "status", "type": "string"},
+            "message": {"description": "message", "type": "string"},
+        },
+        "required": ["status", "message"],
+        "type": "object",
+    }
