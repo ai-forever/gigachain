@@ -25,7 +25,7 @@
 
 > [!WARNING]
 > С 29.10.2024 GigaChain изменяет способ взаимодействия LangChain.
-> Проект перестает быть ответвлением LangChain и будет предоставлять всю функицональность в рамках партнерского пакета [langchain_gigachat](https://github.com/ai-forever/langchain-gigachat/tree/master/libs/gigachat).
+> Проект перестает быть ответвлением LangChain и будет предоставлять всю функциональность в рамках партнерского пакета [langchain_gigachat](https://github.com/ai-forever/langchain-gigachat/tree/master/libs/gigachat).
 >
 > Это позволит повысить качество поддержки и развития оригинальных функций GigaChain, а также даст доступ ко всем интеграциям, которые [поддерживает LangChain](https://python.langchain.com/docs/integrations/providers/).
 >
@@ -84,8 +84,8 @@ while(True):
 * `scope` — необязательный параметр, в котором можно указать версию API. Возможные значения:
   
   * `GIGACHAT_API_PERS` — версия API для физических лиц;
-  * `GIGACHAT_API_B2B` — доступ для ИП и юридических лиц по предоплате;
-  * `GIGACHAT_API_CORP` — доступ для ИП и юридических лиц по постоплате.
+  * `GIGACHAT_API_B2B` — доступ для ИП и юридических лиц [по предоплате](https://developers.sber.ru/docs/ru/gigachat/api/tariffs#platnye-pakety2);
+  * `GIGACHAT_API_CORP` — доступ для ИП и юридических лиц [по схеме pay-as-you-go](https://developers.sber.ru/docs/ru/gigachat/api/tariffs#oplata-pay-as-you-go).
 
   По умолчанию запросы передаются в версию для физических лиц.
 
