@@ -24,19 +24,19 @@
 ---
 
 > [!WARNING]
-> С 29.10.2024 GigaChain изменяет способ взаимодействия LangChain.
-> Проект перестает быть ответвлением LangChain и будет предоставлять всю функциональность в рамках партнерского пакета [langchain_gigachat](https://github.com/ai-forever/langchain-gigachat/tree/master/libs/gigachat).
+> С 29.10.2024 GigaChain изменяет способ взаимодействия с LangChain.
+> Проект перестает быть ответвлением LangChain и будет предоставлять всю функциональность в рамках партнерского пакета [langchain-gigachat](https://github.com/ai-forever/langchain-gigachat/tree/master/libs/gigachat).
 >
-> Это позволит повысить качество поддержки и развития оригинальных функций GigaChain, а также даст доступ ко всем интеграциям, которые [поддерживает LangChain](https://python.langchain.com/docs/integrations/providers/).
+> Это значительно упростит разработку и позволит развивать оригинальные решения GigaChain, а также даст доступ ко всем интеграциям, которые [поддерживает LangChain](https://python.langchain.com/docs/integrations/providers/) и обеспечит поддержку новых версий фреймворка в момент выпуска.
 >
 > Предыдущую версию GigaChain (v0.2.x) вы можете найти в ветке [v_2.x_legacy](https://github.com/ai-forever/gigachain/tree/v_2.x_legacy).
-
 
 ## О GigaChain
 
 GigaChain – это набор решений для создания приложений с использованием больших языковых моделей (*LLM*), который охватывает все этапы разработки от прототипирования и исследования, до запуска в эксплуатацию и поддержки.
 
-Один из компонентов GigaChain — партнерский пакет [langchain_gigachat](https://github.com/ai-forever/langchain-gigachat/tree/master/libs/gigachat), который позволяет использовать [модели GigaChat](https://developers.sber.ru/docs/ru/gigachat/models) при работе с LangChain.
+Один из компонентов GigaChain — партнерский пакет [langchain-gigachat](https://github.com/ai-forever/langchain-gigachat/tree/master/libs/gigachat), который позволяет использовать [модели GigaChat](https://developers.sber.ru/docs/ru/gigachat/models) при работе с LangChain.
+Также, благодаря этому пакету, вы сможете использовать GigaChat для разработки агентов с помощью [LangGraph](https://langchain-ai.github.io/langgraph/tutorials/introduction/).
 
 ## Быстрый старт
 
@@ -96,3 +96,4 @@ while(True):
 ## Смотрите также
 
 * [Официальная документация LangChain](https://python.langchain.com/docs/introduction/)
+* [Официальная документация LangGraph](https://langchain-ai.github.io/langgraph/tutorials/introduction/)
