@@ -164,21 +164,20 @@ for chunk in GigaChat(credentials="ваш_ключ_авторизации",verif
 Список интерактивных примеров в формате [блокнотов Jupyter](https://jupyter.org/):
 
 * Retrieval-Augmented Generation (RAG):
-  * [Ответы на вопросы по заданной книге](https://github.com/ai-forever/gigachain/blob/master/docs/docs_ru/cookbook/gigachat_qa.ipynb)
-  * [RAG с текстовым поиском на основе Yandex Search API](https://github.com/ai-forever/gigachain/blob/master/cookbook/yandex_search/retriever.ipynb)
+  * [Ответы на вопросы по заданной книге](/docs/docs_ru/cookbook/gigachat_qa.ipynb)
+  * [RAG с текстовым поиском на основе Yandex Search API](/cookbook/yandex_search/retriever.ipynb)
 * Агенты:
-  * [Агент для работы с функциями](https://github.com/ai-forever/gigachain/blob/master/docs/docs_ru/cookbook/gigachat_functions_agent.ipynb)
-  * [Агент «Продавец телефонов»](https://github.com/ai-forever/gigachain/blob/master/docs/docs_ru/cookbook/agents/gigachat_phone_agent.ipynb)
-  * [Агент с текстовым поиском на основе Yandex Search API](https://github.com/ai-forever/gigachain/blob/master/cookbook/yandex_search/tool.ipynb)
-  * [Агент риэлтор, с функциями GigaChat](https://github.com/ai-forever/gigachain/blob/master/cookbook/realestate/realestate.ipynb)
-  * [Агент выполняющий код с GigaChat](https://github.com/ai-forever/gigachain/blob/master/cookbook/gigachat_code.ipynb)
-* [Извлечение структурированной информации](https://github.com/ai-forever/gigachain/blob/master/docs/docs_ru/cookbook/extraction.ipynb)
+  * [Агент для работы с функциями](/docs/docs_ru/cookbook/gigachat_functions_agent.ipynb)
+  * [Агент «Продавец телефонов»](/docs/docs_ru/cookbook/agents/gigachat_phone_agent.ipynb)
+  * [Агент с текстовым поиском на основе Yandex Search API](/cookbook/yandex_search/tool.ipynb)
+  * [Агент риэлтор, с функциями GigaChat](/cookbook/realestate/realestate.ipynb)
+  * [Дебаты агентов с разными ролями](/cookbook/agent_debates/README.md)
+  * [Агент для получения рекомендаций Spotify](/docs/docs_ru/cookbook/playlists.ipynb)
+* [Извлечение структурированной информации](/docs/docs_ru/cookbook/extraction.ipynb)
 * Работа с изображениями:
-  * [Распознавание изображения](https://github.com/ai-forever/gigachain/blob/master/cookbook/gigachat_vision/gigachat_vision_simple.ipynb)
-  * [Генерация структурированных данных на основе изображений](https://github.com/ai-forever/gigachain/blob/master/cookbook/gigachat_vision/gigachat_vision.ipynb)
-  * [Получение изображений и видео после генерации](https://github.com/ai-forever/gigachain/blob/master/cookbook/images_and_videos/gigachat_with_images.ipynb)
-* [AutoGPT на основе GigaChain](https://github.com/ai-forever/gigachain/blob/master/cookbook/autogpt/autogpt.ipynb)
-* [Stop-sequence в GigaChat](https://github.com/ai-forever/gigachain/blob/master/cookbook/gigachat_stop_sequence.ipynb)
+  * [Распознавание изображения](/cookbook/gigachat_vision/gigachat_vision_simple.ipynb)
+  * [Генерация структурированных данных на основе изображений](/cookbook/gigachat_vision/gigachat_vision.ipynb)
+  * [Получение изображений и видео после генерации](/cookbook/images_and_videos/gigachat_with_images.ipynb)
 
 ## Смотрите также
 
