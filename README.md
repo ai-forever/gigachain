@@ -23,11 +23,10 @@
 
 ---
 
-> [!WARNING]
-> С 29.10.2024 GigaChain изменяет способ взаимодействия с LangChain.
-> Проект перестает быть ответвлением LangChain и будет предоставлять всю функциональность в рамках партнерского пакета [langchain-gigachat](https://github.com/ai-forever/langchain-gigachat/tree/master/libs/gigachat).
+> [!NOTE]
+> С 29.10.2024 GigaChain предоставляет всю функциональность в рамках партнерского пакета [langchain-gigachat](https://github.com/ai-forever/langchain-gigachat/tree/master/libs/gigachat).
 >
-> Это значительно упростит разработку и позволит развивать оригинальные решения GigaChain, а также даст доступ ко всем интеграциям, которые [поддерживает LangChain](https://python.langchain.com/docs/integrations/providers/) и обеспечит поддержку новых версий фреймворка в момент выпуска.
+> Это значительно упрощает разработку, обеспечивая доступ ко всем интеграциям, которые [поддерживает LangChain](https://python.langchain.com/docs/integrations/providers/), а также поддержку новых версий фреймворка в момент выпуска.
 >
 > Предыдущую версию GigaChain (v0.2.x) вы можете найти в ветке [v_2.x_legacy](https://github.com/ai-forever/gigachain/tree/v_2.x_legacy).
 
@@ -96,7 +95,7 @@ while(True):
 
 Объект GigaChat принимает параметры:
 
-* `credentials` — ключ_авторизации для обмена сообщениями с GigaChat API. О том, как их получить — в [официальной документации](https://developers.sber.ru/docs/ru/gigachat/quickstart/ind-using-api#poluchenie-avtorizatsionnyh-dannyh).
+* `credentials` — ключ авторизации для обмена сообщениями с GigaChat API. [Подробнее о получении ключа авторизации](https://developers.sber.ru/docs/ru/gigachat/quickstart/ind-using-api#poluchenie-avtorizatsionnyh-dannyh).
 * `scope` — необязательный параметр, в котором можно указать версию API. По умолчанию запросы передаются в версию для физических лиц. Возможные значения:
   
   * `GIGACHAT_API_PERS` — версия API для физических лиц;
@@ -110,7 +109,7 @@ while(True):
 > [!TIP]
 > Спросите [чат-бот LangChain](https://chat.langchain.com/), о том, как использовать GigaChat с инструментами фреймворка.
 > 
-> Исходный код чат=бота — в [репозитории chat-langchain](https://github.com/langchain-ai/chat-langchain).
+> Исходный код чат-бота — в [репозитории chat-langchain](https://github.com/langchain-ai/chat-langchain).
 
 ### gigachat
 
@@ -133,7 +132,7 @@ with GigaChat(credentials="ваш_ключ_авторизации", verify_ssl_c
 
 Объект GigaChat принимает параметры:
 
-* `credentials` — ключ_авторизации для обмена сообщениями с GigaChat API. О том, как их получить — в [официальной документации](https://developers.sber.ru/docs/ru/gigachat/quickstart/ind-using-api#poluchenie-avtorizatsionnyh-dannyh).
+* `credentials` — ключ авторизации для обмена сообщениями с GigaChat API. [Подробнее о получении ключа авторизации](https://developers.sber.ru/docs/ru/gigachat/quickstart/ind-using-api#poluchenie-avtorizatsionnyh-dannyh).
 * `scope` — необязательный параметр, в котором можно указать версию API. Возможные значения:
   
   * `GIGACHAT_API_PERS` — версия API для физических лиц;
@@ -153,15 +152,15 @@ from gigachat import GigaChat
 for chunk in GigaChat(credentials="ваш_ключ_авторизации",verify_ssl_certs=False, scope="GIGACHAT_API_PERS", model="GigaChat-Max").stream("Напиши рассказ про двух котят."):
     print(chunk.choices[0].delta.content, end="", flush=True)
 ```
-
-Больше примеров работы с библиотекой — [в репозитории](https://github.com/ai-forever/gigachat/tree/main/examples).
+> [!TIP]
+> Больше примеров работы с библиотекой — [в репозитории](https://github.com/ai-forever/gigachat/tree/main/examples).
 
 ## Примеры
 
 При запуске примеров могут возникать проблемы связанные с особенностями локального окружения Python.
 Чтобы их избежать используйте чистое виртуальное окружение.
 
-Список интерактивных примеров в формате [блокнотов Jupyter](https://jupyter.org/):
+Список интерактивных примеров в формате блокнотов Jupyter:
 
 * Retrieval-Augmented Generation (RAG):
   * [Ответы на вопросы по заданной книге](/docs/docs_ru/cookbook/gigachat_qa.ipynb)
