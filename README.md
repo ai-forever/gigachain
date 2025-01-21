@@ -4,7 +4,7 @@
 <div align="center">
 
   <a href="https://github.com/ai-forever/gigachain">
-    <img src="docs/static/img/logo.png" alt="Logo" width="80" height="80">
+    <img src="static/img/logo.png" alt="Logo" width="80" height="80">
   </a>
 
   <h1 align="center">🦜️🔗 GigaChain (GigaChat + LangChain)</h1>
@@ -19,16 +19,9 @@
 </div>
 
 
-![Product Name Screen Shot](/docs/static/img/logo-with-backgroung.png)
+![Product Name Screen Shot](/static/img/logo-with-backgroung.png)
 
 ---
-
-> [!NOTE]
-> С 29.10.2024 GigaChain предоставляет всю функциональность в рамках партнерского пакета [langchain-gigachat](https://github.com/ai-forever/langchain-gigachat/tree/master/libs/gigachat).
->
-> Это значительно упрощает разработку, обеспечивая доступ ко всем интеграциям, которые [поддерживает LangChain](https://python.langchain.com/docs/integrations/providers/), а также поддержку новых версий фреймворка в момент выпуска.
->
-> Предыдущую версию GigaChain (v0.2.x) вы можете найти в ветке [v_2.x_legacy](https://github.com/ai-forever/gigachain/tree/v_2.x_legacy).
 
 # О GigaChain
 
