@@ -96,7 +96,7 @@ while(True):
   * `GIGACHAT_API_CORP` — доступ для ИП и юридических лиц [по схеме pay-as-you-go](https://developers.sber.ru/docs/ru/gigachat/api/tariffs#oplata-pay-as-you-go).
 
 * `model` — необязательный параметр, в котором можно задать [модель GigaChat](https://developers.sber.ru/docs/ru/gigachat/models). По умолчанию запросы передаются в модель GigaChat Lite (`model="GigaChat"`).
-* `verify_ssl_certs` — необязательный параметр, с помощью которого можно отключить проверку [сертификатов НУЦ Минцифры](/https://developers.sber.ru/docs/ru/gigachat/certificates).
+* `verify_ssl_certs` — необязательный параметр, с помощью которого можно отключить проверку [сертификатов НУЦ Минцифры](https://developers.sber.ru/docs/ru/gigachat/certificates).
 * `streaming` — необязательный параметр, который включает и отключает [потоковую генерацию токенов](https://developers.sber.ru/docs/ru/gigachat/api/response-token-streaming). По умолчанию `False`. Потоковая генерация позволяет повысить отзывчивость интерфейса программы при работе с длинными текстами.
 
 > [!TIP]
