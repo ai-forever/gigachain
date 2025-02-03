@@ -81,7 +81,7 @@ while(True):
     if user_input == "пока":
       break
     messages.append(HumanMessage(content=user_input))
-    res = llm.invoke(messages)
+    res = giga.invoke(messages)
     messages.append(res)
     print("GigaChat: ", res.content)
 ```
