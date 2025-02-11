@@ -156,16 +156,15 @@ for chunk in GigaChat(credentials="ваш_ключ_авторизации",verif
 Список интерактивных примеров в формате блокнотов Jupyter:
 
 * Retrieval-Augmented Generation (RAG):
-  * [Ответы на вопросы по заданной книге](/docs/docs_ru/cookbook/gigachat_qa.ipynb)
+  * [Ответы на вопросы по заданной книге](/cookbook/gigachat_qa.ipynb)
   * [RAG с текстовым поиском на основе Yandex Search API](/cookbook/yandex_search/retriever.ipynb)
 * Агенты:
-  * [Агент для работы с функциями](/docs/docs_ru/cookbook/gigachat_functions_agent.ipynb)
-  * [Агент «Продавец телефонов»](/docs/docs_ru/cookbook/agents/gigachat_phone_agent.ipynb)
+  * [Агент для работы с функциями](/cookbook/gigachat_functions_agent.ipynb)
+  * [Агент «Продавец телефонов»](/cookbook/agents/gigachat_phone_agent.ipynb)
   * [Агент с текстовым поиском на основе Yandex Search API](/cookbook/yandex_search/tool.ipynb)
-  * [Агент риэлтор, с функциями GigaChat](/cookbook/realestate/realestate.ipynb)
   * [Дебаты агентов с разными ролями](/cookbook/agent_debates/README.md)
-  * [Агент для получения рекомендаций Spotify](/docs/docs_ru/cookbook/playlists.ipynb)
-* [Извлечение структурированной информации](/docs/docs_ru/cookbook/extraction.ipynb)
+  * [Агент для получения рекомендаций Spotify](/cookbook/playlists.ipynb)
+* [Извлечение структурированной информации](/cookbook/extraction.ipynb)
 * Работа с изображениями:
   * [Распознавание изображения](/cookbook/gigachat_vision/gigachat_vision_simple.ipynb)
   * [Генерация структурированных данных на основе изображений](/cookbook/gigachat_vision/gigachat_vision.ipynb)
