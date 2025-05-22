@@ -4,15 +4,9 @@
 
 Пример разработан с помощью набора решений [GigaChain](https://github.com/ai-forever/gigachain)
 
-![alt text](image.png)
+![alt text](lean_canvas.png)
 
 ## Подготовка к работе
-
-Установите зависимости:
-
-```sh
-pip install langchain-gigachat langgraph
-```
 
 В папке примера создайте файл с переменными окружения `.env` и добавьте в него переменную `GIGACHAT_CREDENTIALS`:
 
