@@ -25,7 +25,7 @@ To run this notebook, you will need:
 You can install the necessary libraries using pip:
 
 ```bash
-pip install pdfminer.six langchain-gigachat langchain-core dotenv getpass
+pip install pdfminer.six langchain-gigachat dotenv getpass
 ```
 
 ## Usage
