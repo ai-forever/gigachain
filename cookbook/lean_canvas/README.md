@@ -30,7 +30,7 @@
 
 ## Быстрый старт
 
-### 1. Настройка переменных окружения
+### Настройка переменных окружения
 
 Создайте файл `.env` и добавьте необходимые API ключи:
 
@@ -43,30 +43,3 @@ GIGACHAT_BASE_URL=https://gigachat.devices.sberbank.ru/api/v1
 TAVILY_API_KEY=ваш_ключ_tavily  # для улучшенного поиска конкурентов
 GIGACHAT_VERIFY_SSL_CERTS=false # чтобы не возникали ошибки SSL-сертификатов
 ```
-
-**Как получить ключ GigaChat:**
-- Перейдите на [developers.sber.ru](https://developers.sber.ru/docs/ru/gigachat/quickstart/ind-using-api)
-- Зарегистрируйтесь и получите API ключ
-- Добавьте его в `.env` файл
-
-### 2. Запуск проекта
-
-```bash
-# Установка зависимостей (если используете pip)
-pip install -r requirements.txt
-
-# Или через uv (рекомендуется)
-uv sync
-
-# Запуск Jupyter notebook
-jupyter notebook
-# или через uv
-uv run jupyter notebook
-```
-
-### 3. Использование
-
-Откройте `lean_canvas_agent.ipynb` и следуйте инструкциям в notebook. Просто опишите свою бизнес-идею в одном предложении, и агент создаст полный Lean Canvas!
-
-> [!TIP]
-> Вы можете настроить дополнительные переменные окружения, поддерживаемые [Python-библиотекой GigaChat](https://github.com/ai-forever/gigachat#настройка-переменных-окружения).
