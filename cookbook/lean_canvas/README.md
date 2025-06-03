@@ -2,6 +2,8 @@
 
 Комплексный AI-агент на базе набора решений [GigaChain](https://github.com/ai-forever/gigachain), который автоматически создает Lean Canvas для вашей бизнес-идеи с анализом конкурентов и возможностью итеративной доработки.
 
+Данный пример является дополнением к статье ["Ра­зра­бот­ка и при­ме­не­ние муль­ти­а­гент­ных сис­тем в кор­по­ра­тив­ной сре­де"](https://giga.chat/help/articles/multi-agent-system)
+
 ![Пример Lean Canvas](lean_canvas.png)
 
 ## Что такое Lean Canvas?
@@ -43,4 +45,4 @@ GIGACHAT_BASE_URL=https://gigachat.devices.sberbank.ru/api/v1
 TAVILY_API_KEY=ваш_ключ_tavily  # для улучшенного поиска конкурентов
 GIGACHAT_VERIFY_SSL_CERTS=false # чтобы не возникали ошибки SSL-сертификатов
 ```
-После этого можно запустить блокнот `lean_canvas_agent.ipynb`.
+После этого можно запустить блокнот [`lean_canvas_agent.ipynb`](lean_canvas_agent.ipynb).
