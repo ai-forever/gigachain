@@ -43,3 +43,4 @@ GIGACHAT_BASE_URL=https://gigachat.devices.sberbank.ru/api/v1
 TAVILY_API_KEY=ваш_ключ_tavily  # для улучшенного поиска конкурентов
 GIGACHAT_VERIFY_SSL_CERTS=false # чтобы не возникали ошибки SSL-сертификатов
 ```
+После этого можно запустить блокнот `lean_canvas_agent.ipynb`.
