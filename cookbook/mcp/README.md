@@ -30,7 +30,13 @@ MCP разработан компанией Anthropic.
 Установите зависимости:
 
 ```sh
-pip install langchain-gigachat langchain_mcp_adapters langgraph rich
+pip install -r requirements.txt
+```
+
+Или установите зависимости вручную:
+
+```sh
+pip install langchain-gigachat==0.3.11 langchain-mcp-adapters==0.1.8 langgraph==0.5.1 rich==14.0.0
 ```
 
 В папке примера создайте файл с переменными окружения `.env` и добавьте в него переменную `GIGACHAT_CREDENTIALS`:
@@ -38,6 +44,9 @@ pip install langchain-gigachat langchain_mcp_adapters langgraph rich
 ```sh
 GIGACHAT_CREDENTIALS=<ключ_авторизации>
 ```
+
+> [!NOTE]
+> Если у вас возникают проблемы с авторизацией, убедитесь, что не используете переменную `GIGACHAT_BASE_URL`. В текущей версии рекомендуется использовать только `GIGACHAT_CREDENTIALS`.
 
 О том как получить ключ авторизации — в [официальной документации GigaChat](https://developers.sber.ru/docs/ru/gigachat/quickstart/ind-using-api).
 

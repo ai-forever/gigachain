@@ -25,23 +25,27 @@ def _log(ans):
 
 
 async def main():
-    async with MultiServerMCPClient(
+    # Create client without using as context manager
+    client = MultiServerMCPClient(
         {
             "math": {
                 "url": "http://localhost:8000/sse",
                 "transport": "sse",
             }
         }
-    ) as client:
-        agent = create_react_agent(model, client.get_tools())
-        
-        agent_response = await agent.ainvoke({"messages": [
-            {"role": "user", "content": "Сколько будет (3 + 5) x 12?"}]})
-        _log(agent_response)
-        
-        agent_response = await agent.ainvoke({"messages": [
-            {"role": "user", "content": "Найди сколько лет Джону Доу?"}]})
-        _log(agent_response)
+    )
+    
+    # Get tools asynchronously  
+    tools = await client.get_tools()
+    agent = create_react_agent(model, tools)
+    
+    agent_response = await agent.ainvoke({"messages": [
+        {"role": "user", "content": "Сколько будет (3 + 5) x 12?"}]})
+    _log(agent_response)
+    
+    agent_response = await agent.ainvoke({"messages": [
+        {"role": "user", "content": "Найди сколько лет Джону Доу?"}]})
+    _log(agent_response)
 
 # Run the main function
 asyncio.run(main())
