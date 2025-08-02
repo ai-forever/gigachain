@@ -1,3 +1,4 @@
+import logging
 import os
 import json
 from dotenv import find_dotenv, load_dotenv
@@ -9,6 +10,10 @@ import getpass
 from cookbook.validator.extract_text import extract_text_with_pdfminer
 
 load_dotenv(find_dotenv())
+
+
+logger = logging.getLogger(__name__)
+logger.setLevel(logging.INFO)
 
 
 def analyse_article(article_text: str):
@@ -71,9 +76,11 @@ def analyse_article(article_text: str):
 
         return json.loads(result.strip())
 
-    except json.JSONDecodeError:
+    except json.JSONDecodeError as e:
+        logger.error("Failed to parse analysis results: %s", e)
         return {"error": "Failed to parse analysis results"}
     except Exception as e:
+        logger.error("Failed to parse analysis results: %s", e)
         return {"error": str(e)}
 
 
@@ -85,8 +92,8 @@ if __name__ == "__main__":
     if not article_path:
         getpass.getpass("Укажите полный путь до анализируемой научной статьи: ")
 
-    article_text = extract_text_with_pdfminer(article_path)
+    article_content = extract_text_with_pdfminer(article_path)
 
-    analysis_result = analyse_article(article_text)
+    analysis_result = analyse_article(article_content)
 
     print(json.dumps(analysis_result, indent=2, ensure_ascii=False))
