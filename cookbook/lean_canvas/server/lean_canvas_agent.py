@@ -158,11 +158,11 @@ def unfair_advantage(state: LeanGraphState, config: RunnableConfig):
 class CompetitorsAnalysisResult(BaseModel):
     """Анализ конкурентов"""
 
-    thoughts: str = Field(description="Мысли по поводу ответа")
+    chain_of_thoughts: str = Field(description="Мысли по поводу ответа")
     solution: str = Field(
         description="Какие конкуренты существуют и чем они отличаются от вашего продукта"
     )
-    is_unique: bool = Field(description="Уникально ли ваше предложение?")
+    unique: bool = Field(description="Уникально ли ваше предложение?")
 
 
 COMPETITION_ANALYSIS_TEMPLATE = """Ты работаешь над таблицей Lean Canvas и тебе нужно проанализировать конкурентов.
@@ -213,7 +213,7 @@ def check_unique(
         + res.solution
     )
 
-    if res.is_unique:
+    if res.unique:
         # Если предложение уникально, переходим к следующему шагу
         return Command(
             update={"competitors_analysis": competitors_analysis.strip()},
