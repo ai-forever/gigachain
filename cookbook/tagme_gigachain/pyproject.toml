@@ -1,0 +1,60 @@
+[build-system]
+requires = ["setuptools", "wheel"]
+build-backend = "setuptools.build_meta"
+
+[project]
+name = "tagme_gigachain"
+version = "0.1.5"
+description = "TagMe Gigachain Integration client"
+authors = [{name = "dmpresnukhin@sberbank.ru"}]
+readme = "README.md"
+requires-python = ">=3.9"
+
+[tool.setuptools.packages.find]
+where = ["."]
+
+[tool.black]
+line-length = 120
+target-version = ["py39"]
+include = ".*.py$"
+exclude = "^$"  # handled by tooling/CI include lists
+
+[tool.isort]
+profile = "black"
+line_length = 120
+src_paths = ["tagme_gigachain", "tests"]
+known_first_party = ["tagme_gigachain"]
+combine_as_imports = true
+
+[tool.mypy]
+python_version = "3.9"
+mypy_path = ["tagme_gigachain"]
+show_error_codes = true
+pretty = true
+warn_unused_ignores = true
+warn_redundant_casts = true
+ignore_missing_imports = true
+no_implicit_optional = false
+disallow_untyped_defs = false
+check_untyped_defs = false
+strict_equality = false
+exclude = [
+    "^dist/",
+    "^build/",
+    "^.venv/",
+]
+
+[tool.pylint.main]
+py-version = "3.9"
+jobs = 0
+reports = "no"
+fail-under = 10.0
+
+[tool.pytest.ini_options]
+asyncio_default_fixture_loop_scope="function"
+minversion = "7.0"
+testpaths = ["tests"]
+asyncio_mode = "auto"
+markers = [
+  "asyncio: mark test as asyncio (requires pytest-asyncio)",
+]

@@ -1,10 +1,12 @@
+"""Public exports for the TagMe to GigaChain integration package."""
+
 from .client import (
     TagmeIntegrationClient,
     TagmeIntegrationClientAsync,
     TagmeIntegrationClientSync,
 )
 from .decorator import tagme_trace, tagme_trace_async
-from .types import Metadata
+from .entities import Metadata, DialogData, ChatMessage, FunctionDef
 
 __all__ = [
     "TagmeIntegrationClient",
@@ -13,4 +15,7 @@ __all__ = [
     "tagme_trace",
     "tagme_trace_async",
     "Metadata",
+    "DialogData",
+    "ChatMessage",
+    "FunctionDef",
 ]
