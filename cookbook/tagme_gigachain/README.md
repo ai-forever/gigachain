@@ -16,6 +16,7 @@
 
 - Python 3.9+
 - Установленные зависимости из `requirements.txt`
+- Установленный пакет tagme_gigachain: `pip install ./<path_to_repo>/cookbook/tagme_gigachain`
 - Действующий токен доступа к TagMe и адрес сервиса.
 
 ## Настройка окружения
