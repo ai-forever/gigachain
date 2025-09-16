@@ -1,12 +1,12 @@
 """Dataclasses describing TagMe function definitions and responses."""
 
 from dataclasses import asdict, dataclass, field
-from typing import Any, Callable, Dict, List, Literal, Optional, Tuple, Type, TypeVar
+from typing import Any, Callable, Dict, List, Optional, Tuple, Type, TypeVar
 
 from dacite import from_dict
 
 Metadata = Dict[str, Any]
-RoleType = Literal["system", "user", "assistant", "function"]
+RoleType = str
 
 Class = TypeVar("Class")
 
