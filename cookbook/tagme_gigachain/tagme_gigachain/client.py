@@ -38,15 +38,15 @@ class TagmeIntegrationClient:
             base_url (Optional[str]): Override for the TagMe service root URL.
         """
 
-        self.token = token or os.environ.get("TAGME_GIGACHAIN_TOKEN")
+        self.token = token or os.environ.get("TAGME_TOKEN")
         self.validate_token()
 
         raw_url = base_url or os.environ.get(
-            "TAGME_GIGACHAIN_BASE_URL", "https://tagme.sberdevices.ru/dev/chatwm/plugin_statistics/trace"
+            "TAGME_BASE_URL", "https://tagme.sberdevices.ru/dev/chatwm/plugin_statistics/trace"
         )
         parsed = urlparse(raw_url)
         if not parsed.scheme or not parsed.netloc:
-            raise ValueError(f"Invalid TAGME_GIGACHAIN_BASE_URL value: {raw_url}")
+            raise ValueError(f"Invalid TAGME_BASE_URL value: {raw_url}")
         self._base_url = f"{parsed.scheme}://{parsed.netloc}"
         self._base_path = parsed.path.rstrip("/")
 

@@ -23,8 +23,8 @@
 
 Перед использованием установите переменные окружения:
 
-- `TAGME_GIGACHAIN_TOKEN` — токен доступа к TagMe. Если значение не задано, его необходимо передать в конструктор клиента.
-- `TAGME_GIGACHAIN_BASE_URL` — базовый URL сервиса TagMe (например, `https://tagme.sberdevices.ru/dev/chatwm/plugin_statistics/trace`). Можно переопределить через аргумент `base_url`.
+- `TAGME_TOKEN` — токен доступа к TagMe. Если значение не задано, его необходимо передать в конструктор клиента.
+- `TAGME_BASE_URL` — базовый URL сервиса TagMe (например, `https://tagme.sberdevices.ru/dev/chatwm/plugin_statistics/trace`). Можно переопределить через аргумент `base_url`.
 
 ## Быстрый старт: синхронный клиент
 
