@@ -1,0 +1,6 @@
+aiohttp
+pandas
+requests
+langchain_core
+langchain_gigachat
+dacite
