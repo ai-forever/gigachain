@@ -21,7 +21,7 @@
    GIGACHAT_BASE_URL=...
    ```
 
-   Образец заполнения файла .env в папке [coobook/sample_data](https://github.com/ai-forever/gigachain/tree/master/cookbook/sample_data).
+   Образец заполнения файла .env в папке [cookbook/sample_data](https://github.com/ai-forever/gigachain/tree/master/cookbook/sample_data).
 
 5. Запустите приложение
 
