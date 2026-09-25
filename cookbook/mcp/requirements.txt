@@ -1,0 +1,4 @@
+langchain-gigachat==0.3.11
+langchain-mcp-adapters==0.1.8
+langgraph==0.5.1
+rich==14.0.0
